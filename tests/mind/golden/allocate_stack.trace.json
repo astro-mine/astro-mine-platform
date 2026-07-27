@@ -1,0 +1,739 @@
+{
+  "provenance": {
+    "core_interface_versions": {
+      "env": "0.1.0",
+      "messages": "0.1.0",
+      "mission": "0.1.0",
+      "objective": "0.1.0",
+      "policy": "0.1.0",
+      "registry": "0.1.0",
+      "resource_field": "0.1.0",
+      "sadf": "0.1.0",
+      "world_provider": "0.1.0"
+    },
+    "input_hashes": {},
+    "plugin_versions": {
+      "mind.allocate.greedy": "0.1.0",
+      "mind.control.pid": "0.1.0",
+      "mind.mission.pddl": "0.1.0",
+      "mind.reference.constraint_shield": "0.1.0",
+      "mind.tamp.sampling": "0.1.0"
+    },
+    "seed": 7
+  },
+  "stack_id": "reference-lunar-prospecting-allocate",
+  "ticks": [
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 0.0,
+      "tick": 0,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "mission",
+          "trigger": "initial"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "allocator",
+          "trigger": "initial"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "initial"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "initial"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 1.0,
+      "tick": 1,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "mission",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "allocator",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 2.0,
+      "tick": 2,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "mission",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "allocator",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 3.0,
+      "tick": 3,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "mission",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "allocator",
+          "trigger": "periodic"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 4.0,
+      "tick": 4,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "mission",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "allocator",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.25,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 5.0,
+      "tick": 5,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "mission",
+          "trigger": "plan_expired"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "allocator",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                0.625,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 6.0,
+      "tick": 6,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "mission",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "allocator",
+          "trigger": "periodic"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    },
+    {
+      "action_batch": {
+        "actions": [
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                0.3125,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-0",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          },
+          {
+            "actuator": {
+              "control_mode": "velocity",
+              "damping": null,
+              "feedforward": [],
+              "setpoint": [
+                1.5,
+                0.0
+              ],
+              "stiffness": null,
+              "target": "base",
+              "trajectory_ref": null,
+              "unit": "m/s"
+            },
+            "agent_id": "rover-1",
+            "kind": "actuator",
+            "mode": null,
+            "sim_time_s": null,
+            "task": null
+          }
+        ]
+      },
+      "comms_denied": false,
+      "seed": 7,
+      "shield": {
+        "certificate": null,
+        "clauses": [
+          "ref.kinematic_limit.base_speed"
+        ],
+        "intervened": true,
+        "kind": "shield_edit",
+        "plugin": "mind.reference.constraint_shield"
+      },
+      "sim_time_s": 7.0,
+      "tick": 7,
+      "tiers": [
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "mission",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": false,
+          "role": "allocator",
+          "trigger": null
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "tamp",
+          "trigger": "reactive"
+        },
+        {
+          "fallback_used": false,
+          "note": null,
+          "replanned": true,
+          "role": "control",
+          "trigger": "reactive"
+        }
+      ]
+    }
+  ]
+}

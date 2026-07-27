@@ -1,0 +1,188 @@
+# Anchor SafetySpec — lunar polar water-ice prospecting (the flagship scenario).
+#
+# The hard-constraint safety contract for a prospecting rover working a permanently-shadowed
+# polar region: it must keep power and energy above survival floors, stay within its thermal
+# envelope through the lunar night, respect actuator/kinematic limits while anchoring and
+# traversing, stay clear of steep-slope / crater keep-out geometry, and — the temporal
+# clauses — survive the night: hold state-of-charge above the floor until a charging window,
+# and never breach the survival thermal floor over the night horizon.
+#
+# Exercises every constraint kind and all three keep-out geometries. Constraint sources are
+# referenced abstractly by signal key (sadf/worlds/observation); value resolution against
+# Fleet SADF budgets and Worlds terrain/illumination is provided by the models adapter
+# (astro_mine.guard.models, RM-P1-GUARD-04). Fail-safe: every constraint resolves to a safe
+# action (never passthrough) — the night-survival energy floor and SoC-until-charging clause
+# retreat to the safe_pose; the temporal horizons are finite and bounded.
+safety_version: "0.1"
+safety:
+  id: anchor-lunar-polar-v0
+  name: Lunar polar prospecting rover — hard safety contract
+  description: >-
+    Survival power/energy/thermal floors, anchoring torque and traverse-speed limits,
+    steep-slope / crater / lander keep-out geometry, and lunar-night survival temporal
+    clauses for the flagship lunar polar water-ice prospecting scenario.
+  scenario_ref: sha256:0000000000000000000000000000000000000000000000000000000000000000
+  # The verified retreat (safe_state) target: a peak-of-light charging pose, outside every keep-out
+  # and on the safe side of the slope edge, in the same body-fixed frame as the keep-out geometry
+  # (LUNAR-TR-001 — explicit lunar frame, no implicit Earth/WGS84). The night-survival energy floor
+  # and SoC-until-charging clause fall back to a bounded retreat toward this pose (never fail-open).
+  safe_pose:
+    frame: MOON_ME
+    position_m: { x: 60.0, y: 0.0, z: 5.0 }
+  # The discrete directives this contract certifies, by enumeration (RFC-0004 Amendment 2).
+  #
+  # A MODE/TASK directive carries no continuous quantity the shield could project, so the trusted
+  # core can only certify it against this allowlist -- and an admitted directive is re-emitted
+  # UNTOUCHED. The grant is therefore a safety decision, reviewed and content-addressed here rather
+  # than set in deployment config: `ModeCommand.mode` names a SADF `loads_by_mode` profile, which is
+  # the very power/thermal load profile the survival floors above are stated against. Leaving the
+  # survival-heater profile during lunar night is precisely how you invalidate `c_power_floor` /
+  # `c_thermal_floor` / `c_night_thermal_survival`, and the gate is the only PROSPECTIVE control on
+  # that path (the monitors observe the consequence a tick or more later).
+  #
+  # Deployment configuration (CoreConfig.action_policy) may only NARROW this set -- a deployment can
+  # run stricter than its contract, but can never grant authority the contract withholds. Omitting
+  # this block entirely would grant NOTHING (silence is the empty set, not "config stands").
+  admissible_directives:
+    modes:
+      # The survival retreat posture: the rover may be commanded into its low-power hold, which is
+      # the load profile the survival floors are dimensioned for. Certifying it is safe in the exact
+      # sense that matters -- it can only move the rover *toward* the constraint set, never out of it.
+      - safe_hold
+    tasks:
+      # STANDBY and CHARGE are the two directives that reduce load / restore energy. PROSPECT,
+      # EXCAVATE and HAUL are deliberately NOT granted: they raise the drill/mobility duty cycle
+      # against the anchoring-torque ceiling and the traverse-speed limit, and nothing in this
+      # contract certifies that they are safe to enter unconditionally.
+      - standby
+      - charge
+  signals:
+    - key: power_available_w
+      unit: W
+      source: sadf
+      description: Instantaneous available electrical power (SADF power.floor_w budget).
+    - key: battery_soc_j
+      unit: J
+      source: observation
+      description: Battery state-of-charge in joules (SADF PowerStorage.capacity_j).
+    - key: chassis_temp_k
+      unit: K
+      source: observation
+      description: Chassis temperature (SADF ThermalBudget operating/survival range).
+    - key: charging_window_active
+      unit: dimensionless
+      source: worlds
+      description: >-
+        1.0 while a solar charging window is available, else 0.0 — derived by the models adapter
+        from the Worlds surface illumination state (SHADOW/PSR => 0.0).
+    - key: anchor_torque_nm
+      unit: "N.m"
+      source: sadf
+      description: Anchoring-drill actuator torque (SADF Actuator.torque_nm limit).
+    - key: traverse_speed_mps
+      unit: "m/s"
+      source: observation
+      description: Ground traverse speed (SADF ContactElement / mobility limit).
+  constraints:
+    - kind: power_floor
+      id: c_power_floor
+      description: Available power must stay at/above the survival-heater floor.
+      power_floor:
+        signal: power_available_w
+        floor_w: 15.0
+    - kind: energy_floor
+      id: c_energy_floor
+      on_uncertain: safe_state
+      description: >-
+        Battery energy must stay above the night-survival floor; on a breach risk, retreat to the
+        charging pose (safe_state) rather than brake in place.
+      energy_floor:
+        signal: battery_soc_j
+        floor_j: 180000.0
+    - kind: thermal_ceiling
+      id: c_thermal_ceiling
+      description: Chassis temperature must stay at/below the operating ceiling.
+      thermal_ceiling:
+        signal: chassis_temp_k
+        limit_k: 320.0
+    - kind: thermal_floor
+      id: c_thermal_floor
+      description: Chassis temperature must stay at/above the survival floor.
+      thermal_floor:
+        signal: chassis_temp_k
+        limit_k: 120.0
+    - kind: torque_ceiling
+      id: c_anchor_torque
+      description: Anchoring-drill torque must not exceed the actuator limit.
+      torque_ceiling:
+        signal: anchor_torque_nm
+        max_nm: 40.0
+    - kind: kinematic_limit
+      id: c_traverse_speed
+      on_uncertain: hold
+      description: Traverse speed is bounded on steep, low-traction polar terrain.
+      kinematic_limit:
+        signal: traverse_speed_mps
+        max_velocity_mps: 0.1
+    - kind: keep_out
+      id: c_psr_crater
+      description: Stay clear of the permanently-shadowed crater exclusion box.
+      keep_out:
+        margin_m: 5.0
+        volume:
+          shape: box
+          box:
+            frame: MOON_ME
+            center_m: { x: 500.0, y: -1200.0, z: 0.0 }
+            dimensions_m: { x: 200.0, y: 200.0, z: 40.0 }
+    - kind: keep_out
+      id: c_lander_zone
+      description: Stay clear of the lander safety sphere.
+      keep_out:
+        margin_m: 3.0
+        volume:
+          shape: sphere
+          sphere:
+            frame: MOON_ME
+            center_m: { x: 0.0, y: 0.0, z: 0.0 }
+            radius_m: 30.0
+    - kind: keep_out
+      id: c_slope_edge
+      description: Stay on the safe side of the steep-slope terrain boundary.
+      keep_out:
+        margin_m: 1.0
+        volume:
+          shape: half_space
+          half_space:
+            frame: MOON_ME
+            normal: { x: 0.0, y: 0.0, z: 1.0 }
+            offset_m: 2.0
+    - kind: temporal
+      id: c_night_soc_survival
+      on_uncertain: safe_state
+      description: State-of-charge stays above the floor until a charging window opens.
+      temporal:
+        formula:
+          op: until
+          interval_s: { lo: 0.0, hi: 1209600.0 }
+          args:
+            - op: predicate
+              signal: battery_soc_j
+              cmp: ge
+              threshold: 180000.0
+            - op: predicate
+              signal: charging_window_active
+              cmp: ge
+              threshold: 1.0
+    - kind: temporal
+      id: c_night_thermal_survival
+      description: Always hold the chassis above the survival floor through the night.
+      temporal:
+        formula:
+          op: always
+          interval_s: { lo: 0.0, hi: 1209600.0 }
+          args:
+            - op: predicate
+              signal: chassis_temp_k
+              cmp: ge
+              threshold: 120.0

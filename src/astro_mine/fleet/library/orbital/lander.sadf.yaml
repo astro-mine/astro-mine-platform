@@ -1,0 +1,74 @@
+# Scenario 1 (lunar polar ice prospecting) — surface delivery lander.
+# A descent-stage carrier that delivers and dispenses the surface fleet (rovers,
+# excavator, hauler, ISRU plant) to the prospecting site, then serves as a fixed surface
+# node. Phase 0 models it as a structural carrier — descent propulsion is RFC-0001
+# content, deferred to Phase 3, so no propulsion capabilities are declared.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.lander
+    name: Surface Delivery Lander
+    version: 0.1.0
+    kind: lander
+    description: >-
+      Descent-stage carrier that delivers and dispenses the surface fleet to the
+      prospecting site and then acts as a fixed surface node.
+    labels:
+      scenario: lunar-polar-ice-prospecting
+
+  capabilities:
+    - carrier.dispenser
+    - comms.direct_to_earth
+    - power.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+
+  root_frame: deck
+  frames:
+    - name: deck
+
+  bodies:
+    - name: descent_stage
+      frame: deck
+      mass_kg: 800.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.6 }
+      inertia_kg_m2: { ixx: 420.0, iyy: 420.0, izz: 360.0 }
+
+  power:
+    storage:
+      - { name: descent_battery, capacity_j: 8.0e+6, max_charge_w: 0.0, max_discharge_w: 500.0 }
+    floor_w: 30.0
+    loads_by_mode:
+      - { mode: idle, power_w: 60.0 }
+      - { mode: deploy, power_w: 200.0 }
+
+  thermal:
+    operating_range_k: { min: 130.0, max: 330.0 }
+    survival_range_k: { min: 100.0, max: 360.0 }
+    dissipation_w: 40.0
+
+  comms:
+    - name: x_band_dte
+      band: x_band
+      node_role: space
+      antenna: { gain_dbi: 16.0, boresight_frame: deck, pointing_accuracy_deg: 2.0 }
+      eirp_dbw: 20.0
+      gt_db_per_k: -10.0
+      tx_power_w: 25.0
+      min_rate_bps: 1.0e+3
+      max_rate_bps: 1.0e+6
+      protocols: ["ccsds_tc_tm"]
+      relay: false
+
+  mobility:
+    regimes: [surface]
+
+  payload:
+    capacity_kg: 300.0
+    slots:
+      - { name: cargo_deck, frame: deck, accepts: [rover, plant, payload], max_mass_kg: 300.0 }
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: descent-stage point-mass + payload }
+    - { tier: kinematic, determinism_class: bit_exact, detail: rigid stage at a fixed surface pose }

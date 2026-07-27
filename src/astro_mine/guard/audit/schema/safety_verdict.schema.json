@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/guard/audit/v0.1/safety_verdict.schema.json",
+  "title": "Astro-Mine SafetyVerdict v0.1",
+  "description": "The auditable per-tick output of the Guard arbiter (RM-P1-GUARD-06; guard.md §3, §5, §6): the certified action, whether/why an intervention occurred, the invoked spec clause(s), the active layer, the barrier-margin certificate, plus reproducibility provenance (spec/model content hashes, Guard code version, input content hashes). A Core-catalogued Guard-owned message, streamed to MCAP and aggregated to Parquet so a shielded run's safety behaviour is replayable and Bench-scorable. The verdict only *records* the fail-safe decision the trusted Rust safety core already made (guard.md §9.1); telemetry is best-effort and never changes the certified action. Additive-only, RFC-gated (a safety-contract artifact). Canonical source of truth; the Pydantic model in astro_mine.guard.audit.model mirrors it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict_version",
+    "agent_id",
+    "tick",
+    "sim_time_s",
+    "spec_id",
+    "spec_content_hash",
+    "compiled_content_hash",
+    "guard_code_version",
+    "layer",
+    "intervention",
+    "reason",
+    "backup_kind",
+    "constraint_ids",
+    "certified_action",
+    "min_barrier_margin",
+    "action_divergence",
+    "inputs_content_hash",
+    "shield_latency_us"
+  ],
+  "properties": {
+    "verdict_version": {
+      "const": "0.1",
+      "description": "Schema minor of this verdict record."
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "The agent this verdict certifies an action for."
+    },
+    "tick": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "The decision tick (from the agent's Observation)."
+    },
+    "sim_time_s": {
+      "type": "number",
+      "description": "Elapsed simulation time of this tick (SI seconds; an interval, not an epoch)."
+    },
+    "spec_id": {
+      "type": "string",
+      "description": "The SafetySpec id in force (provenance)."
+    },
+    "spec_content_hash": {
+      "type": "string",
+      "description": "The sha256:<hex> content address of the source SafetySpec — the exact reviewed contract (guard.md §5). Reported by the trusted core; never recomputed here."
+    },
+    "compiled_content_hash": {
+      "type": "string",
+      "description": "The sha256:<hex> content address of the CompiledSafetyModel the core enforces (the model version)."
+    },
+    "guard_code_version": {
+      "type": "string",
+      "description": "The astro-mine-guard code version that produced this verdict (provenance)."
+    },
+    "layer": {
+      "type": "string",
+      "description": "The active assurance layer that produced the certified action: 'primary' | 'shield' | 'backup' (carried as a string so an additive core layer never fails an existing consumer)."
+    },
+    "intervention": {
+      "type": "string",
+      "description": "What Guard did to the proposed action: 'none' | 'modified' | 'fallback'."
+    },
+    "reason": {
+      "type": "string",
+      "description": "The audit reason: 'certified' | 'shield_corrected' | 'scalar_violated' | 'monitor_fired' | 'qp_uncertifiable' | 'bad_input' | 'watchdog_expired' (carried as a string — additive-friendly)."
+    },
+    "backup_kind": {
+      "type": ["string", "null"],
+      "description": "The backup behaviour when the arbiter fell back: 'brake_to_stop' | 'hold' | 'safe_state'; null when the primary/shield layer certified."
+    },
+    "constraint_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "The SafetySpec clause/constraint ids that fired this tick (the core's `fired`; empty unless a detect layer tripped). The invoked spec clause(s) — Guard's own contract, never the wrapped policy's internals."
+    },
+    "certified_action": {
+      "type": "array",
+      "items": { "type": "number" },
+      "description": "The single certified action the core emitted (a commanded acceleration of length spatial_dim). Never the raw proposed action (fail-safe, never fail-open)."
+    },
+    "min_barrier_margin": {
+      "type": "number",
+      "description": "The smallest keep-out barrier margin this tick — the safety certificate (+inf when no keep-out term applies)."
+    },
+    "action_divergence": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "The L2 distance ‖certified - proposed‖ between the certified and the proposed action — Guard's own derived measure of shielding cost (0.0 on passthrough). A scalar, not the policy's proposed vector."
+    },
+    "inputs_content_hash": {
+      "type": "string",
+      "description": "The sha256:<hex> content address of the inputs the core certified against (signals + position + velocity + proposed action) — so a verdict ties to the exact inputs in force (guard.md §5 provenance)."
+    },
+    "shield_latency_us": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Wall-clock latency of the per-tick core.step() call in microseconds. Environment-dependent — EXCLUDED from the reproducibility digest (astro_mine.guard.audit.model.SafetyVerdict.provenance)."
+    }
+  }
+}

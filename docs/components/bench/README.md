@@ -1,0 +1,155 @@
+# astro-mine-bench
+
+**Benchmark suite, scenario zoo, and reproducibility harness for [Astro-Mine](https://github.com/astro-mine).**
+Named challenge scenarios, standard metrics, public leaderboards, and a deterministic
+reproducibility harness — *clone, run the anchor scenario, and score a baseline in an
+afternoon*, offline, with no account. Reproducibility is the product.
+
+> **Status:** Phase 1 — the flywheel. Phase 0 is complete and green: the anchor scenario, the
+> reference metric set, the baseline policy, the reproducibility harness + determinism gate, the
+> local scoring tier, and the leaderboard service all ship. Phase 1 is landing on top: Hub-digest
+> submission intake (RM-P1-BENCH-10), scale-out evaluation on Cloud (RM-P1-BENCH-11), community
+> metric plugins + the View leaderboard/replay dataset (RM-P1-BENCH-12), and the hosted tier's
+> security and observability posture — OIDC + OPA + supply-chain verification, sandboxed submission
+> execution, OpenTelemetry/Prometheus, and the Postgres/pgvector scenario catalog. See the
+> [architecture](https://github.com/astro-mine/docs/blob/main/architecture/bench.md) and the
+> [Phase-1 roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/phase-1-autonomy-studio.md).
+
+## Layout
+
+```
+src/astro_mine/bench/       # import path: astro_mine.bench  (local scoring: astro_mine.bench.run)
+  scenario/ zoo/ metrics/ harness/ baseline/ leaderboard/ submit/ eval/ recording/ report/ sandbox/
+policy/bench.rego           # the leaderboard authorization policy (OPA; same rules in-process)
+deploy/                     # Prometheus scrape config + the Grafana submission-pipeline dashboard
+tests/                      # mirrors the package layout
+TRUST_BOUNDARY.md           # what the submission sandbox protects — and what it does not
+```
+
+## Usage
+
+**Local scoring (offline, no account, no cloud)** — clone, run the anchor, score a baseline:
+
+```bash
+astro-mine-bench score          # or: python -m astro_mine.bench score
+astro-mine-bench score --json   # machine-readable scorecard
+astro-mine-bench list           # scenarios in the zoo
+```
+
+The same four verbs are also reachable from the platform's umbrella CLI, if
+[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) is installed:
+
+```bash
+astro-mine score     astro-mine fetch     astro-mine submit     astro-mine list
+```
+
+Identical flags — both surfaces are built from the same argument definitions, so neither can grow
+a flag the other lacks. The umbrella is the discoverable front door for someone who does not yet
+know which package owns an action (RFC-0011); `astro-mine-bench` remains the direct command and
+needs nothing else installed.
+
+Or from Python — inject any Core `Policy` (a Sim-backed runner from `astro-mine-sim` slots into
+the same seam; Bench itself stays dependency-clean, `core + pydantic`):
+
+```python
+from astro_mine.bench.baseline import BaselinePolicy, run
+from astro_mine.bench.zoo import load_scenario, ANCHOR_SCENARIO_ID
+
+scorecard = run(load_scenario(ANCHOR_SCENARIO_ID), BaselinePolicy())
+```
+
+**Hosted leaderboard (submit-policy-we-run + held-out seeds + sampled re-execution)** — an
+optional service tier; the local tier above needs none of it:
+
+```bash
+pip install -e '.[leaderboard,observability]'
+CORE_REPO_TOKEN=<gh token> docker compose up --build   # FastAPI + Postgres/pgvector
+
+# Reads are account-free — the board, scorecards, provenance, replays:
+curl localhost:8000/leaderboard/lunar-polar-ice-prospecting-v1
+
+# Writes require an OIDC bearer token (bench.md §9); an unauthenticated POST is rejected:
+curl -X POST localhost:8000/submissions -H "Authorization: Bearer $TOKEN" \
+  -d '{"scenario_id":"lunar-polar-ice-prospecting-v1","policy_ref":"astro_mine.bench.baseline:BaselinePolicy"}'
+```
+
+### Submitting from the CLI
+
+`submit` is the write path — the last step of the flywheel, and the one that used to be `curl`
+with a hand-assembled JSON body:
+
+```bash
+pip install -e '.[submit]'
+export ASTRO_MINE_BENCH_TOKEN=<oidc token>       # never a flag: a token on argv lands in `ps`
+
+# The path a community submission should take: an artifact referenced by digest.
+astro-mine-bench submit --hub-ref sha256:… \
+  --scenario-id lunar-polar-ice-prospecting-v1 --to https://board.example --wait
+```
+
+`--hub-ref` takes a Hub `name:version` tag or a `sha256:` digest. Bench resolves it from Hub and
+verifies it fail-closed — content address, then cosign signature, SLSA provenance, and SBOM —
+before running it sandboxed. This is the contract `bench.md` §6 fixes: *a leaderboard submission
+references Hub artifacts by digest*, which is what keeps an entry reproducible.
+
+`--policy-ref module:attr` also works and is the **local/dev** path. It runs sandboxed like any
+submission, but nothing pins what the reference resolves to — a re-run can import different code
+under the same name — so it is **not leaderboard-grade** and no architecture document describes it
+as an intake. Prefer `--hub-ref` for anything meant to stand as a published result.
+
+The Hub intake returns a **job ticket**, since evaluation is asynchronous. `--wait` polls it to a
+terminal status and prints the resulting submission and its rank; without `--wait` the job id is
+printed along with the command to resume:
+
+```bash
+astro-mine-bench submit --job <job-id> --to https://board.example --wait
+astro-mine-bench submit … --json          # machine-readable, like `score --json`
+```
+
+Identity comes from the verified token and **only** from the token — no flag can set it, and the
+request body carries no identity field (bench#29). Reading the board needs no account at all;
+`score` and `list` are untouched by any of this and keep working offline with no token and no
+extra installed.
+
+The hosted tier runs every submitted policy **out-of-process in a sandbox** — no network egress,
+hard CPU/memory/time caps — because a submission is untrusted code (bench.md §9). Read
+[TRUST_BOUNDARY.md](TRUST_BOUNDARY.md) before exposing a leaderboard to the public internet: it
+states exactly what each sandbox tier does and does not protect against. Hub-digest submissions are
+additionally verified for a **cosign signature, SLSA provenance, and an SBOM** before they execute,
+reusing [Seal](https://github.com/astro-mine/astro-mine-seal)'s primitives via the Hub client —
+verification failure fails closed.
+
+Authorization is an OPA-shaped policy layer (RBAC + per-role submission quotas + embargo control):
+`policy/bench.rego` is the Rego an OPA sidecar evaluates, and the in-process `RbacPolicyEngine`
+enforces the same rules when no sidecar is configured. Every authN/authZ decision, verification
+outcome, and sandbox rejection lands in a queryable audit trail (`GET /audit`).
+
+**Observability** (`--profile observability`): OpenTelemetry spans cover `submit → evaluate → score
+→ rank` with the trace context propagated across the queue hop, and `GET /metrics` exposes the
+Prometheus series — **queue depth**, the **re-execution mismatch rate** (bench.md §10's key
+integrity signal), and **evaluation latency**. `deploy/grafana/` has the starter dashboard.
+
+**Scenario catalog:** the packaged zoo is scanned from the filesystem by default (offline, no
+database). Setting `ASTRO_MINE_BENCH_CATALOG_DSN` switches discovery to the **Postgres + pgvector**
+catalog (bench.md §5) — spec/version/lineage index plus similarity search:
+
+```bash
+astro-mine-bench zoo-sync --dsn "$DSN"                  # seed it from the packaged zoo
+astro-mine-bench zoo-search --dsn "$DSN" "ice prospecting endurance"
+```
+
+## Development
+
+Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+
+```bash
+conda create -n astro-mine-bench python=3.12
+conda activate astro-mine-bench
+uv sync && uv run pytest
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+
+## License
+
+Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.

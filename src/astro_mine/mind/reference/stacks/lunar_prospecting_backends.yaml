@@ -1,0 +1,28 @@
+stack_spec_version: "0.1"
+stack_spec:
+  id: reference-lunar-prospecting-backends
+  name: Reference lunar-polar prospecting stack (RM-P1-MIND-03 backends)
+  description: >-
+    The default backend stack (mind.md §4, §12): the reference PDDL/temporal mission planner
+    generates a prospect decomposition, the sampling TAMP planner turns it into feasible
+    GOTOs, and the receding-horizon MPC controller closes the loop — every action projected
+    onto the enforcing constraint shield's speed ceiling. Each tier binds a Core Policy
+    sub-interface (MissionPlanner / TaskMotionPlanner / Controller); a Learn ONNX controller
+    (mind.control.onnx) or a unified-planning / OMPL backend swaps in via the registry with no
+    framework change. Runs the anchor scenario end-to-end in Sim.
+  scenario_ref: lunar-polar-prospecting
+  tiers:
+    - role: mission
+      plugin: mind.mission.pddl
+      validity_horizon_s: 5.0
+      replan_triggers:
+        - kind: plan_expired
+    - role: tamp
+      plugin: mind.tamp.sampling
+      replan_triggers:
+        - kind: periodic
+          every_ticks: 2
+    - role: control
+      plugin: mind.control.mpc
+  shield:
+    plugin: mind.reference.constraint_shield

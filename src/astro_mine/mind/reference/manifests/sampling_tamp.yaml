@@ -1,0 +1,22 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.tamp.sampling
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference TAMP planner (RM-P1-MIND-03) — symbolic task selection interleaved with a
+    pure-Python RRT motion planner. The CI-tested default behind Core's TaskMotionPlanner
+    sub-interface; OMPL/FCL ([native] extra) drop in through the same motion contract.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: tamp

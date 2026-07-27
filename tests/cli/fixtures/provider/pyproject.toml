@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+# A stand-in for a third-party package that adds a verb. It is deliberately NOT named
+# `astro-mine-*`: the point it proves is that a distribution with no relationship to this org can
+# contribute a verb with no change to astro-mine-cli (RFC-0011 §3, "no PR to extend").
+name = "am-cli-test-provider"
+version = "0.1.0"
+description = "Test fixture: a third-party distribution contributing astro-mine verbs."
+requires-python = ">=3.12"
+classifiers = ["Private :: Do Not Upload"]
+
+[project.entry-points."astro_mine.cli"]
+# The two adapter styles a real component can choose between (see ARCHITECTURE.md).
+demo = "am_cli_test_provider:demo"
+passthrough = "am_cli_test_provider:passthrough"
+# A provider that resolves but does not satisfy the contract — the umbrella must report it as a
+# packaging bug in *this* distribution, not raise an AttributeError out of its own internals.
+malformed = "am_cli_test_provider:MALFORMED"
+
+# The same "no PR to extend" claim, for scaffolds (RFC-0011 §7). The entry-point NAME is the kind
+# as typed: `astro-mine new demo-doc`, `astro-mine plugin new demo-plugin`. Neither kind is
+# mentioned anywhere in astro-mine-cli.
+[project.entry-points."astro_mine.cli.scaffolds"]
+demo-doc = "am_cli_test_provider:doc_scaffold"
+
+[project.entry-points."astro_mine.cli.plugin_scaffolds"]
+demo-plugin = "am_cli_test_provider:plugin_scaffold"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/am_cli_test_provider"]

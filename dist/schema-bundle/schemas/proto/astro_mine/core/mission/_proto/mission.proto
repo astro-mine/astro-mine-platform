@@ -1,0 +1,140 @@
+// Mission-architecture schema v0.1 — canonical Protobuf wire form
+// (RM-P1-CORE-04 / RFC-0001). RESERVED SCHEMA HOOKS ONLY — no mechanism:
+// Core learns the *schema* of a Mission, never how to fly one (mission-model §3).
+//
+// A single-`surface`-phase Mission is exactly today's campaign, so the whole schema is
+// additive: existing consumers that predate `regime` ignore it (proto3 unknown-field
+// tolerance) and a one-phase MissionSpec validates with no author action.
+//
+// Dual-use (RFC-0001 R3): TrajectoryRef / Maneuver are *descriptive* design-time
+// artifacts. They OMIT — by schema, not convention — actuator/thruster command channels,
+// control gains, closed-loop guidance laws, and any onboard-flight-clock binding.
+// Operational maneuver targeting stays behind the `operational_targeting` capability tag.
+//
+// Mirrors the canonical JSON Schema (mission.schema.json) and the Pydantic models
+// (astro_mine.core.mission.model). Closed-vocabulary fields (regime, maneuver_type) are
+// carried as `string` (the SADF pattern); the type authority is the JSON Schema /
+// Pydantic. Field tags are append-only and never reused (conventions.md §3); nullable
+// scalars use proto3 `optional`.
+
+syntax = "proto3";
+
+package astro_mine.core.mission.v0;
+
+import "astro_mine/core/units/_proto/units.proto";
+
+// --- value types -----------------------------------------------------------------
+
+message Vec3 {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message Provenance {
+  repeated string input_hashes = 1;
+  optional string code_version = 2;
+  optional string toolchain_version = 3;
+  optional string env_lockfile = 4;
+  optional int64 seed = 5;
+}
+
+// --- descriptive design-time trajectory artifacts (NOT executable guidance) ------
+
+message ManeuverBudget {
+  double total_delta_v_mps = 1;
+  optional double time_of_flight_s = 2;
+  optional double margin_mps = 3;
+}
+
+message Maneuver {
+  double epoch_tdb_s = 1;
+  double delta_v_mps = 2;          // magnitude only
+  Vec3 direction = 3;              // unit direction in the named SPICE frame
+  string maneuver_type = 4;        // ManeuverType (closed vocab as string)
+  // Information-preserving typed sibling of epoch_tdb_s: same design-time TDB instant,
+  // same scale, no onboard-clock binding — no guidance capability (RFC-0007 R3; RFC-0001).
+  optional astro_mine.core.units.v0.Epoch epoch = 5;
+}
+
+message ReferenceState {
+  double epoch_tdb_s = 1;
+  Vec3 position_m = 2;
+  Vec3 velocity_mps = 3;
+  optional astro_mine.core.units.v0.Epoch epoch = 4;  // typed sibling of epoch_tdb_s (RFC-0007)
+}
+
+message TrajectorySegment {
+  string id = 1;
+  double start_epoch_tdb_s = 2;
+  double end_epoch_tdb_s = 3;
+  optional string kind = 4;
+  optional astro_mine.core.units.v0.EpochWindow window = 5;  // typed sibling of start/end_epoch_tdb_s (RFC-0007)
+}
+
+message TrajectoryRef {
+  string id = 1;
+  string frame = 2;                       // named SPICE frame
+  repeated TrajectorySegment segments = 3;
+  repeated Maneuver maneuvers = 4;
+  repeated ReferenceState reference_states = 5;
+  optional double feasibility_margin = 6;
+  Provenance provenance = 7;
+  optional astro_mine.core.units.v0.ReferenceFrame frame_ref = 8;  // typed sibling of `frame` (RFC-0007)
+}
+
+// --- mission / phase structure ---------------------------------------------------
+
+message PhaseBoundary {
+  optional string condition = 1;
+  optional string state_ref = 2;
+}
+
+message Leg {
+  string id = 1;
+  TrajectoryRef trajectory_ref = 2;
+  ManeuverBudget maneuver_budget = 3;
+}
+
+// The typed Environment-API handoff event: one phase's terminal state becomes the next
+// phase's initial state (mission-model §2.2). Reserved; no runtime consumes it in P1.
+message PhaseTransition {
+  string from_phase = 1;
+  string to_phase = 2;
+  optional string terminal_state_ref = 3;
+  optional string initial_state_ref = 4;
+}
+
+message Phase {
+  string id = 1;
+  string regime = 2;                 // Regime (closed vocab as string)
+  optional string environment_ref = 3;
+  repeated string assets_active = 4;
+  PhaseBoundary entry = 5;
+  PhaseBoundary exit = 6;
+  optional string campaign_ref = 7;
+  repeated Leg legs = 8;
+}
+
+message MissionConstraints {
+  optional double budget = 1;
+  optional double schedule_s = 2;
+  optional double launch_capacity_kg = 3;
+  bool export_gated = 4;
+}
+
+message MissionSpec {
+  string id = 1;
+  string name = 2;
+  optional string description = 3;
+  repeated Phase phases = 4;
+  repeated string fleet = 5;
+  optional string objective_ref = 6;
+  MissionConstraints constraints = 7;
+  Provenance provenance = 8;
+}
+
+message MissionDocument {
+  string mission_version = 1;
+  MissionSpec mission = 2;
+}

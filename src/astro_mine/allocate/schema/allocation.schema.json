@@ -1,0 +1,387 @@
+{
+  "$defs": {
+    "AllocationProvenance": {
+      "additionalProperties": false,
+      "description": "The reproducibility provenance of a plan (allocate.md \u00a75; conventions.md \u00a75).\n\nMirrors Core's build-time :class:`~astro_mine.core.registry.Provenance` and run-time\n:class:`~astro_mine.core.provenance.RunProvenance`: the content hashes of every pinned\ninput, the IR version, the solver backend + its pinned version, the seed, the wall-clock\nbudget actually consumed, and the Core interface versions the plan was produced against \u2014\nso any plan (and any Bench score) reproduces exactly.",
+      "properties": {
+        "backend": {
+          "title": "Backend",
+          "type": "string"
+        },
+        "backend_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Backend Version"
+        },
+        "budget_consumed_s": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Budget Consumed S"
+        },
+        "core_interface_versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Core Interface Versions",
+          "type": "object"
+        },
+        "input_hashes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Input Hashes",
+          "type": "array"
+        },
+        "ir_version": {
+          "title": "Ir Version",
+          "type": "string"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
+        }
+      },
+      "required": [
+        "ir_version",
+        "backend"
+      ],
+      "title": "AllocationProvenance",
+      "type": "object"
+    },
+    "AllocationStatus": {
+      "description": "Feasibility/optimality verdict of an :class:`~astro_mine.allocate.Allocation`.\n\n``OPTIMAL``/``FEASIBLE`` carry a plan; ``INFEASIBLE`` carries no plan (and, from\nRM-P1-ALLOC-06, an infeasibility certificate). ``UNKNOWN``/``TIMEOUT`` are anytime\noutcomes that MAY carry a best-found incumbent plan but assert no optimality \u2014 a late\noptimal answer is a wrong answer in operations (allocate.md \u00a72, principle 1).",
+      "enum": [
+        "optimal",
+        "feasible",
+        "infeasible",
+        "unknown",
+        "timeout"
+      ],
+      "title": "AllocationStatus",
+      "type": "string"
+    },
+    "AssetSchedule": {
+      "additionalProperties": false,
+      "description": "One asset's time-ordered, **non-overlapping** task sequence.\n\nAn asset is a single-capacity resource: it does one task at a time. The model enforces both\nhalves structurally \u2014 starts are non-decreasing, *and* no task starts before its predecessor\non the same asset has ended (RM-P1-ALLOC-02). A schedule that double-books an asset is not\nrepresentable, so an infeasible plan cannot be smuggled through the response type itself.\n\nThis is a *structural* invariant over the reported ``[start_s, end_s]`` intervals only. The\nauthoritative temporal feasibility check is\n:func:`~astro_mine.allocate.verify_feasible`, which re-derives each interval's length from the\n**IR's** ``NO_OVERLAP`` sizes rather than trusting the plan's own ``end_s`` \u2014 so a backend that\nunder-reports a task's end cannot hide an overlap (allocate.md \u00a79).",
+      "properties": {
+        "asset_id": {
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "tasks": {
+          "items": {
+            "$ref": "#/$defs/ScheduledTask"
+          },
+          "title": "Tasks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "asset_id"
+      ],
+      "title": "AssetSchedule",
+      "type": "object"
+    },
+    "BindingConstraint": {
+      "additionalProperties": false,
+      "description": "A constraint active at the returned plan \u2014 part of the plan's explanation\n(allocate.md \u00a79/\u00a710; RM-P1-ALLOC-06).\n\n``constraint_id`` references the IR constraint; ``slack`` is its residual (``0`` when tight);\n``source`` traces the constraint back to the upstream truth that produced it \u2014 the Link\ncontact window, Worlds terrain, Fleet power budget, or the request's own time-window /\nprecedence \u2014 so an operator learns *what* bound the result (``LUNAR-UX-004``). ``source`` is an\nappend-only additive field (RM-P1-ALLOC-06); absent means the source was not classified.",
+      "properties": {
+        "constraint_id": {
+          "title": "Constraint Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ConstraintKind"
+        },
+        "slack": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slack"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        }
+      },
+      "required": [
+        "constraint_id",
+        "kind"
+      ],
+      "title": "BindingConstraint",
+      "type": "object"
+    },
+    "ConstraintKind": {
+      "description": "The kind of an IR :class:`~astro_mine.allocate.Constraint` (allocate.md \u00a73).\n\n``ASSIGNMENT_COVER``/``PRECEDENCE``/``TIME_WINDOW`` are the structural families the\nRM-P1-ALLOC-01 compiler emits, and ``LINEAR`` the generic power/comms/terrain-budget family\nthe RM-P1-ALLOC-03 builders add. ``NO_OVERLAP``/``CUMULATIVE`` are the **scheduling** families\nthe compiler emits per capacity-bearing resource (one asset does one task at a time): unlike\nevery other kind they are *not* the linear form ``sum(coefficient * variable) <sense> rhs`` \u2014\neach term names a task's start variable and carries its **interval size** as the coefficient,\nand the family's semantics live in :mod:`astro_mine.allocate.model.ir.schedule` (the one place\nthe CP-SAT lowering, the independent verifier, and the binding-constraint explanation all read\nthem from, so they can never disagree). Every other kind is carried structurally (terms + sense\n+ rhs) so any backend can lower it without knowing its physics.",
+      "enum": [
+        "assignment_cover",
+        "precedence",
+        "time_window",
+        "no_overlap",
+        "cumulative",
+        "linear"
+      ],
+      "title": "ConstraintKind",
+      "type": "string"
+    },
+    "InfeasibilityCertificate": {
+      "additionalProperties": false,
+      "description": "An explanation of *why* no feasible plan exists \u2014 the irreducible infeasible set.\n\nA reserved shape (allocate.md \u00a710): the RM-P1-ALLOC-01 result type carries the *slot* so\na consumer's contract is stable; RM-P1-ALLOC-06 populates the actual IIS. ``constraint_ids``\n/ ``task_ids`` name the irreducible conflicting subset and ``explanation`` the human-readable\nreason (e.g. \"no contact window long enough to relay the haul before the power floor\").",
+      "properties": {
+        "constraint_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraint Ids",
+          "type": "array"
+        },
+        "explanation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Explanation"
+        },
+        "task_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Task Ids",
+          "type": "array"
+        }
+      },
+      "title": "InfeasibilityCertificate",
+      "type": "object"
+    },
+    "ObjectiveContribution": {
+      "additionalProperties": false,
+      "description": "One family's (optionally one task's) contribution to the realized objective (RM-P1-ALLOC-06).\n\n``family`` is the objective-family tag the term carries in the IR metadata\n(``objective_family::{term_id}`` \u2014 e.g. ``roi`` / ``info_gain`` from RM-P1-ALLOC-04, or the\ndefault ``value`` for the structural skeleton); ``value`` is the summed\n``coefficient * variable_value`` of every objective term in that family (and, when a\nper-task breakdown is requested, restricted to ``task_id``). ``task_id`` is ``None`` for a\nfamily-level contribution.",
+      "properties": {
+        "family": {
+          "title": "Family",
+          "type": "string"
+        },
+        "task_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task Id"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "family",
+        "value"
+      ],
+      "title": "ObjectiveContribution",
+      "type": "object"
+    },
+    "ObjectiveDecomposition": {
+      "additionalProperties": false,
+      "description": "The realized objective broken into its per-family contributions (allocate.md \u00a710).\n\nEvery plan ships with *why this objective value* \u2014 the info-gain-vs-ROI split (RM-P1-ALLOC-04)\nand any other objective family, each with its contribution. Computed over the solver-neutral IR\nfrom the same variable-value mapping the feasibility verifier uses, so ``total`` equals the sum\nof the ``contributions`` **and** the plan's ``realized_objective`` by construction \u2014 the\nproperty the RM-P1-ALLOC-06 acceptance test asserts.",
+      "properties": {
+        "contributions": {
+          "items": {
+            "$ref": "#/$defs/ObjectiveContribution"
+          },
+          "title": "Contributions",
+          "type": "array"
+        },
+        "total": {
+          "title": "Total",
+          "type": "number"
+        }
+      },
+      "required": [
+        "total"
+      ],
+      "title": "ObjectiveDecomposition",
+      "type": "object"
+    },
+    "ScheduledTask": {
+      "additionalProperties": false,
+      "description": "One task placed on an asset's timeline: which task, its Core kind, and its window.",
+      "properties": {
+        "end_s": {
+          "title": "End S",
+          "type": "number"
+        },
+        "kind": {
+          "$ref": "#/$defs/TaskKind"
+        },
+        "start_s": {
+          "title": "Start S",
+          "type": "number"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "kind",
+        "start_s",
+        "end_s"
+      ],
+      "title": "ScheduledTask",
+      "type": "object"
+    },
+    "TaskKind": {
+      "description": "Typed task-directive kinds. Grows by RFC as autonomy components (Mind/Allocate)\ndefine the directives they emit (mind.md \u00a71; allocate.md \u00a73).",
+      "enum": [
+        "goto",
+        "sample",
+        "excavate",
+        "haul",
+        "dock",
+        "hop",
+        "charge",
+        "prospect",
+        "deploy",
+        "standby",
+        "custom"
+      ],
+      "title": "TaskKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.astro-mine.org/allocate/v0.1/allocation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The result: a feasible plan (or an infeasibility certificate) plus its explanation.\n\n``status`` is the feasibility/optimality verdict. The feasibility contract is enforced\nstructurally (:meth:`_feasibility_contract`): a feasible status (``OPTIMAL``/``FEASIBLE``)\nMUST carry a ``plan`` and MUST NOT carry a certificate; ``INFEASIBLE`` MUST carry no\n``plan`` (its certificate slot is populated by RM-P1-ALLOC-06); and a result never\ncarries both a plan and a certificate at once. The plan is\n*feasible-by-construction* but Allocate is **not** the safety authority \u2014 the result is\nwrappable directly by Guard, which re-checks every hard constraint independently\n(allocate.md \u00a79).",
+  "properties": {
+    "binding_constraints": {
+      "items": {
+        "$ref": "#/$defs/BindingConstraint"
+      },
+      "title": "Binding Constraints",
+      "type": "array"
+    },
+    "infeasibility_certificate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/InfeasibilityCertificate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "objective_decomposition": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ObjectiveDecomposition"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "optimality_gap": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Optimality Gap"
+    },
+    "plan": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/AssetSchedule"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Plan"
+    },
+    "provenance": {
+      "$ref": "#/$defs/AllocationProvenance"
+    },
+    "realized_objective": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Realized Objective"
+    },
+    "status": {
+      "$ref": "#/$defs/AllocationStatus"
+    }
+  },
+  "required": [
+    "status",
+    "provenance"
+  ],
+  "title": "Allocation",
+  "type": "object"
+}

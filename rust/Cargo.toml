@@ -1,0 +1,64 @@
+[package]
+name = "astro-mine-guard-core"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+license = "Apache-2.0"
+description = "Astro-Mine-Guard trusted safety core (TCB): arbiter + CBF-QP shield + STL/MTL monitors + simplex backup (RM-P1-GUARD-02)."
+repository = "https://github.com/astro-mine/astro-mine-guard"
+publish = false
+
+# Two crate types on purpose (guard.md §4): `rlib` so `cargo test` builds and exercises
+# the pure-Rust TCB with no Python linkage, and `cdylib` so maturin can bundle the same
+# core into the `astro_mine.guard._core` PyO3 extension. The Python binding is gated behind
+# the off-by-default `python` feature so the standalone-on-the-edge path (no Python) is the
+# default build and `cargo test` never needs a Python interpreter to link.
+[lib]
+name = "astro_mine_guard_core"
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+python = ["dep:pyo3"]
+
+[dependencies]
+# Canonical CompiledSafetyModel wire form (compiled_safety_model.proto). The core decodes
+# protobuf bytes directly — the same artifact the Python compiler emits — so the edge build
+# needs no Python. prost is a small, deterministic, allocation-lean runtime.
+prost = "0.13"
+# PyO3 binding (feature-gated). extension-module keeps libpython unlinked so the wheel loads
+# under any compatible interpreter.
+pyo3 = { version = "0.29", features = ["extension-module"], optional = true }
+
+[build-dependencies]
+# Pure-Rust protobuf compiler (no system `protoc` needed — hermetic, reproducible builds,
+# conventions.md §11 CX-REPRO) feeding prost-build's codegen.
+protox = "0.7"
+prost-build = "0.13"
+
+[dev-dependencies]
+# Property-based invariants for the monitors and the CBF filter (guard.md §9.3 — the Rust
+# analogue of the Python side's Hypothesis gate).
+proptest = "1"
+# Test-only: parse Core's shared units conformance vectors (RFC-0007 / RM-P1-CORE-08) in
+# rust/tests/conformance.rs to prove the require_* guards agree with the Python reference. A
+# dev-dependency, so it is NOT linked into the trusted core — the TCB's dependency surface is
+# unchanged (the guards in src/units.rs are pure std token/enum validation).
+serde_json = "1"
+# Independent QP oracle: the bespoke allocation-free active-set filter is cross-validated
+# against Clarabel (the Rust-native solver guard.md §11 recommends) on randomized shield QPs,
+# so the tiny in-TCB solver is proven to agree with a reference optimizer.
+clarabel = "0.9"
+
+[lints.rust]
+# `cargo kani` compiles the crate with `--cfg kani` to pull in the proof harnesses in
+# `src/verify.rs`; an ordinary `cargo build` does not know the name, so declare it here rather
+# than let it fire `unexpected_cfgs` under `-D warnings`.
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(kani)"] }
+
+[profile.release]
+# Deterministic, panic-free safety path: abort (never unwind) so a bug is a hard stop, not a
+# half-caught exception on the control path.
+panic = "abort"
+lto = true
+codegen-units = 1

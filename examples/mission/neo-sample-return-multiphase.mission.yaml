@@ -1,0 +1,58 @@
+# A multi-phase, multi-regime Mission exercising the full reserved RFC-0001 schema:
+# launch -> interplanetary transit -> proximity -> surface -> ascent/return -> Earth
+# interface, with descriptive design-time TrajectoryRef / ManeuverBudget artifacts on the
+# inter-phase legs. Schema-only — NO mechanism executes it; TrajectoryRef carries no
+# actuator/thruster/guidance channels (RFC-0001 R3). Illustrative values only.
+mission_version: "0.1"
+mission:
+  id: astro-mine.mission.neo-sample-return.v1
+  name: NEO Sample Return
+  fleet:
+    - astro-mine.fleet.neo-sep-carrier
+  constraints:
+    launch_capacity_kg: 6000.0
+    export_gated: false
+  phases:
+    - id: launch
+      regime: launch_ascent
+      assets_active: [astro-mine.fleet.neo-sep-carrier]
+      exit: { condition: leo-insertion }
+      legs:
+        - id: leo-to-neo
+          maneuver_budget: { total_delta_v_mps: 4200.0, time_of_flight_s: 1.5e+7, margin_mps: 150.0 }
+          trajectory_ref:
+            id: leo-neo-transfer
+            frame: ECLIPJ2000
+            segments:
+              - { id: departure, start_epoch_tdb_s: 8.0e+8, end_epoch_tdb_s: 8.15e+8 }
+            maneuvers:
+              - epoch_tdb_s: 8.0e+8
+                delta_v_mps: 3200.0
+                direction: { x: 1.0, y: 0.0, z: 0.0 }
+                maneuver_type: low_thrust_arc
+            reference_states:
+              - epoch_tdb_s: 8.0e+8
+                position_m: { x: 1.5e+11, y: 0.0, z: 0.0 }
+                velocity_mps: { x: 0.0, y: 3.0e+4, z: 0.0 }
+            feasibility_margin: 0.12
+    - id: cruise
+      regime: interplanetary_transit
+      environment_ref: transit.heliocentric
+    - id: proximity
+      regime: proximity_orbit
+      environment_ref: astro-mine.world.neo-2016-ho3.v1
+    - id: surface_sampling
+      regime: surface
+      environment_ref: astro-mine.world.neo-2016-ho3.v1
+      assets_active: [astro-mine.fleet.neo-sep-carrier]
+    - id: return
+      regime: ascent_return
+      legs:
+        - id: neo-to-earth
+          maneuver_budget: { total_delta_v_mps: 900.0 }
+    - id: earth_delivery
+      regime: earth_interface
+      exit: { condition: capsule-recovered }
+  provenance:
+    code_version: "0.0.0"
+    seed: 2

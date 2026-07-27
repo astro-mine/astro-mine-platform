@@ -1,0 +1,33 @@
+# A Bench baseline policy plugin (bench#5): a greedy information-gain prospecting
+# policy implementing the Core Policy/Planner API. Example plugin manifest.
+manifest_version: "0.1"
+manifest:
+  name: greedy-prospecting-baseline
+  version: 0.1.0
+  kind: policy
+  license: Apache-2.0
+  description: >-
+    Greedy active-perception baseline: drives agents toward the highest information-gain
+    cells of the ice belief field. The reference policy the anchor scenario scores against.
+  core_interfaces:
+    policy: 0.1.0
+    messages: 0.1.0
+  inputs:
+    - Observation
+  outputs:
+    - ActionBatch
+  capability_tags:
+    - prospecting.neutron
+    - mobility.wheeled
+  regimes:
+    - surface
+  attributes:
+    observation_interface: Observation
+    action_interface: ActionBatch
+  provenance:
+    code_version: 0.1.0
+    env_lockfile: uv.lock
+    digest: "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  signature:
+    scheme: sigstore_cosign
+    value: "MEUCIQDbaseline"

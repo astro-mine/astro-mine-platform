@@ -1,0 +1,89 @@
+# Anchor-scenario objective (RM-P0-CORE-04 acceptance).
+# Binds each success criterion of Scenario 1 (§3) to its Bench metric (§13) with an
+# explicit target + tolerance. Targets are illustrative baselines, not commitments
+# (scenarios/README.md honesty note); SI units throughout.
+objective_version: "0.1"
+objective:
+  id: astro-mine.objective.lunar-polar-ice-prospecting.v1
+  name: Lunar Polar Water-Ice Prospecting & Extraction
+  description: >-
+    Characterize the water-ice resource across a target PSR and produce and store a
+    sustained supply of purified water, surviving the lunar night, under power and
+    comms-window constraints.
+  scenario_ref: astro-mine.scenario.lunar-polar-ice-prospecting.v1
+  labels:
+    scenario: lunar-polar-ice-prospecting
+    site: shackleton-de-gerlache
+
+  success_criteria:
+    - id: water_produced
+      description: Purified water stored, sustained at order-tonnes per lunar day.
+      binding:
+        metric: water_mass_produced
+        unit: kg
+        direction: higher_better
+        target: 1000.0
+        tolerance: 100.0
+        aggregation: mean
+        # "per lunar day": evaluate the target over a rolling ~29.53-day synodic window.
+        evaluation_window: { kind: rolling, duration_s: 2.551e+6 }
+
+    - id: resource_characterized
+      description: Reduction in Prospect ice-field posterior uncertainty over the target PSR.
+      # Achieve-by deadline: characterize within ~30 days of campaign sim time.
+      deadline_s: 2.592e+6
+      binding:
+        metric: information_gain
+        unit: dimensionless
+        direction: higher_better
+        target: 0.5
+        tolerance: 0.05
+        aggregation: mean
+
+    - id: energy_survival
+      description: Lunar nights survived without loss of critical assets.
+      binding:
+        metric: nights_survived
+        unit: count
+        direction: higher_better
+        target: 3.0
+        tolerance: 0.0
+        aggregation: min
+
+    - id: coordination_robustness
+      description: Goal attainment under modeled relay-window / PSR-denial dropout.
+      binding:
+        metric: comms_robustness
+        unit: dimensionless
+        direction: higher_better
+        target: 0.9
+        tolerance: 0.05
+        aggregation: mean
+
+    - id: efficiency
+      description: Energy expended per kg of water produced.
+      binding:
+        metric: energy_per_kg
+        unit: J/kg
+        direction: lower_better
+        target: 5.0e+7
+        tolerance: 5.0e+6
+        aggregation: mean
+
+    - id: psr_area_characterized
+      description: PSR area surveyed to a target confidence.
+      required: false
+      weight: 0.5
+      binding:
+        metric: psr_area_characterized
+        unit: m^2
+        direction: higher_better
+        target: 250000.0
+        tolerance: 25000.0
+        aggregation: mean
+
+  provenance:
+    input_hashes: ["sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    code_version: "0.0.0"
+    toolchain_version: "studio 0.0.0"
+    seed: 1

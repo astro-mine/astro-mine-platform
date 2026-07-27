@@ -1,0 +1,264 @@
+{
+  "headline_speedup": 1.6008769265703846,
+  "is_claim": true,
+  "revalidate_every": 2,
+  "runner": "astro-mine-sim/fidelity-speedup",
+  "scenario_id": "lunar-polar-ice-excavation-fidelity-v1",
+  "scorecard_content_hash": "sha256:30e41e7b9bb1dbc07763dc0ef0d2a2412a2706f27d480c1fb551b3e8ed0172a9",
+  "seeds": [
+    {
+      "admitted": true,
+      "admitted_tolerance": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "declared_error_budget": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "dem": {
+        "advance_wall_clock_s": 4.76548137,
+        "engine": "astro-mine.sim.dem_granular",
+        "mean_step_wall_clock_s": 0.02382740685,
+        "real_time_factor": 2.098423899619611,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "articulated"
+      },
+      "escalated": false,
+      "holds_declared_budget": true,
+      "is_claim": true,
+      "realized_error": {
+        "pos_x": 0.023866345343131423,
+        "pos_z": 0.0281156618719415,
+        "vel_x": 0.5060651271019542,
+        "vel_z": 0.45974427596677736
+      },
+      "seed": 3001,
+      "speedup": 1.4539405862148134,
+      "surrogate": {
+        "advance_wall_clock_s": 3.277631435,
+        "engine": "astro-mine.sim.surrogate.granular",
+        "mean_step_wall_clock_s": 0.016388157175,
+        "real_time_factor": 3.0509836747401122,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "surrogate"
+      },
+      "within_budget": true
+    },
+    {
+      "admitted": true,
+      "admitted_tolerance": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "declared_error_budget": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "dem": {
+        "advance_wall_clock_s": 5.229986958,
+        "engine": "astro-mine.sim.dem_granular",
+        "mean_step_wall_clock_s": 0.02614993479,
+        "real_time_factor": 1.9120506571634184,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "articulated"
+      },
+      "escalated": false,
+      "holds_declared_budget": true,
+      "is_claim": true,
+      "realized_error": {
+        "pos_x": 0.026476437269194658,
+        "pos_z": 0.027019459369150678,
+        "vel_x": 0.656497102777692,
+        "vel_z": 0.5183607084448502
+      },
+      "seed": 3002,
+      "speedup": 1.6008769265703846,
+      "surrogate": {
+        "advance_wall_clock_s": 3.266951301,
+        "engine": "astro-mine.sim.surrogate.granular",
+        "mean_step_wall_clock_s": 0.016334756505000003,
+        "real_time_factor": 3.0609577794866576,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "surrogate"
+      },
+      "within_budget": true
+    },
+    {
+      "admitted": true,
+      "admitted_tolerance": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "declared_error_budget": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "dem": {
+        "advance_wall_clock_s": 5.208179832,
+        "engine": "astro-mine.sim.dem_granular",
+        "mean_step_wall_clock_s": 0.02604089916,
+        "real_time_factor": 1.9200565883993093,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "articulated"
+      },
+      "escalated": false,
+      "holds_declared_budget": true,
+      "is_claim": true,
+      "realized_error": {
+        "pos_x": 0.036822117847368066,
+        "pos_z": 0.025513175607756816,
+        "vel_x": 0.29884013868668735,
+        "vel_z": 0.47831186162606193
+      },
+      "seed": 3003,
+      "speedup": 1.6098505768939901,
+      "surrogate": {
+        "advance_wall_clock_s": 3.235194562,
+        "engine": "astro-mine.sim.surrogate.granular",
+        "mean_step_wall_clock_s": 0.01617597281,
+        "real_time_factor": 3.0910042065037344,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "surrogate"
+      },
+      "within_budget": true
+    },
+    {
+      "admitted": true,
+      "admitted_tolerance": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "declared_error_budget": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "dem": {
+        "advance_wall_clock_s": 5.280804357,
+        "engine": "astro-mine.sim.dem_granular",
+        "mean_step_wall_clock_s": 0.026404021785,
+        "real_time_factor": 1.8936509145135154,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "articulated"
+      },
+      "escalated": false,
+      "holds_declared_budget": true,
+      "is_claim": true,
+      "realized_error": {
+        "pos_x": 0.02988914834817777,
+        "pos_z": 0.027052528977086668,
+        "vel_x": 0.37840287579088094,
+        "vel_z": 0.5064984304316178
+      },
+      "seed": 3004,
+      "speedup": 1.635165692330309,
+      "surrogate": {
+        "advance_wall_clock_s": 3.229522477,
+        "engine": "astro-mine.sim.surrogate.granular",
+        "mean_step_wall_clock_s": 0.016147612385,
+        "real_time_factor": 3.0964330086624154,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "surrogate"
+      },
+      "within_budget": true
+    },
+    {
+      "admitted": true,
+      "admitted_tolerance": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "declared_error_budget": {
+        "pos_x": 0.05919988357430493,
+        "pos_z": 0.06449002294922714,
+        "vel_x": 1.807258240158752,
+        "vel_z": 1.301973705510233
+      },
+      "dem": {
+        "advance_wall_clock_s": 5.336753532,
+        "engine": "astro-mine.sim.dem_granular",
+        "mean_step_wall_clock_s": 0.026683767660000003,
+        "real_time_factor": 1.8737983570045833,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "articulated"
+      },
+      "escalated": false,
+      "holds_declared_budget": true,
+      "is_claim": true,
+      "realized_error": {
+        "pos_x": 0.011064594150278731,
+        "pos_z": 0.020376493303099263,
+        "vel_x": 0.223223858493159,
+        "vel_z": 0.37138321795024903
+      },
+      "seed": 3005,
+      "speedup": 1.573118880477831,
+      "surrogate": {
+        "advance_wall_clock_s": 3.392466773,
+        "engine": "astro-mine.sim.surrogate.granular",
+        "mean_step_wall_clock_s": 0.016962333865000002,
+        "real_time_factor": 2.947707573612249,
+        "sim_time_s": 10.000000000000007,
+        "steps": 200,
+        "tier": "surrogate"
+      },
+      "within_budget": true
+    }
+  ],
+  "spec_hash": "sha256:213ed92189d2054cc5a1cfd9a7e7b100fd87d3c744596bacd398b3dfaf43e3e7",
+  "surrogate": {
+    "content_hash": "sha256:bd1cd3936e2ad3458aecbdee57b7a49d1653cb544cd142fd319bc30d28f36469",
+    "error_report_digest": "sha256:751688d5eaea3196aa21343243fb036af5c4333a2c5e1fc2a8f55cf991717c6c",
+    "name": "excavation-gns",
+    "sampling_policy_hash": "sha256:662b9f058c7a409f4b520eb71e1c8c90aac2204fa54f290983e60696ade16b71",
+    "version": "0.6.0"
+  },
+  "toolchain": {
+    "cpu_count": 16,
+    "packages": {
+      "astro-mine-bench": "0.1.dev25",
+      "astro-mine-core": "0.3.0",
+      "astro-mine-hub": "0.1.dev10",
+      "astro-mine-sim": "0.1.dev26",
+      "astro-mine-worlds": "0.1.dev25",
+      "numpy": "2.5.1",
+      "onnxruntime": "1.27.0"
+    },
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "python": "3.12.3"
+  },
+  "worst_realized_error": {
+    "pos_x": 0.036822117847368066,
+    "pos_z": 0.0281156618719415,
+    "vel_x": 0.656497102777692,
+    "vel_z": 0.5183607084448502
+  }
+}

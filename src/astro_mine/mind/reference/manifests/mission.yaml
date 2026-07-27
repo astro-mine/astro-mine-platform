@@ -1,0 +1,21 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.reference.mission
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference scripted mission planner — assigns each agent a fixed prospect region.
+    A replaceable example (conventions.md §1.3); the PDDL/temporal backend lands in
+    RM-P1-MIND-03.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: mission

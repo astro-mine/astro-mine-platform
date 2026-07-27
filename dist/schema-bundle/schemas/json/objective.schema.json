@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/core/objective/v0.1/objective.schema.json",
+  "title": "Astro-Mine ObjectiveSpec v0.1",
+  "description": "The shared objective contract: an objective plus its binding to Bench metrics (RM-P0-CORE-04; core.md §3; LUNAR-FR-008). Canonical source of truth; the Pydantic models in astro_mine.core.objective.model mirror it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["objective_version", "objective"],
+  "properties": {
+    "objective_version": { "const": "0.1" },
+    "objective": { "$ref": "#/$defs/ObjectiveSpec" }
+  },
+  "$defs": {
+    "MetricDirection": {
+      "enum": ["higher_better", "lower_better"]
+    },
+    "MetricAggregation": {
+      "enum": ["mean", "median", "min", "max", "sum", "p05", "p95"]
+    },
+    "WindowKind": {
+      "enum": ["cumulative", "rolling", "per_phase"]
+    },
+    "EvaluationWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/WindowKind" },
+        "duration_s": { "type": ["number", "null"], "exclusiveMinimum": 0 }
+      }
+    },
+    "Provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "seed": { "type": ["integer", "null"] }
+      }
+    },
+    "MetricBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "unit", "direction", "target", "tolerance"],
+      "properties": {
+        "metric": { "type": "string" },
+        "unit": { "type": "string" },
+        "direction": { "$ref": "#/$defs/MetricDirection" },
+        "target": { "type": "number" },
+        "tolerance": { "type": "number", "minimum": 0.0 },
+        "aggregation": { "$ref": "#/$defs/MetricAggregation" },
+        "threshold": { "type": ["number", "null"] },
+        "evaluation_window": {
+          "oneOf": [{ "$ref": "#/$defs/EvaluationWindow" }, { "type": "null" }]
+        }
+      }
+    },
+    "SuccessCriterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "binding"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "binding": { "$ref": "#/$defs/MetricBinding" },
+        "required": { "type": "boolean" },
+        "weight": { "type": ["number", "null"], "minimum": 0.0 },
+        "deadline_s": { "type": ["number", "null"], "exclusiveMinimum": 0 }
+      }
+    },
+    "ObjectiveSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "success_criteria"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "scenario_ref": { "type": ["string", "null"] },
+        "success_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/SuccessCriterion" }
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "provenance": {
+          "oneOf": [{ "$ref": "#/$defs/Provenance" }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}

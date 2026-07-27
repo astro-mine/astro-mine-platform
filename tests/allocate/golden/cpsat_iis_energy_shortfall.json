@@ -1,0 +1,10 @@
+{
+  "constraint_ids": [
+    "cover::excavate-crater-a",
+    "power::excavator-1"
+  ],
+  "explanation": "CP-SAT proved the composed model infeasible; irreducible infeasible set: cover::excavate-crater-a, power::excavator-1",
+  "task_ids": [
+    "excavate-crater-a"
+  ]
+}

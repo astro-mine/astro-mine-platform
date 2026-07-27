@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/core/provenance/v0.1/run_provenance.schema.json",
+  "title": "Astro-Mine RunProvenance v0.1",
+  "description": "Run-time (execution) provenance: the shared vocabulary a run records so it reproduces — resolved input content hashes, engine/toolchain versions, per-domain fidelity tiers, seeds, and per-tier error-budget outcomes. Distinct from the build-time artifact Provenance schemas (sadf/objective/manifest): those describe how an artifact was produced, this describes how a run executed. Stamped by Sim (RM-P0-SIM-09 MCAP provenance), composed by Cloud's RunContext (RM-P0-CLOUD-03), recorded in Worlds/Bench bundles. Canonical source of truth; the Pydantic models in astro_mine.core.provenance.model mirror it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["run_provenance_version", "run_provenance"],
+  "properties": {
+    "run_provenance_version": { "const": "0.1" },
+    "run_provenance": { "$ref": "#/$defs/RunProvenance" }
+  },
+  "$defs": {
+    "ErrorBudgetOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "within_budget"],
+      "properties": {
+        "name": { "type": "string" },
+        "within_budget": { "type": "boolean" },
+        "tier": { "type": ["string", "null"] },
+        "metric": { "type": ["string", "null"] },
+        "value": { "type": ["number", "null"] },
+        "tolerance": { "type": ["number", "null"] }
+      }
+    },
+    "RunProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": { "type": ["string", "null"] },
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "engine_versions": { "type": "object", "additionalProperties": { "type": "string" } },
+        "fidelity_tiers": { "type": "object", "additionalProperties": { "type": "string" } },
+        "seed": { "type": ["integer", "null"] },
+        "seeds": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "error_budget_outcomes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ErrorBudgetOutcome" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      # Lint only — the migrated sources are copied verbatim from repos that
+      # were not uniformly ruff-format-normalized; reformatting is churn.
+      - run: uv run --group dev ruff check src tests scripts
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Each component runs under its source repo's CI selection.
+          - { comp: core }
+          - { comp: spice }
+          - { comp: seal }
+          - { comp: worlds }
+          - { comp: prospect }
+          - { comp: link }
+          - { comp: fleet }
+          - { comp: sim, marks: "not gpu and not ray and not docker" }
+          - { comp: bench, marks: "not cluster and not gpu" }
+          - { comp: cloud }
+          - { comp: surrogate }
+          - { comp: mind, marks: "not pddl and not native and not slow and not sim" }
+          - { comp: learn, marks: "not slow and not gpu and not cluster" }
+          - { comp: allocate, marks: "not scale" }
+          - { comp: guard, marks: "not sim and not slow" }
+          - { comp: hub, marks: "not integration" }
+          - { comp: studio }
+          - { comp: cli }
+    name: test ${{ matrix.comp }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Sync environment
+        run: uv sync --group dev
+      - name: Run ${{ matrix.comp }} suite
+        run: >
+          uv run python -m pytest tests/${{ matrix.comp }} -ra
+          ${{ matrix.marks && format('-m "{0}"', matrix.marks) || '' }}
+          --cov=astro_mine --cov-report=term
+
+  # The opt-in lanes the source repos ran as dedicated jobs (sim-e2e, cluster,
+  # scale) stay opt-in: trigger manually when the environment provides the
+  # required services/hardware.
+  sim-e2e:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --group dev
+      - run: uv run python -m pytest tests/guard tests/mind -m sim -ra

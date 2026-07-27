@@ -1,0 +1,55 @@
+// Units / frames / time vocabulary v0.1 — canonical Protobuf wire form for the
+// SPICE-shaped frame/CRS/time value types (RM-P1-CORE-07 / RFC-0007). This is the
+// FIRST cross-file import in Core's proto set: messages.proto and mission.proto import
+// it so a frame/epoch/CRS is a typed message on the wire, not a bare string/double.
+// (Vec3/Provenance stay deliberately per-package-duplicated; importing one shared
+// vocabulary file is the point of RFC-0007, not a general relaxation of that rule.)
+//
+// Mirrors the canonical JSON Schema (units/schema/units.schema.json) and the Pydantic
+// models (astro_mine.core.units.model). Closed-vocabulary fields (frame_class, scale)
+// are carried as `string` (the SADF pattern): the type authority is the JSON Schema /
+// Pydantic; proto3's "" default is not a StrEnum member, so an unset vocabulary member
+// is representable-as-invalid and fails the guard; and string<->string keeps the
+// round-trip byte-exact and drift-free (matching observation.capnp's Text encoding). A
+// proto enum would give one Core type two wire encodings (int here, Text on the hot
+// path). Field tags are append-only and never reused (conventions.md §3). The
+// require_frame/require_crs guard rules and the EpochWindow end>start ordering are
+// semantic (RM-P1-CORE-08; conventions.md §5), not expressible here.
+
+syntax = "proto3";
+
+package astro_mine.core.units.v0;
+
+// A named reference frame. `name` is a SPICE frame name (e.g. "MOON_ME", "J2000");
+// `center` is the SPICE body it is centred on, absent for a centre-agnostic sky frame.
+message ReferenceFrame {
+  string name = 1;
+  string frame_class = 2;  // FrameClass (closed vocab as string)
+  optional string center = 3;
+}
+
+// An explicit planetary CRS: the minimum needed to place spatial data without guessing.
+// `reference_radius_m` is the PROJ `+R`; its proto3 default of 0.0 is rejected by
+// require_crs. `projection` carries a PROJ/WKT string for a projected CRS; absent means
+// body-fixed geographic. No field has an Earth default.
+message PlanetaryCRS {
+  string body = 1;
+  string body_fixed_frame = 2;
+  double reference_radius_m = 3;
+  optional string projection = 4;
+  optional string datum = 5;
+}
+
+// An instant in TDB/ET: SI seconds past the J2000 TDB epoch. `scale` is required — an
+// epoch whose scale is the empty default is invalid.
+message Epoch {
+  double tdb_seconds = 1;
+  string scale = 2;  // TimeScale (closed vocab as string)
+}
+
+// A half-open interval [start, end); `end` strictly after `start`. Both fields are
+// message-typed, so absence is detectable and rejected.
+message EpochWindow {
+  Epoch start = 1;
+  Epoch end = 2;
+}

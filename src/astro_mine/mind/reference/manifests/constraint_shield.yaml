@@ -1,0 +1,23 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.reference.constraint_shield
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference enforcing shield — projects actuator velocity setpoints onto a hard
+    speed-magnitude ceiling (a kinematic_limit clause, RFC-0004) and reports the edit
+    through the ReportingShield seam. A replaceable stand-in (conventions.md §1.3) for
+    Guard's PolicyShield (RM-P1-GUARD-03), which binds via the Core registry.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: shield

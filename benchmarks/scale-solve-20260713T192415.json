@@ -1,0 +1,22 @@
+{
+  "benchmark": "scale-solve",
+  "recorded_at": "2026-07-13T19:24:15.399782+00:00",
+  "ortools": "9.10.4067",
+  "allocate": "0.1.dev13",
+  "assets": 25,
+  "tasks": 252,
+  "ir_variables": 3136,
+  "ir_constraints": 1555,
+  "forbidden_pairs": 399,
+  "compile_s": 0.116,
+  "solve_s": 0.594,
+  "deadline_s": 60.0,
+  "status": "optimal",
+  "optimality_gap": 1.3481508688837891e-09,
+  "max_gap": 0.05,
+  "realized_objective": 3693.155631978931,
+  "objective_families": {
+    "cost": -3181.7326922930392,
+    "roi": 6874.888324271966
+  }
+}

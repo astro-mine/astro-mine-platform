@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json",
+  "title": "Astro-Mine units / frames / time vocabulary v0.1",
+  "description": "Canonical JSON Schema for the SPICE-shaped frame/CRS/time value types (RM-P1-CORE-06, RFC-0007): ReferenceFrame, PlanetaryCRS, Epoch, EpochWindow, and the closed FrameClass / TimeScale vocabularies. The hand-written Pydantic models in astro_mine.core.units.model / .enums mirror these $defs (scripts/check_model_drift.py). Token strings use pattern ^\\S+$ (non-empty, whitespace-free) to match units.model._validate_token. Two contracts JSON Schema cannot express are the require_frame/require_crs guard rules and the EpochWindow end>start ordering; those are the conformance-vector contract (RM-P1-CORE-08; conventions.md §5).",
+  "$defs": {
+    "TimeScale": { "enum": ["tdb", "et"] },
+    "FrameClass": { "enum": ["body_fixed", "inertial", "topocentric"] },
+    "ReferenceFrame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "frame_class"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^\\S+$" },
+        "frame_class": { "$ref": "#/$defs/FrameClass" },
+        "center": { "type": ["string", "null"], "pattern": "^\\S+$" }
+      }
+    },
+    "PlanetaryCRS": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["body", "body_fixed_frame", "reference_radius_m"],
+      "properties": {
+        "body": { "type": "string", "pattern": "^\\S+$" },
+        "body_fixed_frame": { "type": "string", "pattern": "^\\S+$" },
+        "reference_radius_m": { "type": "number", "exclusiveMinimum": 0 },
+        "projection": { "type": ["string", "null"] },
+        "datum": { "type": ["string", "null"] }
+      }
+    },
+    "Epoch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tdb_seconds", "scale"],
+      "properties": {
+        "tdb_seconds": { "type": "number" },
+        "scale": { "$ref": "#/$defs/TimeScale" }
+      }
+    },
+    "EpochWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "$ref": "#/$defs/Epoch" },
+        "end": { "$ref": "#/$defs/Epoch" }
+      }
+    }
+  }
+}

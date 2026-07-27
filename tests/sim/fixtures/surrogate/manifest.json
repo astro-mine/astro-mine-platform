@@ -1,0 +1,82 @@
+{
+  "name": "excavation-gns",
+  "version": "0.1.0",
+  "kind": "regime_engine",
+  "core_interfaces": {
+    "env": "0.1.0"
+  },
+  "inputs": [],
+  "outputs": [],
+  "capability_tags": [],
+  "determinism_class": null,
+  "regimes": [],
+  "description": "Learned granular_excavation surrogate 'excavation-gns' — a calibrated fidelity tier carrying a bounded ErrorReport (surrogate.md §3).",
+  "license": "Apache-2.0",
+  "provenance": {
+    "input_hashes": [
+      "sha256:c1bf7f9d518709aa6080cf379c1e70681aebc340d9869fac7f1175b347daea01"
+    ],
+    "code_version": "0.1.0",
+    "toolchain_version": "astro-mine-surrogate 0.1.dev12",
+    "env_lockfile": null,
+    "seed": null,
+    "source_content_hashes": {},
+    "builder_version": null,
+    "digest": "sha256:6ddaec067dcffd3048595d4ae6dcc674cb65f85b0fd4017dd29193fe9806843f"
+  },
+  "signature": {
+    "scheme": "sigstore_cosign",
+    "kind": "cosign_signature",
+    "value": "MEQCIGEferBx+zIX6bd3BfuW8gLhSEhqhuF7o/NpQJDuavAsAiAdb7zcinRyfUHFbgLqHcgXRXVi164uGT7v0F7ippYt5Q==",
+    "payload": "sha256:6ddaec067dcffd3048595d4ae6dcc674cb65f85b0fd4017dd29193fe9806843f",
+    "certificate": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhtctdHUEVA8Qzrexq6DJtGi5fygO\nfrEkpkn9z8F4wUMq3QJFMpT3yqkzE2zK1L4ZNWQILUjmbzGbLEP5ElP1kA==\n-----END PUBLIC KEY-----\n",
+    "digest": null
+  },
+  "signatures": [],
+  "attributes": {
+    "domain": "granular_excavation",
+    "input_channels": [
+      "density",
+      "friction",
+      "restitution",
+      "tool_speed"
+    ],
+    "output_channels": [
+      "pos_x",
+      "pos_z",
+      "vel_x",
+      "vel_z"
+    ],
+    "trust_region": {
+      "bounds": {
+        "density": {
+          "low": 1400.0,
+          "high": 1600.0
+        },
+        "friction": {
+          "low": 0.4,
+          "high": 1.0
+        },
+        "restitution": {
+          "low": 0.2,
+          "high": 0.5
+        },
+        "tool_speed": {
+          "low": 0.05,
+          "high": 0.08
+        }
+      }
+    },
+    "recommended_error_budget": {
+      "pos_x": 0.08887099453075403,
+      "pos_z": 0.12161069477827241,
+      "vel_x": 1.768331278962466,
+      "vel_z": 1.4757888843380558
+    },
+    "budget_horizon_steps": 2,
+    "served_backend": "onnx",
+    "native_graph_fallback": false,
+    "error_report_digest": "sha256:044d019a63c5861f78b7cdf94cb4fe26027defa990a5a088e280783210975f6c",
+    "error_report_media_type": "application/vnd.astro-mine.surrogate.error-report.v1+protobuf"
+  }
+}

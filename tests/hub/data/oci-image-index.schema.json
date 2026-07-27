@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Faithful subset of the OCI Image Index spec v1.1 (github.com/opencontainers/image-spec/blob/main/schema/image-index-schema.json), for hermetic CI validation of the layout's index.json. Authoritative check is the `oras` CI step.",
+  "type": "object",
+  "required": ["schemaVersion", "mediaType", "manifests"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 2 },
+    "mediaType": { "const": "application/vnd.oci.image.index.v1+json" },
+    "manifests": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/descriptor" } },
+    "annotations": { "type": "object", "additionalProperties": { "type": "string" } }
+  },
+  "$defs": {
+    "descriptor": {
+      "type": "object",
+      "required": ["mediaType", "digest", "size"],
+      "properties": {
+        "mediaType": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "size": { "type": "integer", "minimum": 0 },
+        "artifactType": { "type": "string" },
+        "annotations": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+// The distributed field service wire contract (RM-P1-PROSPECT-11; prospect.md §3, §7).
+//
+// A field service serves large shared belief fields and streams belief updates so a distributed
+// swarm sim shares ONE consistent posterior. The server is the single writer for each field; a
+// FieldSnapshot ships the content-addressed prior plus the ordered observation log, and every
+// BeliefUpdate carries the appended observations plus the resulting content hash — so a subscriber
+// reconstructs a byte-identical posterior by replaying the log (the replay property, prospect.md §5),
+// and can fail closed the instant its reconstructed hash diverges from the server's.
+
+syntax = "proto3";
+
+package astro_mine.prospect.service.v1;
+
+// The shared units/frames vocabulary (RM-P1-CORE-07 / RFC-0007). Importing it lets a served field
+// carry a typed ReferenceFrame + PlanetaryCRS on the wire instead of dropping the georeference that
+// FieldMetadata enforces in Python (conventions.md §5). The .proto is vendored under this repo's
+// schemas/proto tree for buf import resolution (Core's wheel ships only the generated units_pb2);
+// `buf generate` targets field_service.proto alone, so the generated binding imports Core's
+// installed astro_mine.core.units._proto.units_pb2 rather than emitting a second copy.
+import "astro_mine/core/units/_proto/units.proto";
+
+// One located, noisy reading — the wire form of a Prospect FieldObservation (belief log entry).
+message Observation {
+  double x_m = 1;
+  double y_m = 2;
+  double z_m = 3;
+  double value = 4;
+  double noise_sigma = 5;  // the sensor likelihood std (strictly positive)
+  double time_s = 6;
+  string sensor = 7;  // optional provenance tag ("" == none)
+  // The registered sensor likelihood the reading was rendered by (prospect.md §3, §6):
+  // "neutron_spectrometer", "nir_reflectance", "gpr", "drill_assay", … . The instrument tag the
+  // belief resolves so it conditions with the same footprint + depth response the reading was
+  // synthesized under; "" == none, i.e. the zero-footprint unit-gain point model. An append-only
+  // field (conventions.md §3 — never renumber or repurpose a tag); it MUST ride the wire, because a
+  // subscriber that dropped it would replay the log under a different likelihood and diverge from
+  // the server's posterior (which the client's fail-closed hash check would then reject).
+  string likelihood = 8;
+}
+
+message FieldRequest {
+  string field_id = 1;
+}
+
+// The replayable state of a shared field: its content-addressed prior bundle plus the ordered log
+// conditioned into the current posterior. A client rebuilds the exact BeliefField from these.
+message FieldSnapshot {
+  string field_id = 1;
+  bytes prior_bundle = 2;  // the deterministic resource-field bundle of the prior (BUNDLE_MEDIA_TYPE)
+  repeated Observation observations = 3;  // the ordered log so far
+  string content_hash = 4;  // the posterior's content address
+  uint64 revision = 5;  // observation batches applied so far
+  // The field's georeference — the query ReferenceFrame and explicit PlanetaryCRS that
+  // FieldMetadata binds (field/metadata.py). Additive typed fields (RFC-0007 Design §2); no
+  // existing tag moves. A served ResourceField carries its frame/CRS so a non-Python subscriber
+  // places the belief field without re-deriving the vocabulary.
+  astro_mine.core.units.v0.ReferenceFrame frame = 6;
+  astro_mine.core.units.v0.PlanetaryCRS crs = 7;
+}
+
+message ObservationBatch {
+  string field_id = 1;
+  repeated Observation observations = 2;
+}
+
+message UpdateAck {
+  string field_id = 1;
+  string content_hash = 2;  // the posterior's content address after applying the batch
+  uint64 revision = 3;
+  uint64 applied = 4;  // observations appended by this call
+}
+
+message SubscribeRequest {
+  string field_id = 1;
+  uint64 from_revision = 2;  // catch up from this revision (0 == from the beginning)
+}
+
+// One increment of the shared posterior: the observations appended at `revision`, with the
+// resulting content hash so a subscriber verifies it stayed in lockstep with the server.
+message BeliefUpdate {
+  string field_id = 1;
+  repeated Observation observations = 2;
+  string content_hash = 3;
+  uint64 revision = 4;
+}
+
+service FieldService {
+  // Fetch the current replayable state of a shared field.
+  rpc GetField(FieldRequest) returns (FieldSnapshot);
+  // Append observations to a field's ordered log; the server re-conditions the one posterior.
+  rpc SubmitObservations(ObservationBatch) returns (UpdateAck);
+  // Stream belief updates (catch-up + live) so a distributed sim tracks the one posterior.
+  rpc StreamBeliefUpdates(SubscribeRequest) returns (stream BeliefUpdate);
+}

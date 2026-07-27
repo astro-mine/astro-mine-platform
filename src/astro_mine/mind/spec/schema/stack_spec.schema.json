@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/mind/stack_spec/v0.1/stack_spec.schema.json",
+  "title": "Astro-Mine Mind StackSpec v0.1",
+  "description": "The declarative autonomy-stack contract (RM-P1-MIND-01; mind.md §3): which registry plugin fills each tier, how the tiers wire, the mandatory Guard shield, validity horizons, replan triggers, and fallbacks. Canonical source of truth; the Pydantic models in astro_mine.mind.spec.model mirror it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["stack_spec_version", "stack_spec"],
+  "properties": {
+    "stack_spec_version": { "const": "0.1" },
+    "stack_spec": { "$ref": "#/$defs/StackSpec" }
+  },
+  "$defs": {
+    "TierRole": {
+      "enum": ["mission", "allocator", "tamp", "control"]
+    },
+    "ReplanTriggerKind": {
+      "enum": ["plan_expired", "periodic", "on_fallback", "comms_lost"]
+    },
+    "ExecutionKind": {
+      "enum": ["composition", "behavior_tree"]
+    },
+    "CoordinationKind": {
+      "enum": ["centralized", "decentralized", "hybrid"]
+    },
+    "SpecProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "seed": { "type": ["integer", "null"] }
+      }
+    },
+    "ReplanTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/ReplanTriggerKind" },
+        "every_ticks": { "type": ["integer", "null"], "exclusiveMinimum": 0 }
+      }
+    },
+    "FallbackBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plugin"],
+      "properties": {
+        "plugin": { "type": "string" },
+        "params": { "type": "object" }
+      }
+    },
+    "TierBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "plugin"],
+      "properties": {
+        "role": { "$ref": "#/$defs/TierRole" },
+        "plugin": { "type": "string" },
+        "params": { "type": "object" },
+        "validity_horizon_s": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+        "replan_triggers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ReplanTrigger" }
+        },
+        "fallback": {
+          "oneOf": [{ "$ref": "#/$defs/FallbackBinding" }, { "type": "null" }]
+        }
+      }
+    },
+    "ShieldBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plugin"],
+      "properties": {
+        "plugin": { "type": "string" },
+        "params": { "type": "object" }
+      }
+    },
+    "ExecutionSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "$ref": "#/$defs/ExecutionKind" },
+        "behavior_tree_ref": { "type": ["string", "null"] }
+      }
+    },
+    "CoordinationSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "$ref": "#/$defs/CoordinationKind" }
+      }
+    },
+    "StackSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "tiers", "shield"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "scenario_ref": { "type": ["string", "null"] },
+        "execution": { "$ref": "#/$defs/ExecutionSpec" },
+        "coordination": { "$ref": "#/$defs/CoordinationSpec" },
+        "tiers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/TierBinding" }
+        },
+        "shield": { "$ref": "#/$defs/ShieldBinding" },
+        "provenance": {
+          "oneOf": [{ "$ref": "#/$defs/SpecProvenance" }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}

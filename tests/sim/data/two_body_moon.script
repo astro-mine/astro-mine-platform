@@ -1,0 +1,43 @@
+%% Two-body lunar orbit - the RM-P0-SIM-10 orbital regression reference (point-mass Luna only).
+%%
+%% GMAT propagates a spacecraft under Luna point-mass gravity in a Moon-centred inertial frame and
+%% reports its position over one orbit. astro-mine-sim's OrbitalEngine (a two-body RK4 propagator)
+%% is regressed against this flight-grade oracle within an explicit error budget (sim.md S2.9, S10).
+%% The test overrides the initial Cartesian state and reads Luna.Mu so the engine and GMAT share an
+%% identical gravitational parameter; units here are km and km/s (GMAT's), converted in the test.
+
+Create CoordinateSystem MoonInertial;
+GMAT MoonInertial.Origin = Luna;
+GMAT MoonInertial.Axes = MJ2000Eq;
+
+Create Spacecraft Sat;
+GMAT Sat.CoordinateSystem = MoonInertial;
+GMAT Sat.DateFormat = TAIModJulian;
+GMAT Sat.Epoch = 21545;
+GMAT Sat.X = 1837.4;
+GMAT Sat.Y = 0;
+GMAT Sat.Z = 0;
+GMAT Sat.VX = 0;
+GMAT Sat.VY = 1.6335;
+GMAT Sat.VZ = 0;
+
+Create ForceModel FM;
+GMAT FM.CentralBody = Luna;
+GMAT FM.PointMasses = {Luna};
+GMAT FM.Drag = None;
+GMAT FM.SRP = Off;
+
+Create Propagator Prop;
+GMAT Prop.FM = FM;
+GMAT Prop.Type = RungeKutta89;
+GMAT Prop.InitialStepSize = 60;
+GMAT Prop.MaxStep = 60;
+
+Create ReportFile R;
+GMAT R.Filename = 'two_body_moon.report';
+GMAT R.WriteHeaders = true;
+GMAT R.WriteReport = true;
+GMAT R.Add = {Sat.ElapsedSecs, Sat.MoonInertial.X, Sat.MoonInertial.Y, Sat.MoonInertial.Z};
+
+BeginMissionSequence;
+Propagate Prop(Sat) {Sat.ElapsedSecs = 7020};

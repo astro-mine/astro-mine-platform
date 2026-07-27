@@ -1,0 +1,22 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.reference.tamp
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference scripted task-and-motion planner — turns an assigned prospect region into a
+    GOTO toward its centre. A replaceable example; the OMPL/PDDLStream backend lands in
+    RM-P1-MIND-03.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: tamp

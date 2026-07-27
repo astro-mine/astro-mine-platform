@@ -1,0 +1,20 @@
+{{- if .Values.observability.enabled }}
+# Observability wiring for the platform control plane: a Prometheus ServiceMonitor so the
+# submission edge's OpenTelemetry/Prometheus metrics are scraped alongside the Kueue/Argo/Ray
+# and DCGM GPU exporters (cloud.md §10). Requires the Prometheus Operator (kube-prometheus-stack).
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: astro-mine-cloud-control-plane
+  namespace: {{ include "astro-mine-cloud.namespace" . }}
+  labels:
+    {{- include "astro-mine-cloud.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: astro-mine
+      app.kubernetes.io/component: control-plane
+  endpoints:
+    - port: metrics
+      interval: 30s
+{{- end }}

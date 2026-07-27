@@ -1,0 +1,76 @@
+{
+  "channels": [
+    {
+      "categorical": {
+        "accuracy": 0.97,
+        "classes": [
+          "shadow",
+          "lit"
+        ],
+        "reliability": [
+          {
+            "empirical": 0.9,
+            "nominal": 0.9
+          }
+        ]
+      },
+      "channel": "visibility",
+      "kind": "categorical"
+    },
+    {
+      "channel": "solar_flux_w_m2",
+      "continuous": {
+        "coverage": [
+          {
+            "empirical": 0.9,
+            "nominal": 0.9
+          }
+        ],
+        "rmse": 12.0,
+        "tail": {
+          "max_abs_error": 60.0,
+          "p95_abs_error": 20.0,
+          "p99_abs_error": 35.0
+        },
+        "unit": "W/m^2"
+      },
+      "kind": "continuous"
+    }
+  ],
+  "domain": "illumination_field",
+  "oracle": {
+    "producer": "astro-mine-worlds",
+    "producer_version": "0.1.0"
+  },
+  "rollout": null,
+  "substitution_policy": {
+    "escalate_on_ood": true,
+    "recommended_error_budget": {
+      "solar_flux_w_m2": 15.0,
+      "visibility": 0.03
+    }
+  },
+  "surrogate_name": "shackleton-illumination-fixture",
+  "surrogate_version": "0.1.0",
+  "trust_region": {
+    "bounds": {
+      "easting_m": {
+        "high": 1000000.0,
+        "low": -1000000.0
+      },
+      "epoch_s": {
+        "high": 1000000000000.0,
+        "low": 0.0
+      },
+      "northing_m": {
+        "high": 1000000.0,
+        "low": -1000000.0
+      },
+      "sun_elevation_deg": {
+        "high": 90.0,
+        "low": -90.0
+      }
+    }
+  },
+  "validation_dataset_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}

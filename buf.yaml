@@ -1,0 +1,24 @@
+# buf module config (RM-P0-CORE-07). The canonical .proto sources live under
+# schemas/proto; buf lints them, gates breaking changes against main in CI, and
+# generates the multi-language bindings (see buf.gen.yaml).
+version: v2
+modules:
+  - path: schemas/proto
+lint:
+  use:
+    - STANDARD
+  except:
+    # The Core layout keeps each interface's wire form in a `<comp>/_proto/`
+    # directory (so generated bindings land at astro_mine.core.<comp>._proto.*,
+    # the import path downstream already builds against). That deliberately
+    # diverges from buf's package==directory convention; restructuring would
+    # break the frozen, already-published import paths for no wire-level gain.
+    - PACKAGE_DIRECTORY_MATCH
+    # Core interfaces are versioned pre-1.0 during Phase 0 (`.v0`, matching each
+    # JSON Schema $id `.../v0/...` and the per-interface SemVer scheme in
+    # core.md §11). buf's version-suffix rule only accepts `v1`+, so it is
+    # waived until interfaces reach v1 (the Phase-0 freeze, core.md §12).
+    - PACKAGE_VERSION_SUFFIX
+breaking:
+  use:
+    - FILE

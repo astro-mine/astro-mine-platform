@@ -1,0 +1,25 @@
+Astro-Mine-Cloud platform installed (chart {{ .Chart.Version }}).
+
+Execution engines available:
+{{- if index .Values "kuberay-operator" "enabled" }}
+  - Ray / KubeRay   : RayJob / RayCluster for tightly-coupled work (RL, actor fleets, solves)
+{{- end }}
+{{- if index .Values "argo-workflows" "enabled" }}
+  - Argo Workflows  : DAG / fan-out batch sweeps
+{{- end }}
+  - Kubernetes Jobs : trivial one-shots (always available, no operator)
+
+{{- if index .Values "kueue" "enabled" }}
+Queueing/quotas/fair-share: Kueue.
+{{- end }}
+{{- if index .Values "gpu-operator" "enabled" }}
+GPU: NVIDIA GPU Operator (MIG partitioning + DCGM telemetry).
+{{- end }}
+{{- if .Values.admission.enabled }}
+Admission: cosign-verified-images-only (Kyverno ClusterPolicy "require-signed-images").
+{{- end }}
+
+Submit from the same call site as a laptop -- only the backend selector differs:
+  astro-mine-cloud submit job.json --backend cluster
+
+Docs: https://github.com/astro-mine/docs/blob/main/architecture/cloud.md

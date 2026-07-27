@@ -1,0 +1,9 @@
+# The smallest valid PolicyPackage: a name, a version, and the content-addressed ONNX
+# model it describes. The I/O signature, assumptions, declared Core interfaces, and
+# provenance are all optional — a producer fills them as the export resolves.
+policy_package_version: "0.1"
+policy_package:
+  name: minimal-policy
+  version: 0.0.1
+  onnx_model:
+    digest: sha256:3333333333333333333333333333333333333333333333333333333333333333

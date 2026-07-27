@@ -1,0 +1,32 @@
+# kind / k3s dev profile -- exercise the *same* charts on a laptop cluster in CI (cloud.md §7).
+# The engines and queueing install; GPU and the heavy observability stack stay off so a
+# single-node kind cluster comes up fast. Distinct from the dependency-free local tier, which
+# needs no Kubernetes at all.
+kuberay-operator:
+  enabled: true
+
+argo-workflows:
+  enabled: true
+  server:
+    enabled: false  # no UI on a throwaway CI cluster
+
+kueue:
+  enabled: true
+
+gpu-operator:
+  enabled: false  # no GPUs in kind/k3s CI
+
+kube-prometheus-stack:
+  enabled: false  # too heavy for a single-node CI cluster
+
+loki:
+  enabled: false
+
+admission:
+  enabled: false  # Kyverno not installed in the minimal CI profile
+
+observability:
+  enabled: false
+
+kyverno:
+  enabled: false  # no admission controller in the minimal CI profile

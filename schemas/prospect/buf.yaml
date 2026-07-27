@@ -1,0 +1,26 @@
+# buf module config (RM-P1-PROSPECT-11). The canonical .proto sources live under
+# schemas/proto; buf lints them, gates breaking changes, and generates the Python
+# bindings (see buf.gen.yaml). Mirrors astro-mine-allocate / astro-mine-core.
+version: v2
+modules:
+  - path: schemas/proto
+lint:
+  use:
+    - STANDARD
+  except:
+    # Prospect keeps its wire form under `.../service/_proto/` so generated bindings land at
+    # astro_mine.prospect.service._proto.* — the import path astro_mine.prospect.service.server /
+    # client build against. That diverges from buf's package==directory convention deliberately.
+    - PACKAGE_DIRECTORY_MATCH
+    # The service interface is versioned pre-1.0 during Phase 1 (`.v1` package tag is a wire
+    # namespace, not a frozen interface). buf's version-suffix rule is waived to match allocate/core
+    # until the Phase-0/1 interface freeze.
+    - PACKAGE_VERSION_SUFFIX
+    # RPCs stream FieldSnapshot/BeliefUpdate; buf's RPC request/response standalone-message rule is
+    # waived because the service reuses FieldRequest/ObservationBatch across calls by design.
+    - RPC_REQUEST_STANDARD_NAME
+    - RPC_RESPONSE_STANDARD_NAME
+    - RPC_REQUEST_RESPONSE_UNIQUE
+breaking:
+  use:
+    - FILE

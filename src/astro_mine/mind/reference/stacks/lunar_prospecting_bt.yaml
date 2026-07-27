@@ -1,0 +1,23 @@
+stack_spec_version: "0.1"
+stack_spec:
+  id: reference-lunar-prospecting-bt
+  name: Reference lunar-polar prospecting stack (behavior-tree execution)
+  description: >-
+    The reference three-tier stack executed by a Groot-compatible behavior tree
+    (RM-P1-MIND-02) instead of direct composition: the same mission/TAMP/control reference
+    tiers, sequenced and guarded by trees/lunar_prospecting.bt.xml, whose Fallback branch
+    degrades to a safe-idle standby when the control tier has no fresh input. A replaceable
+    example; swap the BT or the tiers via the registry without touching the framework.
+  scenario_ref: lunar-polar-prospecting
+  execution:
+    kind: behavior_tree
+    behavior_tree_ref: trees/lunar_prospecting.bt.xml
+  tiers:
+    - role: mission
+      plugin: mind.reference.mission
+    - role: tamp
+      plugin: mind.reference.tamp
+    - role: control
+      plugin: mind.reference.control
+  shield:
+    plugin: mind.reference.shield

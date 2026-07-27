@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/guard/spec/v0.1/safety_spec.schema.json",
+  "title": "Astro-Mine SafetySpec v0.1",
+  "description": "The Guard-owned safety contract: hard constraints (keep-out, power/energy floors, thermal/torque ceilings, kinematic limits, STL/MTL temporal clauses) an authored SafetySpec declares and the constraint compiler lowers (RM-P1-GUARD-01; guard.md §3, §5). Canonical source of truth; the Pydantic models in astro_mine.guard.spec.model mirror it. Additive-only, RFC-gated (a safety contract).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["safety_version", "safety"],
+  "properties": {
+    "safety_version": { "const": "0.1" },
+    "safety": { "$ref": "#/$defs/SafetySpec" }
+  },
+  "$defs": {
+    "ConstraintKind": {
+      "enum": [
+        "keep_out",
+        "power_floor",
+        "energy_floor",
+        "thermal_ceiling",
+        "thermal_floor",
+        "torque_ceiling",
+        "kinematic_limit",
+        "temporal"
+      ]
+    },
+    "PredicateOp": {
+      "enum": ["lt", "le", "gt", "ge"]
+    },
+    "TemporalOp": {
+      "enum": ["predicate", "not", "and", "or", "always", "eventually", "until"]
+    },
+    "OnUncertain": {
+      "enum": ["fallback", "hold", "safe_state"]
+    },
+    "SignalSource": {
+      "enum": ["observation", "sadf", "worlds", "derived"]
+    },
+    "GeometryKind": {
+      "enum": ["box", "sphere", "half_space"]
+    },
+    "Vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "Volume": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "center_m", "dimensions_m"],
+      "properties": {
+        "frame": { "type": "string", "pattern": "^\\S+$" },
+        "center_m": { "$ref": "#/$defs/Vec3" },
+        "dimensions_m": { "$ref": "#/$defs/Vec3" },
+        "frame_ref": {
+          "oneOf": [
+            { "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "SignalRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "unit", "source"],
+      "properties": {
+        "key": { "type": "string" },
+        "unit": { "type": "string" },
+        "source": { "$ref": "#/$defs/SignalSource" },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+    "Interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lo", "hi"],
+      "properties": {
+        "lo": { "type": "number", "minimum": 0.0 },
+        "hi": { "type": "number", "minimum": 0.0 }
+      }
+    },
+    "KeepOutSphere": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "center_m", "radius_m"],
+      "properties": {
+        "frame": { "type": "string", "pattern": "^\\S+$" },
+        "center_m": { "$ref": "#/$defs/Vec3" },
+        "radius_m": { "type": "number", "exclusiveMinimum": 0.0 },
+        "frame_ref": {
+          "oneOf": [
+            { "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "KeepOutHalfSpace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "normal", "offset_m"],
+      "properties": {
+        "frame": { "type": "string", "pattern": "^\\S+$" },
+        "normal": { "$ref": "#/$defs/Vec3" },
+        "offset_m": { "type": "number" },
+        "frame_ref": {
+          "oneOf": [
+            { "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "KeepOutVolume": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape"],
+      "properties": {
+        "shape": { "$ref": "#/$defs/GeometryKind" },
+        "box": { "oneOf": [{ "$ref": "#/$defs/Volume" }, { "type": "null" }] },
+        "sphere": { "oneOf": [{ "$ref": "#/$defs/KeepOutSphere" }, { "type": "null" }] },
+        "half_space": { "oneOf": [{ "$ref": "#/$defs/KeepOutHalfSpace" }, { "type": "null" }] }
+      }
+    },
+    "STLFormula": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op"],
+      "properties": {
+        "op": { "$ref": "#/$defs/TemporalOp" },
+        "signal": { "type": ["string", "null"] },
+        "cmp": { "oneOf": [{ "$ref": "#/$defs/PredicateOp" }, { "type": "null" }] },
+        "threshold": { "type": ["number", "null"] },
+        "interval_s": { "oneOf": [{ "$ref": "#/$defs/Interval" }, { "type": "null" }] },
+        "args": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/STLFormula" }
+        }
+      }
+    },
+    "KeepOutConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["volume", "margin_m"],
+      "properties": {
+        "volume": { "$ref": "#/$defs/KeepOutVolume" },
+        "margin_m": { "type": "number", "minimum": 0.0 },
+        "collision_pair": {
+          "oneOf": [
+            { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "PowerFloorConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "floor_w"],
+      "properties": {
+        "signal": { "type": "string" },
+        "floor_w": { "type": "number" }
+      }
+    },
+    "EnergyFloorConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "floor_j"],
+      "properties": {
+        "signal": { "type": "string" },
+        "floor_j": { "type": "number" }
+      }
+    },
+    "ThermalCeilingConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "limit_k"],
+      "properties": {
+        "signal": { "type": "string" },
+        "limit_k": { "type": "number" }
+      }
+    },
+    "ThermalFloorConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "limit_k"],
+      "properties": {
+        "signal": { "type": "string" },
+        "limit_k": { "type": "number" }
+      }
+    },
+    "TorqueCeilingConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "max_nm"],
+      "properties": {
+        "signal": { "type": "string" },
+        "max_nm": { "type": "number", "exclusiveMinimum": 0.0 }
+      }
+    },
+    "KinematicLimitConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal"],
+      "properties": {
+        "signal": { "type": "string" },
+        "max_velocity_mps": { "type": ["number", "null"], "minimum": 0.0 },
+        "max_accel_mps2": { "type": ["number", "null"], "minimum": 0.0 }
+      }
+    },
+    "TemporalConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formula"],
+      "properties": {
+        "formula": { "$ref": "#/$defs/STLFormula" }
+      }
+    },
+    "Constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/ConstraintKind" },
+        "id": { "type": "string" },
+        "on_uncertain": { "$ref": "#/$defs/OnUncertain" },
+        "description": { "type": ["string", "null"] },
+        "keep_out": { "oneOf": [{ "$ref": "#/$defs/KeepOutConstraint" }, { "type": "null" }] },
+        "power_floor": { "oneOf": [{ "$ref": "#/$defs/PowerFloorConstraint" }, { "type": "null" }] },
+        "energy_floor": { "oneOf": [{ "$ref": "#/$defs/EnergyFloorConstraint" }, { "type": "null" }] },
+        "thermal_ceiling": {
+          "oneOf": [{ "$ref": "#/$defs/ThermalCeilingConstraint" }, { "type": "null" }]
+        },
+        "thermal_floor": {
+          "oneOf": [{ "$ref": "#/$defs/ThermalFloorConstraint" }, { "type": "null" }]
+        },
+        "torque_ceiling": {
+          "oneOf": [{ "$ref": "#/$defs/TorqueCeilingConstraint" }, { "type": "null" }]
+        },
+        "kinematic_limit": {
+          "oneOf": [{ "$ref": "#/$defs/KinematicLimitConstraint" }, { "type": "null" }]
+        },
+        "temporal": { "oneOf": [{ "$ref": "#/$defs/TemporalConstraint" }, { "type": "null" }] }
+      }
+    },
+    "Provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "seed": { "type": ["integer", "null"] }
+      }
+    },
+    "SafePose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "position_m"],
+      "properties": {
+        "frame": { "type": "string", "pattern": "^\\S+$" },
+        "position_m": { "$ref": "#/$defs/Vec3" },
+        "frame_ref": {
+          "oneOf": [
+            { "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "AdmissibleDirectives": {
+      "description": "The discrete MODE/TASK directives this contract certifies, by enumeration (RFC-0004 Amendment 2). A directive carries no continuous quantity to project, so the shield cannot *correct* it -- it can only certify it against a reviewed allowlist, and an admitted directive is re-emitted untouched. That makes the grant a safety decision, so it is authored here, content-addressed and signed with the rest of the contract, rather than in deployment configuration. The gate's effective allowlist is `spec INTERSECT config`: CoreConfig.action_policy may only ever *narrow* this grant, never widen it. **Absent (or empty) => the contract admits NO directive** -- silence grants nothing (the identity of a permission set's meet is the empty set, not `config stands`; contrast an absent kinematic_limit ceiling, whose identity is +inf).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "modes": {
+          "description": "Pre-certified ModeCommand.mode names. An open vocabulary: a mode name is a free string matching a SADF asset's loads_by_mode profile -- which is the power/thermal load profile the survival floors are stated against, and is why a MODE switch is a safety-relevant permission.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tasks": {
+          "description": "Pre-certified TaskDirective.task_kind values -- Core's closed TaskKind vocabulary, `$ref`d by its published `$id` (RFC-0009 §1), so an unknown task is refused at authoring time.",
+          "type": "array",
+          "items": { "$ref": "https://schemas.astro-mine.org/core/messages/v0.1/messages.schema.json#/$defs/TaskKind" }
+        }
+      }
+    },
+    "SafetySpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "constraints"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "scenario_ref": { "type": ["string", "null"] },
+        "signals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/SignalRef" }
+        },
+        "constraints": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/Constraint" }
+        },
+        "provenance": {
+          "oneOf": [{ "$ref": "#/$defs/Provenance" }, { "type": "null" }]
+        },
+        "safe_pose": {
+          "oneOf": [{ "$ref": "#/$defs/SafePose" }, { "type": "null" }]
+        },
+        "admissible_directives": {
+          "oneOf": [{ "$ref": "#/$defs/AdmissibleDirectives" }, { "type": "null" }]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+%% Ground-station contact windows -- the RM-P0-LINK-05 external-oracle pass-time reference.
+%% (ASCII only: GMAT rejects non-ASCII script characters.)
+%%
+%% GMAT propagates a LEO spacecraft under Earth point-mass gravity, reports the station contact
+%% (rise/set) windows via a ContactLocator, and exports the propagated orbit as a SPICE SPK.
+%% astro-mine-link's dsn_contact_windows is regressed against GMAT's pass times: the test reads
+%% BOTH the ContactLocator report (the oracle) and the exported SPK (the shared ephemeris), then
+%% recomputes the windows from the same SPK + GMAT's DE/LSK/PCK kernels and cross-checks the
+%% rise/set times within an explicit budget (see link.md sec 10).
+%%
+%% Geometry is matched deliberately: light-time and stellar aberration are OFF (the test uses
+%% abcorr='NONE'), and the station is a simple spherical-Earth site (the Phase-0 model). The
+%% residual -- a few seconds, bounded by the spherical-station + analytic-frame approximation --
+%% is what the budget covers. Output filenames are RELATIVE so gmat-run drops them in its
+%% working dir.
+
+Create Spacecraft Sat;
+Sat.DateFormat = UTCGregorian;
+Sat.Epoch = '01 Jun 2004 00:00:00.000';
+Sat.CoordinateSystem = EarthMJ2000Eq;
+Sat.DisplayStateType = Keplerian;
+Sat.SMA = 7191.9;
+Sat.ECC = 0.02;
+Sat.INC = 56.7;
+Sat.RAAN = 306.6;
+Sat.AOP = 314.2;
+Sat.TA = 99.9;
+Sat.NAIFId = -10001;
+
+Create ForceModel FM;
+FM.CentralBody = Earth;
+FM.PointMasses = {Earth};
+FM.Drag = None;
+FM.SRP = Off;
+
+Create Propagator Prop;
+Prop.FM = FM;
+Prop.Type = RungeKutta89;
+Prop.InitialStepSize = 30;
+Prop.MaxStep = 30;
+
+Create GroundStation DSS;
+DSS.CentralBody = Earth;
+DSS.StateType = Spherical;
+DSS.Location1 = 35.3;
+DSS.Location2 = 243.1;
+DSS.Location3 = 0.0;
+DSS.MinimumElevationAngle = 10;
+
+Create ContactLocator CL;
+CL.Target = Sat;
+CL.Filename = 'contacts.txt';
+CL.InputEpochFormat = 'UTCGregorian';
+CL.InitialEpoch = '01 Jun 2004 00:05:00.000';
+CL.FinalEpoch = '01 Jun 2004 23:55:00.000';
+CL.StepSize = 10;
+CL.UseLightTimeDelay = false;
+CL.UseStellarAberration = false;
+CL.WriteReport = true;
+CL.RunMode = Automatic;
+CL.UseEntireInterval = true;
+CL.Observers = {DSS};
+
+Create EphemerisFile Eph;
+Eph.Spacecraft = Sat;
+Eph.Filename = 'sat.bsp';
+Eph.FileFormat = SPK;
+Eph.StepSize = 10;
+
+BeginMissionSequence;
+Propagate Prop(Sat){Sat.ElapsedDays = 1.0};

@@ -1,0 +1,180 @@
+# Scenario 1 (lunar polar ice prospecting) — scout / prospector rover.
+# Active-perception prospecting in permanently shadowed regions: neutron, NIR, GPR, and
+# drill-assay sensing on a four-wheel chassis, with a relay radio for comms-denied PSR work.
+# Low-fi massmodel → kinematic → articulated under one identity. Illustrative values.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.prospecting-rover
+    name: Prospecting Rover
+    version: 0.1.0
+    kind: rover
+    description: >-
+      Active-perception prospecting rover for permanently shadowed regions: neutron, NIR,
+      GPR, and drill-assay sensing with a drill, on a four-wheel chassis.
+    labels:
+      scenario: lunar-polar-ice-prospecting
+      site: shackleton-de-gerlache
+
+  capabilities:
+    - mobility.wheeled
+    - prospecting.neutron
+    - prospecting.nir
+    - prospecting.gpr
+    - prospecting.drill_assay
+    - excavation.drill
+    - sensing.imaging
+    - sensing.imu
+    - sensing.odometry
+    - comms.relay
+    - power.generation
+    - power.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+
+  root_frame: body
+  frames:
+    - name: body
+    - name: sensor_mast
+      parent: body
+      transform:
+        translation_m: { x: 0.0, y: 0.0, z: 1.1 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+    - name: wheel_front_left
+      parent: body
+      transform:
+        translation_m: { x: 0.5, y: 0.4, z: 0.25 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+    - name: drill
+      parent: body
+      transform:
+        translation_m: { x: 0.4, y: 0.0, z: 0.2 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+
+  bodies:
+    - name: chassis
+      frame: body
+      mass_kg: 180.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.35 }
+      inertia_kg_m2: { ixx: 28.0, iyy: 34.0, izz: 22.0 }
+    - name: wheel_front_left
+      frame: wheel_front_left
+      mass_kg: 9.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.0 }
+      inertia_kg_m2: { ixx: 0.12, iyy: 0.20, izz: 0.12 }
+    - name: drill_head
+      frame: drill
+      mass_kg: 6.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: -0.1 }
+      inertia_kg_m2: { ixx: 0.05, iyy: 0.05, izz: 0.02 }
+
+  joints:
+    - name: wheel_fl
+      type: continuous
+      parent_body: chassis
+      child_body: wheel_front_left
+      axis: { x: 0.0, y: 1.0, z: 0.0 }
+      limits: { velocity_rad_s: 6.0, effort_nm: 40.0 }
+    - name: drill_z
+      type: prismatic
+      parent_body: chassis
+      child_body: drill_head
+      axis: { x: 0.0, y: 0.0, z: 1.0 }
+      limits:
+        position_rad: { min: -0.5, max: 0.0 }
+        effort_nm: 120.0
+
+  actuators:
+    - { name: drive_fl, target_joint: wheel_fl, torque_nm: 40.0, velocity: 6.0, power_draw_w: 25.0 }
+    - { name: drill_motor, target_joint: drill_z, force_n: 800.0, power_draw_w: 90.0 }
+
+  power:
+    sources:
+      - { name: body_solar, kind: solar, nominal_power_w: 210.0 }
+      - { name: rhu_pack, kind: rhu, nominal_power_w: 8.0 }
+    storage:
+      - { name: main_battery, capacity_j: 3.6e+6, max_charge_w: 150.0, max_discharge_w: 300.0 }
+    floor_w: 25.0
+    loads_by_mode:
+      - { mode: idle, power_w: 30.0 }
+      - { mode: drive, power_w: 120.0 }
+      - { mode: prospect, power_w: 95.0 }
+      - { mode: drill, power_w: 160.0 }
+
+  thermal:
+    operating_range_k: { min: 120.0, max: 330.0 }
+    survival_range_k: { min: 95.0, max: 360.0 }
+    dissipation_w: 60.0
+    radiator_area_m2: 0.4
+    heater_power_w: 30.0
+    surface_coupling: true
+
+  sensors:
+    - name: neutron_spectrometer
+      kind: neutron_spectrometer
+      frame: body
+      observation_model: { noise_sigma: 0.08, footprint_m2: 4.0, depth_response_m: 0.7 }
+      resource: { species: water_equivalent_hydrogen, si_unit: mass_fraction }
+    - name: nir_spectrometer
+      kind: nir_spectrometer
+      frame: sensor_mast
+      pose:
+        translation_m: { x: 0.2, y: 0.0, z: 0.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+      observation_model: { noise_sigma: 0.05, footprint_m2: 0.25, range_m: 3.0, fov_deg: 12.0 }
+      resource: { species: water_ice_band_depth, si_unit: dimensionless }
+    - name: gpr
+      kind: gpr
+      frame: body
+      observation_model: { noise_sigma: 0.1, footprint_m2: 1.0, depth_response_m: 2.0 }
+      resource: { species: subsurface_ice_fraction, si_unit: volume_fraction }
+    - name: drill_assay
+      kind: drill_assay
+      frame: body
+      observation_model: { noise_sigma: 0.03, footprint_m2: 0.01, depth_response_m: 0.5 }
+      resource: { species: water_equivalent_hydrogen, si_unit: mass_fraction }
+    - name: nav_imu
+      kind: imu
+      frame: body
+    - name: hazcam
+      kind: imaging
+      frame: sensor_mast
+      observation_model: { range_m: 20.0, fov_deg: 70.0 }
+
+  comms:
+    - name: uhf_relay
+      band: uhf
+      node_role: space
+      antenna: { gain_dbi: 6.0, boresight_frame: sensor_mast, pointing_accuracy_deg: 5.0 }
+      eirp_dbw: 5.0
+      gt_db_per_k: -18.0
+      tx_power_w: 8.0
+      min_rate_bps: 2.0e+3
+      max_rate_bps: 2.0e+6
+      modcod_supported: ["gmsk_r1_2", "gmsk_r3_4"]
+      protocols: ["ccsds_tc_tm"]
+      relay: true
+
+  mobility:
+    regimes: [surface]
+    contact:
+      - kind: wheel
+        dimensions_m: { x: 0.30, y: 0.15, z: 0.30 }
+        footprint_m2: 0.045
+        max_ground_pressure_pa: 8000.0
+        max_slope_deg: 25.0
+
+  payload:
+    capacity_kg: 5.0
+    slots:
+      - { name: top_deck, frame: body, accepts: [sensor, payload], max_mass_kg: 8.0 }
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: chassis point-mass + power/thermal }
+    - { tier: kinematic, determinism_class: bit_exact, detail: "rigid chassis + wheels, no contact" }
+    - { tier: articulated, determinism_class: tolerance, detail: full wheel/soil contact + drill }
+
+  interfaces:
+    observation_space: prospect-rover/obs-v1
+    action_space: prospect-rover/act-v1

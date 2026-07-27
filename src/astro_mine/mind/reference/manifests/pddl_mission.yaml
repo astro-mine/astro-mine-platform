@@ -1,0 +1,22 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.mission.pddl
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference PDDL/temporal mission planner (RM-P1-MIND-03) — generates a PDDL problem from
+    the belief each replan and emits a per-agent prospect-region decomposition. The
+    CI-tested default behind Core's MissionPlanner sub-interface; a unified-planning engine
+    ([pddl] extra) drops in through the same contract.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: mission

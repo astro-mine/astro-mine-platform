@@ -1,0 +1,21 @@
+# Minimal downstream consumer of astro-mine-core — the canonical private-incubation
+# dependency pattern (docs/VERSIONING.md §5): declare Core as a **tag-pinned uv Git
+# source** and resolve it with `uv sync --locked`. Sibling repos (worlds, prospect,
+# fleet, sim, bench, link, cloud) copy this block verbatim, bumping the tag at each
+# integration milestone. CI authenticates the private fetch with CORE_REPO_TOKEN
+# (read scope) — see this directory's README.
+[project]
+name = "astro-mine-downstream-consumer"
+version = "0.0.0"
+description = "Example: consume astro-mine-core via a tag-pinned uv Git source."
+requires-python = ">=3.12"
+dependencies = ["astro-mine-core"]
+
+# This is a runnable example, not a distributable package — uv only builds the env.
+[tool.uv]
+package = false
+
+# Pin to an annotated tag (never `branch = "main"`) so `uv sync --locked` is
+# byte-for-byte reproducible. The tag is the version identity (VERSIONING.md §2.1).
+[tool.uv.sources]
+astro-mine-core = { git = "https://github.com/astro-mine/astro-mine-core.git", tag = "v0.1.0" }

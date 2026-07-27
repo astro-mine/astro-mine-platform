@@ -1,0 +1,214 @@
+{
+  "compiled_safety_model": {
+    "enums": {
+      "GeometryKind": [
+        "box",
+        "half_space",
+        "sphere"
+      ],
+      "OnUncertain": [
+        "fallback",
+        "hold",
+        "safe_state"
+      ],
+      "PredicateOp": [
+        "ge",
+        "gt",
+        "le",
+        "lt"
+      ],
+      "TemporalOp": [
+        "always",
+        "and",
+        "eventually",
+        "not",
+        "or",
+        "predicate",
+        "until"
+      ]
+    },
+    "required": {
+      "<root>": [
+        "compiled_version",
+        "predicate_table",
+        "resource_bounds",
+        "sample_period_s",
+        "spec_content_hash",
+        "spec_id"
+      ],
+      "ActionLimits": [],
+      "CompiledAdmissibleDirectives": [],
+      "CompiledNode": [
+        "op"
+      ],
+      "CompiledSafePose": [
+        "frame",
+        "position"
+      ],
+      "KeepOutTerm": [
+        "constraint_id",
+        "frame",
+        "margin_m",
+        "on_uncertain",
+        "shape"
+      ],
+      "MonitorAutomaton": [
+        "constraint_id",
+        "history_window_len",
+        "node_count",
+        "on_uncertain",
+        "root"
+      ],
+      "PredicateAtom": [
+        "op",
+        "signal_index",
+        "threshold"
+      ],
+      "PredicateTable": [],
+      "ResourceBounds": [
+        "keep_out_term_count",
+        "max_history_len",
+        "monitor_count",
+        "predicate_slot_count",
+        "scalar_bound_count",
+        "worst_case_term_count"
+      ],
+      "ScalarBound": [
+        "atom_index",
+        "constraint_id",
+        "on_uncertain"
+      ]
+    }
+  },
+  "safety_spec": {
+    "enums": {
+      "ConstraintKind": [
+        "energy_floor",
+        "keep_out",
+        "kinematic_limit",
+        "power_floor",
+        "temporal",
+        "thermal_ceiling",
+        "thermal_floor",
+        "torque_ceiling"
+      ],
+      "GeometryKind": [
+        "box",
+        "half_space",
+        "sphere"
+      ],
+      "OnUncertain": [
+        "fallback",
+        "hold",
+        "safe_state"
+      ],
+      "PredicateOp": [
+        "ge",
+        "gt",
+        "le",
+        "lt"
+      ],
+      "SignalSource": [
+        "derived",
+        "observation",
+        "sadf",
+        "worlds"
+      ],
+      "TemporalOp": [
+        "always",
+        "and",
+        "eventually",
+        "not",
+        "or",
+        "predicate",
+        "until"
+      ]
+    },
+    "required": {
+      "<root>": [
+        "safety",
+        "safety_version"
+      ],
+      "AdmissibleDirectives": [],
+      "Constraint": [
+        "id",
+        "kind"
+      ],
+      "EnergyFloorConstraint": [
+        "floor_j",
+        "signal"
+      ],
+      "Interval": [
+        "hi",
+        "lo"
+      ],
+      "KeepOutConstraint": [
+        "margin_m",
+        "volume"
+      ],
+      "KeepOutHalfSpace": [
+        "frame",
+        "normal",
+        "offset_m"
+      ],
+      "KeepOutSphere": [
+        "center_m",
+        "frame",
+        "radius_m"
+      ],
+      "KeepOutVolume": [
+        "shape"
+      ],
+      "KinematicLimitConstraint": [
+        "signal"
+      ],
+      "PowerFloorConstraint": [
+        "floor_w",
+        "signal"
+      ],
+      "Provenance": [],
+      "STLFormula": [
+        "op"
+      ],
+      "SafePose": [
+        "frame",
+        "position_m"
+      ],
+      "SafetySpec": [
+        "constraints",
+        "id",
+        "name"
+      ],
+      "SignalRef": [
+        "key",
+        "source",
+        "unit"
+      ],
+      "TemporalConstraint": [
+        "formula"
+      ],
+      "ThermalCeilingConstraint": [
+        "limit_k",
+        "signal"
+      ],
+      "ThermalFloorConstraint": [
+        "limit_k",
+        "signal"
+      ],
+      "TorqueCeilingConstraint": [
+        "max_nm",
+        "signal"
+      ],
+      "Vec3": [
+        "x",
+        "y",
+        "z"
+      ],
+      "Volume": [
+        "center_m",
+        "dimensions_m",
+        "frame"
+      ]
+    }
+  }
+}

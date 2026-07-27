@@ -1,0 +1,5 @@
+# The smallest valid run-provenance record: a versioned, empty envelope. Every
+# RunProvenance field is optional, so a producer can stamp the version first and fill
+# the fields as a run resolves its inputs and executes.
+run_provenance_version: "0.1"
+run_provenance: {}

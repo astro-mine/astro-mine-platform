@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/guard/spec/v0.1/compiled_safety_model.schema.json",
+  "title": "Astro-Mine CompiledSafetyModel v0.1",
+  "description": "The analyzable, content-addressed compiled IR the constraint compiler lowers a SafetySpec into for the Rust safety core (RM-P1-GUARD-01; guard.md §3, §9). Predicate table, keep-out/barrier terms, bounded monitor automata, and the static resource bounds. Canonical source of truth; the Pydantic models in astro_mine.guard.spec.ir mirror it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "compiled_version",
+    "spec_id",
+    "spec_content_hash",
+    "sample_period_s",
+    "predicate_table",
+    "resource_bounds"
+  ],
+  "properties": {
+    "compiled_version": { "const": "0.1" },
+    "spec_id": { "type": "string" },
+    "spec_content_hash": { "type": "string" },
+    "sample_period_s": { "type": "number", "exclusiveMinimum": 0.0 },
+    "predicate_table": { "$ref": "#/$defs/PredicateTable" },
+    "scalar_bounds": { "type": "array", "items": { "$ref": "#/$defs/ScalarBound" } },
+    "keep_out_terms": { "type": "array", "items": { "$ref": "#/$defs/KeepOutTerm" } },
+    "monitors": { "type": "array", "items": { "$ref": "#/$defs/MonitorAutomaton" } },
+    "resource_bounds": { "$ref": "#/$defs/ResourceBounds" },
+    "action_limits": { "$ref": "#/$defs/ActionLimits" },
+    "safe_pose": {
+      "oneOf": [{ "$ref": "#/$defs/CompiledSafePose" }, { "type": "null" }]
+    },
+    "admissible_directives": {
+      "oneOf": [{ "$ref": "#/$defs/CompiledAdmissibleDirectives" }, { "type": "null" }]
+    }
+  },
+  "$defs": {
+    "PredicateOp": {
+      "enum": ["lt", "le", "gt", "ge"]
+    },
+    "TemporalOp": {
+      "enum": ["predicate", "not", "and", "or", "always", "eventually", "until"]
+    },
+    "OnUncertain": {
+      "enum": ["fallback", "hold", "safe_state"]
+    },
+    "GeometryKind": {
+      "enum": ["box", "sphere", "half_space"]
+    },
+    "PredicateAtom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "signal_index", "threshold"],
+      "properties": {
+        "op": { "$ref": "#/$defs/PredicateOp" },
+        "signal_index": { "type": "integer", "minimum": 0 },
+        "threshold": { "type": "number" }
+      }
+    },
+    "PredicateTable": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "signals": { "type": "array", "items": { "type": "string" } },
+        "atoms": { "type": "array", "items": { "$ref": "#/$defs/PredicateAtom" } }
+      }
+    },
+    "ScalarBound": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_id", "on_uncertain", "atom_index"],
+      "properties": {
+        "constraint_id": { "type": "string" },
+        "on_uncertain": { "$ref": "#/$defs/OnUncertain" },
+        "atom_index": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "KeepOutTerm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_id", "on_uncertain", "shape", "frame", "margin_m"],
+      "properties": {
+        "constraint_id": { "type": "string" },
+        "on_uncertain": { "$ref": "#/$defs/OnUncertain" },
+        "shape": { "$ref": "#/$defs/GeometryKind" },
+        "frame": { "type": "string", "pattern": "^\\S+$" },
+        "margin_m": { "type": "number" },
+        "center": { "type": "array", "items": { "type": "number" } },
+        "half_extents": { "type": "array", "items": { "type": "number" } },
+        "radius": { "type": ["number", "null"] },
+        "normal": { "type": "array", "items": { "type": "number" } },
+        "offset": { "type": ["number", "null"] },
+        "collision_pair": {
+          "oneOf": [
+            { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 },
+            { "type": "null" }
+          ]
+        },
+        "frame_ref": {
+          "oneOf": [
+            { "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "CompiledNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op"],
+      "properties": {
+        "op": { "$ref": "#/$defs/TemporalOp" },
+        "predicate_index": { "type": ["integer", "null"], "minimum": 0 },
+        "interval_lo_samples": { "type": ["integer", "null"], "minimum": 0 },
+        "interval_hi_samples": { "type": ["integer", "null"], "minimum": 0 },
+        "args": { "type": "array", "items": { "$ref": "#/$defs/CompiledNode" } }
+      }
+    },
+    "MonitorAutomaton": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_id", "on_uncertain", "root", "history_window_len", "node_count"],
+      "properties": {
+        "constraint_id": { "type": "string" },
+        "on_uncertain": { "$ref": "#/$defs/OnUncertain" },
+        "root": { "$ref": "#/$defs/CompiledNode" },
+        "history_window_len": { "type": "integer", "minimum": 0 },
+        "node_count": { "type": "integer", "minimum": 1 },
+        "predicate_indices": { "type": "array", "items": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "CompiledSafePose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "position"],
+      "properties": {
+        "frame": { "type": "string", "pattern": "^\\S+$" },
+        "position": { "type": "array", "items": { "type": "number" } },
+        "frame_ref": {
+          "oneOf": [
+            { "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "ActionLimits": {
+      "description": "The reviewed kinematic envelope on the *commanded* action (RM-P1-GUARD-03), lowered from the spec's kinematic_limit constraints (tightest bound wins). The same reviewed clause whose ScalarBounds police the *measured* signal (detect) bounds the *command* here (correct), so a VELOCITY/POSITION/EFFORT setpoint is projected onto the contract that was reviewed, not onto a runtime configuration knob. An absent member means the spec authored no such limit and the core's configured ceiling stands; an authored limit may only ever tighten it, never loosen it.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_velocity_mps": {
+          "oneOf": [{ "type": "number", "exclusiveMinimum": 0.0 }, { "type": "null" }]
+        },
+        "max_accel_mps2": {
+          "oneOf": [{ "type": "number", "exclusiveMinimum": 0.0 }, { "type": "null" }]
+        }
+      }
+    },
+    "CompiledAdmissibleDirectives": {
+      "description": "The reviewed MODE/TASK allowlist on the *action gate*, lowered from SafetySpec.admissible_directives (RFC-0004 Amendment 2). The trusted core intersects it with the configured CoreConfig.action_policy ONCE, at construction (the hot path stays allocation-free), and certifies a discrete directive only if BOTH admit it. **Absent => the contract admits NO directive**, whatever the configuration grants: configuration may only narrow the reviewed grant, never create a permission. The closed TaskKind vocabulary is enforced upstream, at spec-authoring time; it rides here as a plain string like every other closed vocabulary in this IR.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "modes": { "type": "array", "items": { "type": "string" } },
+        "tasks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "ResourceBounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predicate_slot_count",
+        "scalar_bound_count",
+        "keep_out_term_count",
+        "monitor_count",
+        "max_history_len",
+        "worst_case_term_count"
+      ],
+      "properties": {
+        "predicate_slot_count": { "type": "integer", "minimum": 0 },
+        "scalar_bound_count": { "type": "integer", "minimum": 0 },
+        "keep_out_term_count": { "type": "integer", "minimum": 0 },
+        "monitor_count": { "type": "integer", "minimum": 0 },
+        "max_history_len": { "type": "integer", "minimum": 0 },
+        "worst_case_term_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

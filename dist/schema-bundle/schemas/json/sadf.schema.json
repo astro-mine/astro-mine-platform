@@ -1,0 +1,560 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/sadf/v0.1/sadf.schema.json",
+  "title": "SADF v0.1 — Swarm Asset Description Format",
+  "description": "Canonical schema for a single Astro-Mine asset (RM-P0-CORE-01). The source of truth; Pydantic models and the Protobuf wire form mirror this. SI units; every spatial value resolves in a named frame.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sadf_version", "asset"],
+  "properties": {
+    "sadf_version": { "const": "0.1" },
+    "asset": { "$ref": "#/$defs/Asset" }
+  },
+  "$defs": {
+    "CapabilityTag": {
+      "type": "string",
+      "enum": [
+        "mobility.wheeled", "mobility.tracked", "mobility.legged", "mobility.hop",
+        "mobility.orbiter", "mobility.rocket",
+        "propulsion.chemical", "propulsion.cryo_chemical", "propulsion.electric_ion",
+        "propulsion.cold_gas", "propulsion.solar_sail",
+        "excavation.bucket", "excavation.auger", "excavation.scoop", "excavation.drill",
+        "sample_collection.drill", "sample_collection.scoop", "sample_collection.auger",
+        "sample_collection.pneumatic", "sample_collection.capture_bag",
+        "manipulation.arm", "manipulation.gripper",
+        "prospecting.neutron", "prospecting.nir", "prospecting.gpr",
+        "prospecting.mass_spec", "prospecting.drill_assay",
+        "sensing.imaging", "sensing.ranging", "sensing.lidar", "sensing.imu",
+        "sensing.odometry", "sensing.contact", "sensing.altimetry", "sensing.thermal",
+        "comms.relay", "comms.direct_to_earth", "comms.dsn", "comms.dtn",
+        "isru.thermal_extraction", "isru.electrolysis", "isru.purification", "isru.storage",
+        "power.generation", "power.storage", "power.distribution",
+        "anchoring.anchor", "anchoring.harpoon", "anchoring.touch_and_go",
+        "anchoring.capture_bag",
+        "return.sample_canister", "return.bulk_hauler",
+        "earth_interface.ballistic_capsule",
+        "staging", "reusable", "carrier.dispenser",
+        "operational_targeting", "ground_truth_access",
+        "comms.live_mission_link_prediction"
+      ]
+    },
+    "Regime": {
+      "type": "string",
+      "enum": ["launch_ascent", "interplanetary_transit", "proximity_orbit", "surface",
+               "ascent_return", "earth_interface"]
+    },
+    "PropulsionKind": {
+      "type": "string",
+      "enum": ["chemical_biprop", "chemical_monoprop", "cryo_chemical", "electric_ion",
+               "cold_gas", "solar_sail"]
+    },
+    "PropellantType": {
+      "type": "string",
+      "enum": ["mmh_nto", "lox_lh2", "lox_lch4", "hydrazine", "xenon", "krypton",
+               "cold_gas_n2", "other"]
+    },
+    "PowerSourceKind": {
+      "type": "string",
+      "enum": ["solar", "rtg", "rhu", "fuel_cell", "external"]
+    },
+    "SensorKind": {
+      "type": "string",
+      "enum": ["imaging", "lidar", "rangefinder", "imu", "odometry", "contact",
+               "neutron_spectrometer", "nir_spectrometer", "gpr", "mass_spectrometer",
+               "drill_assay", "altimeter", "thermal_sensor", "comms_link_state",
+               "resource_storage"]
+    },
+    "CommsBand": {
+      "type": "string",
+      "enum": ["uhf", "s_band", "x_band", "ka_band", "optical"]
+    },
+    "CommsProtocol": {
+      "type": "string",
+      "enum": ["ros2_dds", "ccsds_spp", "ccsds_tc_tm", "cfdp", "dtn_bpv7"]
+    },
+    "NodeRole": {
+      "type": "string",
+      "enum": ["space", "ground"]
+    },
+    "JointType": {
+      "type": "string",
+      "enum": ["fixed", "revolute", "continuous", "prismatic"]
+    },
+    "ContactElementKind": {
+      "type": "string",
+      "enum": ["wheel", "track", "leg", "tool", "anchor", "harpoon"]
+    },
+    "GeometryRole": {
+      "type": "string",
+      "enum": ["visual", "collision"]
+    },
+    "GeometryFormat": {
+      "type": "string",
+      "enum": ["usd", "gltf"]
+    },
+    "FidelityTier": {
+      "type": "string",
+      "enum": ["massmodel", "kinematic", "articulated", "surrogate"]
+    },
+    "SurrogatePhysicsDomain": {
+      "type": "string",
+      "enum": ["granular_excavation", "terramechanics", "manipulation_contact", "thermal",
+               "microgravity_contact"]
+    },
+    "DeterminismClass": {
+      "type": "string",
+      "enum": ["bit_exact", "tolerance"]
+    },
+    "ReturnKind": {
+      "type": "string",
+      "enum": ["sample_canister", "bulk_hauler", "none"]
+    },
+    "EarthInterfaceMode": {
+      "type": "string",
+      "enum": ["ballistic_capsule", "none"]
+    },
+    "FlightStack": {
+      "type": "string",
+      "enum": ["sim", "ros2", "cfs", "fprime", "ccsds", "dsn"]
+    },
+
+    "Vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "Quat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z", "w"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" },
+        "w": { "type": "number" }
+      }
+    },
+    "Transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["translation_m", "rotation_quat_xyzw"],
+      "properties": {
+        "translation_m": { "$ref": "#/$defs/Vec3" },
+        "rotation_quat_xyzw": { "$ref": "#/$defs/Quat" }
+      }
+    },
+    "Inertia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ixx", "iyy", "izz"],
+      "properties": {
+        "ixx": { "type": "number" },
+        "iyy": { "type": "number" },
+        "izz": { "type": "number" },
+        "ixy": { "type": "number" },
+        "ixz": { "type": "number" },
+        "iyz": { "type": "number" }
+      }
+    },
+    "Range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" }
+      }
+    },
+
+    "Frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "parent": { "type": ["string", "null"] },
+        "transform": { "anyOf": [{ "$ref": "#/$defs/Transform" }, { "type": "null" }] },
+        "spice_body_id": { "type": ["string", "null"] }
+      }
+    },
+    "GeometryRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "format", "uri", "frame"],
+      "properties": {
+        "role": { "$ref": "#/$defs/GeometryRole" },
+        "format": { "$ref": "#/$defs/GeometryFormat" },
+        "uri": { "type": "string" },
+        "frame": { "type": "string" },
+        "lod": { "type": "integer" }
+      }
+    },
+    "Body": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "frame", "mass_kg", "center_of_mass_m", "inertia_kg_m2"],
+      "properties": {
+        "name": { "type": "string" },
+        "frame": { "type": "string" },
+        "mass_kg": { "type": "number" },
+        "center_of_mass_m": { "$ref": "#/$defs/Vec3" },
+        "inertia_kg_m2": { "$ref": "#/$defs/Inertia" }
+      }
+    },
+    "JointLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "position_rad": { "anyOf": [{ "$ref": "#/$defs/Range" }, { "type": "null" }] },
+        "velocity_rad_s": { "type": ["number", "null"] },
+        "effort_nm": { "type": ["number", "null"] }
+      }
+    },
+    "Joint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "parent_body", "child_body"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "$ref": "#/$defs/JointType" },
+        "parent_body": { "type": "string" },
+        "child_body": { "type": "string" },
+        "axis": { "anyOf": [{ "$ref": "#/$defs/Vec3" }, { "type": "null" }] },
+        "limits": { "anyOf": [{ "$ref": "#/$defs/JointLimits" }, { "type": "null" }] }
+      }
+    },
+    "Actuator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "target_joint": { "type": ["string", "null"] },
+        "torque_nm": { "type": ["number", "null"] },
+        "force_n": { "type": ["number", "null"] },
+        "velocity": { "type": ["number", "null"] },
+        "power_draw_w": { "type": ["number", "null"] }
+      }
+    },
+    "PowerSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "nominal_power_w"],
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "$ref": "#/$defs/PowerSourceKind" },
+        "nominal_power_w": { "type": "number" }
+      }
+    },
+    "PowerStorage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "capacity_j"],
+      "properties": {
+        "name": { "type": "string" },
+        "capacity_j": { "type": "number" },
+        "max_charge_w": { "type": ["number", "null"] },
+        "max_discharge_w": { "type": ["number", "null"] }
+      }
+    },
+    "ModeLoad": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "power_w"],
+      "properties": {
+        "mode": { "type": "string" },
+        "power_w": { "type": "number" }
+      }
+    },
+    "PowerBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/PowerSource" } },
+        "storage": { "type": "array", "items": { "$ref": "#/$defs/PowerStorage" } },
+        "floor_w": { "type": ["number", "null"] },
+        "loads_by_mode": { "type": "array", "items": { "$ref": "#/$defs/ModeLoad" } }
+      }
+    },
+    "ThermalBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operating_range_k"],
+      "properties": {
+        "operating_range_k": { "$ref": "#/$defs/Range" },
+        "survival_range_k": { "anyOf": [{ "$ref": "#/$defs/Range" }, { "type": "null" }] },
+        "dissipation_w": { "type": ["number", "null"] },
+        "radiator_area_m2": { "type": ["number", "null"] },
+        "heater_power_w": { "type": ["number", "null"] },
+        "surface_coupling": { "type": "boolean" }
+      }
+    },
+    "ObservationModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "noise_sigma": { "type": ["number", "null"] },
+        "footprint_m2": { "type": ["number", "null"] },
+        "depth_response_m": { "type": ["number", "null"] },
+        "range_m": { "type": ["number", "null"] },
+        "fov_deg": { "type": ["number", "null"] }
+      }
+    },
+    "ResourceTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["species", "si_unit"],
+      "properties": {
+        "species": { "type": "string" },
+        "si_unit": { "type": "string" }
+      }
+    },
+    "Sensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "frame"],
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "$ref": "#/$defs/SensorKind" },
+        "frame": { "type": "string" },
+        "pose": { "anyOf": [{ "$ref": "#/$defs/Transform" }, { "type": "null" }] },
+        "observation_model": {
+          "anyOf": [{ "$ref": "#/$defs/ObservationModel" }, { "type": "null" }]
+        },
+        "resource": { "anyOf": [{ "$ref": "#/$defs/ResourceTarget" }, { "type": "null" }] }
+      }
+    },
+    "Antenna": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gain_dbi": { "type": ["number", "null"] },
+        "gain_pattern": { "type": ["string", "null"] },
+        "boresight_frame": { "type": ["string", "null"] },
+        "pointing_accuracy_deg": { "type": ["number", "null"] }
+      }
+    },
+    "Comms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "band"],
+      "properties": {
+        "name": { "type": "string" },
+        "band": { "$ref": "#/$defs/CommsBand" },
+        "node_role": { "$ref": "#/$defs/NodeRole" },
+        "antenna": { "anyOf": [{ "$ref": "#/$defs/Antenna" }, { "type": "null" }] },
+        "eirp_dbw": { "type": ["number", "null"] },
+        "gt_db_per_k": { "type": ["number", "null"] },
+        "tx_power_w": { "type": ["number", "null"] },
+        "min_rate_bps": { "type": ["number", "null"] },
+        "max_rate_bps": { "type": ["number", "null"] },
+        "modcod_supported": { "type": "array", "items": { "type": "string" } },
+        "protocols": { "type": "array", "items": { "$ref": "#/$defs/CommsProtocol" } },
+        "relay": { "type": "boolean" }
+      }
+    },
+    "ContactElement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/ContactElementKind" },
+        "dimensions_m": { "anyOf": [{ "$ref": "#/$defs/Vec3" }, { "type": "null" }] },
+        "footprint_m2": { "type": ["number", "null"] },
+        "max_ground_pressure_pa": { "type": ["number", "null"] },
+        "max_slope_deg": { "type": ["number", "null"] }
+      }
+    },
+    "Anchoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_force_n"],
+      "properties": {
+        "max_force_n": { "type": "number" }
+      }
+    },
+    "Mobility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "regimes": { "type": "array", "items": { "$ref": "#/$defs/Regime" } },
+        "contact": { "type": "array", "items": { "$ref": "#/$defs/ContactElement" } },
+        "anchoring": { "anyOf": [{ "$ref": "#/$defs/Anchoring" }, { "type": "null" }] }
+      }
+    },
+    "Propellant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "mass_kg"],
+      "properties": {
+        "type": { "$ref": "#/$defs/PropellantType" },
+        "mass_kg": { "type": "number" }
+      }
+    },
+    "PropulsionSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/PropulsionKind" },
+        "thrust_n": { "type": ["number", "null"] },
+        "isp_s": { "type": ["number", "null"] },
+        "propellant": { "anyOf": [{ "$ref": "#/$defs/Propellant" }, { "type": "null" }] },
+        "power_w": { "type": ["number", "null"] }
+      }
+    },
+    "Stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dry_kg", "propellant_kg"],
+      "properties": {
+        "dry_kg": { "type": "number" },
+        "propellant_kg": { "type": "number" }
+      }
+    },
+    "Propulsion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "systems": { "type": "array", "items": { "$ref": "#/$defs/PropulsionSystem" } },
+        "delta_v_budget_mps": { "type": ["number", "null"] },
+        "staging": { "type": "array", "items": { "$ref": "#/$defs/Stage" } }
+      }
+    },
+    "ReturnSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "capability": { "$ref": "#/$defs/ReturnKind" },
+        "payload_capacity_kg": { "type": ["number", "null"] },
+        "earth_interface": { "$ref": "#/$defs/EarthInterfaceMode" }
+      }
+    },
+    "Isru": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "throughput_kg_hr": { "type": ["number", "null"] },
+        "plant_power_w": { "type": ["number", "null"] }
+      }
+    },
+    "PayloadSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "frame"],
+      "properties": {
+        "name": { "type": "string" },
+        "frame": { "type": "string" },
+        "accepts": { "type": "array", "items": { "type": "string" } },
+        "max_mass_kg": { "type": ["number", "null"] }
+      }
+    },
+    "PayloadSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "slots": { "type": "array", "items": { "$ref": "#/$defs/PayloadSlot" } },
+        "isru": { "anyOf": [{ "$ref": "#/$defs/Isru" }, { "type": "null" }] },
+        "capacity_kg": { "type": ["number", "null"] }
+      }
+    },
+    "SubAssembly": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "mount_frame"],
+      "properties": {
+        "ref": { "type": "string" },
+        "mount_frame": { "type": "string" },
+        "transform": { "anyOf": [{ "$ref": "#/$defs/Transform" }, { "type": "null" }] }
+      }
+    },
+    "SurrogateProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["physics_domain"],
+      "properties": {
+        "physics_domain": { "$ref": "#/$defs/SurrogatePhysicsDomain" },
+        "trust_region": { "type": ["string", "null"] }
+      }
+    },
+    "FidelityProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier"],
+      "properties": {
+        "tier": { "$ref": "#/$defs/FidelityTier" },
+        "determinism_class": { "$ref": "#/$defs/DeterminismClass" },
+        "detail": { "type": ["string", "null"] },
+        "surrogate": { "anyOf": [{ "$ref": "#/$defs/SurrogateProfile" }, { "type": "null" }] }
+      }
+    },
+    "Interfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observation_space": { "type": ["string", "null"] },
+        "action_space": { "type": ["string", "null"] }
+      }
+    },
+    "Provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "seed": { "type": ["integer", "null"] }
+      }
+    },
+    "Identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "version", "kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "kind": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "Asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "root_frame"],
+      "properties": {
+        "identity": { "$ref": "#/$defs/Identity" },
+        "capabilities": { "type": "array", "items": { "$ref": "#/$defs/CapabilityTag" } },
+        "core_interface_versions": { "type": "object", "additionalProperties": { "type": "string" } },
+        "frames": { "type": "array", "items": { "$ref": "#/$defs/Frame" } },
+        "root_frame": { "type": "string" },
+        "geometry": { "type": "array", "items": { "$ref": "#/$defs/GeometryRef" } },
+        "bodies": { "type": "array", "items": { "$ref": "#/$defs/Body" } },
+        "joints": { "type": "array", "items": { "$ref": "#/$defs/Joint" } },
+        "actuators": { "type": "array", "items": { "$ref": "#/$defs/Actuator" } },
+        "power": { "anyOf": [{ "$ref": "#/$defs/PowerBudget" }, { "type": "null" }] },
+        "thermal": { "anyOf": [{ "$ref": "#/$defs/ThermalBudget" }, { "type": "null" }] },
+        "sensors": { "type": "array", "items": { "$ref": "#/$defs/Sensor" } },
+        "comms": { "type": "array", "items": { "$ref": "#/$defs/Comms" } },
+        "mobility": { "anyOf": [{ "$ref": "#/$defs/Mobility" }, { "type": "null" }] },
+        "propulsion": { "anyOf": [{ "$ref": "#/$defs/Propulsion" }, { "type": "null" }] },
+        "return": { "anyOf": [{ "$ref": "#/$defs/ReturnSpec" }, { "type": "null" }] },
+        "payload": { "anyOf": [{ "$ref": "#/$defs/PayloadSpec" }, { "type": "null" }] },
+        "subassemblies": { "type": "array", "items": { "$ref": "#/$defs/SubAssembly" } },
+        "fidelity_profiles": {
+          "type": "array", "items": { "$ref": "#/$defs/FidelityProfile" }
+        },
+        "flight_stacks": { "type": "array", "items": { "$ref": "#/$defs/FlightStack" } },
+        "interfaces": { "anyOf": [{ "$ref": "#/$defs/Interfaces" }, { "type": "null" }] },
+        "provenance": { "anyOf": [{ "$ref": "#/$defs/Provenance" }, { "type": "null" }] }
+      }
+    }
+  }
+}

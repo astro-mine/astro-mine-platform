@@ -1,0 +1,82 @@
+# Scenario 1 (lunar polar ice prospecting) — hauler rover.
+# Moves excavated icy regolith from the dig site to the ISRU plant: a high-capacity,
+# high-traction wheeled chassis with a passive bin. Low-fi massmodel + kinematic.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.hauler
+    name: Hauler Rover
+    version: 0.1.0
+    kind: hauler
+    description: >-
+      High-capacity wheeled hauler that carries excavated regolith from the dig site to
+      the ISRU plant.
+    labels:
+      scenario: lunar-polar-ice-prospecting
+
+  capabilities:
+    - mobility.wheeled
+    - sensing.imu
+    - sensing.odometry
+    - power.generation
+    - power.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+
+  root_frame: body
+  frames:
+    - name: body
+
+  bodies:
+    - name: chassis
+      frame: body
+      mass_kg: 300.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.45 }
+      inertia_kg_m2: { ixx: 60.0, iyy: 80.0, izz: 55.0 }
+
+  power:
+    sources:
+      - { name: body_solar, kind: solar, nominal_power_w: 300.0 }
+    storage:
+      - { name: main_battery, capacity_j: 5.0e+6, max_charge_w: 200.0, max_discharge_w: 450.0 }
+    floor_w: 35.0
+    loads_by_mode:
+      - { mode: idle, power_w: 45.0 }
+      - { mode: drive_empty, power_w: 160.0 }
+      - { mode: drive_loaded, power_w: 280.0 }
+
+  thermal:
+    operating_range_k: { min: 120.0, max: 330.0 }
+    survival_range_k: { min: 95.0, max: 360.0 }
+    dissipation_w: 70.0
+    radiator_area_m2: 0.5
+    heater_power_w: 25.0
+    surface_coupling: true
+
+  sensors:
+    - name: nav_imu
+      kind: imu
+      frame: body
+    - name: nav_cam
+      kind: imaging
+      frame: body
+      observation_model: { range_m: 25.0, fov_deg: 80.0 }
+
+  mobility:
+    regimes: [surface]
+    contact:
+      - kind: wheel
+        dimensions_m: { x: 0.40, y: 0.25, z: 0.40 }
+        footprint_m2: 0.10
+        max_ground_pressure_pa: 15000.0
+        max_slope_deg: 18.0
+
+  payload:
+    capacity_kg: 500.0
+    slots:
+      - { name: cargo_bin, frame: body, accepts: [regolith], max_mass_kg: 500.0 }
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: chassis point-mass + cargo + power }
+    - { tier: kinematic, determinism_class: bit_exact, detail: "rigid chassis + wheels, no contact" }

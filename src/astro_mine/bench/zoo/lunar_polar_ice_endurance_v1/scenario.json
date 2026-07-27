@@ -1,0 +1,110 @@
+{
+  "scenario_id": "lunar-polar-ice-endurance-v1",
+  "name": "Lunar Polar Water-Ice Endurance v1",
+  "spec_version": "0.5.0",
+  "description": "A survival-weighted, full-chain benchmark on the anchor's Shackleton-de Gerlache world (scenarios/1-lunar-polar-ice-prospecting.md): the heterogeneous swarm must sustain the excavate -> haul -> extract -> purify -> store ISRU chain across a 30-day campaign spanning lunar night, under a fixed compute budget. A distinct task from the anchor: it drops the pure-prospecting metrics and ranks by nights_survived, so the primary leaderboard question is endurance and yield-per-energy, not discovery. Content is REUSED by hash from the anchor's published Hub artifacts (RM-P1-WORLDS-15 / RM-P1-FLEET-10 / RM-P1-PROSPECT-13) - see PROVENANCE.md. This scenario does not exercise the operational_targeting dual-use gate.",
+  "core_interface": {
+    "env": "0.1.0",
+    "messages": "0.1.0",
+    "policy": "0.1.0",
+    "sadf": "0.1.0",
+    "objective": "0.1.0",
+    "resource_field": "0.1.0",
+    "world_provider": "0.1.0",
+    "registry": "0.1.0"
+  },
+  "core_schema_digest": "sha256:2ebc6353bda4ecd0ed14b39ef04747b84a8fa79f8a094146f74ee027cbf07980",
+  "content": {
+    "world": {
+      "id": "shackleton-de-gerlache-v1",
+      "content_hash": "sha256:fd14f5f6e618a9c01c36028e642e6efdbee449a5e96bac832047654913a4fd2c",
+      "description": "Shackleton-de Gerlache ridge, lunar south pole, version 0.4.0 - ships its horizon map, so the world resolves in ~3 s instead of re-deriving a 192-million-entry skyline from the packaged DEM on every load (astro-mine-worlds#46). Terrain and regolith rasters are byte-identical to the prior bundle; the PSR mask is now the spec-driven, validated one (|error| 0.0400 inside the 0.0500 budget, where the 0.1.0 world this pinned before was at 0.0586 - outside it)."
+    },
+    "fleet": [
+      {
+        "id": "astro-mine.fleet.relay-orbiter",
+        "content_hash": "sha256:47d74f0e851826718a5064d101983ea187d40d9d8ac51488c023755c29141480",
+        "description": "Comms relay + Earth-link gateway. Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      },
+      {
+        "id": "astro-mine.fleet.lander",
+        "content_hash": "sha256:f0270170c2cac90953392b5cd70d79a2d7abf3799454d29f46fa6a4cea4bdc90",
+        "description": "Cargo lander delivering the surface swarm. Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      },
+      {
+        "id": "astro-mine.fleet.prospecting-rover",
+        "content_hash": "sha256:74db543ff304a2fe4cef9c421873a3375243019acd0314f0ef9aae6e6fb04629",
+        "description": "Active-perception scout. Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      },
+      {
+        "id": "astro-mine.fleet.excavator",
+        "content_hash": "sha256:d576d7844625b25baec6496a45ad0a18a4da945c2cb0a5ebfa5c957d62fd5d35",
+        "description": "Granular excavation (bucket/auger). Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      },
+      {
+        "id": "astro-mine.fleet.hauler",
+        "content_hash": "sha256:5e0c5b6d075d81c06507f283f390b74afd92953ec106d67656e00c31f7c63aab",
+        "description": "Moves regolith/ore to the extraction plant. Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      },
+      {
+        "id": "astro-mine.fleet.isru-plant",
+        "content_hash": "sha256:3b13364714c41693c4523c0bed6303a77d3d6348a3b8a549561d2addb57fa7eb",
+        "description": "Central thermal extraction -> purification -> water storage. Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      }
+    ],
+    "prospect": [
+      {
+        "id": "shackleton_water_ice_v1",
+        "content_hash": "sha256:1019c47f1d3258413ce8b5a0090d0ff2dacfc984dec269f2d86c86fb81aa81ca",
+        "description": "Water-ice belief prior over the default Shackleton grid. Reused from the anchor's real Hub digest - see PROVENANCE.md."
+      }
+    ],
+    "link": null
+  },
+  "seeds": {
+    "public": [
+      3001,
+      3002,
+      3003,
+      3004,
+      3005,
+      3006
+    ],
+    "heldout_commit": null
+  },
+  "episode": {
+    "horizon_steps": 43200,
+    "max_sim_seconds": 2592000.0
+  },
+  "termination": {
+    "conditions": [
+      "critical_asset_loss",
+      "power_floor_violation",
+      "thermal_ceiling_violation"
+    ],
+    "max_steps": 43200
+  },
+  "metrics": [
+    {
+      "name": "nights_survived",
+      "version": "0.1.0"
+    },
+    {
+      "name": "water_mass",
+      "version": "0.1.0"
+    },
+    {
+      "name": "energy_per_kg",
+      "version": "0.1.0"
+    },
+    {
+      "name": "comms_robustness",
+      "version": "0.1.0"
+    }
+  ],
+  "budgets": {
+    "wall_clock_seconds": null,
+    "sim_steps": 43200,
+    "compute_units": 5000.0
+  }
+}

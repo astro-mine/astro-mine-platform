@@ -1,0 +1,93 @@
+// ErrorReport v0.1 — canonical Protobuf wire form (RM-P1-SURR-01).
+//
+// The one surrogate type that crosses a language boundary: Sim's multi-fidelity
+// scheduler (which may be C++/Rust) consumes the ErrorReport to admit or reject a
+// learned fidelity tier (surrogate.md §5, §6). The SurrogateManifest is *not* here — it
+// is a Core PluginManifest, a control-plane document Core deliberately keeps schema/YAML
+// only (core.md registry: "no Protobuf wire form yet"); the surrogate follows Core.
+//
+// Mirrors the canonical JSON Schema (schema/error_report.schema.json) and the Pydantic
+// models (astro_mine.surrogate.report). Field names match the models' JSON projection so
+// conversion round-trips through protobuf's json_format (astro_mine.surrogate.wire).
+// Closed-vocabulary fields (domain, kind) are carried as `string` — the type authority is
+// the Pydantic model / JSON Schema, and string<->string keeps the round-trip byte-exact
+// (the Core messages/sadf pattern). Nullable singular fields use proto3 `optional` (or
+// message presence) to preserve absence.
+//
+// Field tags are append-only and never reused (conventions.md §3).
+
+syntax = "proto3";
+
+package astro_mine.surrogate.v0;
+
+message CoveragePoint {
+  double nominal = 1;
+  double empirical = 2;
+}
+
+message TailBehavior {
+  double p95_abs_error = 1;
+  double p99_abs_error = 2;
+  double max_abs_error = 3;
+}
+
+message ContinuousMetrics {
+  string unit = 1;
+  double rmse = 2;
+  repeated CoveragePoint coverage = 3;
+  TailBehavior tail = 4;
+}
+
+message CategoricalMetrics {
+  repeated string classes = 1;
+  double accuracy = 2;
+  repeated CoveragePoint reliability = 3;
+}
+
+message ChannelError {
+  string channel = 1;
+  string kind = 2;  // ChannelKind (closed vocab as string)
+  optional ContinuousMetrics continuous = 3;
+  optional CategoricalMetrics categorical = 4;
+}
+
+message Bound {
+  double low = 1;
+  double high = 2;
+}
+
+message TrustRegion {
+  map<string, Bound> bounds = 1;
+}
+
+message OracleRef {
+  string producer = 1;
+  string producer_version = 2;
+  optional string config_hash = 3;
+}
+
+message SubstitutionPolicy {
+  map<string, double> recommended_error_budget = 1;
+  bool escalate_on_ood = 2;
+  // The autoregressive rollout horizon (steps) the budget was calibrated to hold at. A consumer
+  // that grades the tier over a longer rollout checks a bound the producer never made
+  // (astro-mine-surrogate#23). 0/unset reads as the degenerate single-step case.
+  int32 budget_horizon_steps = 3;
+}
+
+message RolloutError {
+  int32 horizon_steps = 1;
+  repeated double rmse_by_horizon = 2;
+}
+
+message ErrorReport {
+  string surrogate_name = 1;
+  string surrogate_version = 2;
+  string domain = 3;  // PhysicsDomain (closed vocab as string)
+  repeated ChannelError channels = 4;
+  TrustRegion trust_region = 5;
+  string validation_dataset_hash = 6;
+  OracleRef oracle = 7;
+  SubstitutionPolicy substitution_policy = 8;
+  optional RolloutError rollout = 9;
+}

@@ -1,0 +1,45 @@
+{
+  "name": "reference-smoke",
+  "seed": 7,
+  "dt_s": 1.0,
+  "horizon_steps": 16,
+  "agents": [
+    {
+      "agent_id": "rover",
+      "initial_position_m": [30.0, 0.0, 0.0],
+      "velocity_mps": [0.0, 0.0, 0.0],
+      "battery_soc_j": 50000.0,
+      "mode": "idle",
+      "dynamics": {
+        "kind": "mobility",
+        "mass_kg": 300.0,
+        "max_speed_mps": 0.5,
+        "max_traction_n": 200.0,
+        "idle_power_w": 10.0,
+        "drive_power_w_per_mps": 40.0
+      }
+    },
+    {
+      "agent_id": "excavator",
+      "initial_position_m": [0.0, 40.0, 0.0],
+      "velocity_mps": [0.0, 0.0, 0.0],
+      "battery_soc_j": 50000.0,
+      "mode": "idle",
+      "dynamics": {
+        "kind": "mobility",
+        "mass_kg": 800.0,
+        "max_speed_mps": 0.3,
+        "max_traction_n": 500.0,
+        "idle_power_w": 15.0,
+        "drive_power_w_per_mps": 60.0
+      }
+    },
+    {
+      "agent_id": "relay",
+      "initial_position_m": [0.0, 0.0, 2000.0],
+      "velocity_mps": [0.0, 0.0, 0.0],
+      "battery_soc_j": 200000.0,
+      "mode": "nominal"
+    }
+  ]
+}

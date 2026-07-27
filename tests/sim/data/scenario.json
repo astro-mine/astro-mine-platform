@@ -1,0 +1,22 @@
+{
+  "name": "two-rover-smoke",
+  "seed": 42,
+  "dt_s": 0.5,
+  "horizon_steps": 4,
+  "agents": [
+    {
+      "agent_id": "rover-a",
+      "initial_position_m": [0.0, 0.0, 0.0],
+      "velocity_mps": [1.0, 0.0, 0.0],
+      "battery_soc_j": 1000.0,
+      "mode": "drive"
+    },
+    {
+      "agent_id": "rover-b",
+      "initial_position_m": [10.0, 0.0, 0.0],
+      "velocity_mps": [0.0, 0.5, 0.0],
+      "battery_soc_j": 800.0,
+      "mode": "prospect"
+    }
+  ]
+}

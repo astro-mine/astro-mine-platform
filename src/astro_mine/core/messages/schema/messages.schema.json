@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/core/messages/v0.1/messages.schema.json",
+  "title": "Astro-Mine message catalog v0.1 (control plane)",
+  "description": "Canonical JSON Schema for the control-plane message families (RM-P0-CORE-04): action and contact-plan. The per-tick observation family is Cap'n Proto (observation.capnp). The Pydantic models in astro_mine.core.messages.model mirror these $defs.",
+  "$defs": {
+    "ActionKind": { "enum": ["actuator", "mode", "task"] },
+    "ControlMode": { "enum": ["position", "velocity", "effort", "impedance", "trajectory"] },
+    "TaskKind": {
+      "enum": ["goto", "sample", "excavate", "haul", "dock", "hop", "charge", "prospect", "deploy", "standby", "custom"]
+    },
+    "SampleMethod": { "enum": ["drill", "scoop", "auger", "pneumatic", "capture_bag"] },
+    "ExcavationTool": { "enum": ["bucket", "auger", "scoop", "drill"] },
+    "ExcavationPattern": { "enum": ["trench", "bench", "spiral"] },
+    "ChargeSource": { "enum": ["solar", "relay", "plant", "fission"] },
+    "NodeRole": { "enum": ["space", "ground"] },
+    "ContactConfidence": { "enum": ["high", "medium", "low"] },
+
+    "Vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" } }
+    },
+    "Quat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z", "w"],
+      "properties": {
+        "x": { "type": "number" }, "y": { "type": "number" },
+        "z": { "type": "number" }, "w": { "type": "number" }
+      }
+    },
+    "Transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["translation_m", "rotation_quat_xyzw"],
+      "properties": {
+        "translation_m": { "$ref": "#/$defs/Vec3" },
+        "rotation_quat_xyzw": { "$ref": "#/$defs/Quat" }
+      }
+    },
+    "Volume": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame", "center_m", "dimensions_m"],
+      "properties": {
+        "frame": { "type": "string" },
+        "center_m": { "$ref": "#/$defs/Vec3" },
+        "dimensions_m": { "$ref": "#/$defs/Vec3" },
+        "frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] }
+      }
+    },
+
+    "ActuatorCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "control_mode"],
+      "properties": {
+        "target": { "type": "string" },
+        "control_mode": { "$ref": "#/$defs/ControlMode" },
+        "setpoint": { "type": "array", "items": { "type": "number" } },
+        "unit": { "type": ["string", "null"] },
+        "stiffness": { "type": ["number", "null"] },
+        "damping": { "type": ["number", "null"] },
+        "feedforward": { "type": "array", "items": { "type": "number" } },
+        "trajectory_ref": { "type": ["string", "null"] }
+      }
+    },
+    "ModeCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string" },
+        "params": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "GotoTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_frame", "target_pose"],
+      "properties": {
+        "target_frame": { "type": "string" },
+        "target_pose": { "$ref": "#/$defs/Transform" },
+        "position_tolerance_m": { "type": ["number", "null"] },
+        "heading_tolerance_rad": { "type": ["number", "null"] },
+        "max_speed_mps": { "type": ["number", "null"] },
+        "target_frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] }
+      }
+    },
+    "SampleTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["site_frame", "target_point_m", "method"],
+      "properties": {
+        "site_frame": { "type": "string" },
+        "target_point_m": { "$ref": "#/$defs/Vec3" },
+        "method": { "$ref": "#/$defs/SampleMethod" },
+        "depth_m": { "type": ["number", "null"] },
+        "sample_mass_kg": { "type": ["number", "null"] },
+        "site_frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] }
+      }
+    },
+    "ExcavateTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region", "tool", "pattern"],
+      "properties": {
+        "region": { "$ref": "#/$defs/Volume" },
+        "tool": { "$ref": "#/$defs/ExcavationTool" },
+        "pattern": { "$ref": "#/$defs/ExcavationPattern" },
+        "target_volume_m3": { "type": ["number", "null"] }
+      }
+    },
+    "HaulTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_frame", "to_frame"],
+      "properties": {
+        "from_frame": { "type": "string" },
+        "to_frame": { "type": "string" },
+        "payload_kg": { "type": ["number", "null"] },
+        "resource_species": { "type": ["string", "null"] },
+        "from_frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] },
+        "to_frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] }
+      }
+    },
+    "DockTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_asset_id"],
+      "properties": {
+        "target_asset_id": { "type": "string" },
+        "port_name": { "type": ["string", "null"] },
+        "approach_frame": { "type": ["string", "null"] },
+        "approach_frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] }
+      }
+    },
+    "HopTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["launch_frame", "target_point_m"],
+      "properties": {
+        "launch_frame": { "type": "string" },
+        "target_point_m": { "$ref": "#/$defs/Vec3" },
+        "range_m": { "type": ["number", "null"] },
+        "apoapsis_m": { "type": ["number", "null"] },
+        "launch_frame_ref": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/ReferenceFrame" }, { "type": "null" }] }
+      }
+    },
+    "ChargeTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "$ref": "#/$defs/ChargeSource" },
+        "target_soc_j": { "type": ["number", "null"] },
+        "max_power_w": { "type": ["number", "null"] }
+      }
+    },
+    "ProspectTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region"],
+      "properties": {
+        "region": { "$ref": "#/$defs/Volume" },
+        "sensor_kinds": { "type": "array", "items": { "type": "string" } },
+        "info_gain_target": { "type": ["number", "null"] }
+      }
+    },
+    "TaskDirective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_kind"],
+      "properties": {
+        "task_kind": { "$ref": "#/$defs/TaskKind" },
+        "priority": { "type": "integer" },
+        "deadline_s": { "type": ["number", "null"] },
+        "goto": { "oneOf": [{ "$ref": "#/$defs/GotoTask" }, { "type": "null" }] },
+        "sample": { "oneOf": [{ "$ref": "#/$defs/SampleTask" }, { "type": "null" }] },
+        "excavate": { "oneOf": [{ "$ref": "#/$defs/ExcavateTask" }, { "type": "null" }] },
+        "haul": { "oneOf": [{ "$ref": "#/$defs/HaulTask" }, { "type": "null" }] },
+        "dock": { "oneOf": [{ "$ref": "#/$defs/DockTask" }, { "type": "null" }] },
+        "hop": { "oneOf": [{ "$ref": "#/$defs/HopTask" }, { "type": "null" }] },
+        "charge": { "oneOf": [{ "$ref": "#/$defs/ChargeTask" }, { "type": "null" }] },
+        "prospect": { "oneOf": [{ "$ref": "#/$defs/ProspectTask" }, { "type": "null" }] },
+        "directive": { "type": ["string", "null"] },
+        "params": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "Action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_id", "kind"],
+      "properties": {
+        "agent_id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/ActionKind" },
+        "sim_time_s": { "type": ["number", "null"] },
+        "actuator": { "oneOf": [{ "$ref": "#/$defs/ActuatorCommand" }, { "type": "null" }] },
+        "mode": { "oneOf": [{ "$ref": "#/$defs/ModeCommand" }, { "type": "null" }] },
+        "task": { "oneOf": [{ "$ref": "#/$defs/TaskDirective" }, { "type": "null" }] }
+      }
+    },
+    "ActionBatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actions": { "type": "array", "items": { "$ref": "#/$defs/Action" } }
+      }
+    },
+
+    "LinkBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "eirp_dbw": { "type": ["number", "null"] },
+        "path_loss_db": { "type": ["number", "null"] },
+        "gt_db_per_k": { "type": ["number", "null"] },
+        "required_ebn0_db": { "type": ["number", "null"] },
+        "margin_db": { "type": ["number", "null"] },
+        "modcod": { "type": ["string", "null"] }
+      }
+    },
+    "ContactNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role"],
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "$ref": "#/$defs/NodeRole" },
+        "kind": { "type": ["string", "null"] }
+      }
+    },
+    "ContactInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_a", "node_b", "start_tdb_s", "end_tdb_s"],
+      "properties": {
+        "node_a": { "type": "string" },
+        "node_b": { "type": "string" },
+        "start_tdb_s": { "type": "number" },
+        "end_tdb_s": { "type": "number" },
+        "max_rate_bps": { "type": ["number", "null"] },
+        "min_latency_s": { "type": ["number", "null"] },
+        "mean_latency_s": { "type": ["number", "null"] },
+        "margin_db": { "type": ["number", "null"] },
+        "confidence": { "$ref": "#/$defs/ContactConfidence" },
+        "band": { "type": ["string", "null"] },
+        "modcod": { "type": ["string", "null"] },
+        "link_budget": { "oneOf": [{ "$ref": "#/$defs/LinkBudget" }, { "type": "null" }] },
+        "window": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/EpochWindow" }, { "type": "null" }] }
+      }
+    },
+    "Route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "dest"],
+      "properties": {
+        "source": { "type": "string" },
+        "dest": { "type": "string" },
+        "hops": { "type": "array", "items": { "type": "string" } },
+        "store_and_forward": { "type": "boolean" },
+        "earliest_delivery_tdb_s": { "type": ["number", "null"] },
+        "total_latency_s": { "type": ["number", "null"] },
+        "earliest_delivery": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/Epoch" }, { "type": "null" }] }
+      }
+    },
+    "ContactPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/ContactNode" } },
+        "intervals": { "type": "array", "items": { "$ref": "#/$defs/ContactInterval" } },
+        "routes": { "type": "array", "items": { "$ref": "#/$defs/Route" } },
+        "epoch_start_tdb_s": { "type": ["number", "null"] },
+        "epoch_end_tdb_s": { "type": ["number", "null"] },
+        "window": { "oneOf": [{ "$ref": "https://schemas.astro-mine.org/core/units/v0.1/units.schema.json#/$defs/EpochWindow" }, { "type": "null" }] }
+      }
+    }
+  }
+}

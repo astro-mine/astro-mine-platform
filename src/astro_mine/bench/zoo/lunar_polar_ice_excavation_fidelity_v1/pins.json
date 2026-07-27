@@ -1,0 +1,26 @@
+{
+  "shackleton-de-gerlache-v1": {
+    "producer": "worlds",
+    "content_id": "shackleton-de-gerlache-v1",
+    "content_version": "0.4.0",
+    "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md); no republish - the same content backs a new task. 0.4.0 ships its horizon map (astro-mine-worlds#46), so resolving the world costs ~3 s rather than the better part of an hour."
+  },
+  "astro-mine.fleet.excavator": {
+    "producer": "fleet",
+    "content_id": "astro-mine.fleet.excavator",
+    "content_version": "0.2.0",
+    "recipe": "fleet publish library/manipulation/excavator.sadf.yaml --registry <reg> --sign --key <key>  # 0.2.0 adds the `tool` contact element (astro-mine-fleet#37); 0.1.0 remains published and immutable"
+  },
+  "shackleton_water_ice_v1": {
+    "producer": "prospect",
+    "content_id": "shackleton_water_ice_v1",
+    "content_version": "1.0.0",
+    "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md)"
+  },
+  "excavation-gns": {
+    "producer": "surrogate",
+    "content_id": "excavation-gns",
+    "content_version": "0.6.0",
+    "recipe": "astro-mine-surrogate scripts/publish_surrogate.py --registry <reg> --key <key> --version 0.6.0  # NOT a ScenarioSpec content pin - ContentPins has no surrogate slot, and must not: the tier under test is an argument to the runner, not part of the task. Recorded here so the measured result in RESULTS.md is traceable to the exact artifact it was measured against. 0.6.0 declares its error budget as a max over a 2-step rollout horizon (astro-mine-surrogate#21/#23/#27); the earlier 0.2.0-0.5.0 tiers declared bounds Sim could not hold at its grading cadence and produced no claim - see PROVENANCE.md."
+  }
+}

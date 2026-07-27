@@ -1,0 +1,34 @@
+# The real Guard shield, as a Mind tier/shield plugin (RFC-0006 sibling binding; RM-P1-GUARD-03).
+#
+# Discovered through the `astro_mine.mind.tier_plugins` entry-point group, which Guard's [mind]
+# extra registers — so co-installing mind + guard[mind] binds Mind's mandatory shield stage
+# (RM-P1-MIND-05) to the real Rust TCB with no mind -> guard dependency. Gated by the Core plugin
+# registry exactly like every other plugin (validity -> interface negotiation -> signature).
+manifest_version: "0.1"
+manifest:
+  name: guard.shield
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Astro-Mine-Guard PolicyShield — the trusted Rust safety core (CBF-QP keep-out shield +
+    STL/MTL runtime monitors + simplex backup + the action gate) behind Mind's shield stage and
+    the ReportingShield seam. Enforces a reviewed, content-addressed SafetySpec (RFC-0004): every
+    action crosses the TCB, and no positive certificate resolves to a verified safe command —
+    fail-safe, never fail-open. Requires params.spec_path or params.spec.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  # The certified action is a deterministic function of the compiled model and the tick's inputs:
+  # the arbiter carries no clock and no RNG (the watchdog path is opt-in and off by default), so a
+  # seeded run reproduces its interventions bit-for-bit.
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+    - SafetyVerdict
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: shield

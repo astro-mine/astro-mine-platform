@@ -1,0 +1,47 @@
+# The metadata sidecar for an exported ONNX policy (RM-P1-CORE-01; core.md §3; learn.md):
+# an ONNX graph plus this document is the portable policy artifact Learn exports, Mind
+# hosts, Guard wraps, and Bench scores. Pairs with the greedy-prospecting-baseline plugin
+# manifest (examples/plugins/). Illustrative digests; not a real model.
+policy_package_version: "0.1"
+policy_package:
+  name: greedy-prospecting-baseline
+  version: 0.1.0
+  onnx_model:
+    digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+    uri: oci://ghcr.io/astro-mine/policies/greedy-prospecting-baseline:0.1.0
+    opset: 18
+  io_signature:
+    inputs:
+      - name: observation
+        dtype: float32
+        shape: [-1, 32]
+    outputs:
+      - name: action
+        dtype: float32
+        shape: [-1, 4]
+    observation_space:
+      rover:
+        kind: box
+        shape: "32"
+    action_space:
+      rover:
+        kind: box
+        shape: "4"
+  core_interfaces:
+    policy: 0.1.0
+    messages: 0.1.0
+    objective: 0.1.0
+  assumptions:
+    comms_observability: intermittent
+    action_bounds:
+      max_speed_mps: "0.5"
+    surrogate_fidelity_caveats:
+      - Trained against the kinematic terramechanics tier; not validated on the granular tier.
+    deterministic: true
+  provenance:
+    input_hashes:
+      - sha256:1111111111111111111111111111111111111111111111111111111111111111
+    code_version: astro-mine-learn 0.1.0
+    toolchain_version: python-3.12.4
+    env_lockfile: sha256:2222222222222222222222222222222222222222222222222222222222222222
+    seed: 42

@@ -1,0 +1,139 @@
+# Scenario 1 (lunar polar ice prospecting) — excavator rover.
+# Digs icy regolith at prospect-confirmed sites with a single-DOF bucket and feeds the
+# hauler/ISRU plant. The articulated tier exercises the bucket joint + actuator authoring
+# path. Illustrative values.
+#
+# 0.2.0 — declares the digging blade as a `tool` contact element (fleet#37). See the note on
+# `mobility.contact` below. 0.1.0 declared only a wheel, so every physics engine that asks "is this
+# a digging machine?" by looking for a `tool` element got "no", and the granular contact ladder was
+# unreachable from any published asset. 0.1.0 stays published and immutable; the anchor benchmark
+# still pins it, and pins the *rover* physics it was actually scored under.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.excavator
+    name: Excavator Rover
+    version: 0.2.0
+    kind: excavator
+    description: >-
+      Wheeled excavator with a single-DOF bucket for digging icy regolith at
+      prospect-confirmed sites.
+    labels:
+      scenario: lunar-polar-ice-prospecting
+
+  capabilities:
+    - mobility.wheeled
+    - excavation.bucket
+    - sensing.imu
+    - sensing.odometry
+    - power.generation
+    - power.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+
+  root_frame: body
+  frames:
+    - name: body
+    - name: bucket
+      parent: body
+      transform:
+        translation_m: { x: 1.2, y: 0.0, z: 0.2 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+
+  bodies:
+    - name: chassis
+      frame: body
+      mass_kg: 200.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.4 }
+      inertia_kg_m2: { ixx: 36.0, iyy: 44.0, izz: 30.0 }
+    - name: bucket_arm
+      frame: bucket
+      mass_kg: 40.0
+      center_of_mass_m: { x: 0.3, y: 0.0, z: 0.0 }
+      inertia_kg_m2: { ixx: 3.0, iyy: 5.0, izz: 5.0 }
+
+  joints:
+    - name: bucket_pitch
+      type: revolute
+      parent_body: chassis
+      child_body: bucket_arm
+      axis: { x: 0.0, y: 1.0, z: 0.0 }
+      limits:
+        position_rad: { min: -0.2, max: 1.4 }
+        velocity_rad_s: 0.6
+        effort_nm: 2000.0
+
+  actuators:
+    - { name: bucket_motor, target_joint: bucket_pitch, torque_nm: 2000.0, velocity: 0.6, power_draw_w: 250.0 }
+
+  power:
+    sources:
+      - { name: body_solar, kind: solar, nominal_power_w: 250.0 }
+      - { name: rhu_pack, kind: rhu, nominal_power_w: 8.0 }
+    storage:
+      - { name: main_battery, capacity_j: 4.0e+6, max_charge_w: 200.0, max_discharge_w: 400.0 }
+    floor_w: 30.0
+    loads_by_mode:
+      - { mode: idle, power_w: 40.0 }
+      - { mode: drive, power_w: 140.0 }
+      - { mode: excavate, power_w: 320.0 }
+
+  thermal:
+    operating_range_k: { min: 120.0, max: 330.0 }
+    survival_range_k: { min: 95.0, max: 360.0 }
+    dissipation_w: 80.0
+    radiator_area_m2: 0.5
+    heater_power_w: 30.0
+    surface_coupling: true
+
+  sensors:
+    - name: nav_imu
+      kind: imu
+      frame: body
+    - name: bucket_cam
+      kind: imaging
+      frame: bucket
+      observation_model: { range_m: 8.0, fov_deg: 60.0 }
+
+  mobility:
+    regimes: [surface]
+    contact:
+      - kind: wheel
+        dimensions_m: { x: 0.35, y: 0.20, z: 0.35 }
+        footprint_m2: 0.07
+        max_ground_pressure_pa: 12000.0
+        max_slope_deg: 20.0
+      # The digging blade. A `tool` element is what *makes* an asset an excavator to a physics
+      # engine: it is the declaration that this robot's contact with the ground is a cutting
+      # interaction, not a rolling one, and it is the only thing that routes the asset to a
+      # granular (DEM / learned-surrogate) contact model rather than a wheel-soil one. Without it
+      # the excavator was an excavator in name — `kind: excavator`, `excavation.bucket` — and a
+      # rover in physics.
+      #
+      # `dimensions_m` is the blade's bounding box in the `bucket` frame: **x = cutting width**
+      # (the span of soil the blade engages), y = fore-aft depth of the bucket pan, **z = blade
+      # height** (how deep it can cut in one pass). x and z are the load-bearing pair — a granular
+      # engine sizes its particle bed from the cutting width and its tool from the blade height.
+      #
+      # The numbers are the bucket the rest of this asset already implies. A 0.40 x 0.35 x 0.15 m
+      # pan holds 0.021 m^3, which at the 1500 kg/m^3 lunar regolith bulk density is ~31 kg — one
+      # scoop inside the 50 kg `payload.capacity_kg` below, as it must be. The 2000 N.m
+      # `bucket_motor` acting through the ~0.5 m blade lever arm delivers ~4 kN at the cutting
+      # edge, which over the 0.14 m^2 pan is ~29 kPa — declared here rounded to 30 kPa, and two and
+      # a half times the wheel's ceiling, because concentrating force is what a blade is for. It
+      # digs on gentler ground than it drives on (15 deg vs 20 deg): breaking traction while
+      # cutting is how an excavator tips over.
+      - kind: tool
+        dimensions_m: { x: 0.40, y: 0.35, z: 0.15 }
+        footprint_m2: 0.14
+        max_ground_pressure_pa: 30000.0
+        max_slope_deg: 15.0
+
+  payload:
+    capacity_kg: 50.0
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: chassis+bucket point-mass + power }
+    - { tier: kinematic, determinism_class: bit_exact, detail: "rigid chassis + bucket, no contact" }
+    - { tier: articulated, determinism_class: tolerance, detail: bucket joint + wheel/soil contact }

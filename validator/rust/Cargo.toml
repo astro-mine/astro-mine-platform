@@ -1,0 +1,22 @@
+# Minimal Rust fast-path validator for the Core JSON Schemas (RM-P0-CORE-07).
+# The Python reference (astro_mine.core.*.loader) is authoritative; this MUST agree
+# with it structurally (core.md §8, §11). Compiled in CI and the conda dev env.
+[package]
+name = "astro-mine-core-validate"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+# Internal `#/$defs` refs only, so drop default features (no HTTP/file ref resolution →
+# no reqwest/hyper in the tree).
+jsonschema = { version = "0.26", default-features = false }
+serde_json = "1"
+
+[dev-dependencies]
+# Parity test only: loads the checked-in YAML example corpus (the same files the Python
+# consistency test reads) so the Rust verdict can be compared against the reference.
+serde_yaml = "0.9"
+
+[lib]
+path = "src/lib.rs"

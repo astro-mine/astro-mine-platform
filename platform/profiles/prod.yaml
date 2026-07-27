@@ -1,0 +1,45 @@
+# Production profile -- the full stack on a managed/self-hosted cluster (EKS/GKE/AKS/on-prem).
+# All engines, Kueue, the GPU Operator (MIG + DCGM), the observability stack, and
+# cosign-verified-images-only admission are on. Substrate-agnostic: no dependence on a single
+# cloud's proprietary API (cloud.md §2 principle 8).
+kuberay-operator:
+  enabled: true
+
+argo-workflows:
+  enabled: true
+  server:
+    enabled: true
+
+kueue:
+  enabled: true
+
+gpu-operator:
+  enabled: true
+  mig:
+    strategy: mixed
+  dcgmExporter:
+    enabled: true
+
+kube-prometheus-stack:
+  enabled: true
+
+loki:
+  enabled: true
+
+kyverno:
+  enabled: true  # the controller that enforces the admission policy below
+
+admission:
+  enabled: true
+  # Set to the PEM public key (or keyless issuer) cosign verifies signatures against.
+  cosignPublicKey: ""
+  # Every image, in every namespace -- correct on a cluster where the platform's own images are
+  # signed by this key too. Scope `imageReferences`/`namespaces` if they are not.
+  imageReferences:
+    - "*"
+  namespaces: []
+  requireAttestations: true
+  ignoreTlog: false  # real signatures are published; verify against the transparency log
+
+observability:
+  enabled: true

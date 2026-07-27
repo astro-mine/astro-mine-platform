@@ -1,0 +1,21 @@
+# ESA ESTRACK deep-space + augmentation stations (RM-P1-LINK-13) — the first non-DSN
+# network, proving the catalog is data, not code. Approximate geodetic coordinates; lon is
+# degrees East (negative West). The default open path uses public station locations only.
+network: estrack
+stations:
+  - name: NNO-New-Norcia
+    lat_deg: -31.0482
+    lon_deg: 116.1914
+    min_elevation_deg: 10.0
+  - name: CEB-Cebreros
+    lat_deg: 40.4527
+    lon_deg: -4.3676
+    min_elevation_deg: 10.0
+  - name: MLG-Malargue
+    lat_deg: -35.7760
+    lon_deg: -69.3982
+    min_elevation_deg: 10.0
+  - name: KRU-Kourou
+    lat_deg: 5.2515
+    lon_deg: -52.8046
+    min_elevation_deg: 10.0

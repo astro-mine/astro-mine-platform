@@ -1,0 +1,137 @@
+// CompiledSafetyModel v0.1 — canonical Protobuf wire form (RM-P1-GUARD-01).
+//
+// Mirrors the canonical JSON Schema (compiled_safety_model.schema.json) and the Pydantic
+// models (astro_mine.guard.spec.ir). The compiler-produced IR the future Rust safety core
+// (RM-P1-GUARD-02) consumes: predicate table, keep-out/barrier terms, bounded monitor
+// automata, and static resource bounds. Closed-vocabulary fields are carried as `string`
+// for a byte-exact, drift-free round-trip; nullable scalars use proto3 `optional`.
+//
+// Conventions: field tags are append-only and never reused (conventions.md §3). Bindings
+// are generated with buf (scripts/gen_proto.sh).
+
+syntax = "proto3";
+
+package astro_mine.guard.spec.v0;
+
+// The shared Core units/frames/time vocabulary (RFC-0007): a keep-out / safe-pose frame is the
+// typed Core `ReferenceFrame` on the wire. Each `string frame` keeps its tag (wire-frozen); the
+// typed `frame_ref` is an additive sibling. The trusted Rust core (RM-P1-GUARD-02) validates
+// frame_ref with its own `require_frame` (conformance-pinned) but still reads only position for
+// control — typing the frame does not widen the TCB's control surface.
+import "astro_mine/core/units/_proto/units.proto";
+
+message CompiledSafetyModel {
+  string compiled_version = 1;  // "0.1"
+  string spec_id = 2;
+  string spec_content_hash = 3;
+  double sample_period_s = 4;
+  PredicateTable predicate_table = 5;
+  repeated ScalarBound scalar_bounds = 6;
+  repeated KeepOutTerm keep_out_terms = 7;
+  repeated MonitorAutomaton monitors = 8;
+  ResourceBounds resource_bounds = 9;
+  // Authored night-survival target the retreat (safe_state) backup drives toward, lowered from
+  // SafetySpec.safe_pose into the keep-out frame (RM-P1-GUARD-04). Additive, RFC-gated. Absent =>
+  // the safe_state backup degrades to brake-to-stop (fail-safe, never fail-open).
+  optional CompiledSafePose safe_pose = 10;
+  // The reviewed kinematic envelope on the *commanded* action, lowered from the spec's
+  // kinematic_limit constraints (RM-P1-GUARD-03). Additive. Absent (or an absent member) => the
+  // spec authored no such limit and the core's configured ceiling stands; an authored limit may
+  // only ever *tighten* it, never loosen it.
+  optional ActionLimits action_limits = 11;
+  // The reviewed MODE/TASK allowlist on the action gate, lowered from
+  // SafetySpec.admissible_directives (RFC-0004 Amendment 2). Additive, RFC-gated. The core
+  // intersects it with the *configured* allowlist once, at construction. Absent => the contract
+  // admits NO directive, whatever the configuration grants.
+  //
+  // NOTE the deliberate asymmetry with action_limits above: an absent *ceiling* leaves the
+  // configured one standing (the identity of a ceiling's meet is +inf), but an absent *permission
+  // set* admits nothing (its identity is the empty set). Both are the greatest-lower-bound — only
+  // the identity differs. Silence must never grant authority.
+  optional CompiledAdmissibleDirectives admissible_directives = 12;
+}
+
+// The reviewed MODE/TASK allowlist the action gate certifies a discrete directive against.
+// (Named `Compiled*` because the spec-side `AdmissibleDirectives` shares this proto package —
+// the same reason `CompiledSafePose` is not `SafePose`.)
+message CompiledAdmissibleDirectives {
+  repeated string modes = 1;  // ModeCommand.mode names (open vocab: SADF loads_by_mode)
+  repeated string tasks = 2;  // TaskKind (closed vocab carried as string)
+}
+
+// The tightest reviewed bound on a commanded actuator setpoint — the envelope the POSITION /
+// VELOCITY / EFFORT shield projects onto (the same reviewed kinematic_limit whose scalar bounds
+// police the *measured* signal, applied here to the *command*).
+message ActionLimits {
+  optional double max_velocity_mps = 1;  // commanded speed ceiling ‖w‖ (m/s)
+  optional double max_accel_mps2 = 2;    // commanded acceleration ceiling (m/s²)
+}
+
+// A charging / safe pose reduced to a bare position in the keep-out spatial frame — the target the
+// verified retreat-to-charging-pose backup steers toward. `frame` is carried for authoring-time
+// cross-frame validation; the trusted core reads only `position`.
+message CompiledSafePose {
+  string frame = 1;
+  repeated double position = 2;  // dim-length, in the keep-out frame
+  // Typed sibling of `frame` (RFC-0007). Authoring-time cross-frame metadata only; the trusted
+  // core reads only `position` (typing the frame must not widen what the TCB reads).
+  optional astro_mine.core.units.v0.ReferenceFrame frame_ref = 3;
+}
+
+message PredicateAtom {
+  string op = 1;  // PredicateOp (closed vocab carried as string)
+  int64 signal_index = 2;
+  double threshold = 3;
+}
+
+message PredicateTable {
+  repeated string signals = 1;
+  repeated PredicateAtom atoms = 2;
+}
+
+message ScalarBound {
+  string constraint_id = 1;
+  string on_uncertain = 2;  // OnUncertain (closed vocab carried as string)
+  int64 atom_index = 3;
+}
+
+message KeepOutTerm {
+  string constraint_id = 1;
+  string on_uncertain = 2;  // OnUncertain (closed vocab carried as string)
+  string shape = 3;  // GeometryKind (closed vocab carried as string)
+  string frame = 4;
+  double margin_m = 5;
+  repeated double center = 6;
+  repeated double half_extents = 7;
+  optional double radius = 8;
+  repeated double normal = 9;
+  optional double offset = 10;
+  repeated string collision_pair = 11;  // exactly 0 or 2 elements
+  optional astro_mine.core.units.v0.ReferenceFrame frame_ref = 12;  // typed sibling of `frame` (RFC-0007)
+}
+
+message CompiledNode {
+  string op = 1;  // TemporalOp (closed vocab carried as string)
+  optional int64 predicate_index = 2;
+  optional int64 interval_lo_samples = 3;
+  optional int64 interval_hi_samples = 4;
+  repeated CompiledNode args = 5;
+}
+
+message MonitorAutomaton {
+  string constraint_id = 1;
+  string on_uncertain = 2;  // OnUncertain (closed vocab carried as string)
+  CompiledNode root = 3;
+  int64 history_window_len = 4;
+  int64 node_count = 5;
+  repeated int64 predicate_indices = 6;
+}
+
+message ResourceBounds {
+  int64 predicate_slot_count = 1;
+  int64 scalar_bound_count = 2;
+  int64 keep_out_term_count = 3;
+  int64 monitor_count = 4;
+  int64 max_history_len = 5;
+  int64 worst_case_term_count = 6;
+}

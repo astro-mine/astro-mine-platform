@@ -1,0 +1,20 @@
+<root BTCPP_format="4" main_tree_to_execute="LunarProspecting">
+  <!-- Reference lunar-polar-prospecting tree (RM-P1-MIND-02): the behavior-tree execution
+       form of the reference composition stack. Mission then TAMP run in sequence; the control
+       tier runs only while fresh input is available, and a selector (Fallback) degrades to a
+       safe-idle standby primitive when it is not (the explicit graceful-degradation branch,
+       principle 4). Every proposed action still passes through the mandatory shield. -->
+  <BehaviorTree ID="LunarProspecting">
+    <Sequence>
+      <Action ID="RunMission" kind="planner" tier="mission"/>
+      <Action ID="RunTamp" kind="planner" tier="tamp"/>
+      <Fallback>
+        <Sequence>
+          <Condition ID="FreshFromTamp" kind="fresh_upstream"/>
+          <Action ID="RunControl" kind="policy" tier="control"/>
+        </Sequence>
+        <Action ID="SafeIdle" kind="primitive" action="standby"/>
+      </Fallback>
+    </Sequence>
+  </BehaviorTree>
+</root>

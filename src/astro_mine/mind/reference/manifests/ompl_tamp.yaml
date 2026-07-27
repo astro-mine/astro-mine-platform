@@ -1,0 +1,26 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.tamp.ompl
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    TAMP planner with the native OMPL/FCL motion backend (RM-P1-MIND-03) — symbolic task
+    selection interleaved with OMPL sampling-based motion (RRT*/PRM*/BIT*) over FCL collision
+    checking, behind the same MotionPlanner contract the reference RRT fills. Needs the [native]
+    extra; mind.tamp.sampling (pure-Python RRT) is the CI-tested default.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  # OMPL owns a process-global RNG seedable only once (before any sampling) and its planners are
+  # wall-clock-budgeted, so repeated solves agree within tolerance, not bit-for-bit. The
+  # bit-exact reference RRT remains the golden-trace baseline (conventions.md §11).
+  determinism_class: tolerance
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: tamp

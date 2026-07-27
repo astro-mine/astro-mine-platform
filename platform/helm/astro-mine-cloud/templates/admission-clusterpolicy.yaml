@@ -1,0 +1,51 @@
+{{- if .Values.admission.enabled }}
+# Cosign-verified-images-only admission (RM-P1-CLOUD-05). Mirrors
+# astro_mine.cloud.tenancy.admission.cosign_cluster_policy(): only signed images carrying SLSA
+# provenance + a CycloneDX SBOM are admitted at the cluster boundary (cloud.md §9).
+#
+# Needs Kyverno -- set `kyverno.enabled: true`. The chart now installs it; it previously did not,
+# which left this policy a YAML file nothing on the cluster could enforce.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-signed-images
+  labels:
+    {{- include "astro-mine-cloud.labels" . | nindent 4 }}
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: verify-signature
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              {{- with .Values.admission.namespaces }}
+              # Scoped. An unscoped rule also refuses the platform's own (unsigned, upstream)
+              # operator pods -- including Kyverno's own -- and takes the cluster with it.
+              namespaces:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+      verifyImages:
+        - imageReferences:
+            {{- toYaml .Values.admission.imageReferences | nindent 12 }}
+          attestors:
+            - entries:
+                - keys:
+                    publicKeys: |-
+                      {{- .Values.admission.cosignPublicKey | nindent 22 }}
+                    {{- if .Values.admission.ignoreTlog }}
+                    # Offline signatures: there is no transparency-log entry to look up, and no
+                    # SCT to check.
+                    rekor:
+                      ignoreTlog: true
+                    ctlog:
+                      ignoreSCT: true
+                    {{- end }}
+          {{- if .Values.admission.requireAttestations }}
+          attestations:
+            - predicateType: https://slsa.dev/provenance/v1
+            - predicateType: https://cyclonedx.org/bom
+          {{- end }}
+{{- end }}

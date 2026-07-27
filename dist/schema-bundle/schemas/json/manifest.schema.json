@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/core/registry/v0.1/manifest.schema.json",
+  "title": "Astro-Mine Plugin Manifest v0.1",
+  "description": "How a plugin declares itself to the platform: kind, the Core interface versions it implements, inputs/outputs, capability tags, provenance, and signature (RM-P0-CORE-05; core.md §3, §9; conventions.md §9, §12). Canonical source of truth; the Pydantic models in astro_mine.core.registry.model mirror it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "manifest"],
+  "properties": {
+    "manifest_version": { "const": "0.1" },
+    "manifest": { "$ref": "#/$defs/PluginManifest" }
+  },
+  "$defs": {
+    "PluginKind": {
+      "enum": ["regime_engine", "sensor_model", "coupling_scheme", "world_provider", "body_pack", "field_model", "resource_field_backend", "observation_model", "prior_recipe", "info_gain_objective", "comms_model", "asset", "policy", "metric", "design", "campaign"]
+    },
+    "SignatureScheme": {
+      "enum": ["sigstore_cosign", "unsigned"]
+    },
+    "SignatureKind": {
+      "enum": ["cosign_signature", "slsa_provenance", "sbom"]
+    },
+    "DeterminismClass": {
+      "enum": ["bit_exact", "tolerance"]
+    },
+    "Regime": {
+      "enum": ["launch_ascent", "interplanetary_transit", "proximity_orbit", "surface", "ascent_return", "earth_interface"]
+    },
+    "CapabilityTag": {
+      "enum": ["mobility.wheeled", "mobility.tracked", "mobility.legged", "mobility.hop", "mobility.orbiter", "mobility.rocket", "propulsion.chemical", "propulsion.cryo_chemical", "propulsion.electric_ion", "propulsion.cold_gas", "propulsion.solar_sail", "excavation.bucket", "excavation.auger", "excavation.scoop", "excavation.drill", "sample_collection.drill", "sample_collection.scoop", "sample_collection.auger", "sample_collection.pneumatic", "sample_collection.capture_bag", "manipulation.arm", "manipulation.gripper", "prospecting.neutron", "prospecting.nir", "prospecting.gpr", "prospecting.mass_spec", "prospecting.drill_assay", "sensing.imaging", "sensing.ranging", "sensing.lidar", "sensing.imu", "sensing.odometry", "sensing.contact", "sensing.altimetry", "sensing.thermal", "comms.relay", "comms.direct_to_earth", "comms.dsn", "comms.dtn", "isru.thermal_extraction", "isru.electrolysis", "isru.purification", "isru.storage", "power.generation", "power.storage", "power.distribution", "anchoring.anchor", "anchoring.harpoon", "anchoring.touch_and_go", "anchoring.capture_bag", "return.sample_canister", "return.bulk_hauler", "earth_interface.ballistic_capsule", "staging", "reusable", "carrier.dispenser", "operational_targeting", "ground_truth_access", "comms.live_mission_link_prediction"]
+    },
+    "Provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "seed": { "type": ["integer", "null"] },
+        "source_content_hashes": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "builder_version": { "type": ["string", "null"] },
+        "digest": { "type": ["string", "null"] }
+      }
+    },
+    "Signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scheme"],
+      "properties": {
+        "scheme": { "$ref": "#/$defs/SignatureScheme" },
+        "kind": { "$ref": "#/$defs/SignatureKind" },
+        "value": { "type": ["string", "null"] },
+        "payload": { "type": ["string", "null"] },
+        "certificate": { "type": ["string", "null"] },
+        "digest": { "type": ["string", "null"] }
+      }
+    },
+    "PluginManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "kind"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "kind": { "$ref": "#/$defs/PluginKind" },
+        "core_interfaces": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "inputs": { "type": "array", "items": { "type": "string" } },
+        "outputs": { "type": "array", "items": { "type": "string" } },
+        "capability_tags": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CapabilityTag" }
+        },
+        "determinism_class": {
+          "oneOf": [{ "$ref": "#/$defs/DeterminismClass" }, { "type": "null" }]
+        },
+        "regimes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Regime" }
+        },
+        "description": { "type": ["string", "null"] },
+        "license": { "type": ["string", "null"] },
+        "provenance": {
+          "oneOf": [{ "$ref": "#/$defs/Provenance" }, { "type": "null" }]
+        },
+        "signature": {
+          "oneOf": [{ "$ref": "#/$defs/Signature" }, { "type": "null" }]
+        },
+        "signatures": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Signature" }
+        },
+        "attributes": { "type": "object" }
+      }
+    }
+  }
+}

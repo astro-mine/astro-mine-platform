@@ -1,0 +1,23 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.control.onnx
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    ONNX control-tier plugin (RM-P1-MIND-03) — hosts a Learn-exported ONNX PolicyPackage
+    (RM-P1-LEARN-05) via Core's OnnxPolicy contract and an ONNX-Runtime session. A learned
+    controller that drops into the control tier through the same Core Controller interface;
+    Guard-wrapped like any tier. Requires the [onnx] extra.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: control

@@ -1,0 +1,138 @@
+stack_spec_version: "0.1"
+stack_spec:
+  id: reference-lunar-prospecting-anchor
+  name: Anchor lunar-polar prospecting stack (real Guard, real Allocate)
+  description: >-
+    The Phase-1 exit stack (mind.md §12): the three-tier hierarchy composed against the REAL
+    siblings rather than Mind's in-repo stand-ins — Astro-Mine-Allocate's CP-SAT AllocationPlanner
+    in the allocator tier (RM-P1-MIND-04) and Astro-Mine-Guard's PolicyShield, over the Rust TCB,
+    as the mandatory single egress (RM-P1-MIND-05). Both are bound purely by name: they are
+    discovered through the `astro_mine.mind.tier_plugins` entry-point group that the sibling
+    packages register, so composing this stack needs no mind->guard / mind->allocate import, and
+    the swap is a registry swap, not a framework edit (mind.md §6, §7).
+
+    Coordination is `hybrid`, so the executive selects the comms-aware degrade-not-collapse
+    strategy (RM-P1-MIND-06): under a comms blackout the mission replan is suppressed and agents
+    act on cached intent, reconciling when the relay window reopens. Composing it needs the [sim]
+    extra installed (that is what puts the sibling plugins on the entry-point group); without it,
+    `compose` raises `PluginNotRegistered` -- deliberately, rather than silently falling back to a
+    weaker shield.
+  scenario_ref: lunar-polar-prospecting
+  coordination:
+    kind: hybrid
+  tiers:
+    - role: mission
+      plugin: mind.mission.pddl
+      # In SIM seconds, at the anchor's 60 s decision tick: three ticks of validity. A blackout
+      # must outlast this for act-while-stale to be observable -- on the tick comms drops the
+      # `comms_lost` trigger replans (re-arming the horizon), and only when THAT plan expires while
+      # still dark does the mission replan get suppressed.
+      validity_horizon_s: 180.0
+      replan_triggers:
+        - kind: plan_expired
+        - kind: comms_lost
+    - role: allocator
+      # The real thing: astro_mine.allocate.AllocationPlanner (CP-SAT). Mind embeds no solver --
+      # it owns decomposition and execution, not the combinatorics (mind.md §6).
+      plugin: allocate.planner
+      params:
+        backend: cp-sat
+        deadline_s: 5.0
+      replan_triggers:
+        - kind: periodic
+          every_ticks: 3
+    - role: tamp
+      plugin: mind.tamp.sampling
+    - role: control
+      plugin: mind.control.pid
+      params:
+        # 3-D commanded velocity. The reference controllers are planar by default (the toy env
+        # integrates a 2-vector), but Guard's TCB certifies a command only when its length matches
+        # the compiled SafetySpec's spatial_dim -- and a spec with real keep-out geometry is 3-D,
+        # because the world is. Left at 2, every command below would be *not certifiable* and the
+        # shield would substitute a zero-effort hold: a frozen swarm that still emits one action
+        # per agent per tick, and would sail through a naive "it didn't collapse" assertion.
+        dim: 3
+        # Below the shield's v_max (0.5 m/s), so the controller lives inside the reviewed kinematic
+        # envelope rather than being clamped into it on every tick.
+        max_speed_mps: 0.4
+  shield:
+    # The real Guard PolicyShield. A shield with no contract is not a shield, so it is supplied a
+    # SafetySpec inline. This is NOT a copy of Guard's reviewed anchor spec (`anchor-lunar-polar-v0`,
+    # now shipped as package data via astro_mine.guard.reference since astro-mine-guard#29). It is a
+    # DELIBERATELY NARROWER spec (`mind-anchor-lunar-polar-v0`) authored for what the Phase-1 Sim
+    # integration can evaluate: Guard's full spec binds power/torque/keep-out/temporal clauses whose
+    # signals resolve to NaN in this path (see below) and would freeze the swarm. So this is inline
+    # by design, not by a packaging limitation — referencing Guard's packaged spec here would be
+    # wrong, not a de-duplication. The two are distinct contracts and there is no shared text to
+    # keep in sync.
+    #
+    # The constraints below are deliberately only those the Phase-1 signal resolution can actually
+    # evaluate. Guard's DefaultSignalResolver reads `battery_soc_j` and `temperature_k` off the
+    # observation's StateSample -- exactly the two scalars Sim publishes -- and resolves
+    # SADF/Worlds-sourced signals (power floors, torque budgets, terrain) to NaN *by design* until
+    # RM-P1-GUARD-04 lands their resolution. A NaN safety signal fails the tick CLOSED. So a spec
+    # that referenced them here would not be a stricter contract, it would be a permanently
+    # retreating one -- the shield would intervene on every tick of every run and the integration
+    # would prove nothing. These clauses bind; the omitted ones are pending GUARD-04, not waived.
+    plugin: guard.shield
+    params:
+      sample_period_s: 60.0
+      # No directive grant. This stack's control tier emits ActionKind.ACTUATOR actions, which are
+      # NUMERIC commands: the shield projects them onto the safe set, and the MODE/TASK allowlist is
+      # never consulted for them. (The allowlist gates `ModeCommand.mode` NAMES, not `ControlMode`
+      # values -- a distinction this file previously got wrong, granting `certified_modes:
+      # ["velocity"]` on the belief that it was needed for VELOCITY setpoints. It was not: the entry
+      # was inert for every action this stack emits, and a standing grant for any MODE directive that
+      # happened to be named "velocity".)
+      #
+      # Under RFC-0004 Amendment 2 the grant lives in the reviewed SafetySpec
+      # (`admissible_directives`), and these params can only NARROW it. If this stack ever needs to
+      # certify a directive, author it in the `spec:` block below -- where it is reviewed,
+      # content-addressed, signed, and bound into every SafetyVerdict -- not here.
+      v_max: 0.5
+      spec: |
+        safety_version: "0.1"
+        safety:
+          id: mind-anchor-lunar-polar-v0
+          name: Anchor prospecting swarm — hard safety contract
+          description: >-
+            Survival energy and thermal floors plus the lander-zone keep-out, for the composed
+            Mind stack on the lunar polar water-ice anchor scenario.
+          scenario_ref: sha256:0000000000000000000000000000000000000000000000000000000000000000
+          safe_pose:
+            frame: MOON_ME
+            position_m: { x: 60.0, y: 0.0, z: 5.0 }
+          signals:
+            - key: battery_soc_j
+              unit: J
+              source: observation
+              description: Battery state-of-charge (Sim publishes it on StateSample).
+            - key: temperature_k
+              unit: K
+              source: observation
+              description: Chassis temperature (Sim publishes it on StateSample).
+          constraints:
+            - kind: energy_floor
+              id: c_energy_floor
+              description: Battery energy stays above the night-survival floor.
+              energy_floor:
+                signal: battery_soc_j
+                floor_j: 1000.0
+            - kind: thermal_floor
+              id: c_thermal_floor
+              description: Chassis temperature stays at/above the survival floor.
+              thermal_floor:
+                signal: temperature_k
+                limit_k: 90.0
+            - kind: keep_out
+              id: c_lander_zone
+              description: Stay clear of the lander safety sphere.
+              keep_out:
+                margin_m: 3.0
+                volume:
+                  shape: sphere
+                  sphere:
+                    frame: MOON_ME
+                    center_m: { x: 0.0, y: 0.0, z: 0.0 }
+                    radius_m: 30.0

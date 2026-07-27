@@ -1,0 +1,21 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.reference.shield
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference pass-through shield — a local-dev stand-in for Guard's PolicyShield that
+    returns the proposed action unchanged. NOT a safety enforcer; the real Guard shield is
+    bound via the registry in RM-P1-MIND-05.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: shield

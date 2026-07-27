@@ -1,0 +1,27 @@
+stack_spec_version: "0.1"
+stack_spec:
+  id: reference-lunar-prospecting
+  name: Reference lunar-polar prospecting stack
+  description: >-
+    The default three-tier stack over the reference tier plugins: a scripted mission
+    planner assigns each agent a prospect region, a scripted TAMP planner turns it into a
+    GOTO, and a scripted controller closes the loop — every action passing through the
+    reference pass-through shield. A replaceable example that runs the spine end-to-end on
+    the anchor scenario; swap in the RM-P1-MIND-03 backends and the real Guard shield
+    (RM-P1-MIND-05) via the registry without touching the framework.
+  scenario_ref: lunar-polar-prospecting
+  tiers:
+    - role: mission
+      plugin: mind.reference.mission
+      validity_horizon_s: 5.0
+      replan_triggers:
+        - kind: plan_expired
+    - role: tamp
+      plugin: mind.reference.tamp
+      replan_triggers:
+        - kind: periodic
+          every_ticks: 3
+    - role: control
+      plugin: mind.reference.control
+  shield:
+    plugin: mind.reference.shield

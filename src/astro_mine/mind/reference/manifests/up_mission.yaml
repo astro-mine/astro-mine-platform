@@ -1,0 +1,22 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.mission.up
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    unified-planning mission backend (RM-P1-MIND-03) — solves the generated PDDL problem with a
+    real engine (Fast Downward / OPTIC / ENHSP, resolved by problem kind) and turns the returned
+    plan's assign steps into the per-agent prospect decomposition. Needs the [pddl] extra; the
+    pure-Python reference planner (mind.mission.pddl) is the CI-tested default.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: mission

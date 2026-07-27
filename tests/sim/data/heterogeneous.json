@@ -1,0 +1,40 @@
+{
+  "name": "heterogeneous-co-step",
+  "seed": 11,
+  "dt_s": 1.0,
+  "horizon_steps": 4,
+  "agents": [
+    {
+      "agent_id": "relay",
+      "initial_position_m": [1837400.0, 0.0, 0.0],
+      "velocity_mps": [0.0, 1633.4, 0.0],
+      "battery_soc_j": 500.0,
+      "frame": { "name": "J2000", "frame_class": "inertial" },
+      "dynamics": { "kind": "orbital" }
+    },
+    {
+      "agent_id": "rover",
+      "initial_position_m": [0.0, 0.0, 0.0],
+      "velocity_mps": [0.5, 0.0, 0.0],
+      "battery_soc_j": 300.0,
+      "dynamics": {
+        "kind": "mobility",
+        "mass_kg": 200.0,
+        "max_speed_mps": 0.5,
+        "max_traction_n": 400.0,
+        "idle_power_w": 10.0,
+        "drive_power_w_per_mps": 20.0
+      }
+    },
+    {
+      "agent_id": "digger",
+      "initial_position_m": [5.0, 0.0, 0.0],
+      "battery_soc_j": 400.0,
+      "dynamics": {
+        "kind": "granular",
+        "max_dig_rate_m3_s": 0.01,
+        "specific_energy_j_per_m3": 100000.0
+      }
+    }
+  ]
+}

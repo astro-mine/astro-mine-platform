@@ -1,0 +1,17 @@
+# buf codegen — Python bindings + gRPC service stubs (RM-P1-PROSPECT-11).
+#
+# Generates the checked-in Python protobuf bindings (*_pb2.py / *_pb2.pyi) and the gRPC service
+# stubs (*_pb2_grpc.py) that astro_mine.prospect.service.{server,client} import. Output lands in
+# `src/` mirroring the proto path, i.e. src/astro_mine/prospect/service/_proto/field_service_pb2.py.
+#
+# Remote plugins are PINNED for reproducibility (CX-REPRO): the v35 line emits gencode for the
+# protobuf 7.35 runtime pinned in pyproject.toml (grpcio is the runtime, not grpcio-tools, which
+# caps protobuf <7). Bump the plugin and the runtime together. Run via `scripts/gen_proto.sh`.
+version: v2
+plugins:
+  - remote: buf.build/protocolbuffers/python:v35.1
+    out: src
+  - remote: buf.build/protocolbuffers/pyi:v35.1
+    out: src
+  - remote: buf.build/grpc/python:v1.71.0
+    out: src

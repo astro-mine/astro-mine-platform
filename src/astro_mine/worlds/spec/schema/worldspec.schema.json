@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/worlds/spec/v0.1/worldspec.schema.json",
+  "$defs": {
+    "LayerSpec": {
+      "additionalProperties": false,
+      "description": "Which derived layers the world enables, and their parameters.\n\nTerrain is always present (it establishes the grid). Each of the others is opt-in: a value of\n``None``/empty means the layer is not part of this world. The bundle build is given the matching\nproducts and validates them against this declaration.",
+      "properties": {
+        "regolith_prior": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Regolith Prior"
+        },
+        "illumination_n_azimuth": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Illumination N Azimuth"
+        },
+        "psr_semantics": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Psr Semantics"
+        },
+        "thermal_classes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Thermal Classes",
+          "type": "array"
+        },
+        "illumination_backend": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Illumination Backend"
+        },
+        "illumination_horizon_frame": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Illumination Horizon Frame"
+        },
+        "illumination_max_radius_m": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Illumination Max Radius M"
+        },
+        "illumination_abcorr": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Illumination Abcorr"
+        },
+        "psr_start": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Psr Start"
+        },
+        "psr_days": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Psr Days"
+        },
+        "psr_step_hours": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Psr Step Hours"
+        }
+      },
+      "title": "LayerSpec",
+      "type": "object"
+    },
+    "PlanetaryCRS": {
+      "additionalProperties": false,
+      "description": "An explicit planetary coordinate reference system.\n\nThe minimum needed to reproject spatial data without guessing: the ``body``, its\nbody-fixed ``body_fixed_frame``, and the PROJ planetary reference radius\n``reference_radius_m`` (the PROJ ``+R``; the Moon is modelled as a sphere,\nR \u2248 1_737_400 m \u2014 ellipsoid ``+a``/``+b`` is deferred). ``projection`` carries an\nexplicit PROJ/WKT/EPSG string for a *projected* CRS (e.g. lunar polar stereographic\nfor the Shackleton DEM); ``None`` means body-fixed geographic (lat/lon on the\ndatum). No field defaults to an Earth/WGS84 value \u2014 a CRS is explicit or it is\nrejected (RM-P0-WORLDS-01; conventions.md \u00a75).",
+      "properties": {
+        "body": {
+          "title": "Body",
+          "type": "string"
+        },
+        "body_fixed_frame": {
+          "title": "Body Fixed Frame",
+          "type": "string"
+        },
+        "reference_radius_m": {
+          "exclusiveMinimum": 0.0,
+          "title": "Reference Radius M",
+          "type": "number"
+        },
+        "projection": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Projection"
+        },
+        "datum": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Datum"
+        }
+      },
+      "required": [
+        "body",
+        "body_fixed_frame",
+        "reference_radius_m"
+      ],
+      "title": "PlanetaryCRS",
+      "type": "object"
+    },
+    "Region": {
+      "additionalProperties": false,
+      "description": "A CRS-projected rectangular region (metres) at a target resolution.\n\nThe half-open box ``[min, max)`` in the world CRS's projected metres, plus the intended\nground sample distance. The realized grid (width/height/transform) comes from the terrain\nproduct; this is the *declared* extent the spec is authored against.",
+      "properties": {
+        "min_x_m": {
+          "title": "Min X M",
+          "type": "number"
+        },
+        "min_y_m": {
+          "title": "Min Y M",
+          "type": "number"
+        },
+        "max_x_m": {
+          "title": "Max X M",
+          "type": "number"
+        },
+        "max_y_m": {
+          "title": "Max Y M",
+          "type": "number"
+        },
+        "resolution_m": {
+          "exclusiveMinimum": 0.0,
+          "title": "Resolution M",
+          "type": "number"
+        }
+      },
+      "required": [
+        "min_x_m",
+        "min_y_m",
+        "max_x_m",
+        "max_y_m",
+        "resolution_m"
+      ],
+      "title": "Region",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "description": "A reference to a source input dataset (e.g. the LOLA DEM), cited by content hash.\n\n``content_hash`` pins the exact input so a world is reproducible from its sources; it is\n``None`` only for a synthetic/illustrative source (e.g. the CI stand-in DEM).",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "content_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Hash"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "SourceRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The declarative description of a world \u2014 authored as YAML, hashed as canonical JSON.\n\nConstruct from YAML (:meth:`from_yaml` / :meth:`from_yaml_text`) or directly; serialize back\nwith :meth:`to_yaml`. :attr:`spec_hash` content-addresses the declaration; the full world hash\n(declaration + resolved component hashes + toolchain) is computed by the bundle build.",
+  "properties": {
+    "world_id": {
+      "minLength": 1,
+      "title": "World Id",
+      "type": "string"
+    },
+    "version": {
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "crs": {
+      "$ref": "#/$defs/PlanetaryCRS"
+    },
+    "region": {
+      "$ref": "#/$defs/Region"
+    },
+    "source_dem": {
+      "$ref": "#/$defs/SourceRef"
+    },
+    "layers": {
+      "$ref": "#/$defs/LayerSpec"
+    },
+    "reference_datetime": {
+      "default": "2025-01-01T00:00:00Z",
+      "title": "Reference Datetime",
+      "type": "string"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Description"
+    }
+  },
+  "required": [
+    "world_id",
+    "crs",
+    "region",
+    "source_dem"
+  ],
+  "title": "WorldSpec",
+  "type": "object"
+}

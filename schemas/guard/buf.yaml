@@ -1,0 +1,25 @@
+# buf module config (RM-P1-GUARD-01). The canonical .proto sources live under
+# schemas/proto; buf lints them, gates breaking changes against main in CI, and generates
+# the Python bindings (see buf.gen.yaml). Mirrors astro-mine-core / astro-mine-surrogate.
+#
+# The SafetySpec is a safety contract: `breaking: use FILE` makes CI reject any non-additive
+# wire change (a removed/renamed/re-typed field), so a constraint kind can only be *added*,
+# never silently altered (guard.md §5, additive & RFC-gated).
+version: v2
+modules:
+  - path: schemas/proto
+lint:
+  use:
+    - STANDARD
+  except:
+    # Guard keeps its wire form in `<pkg>/_proto/` so generated bindings land at
+    # astro_mine.guard.spec._proto.* — the import path astro_mine.guard.spec.wire builds
+    # against. That diverges from buf's package==directory convention deliberately.
+    - PACKAGE_DIRECTORY_MATCH
+    # Interfaces are versioned pre-1.0 during Phase 1 (`.v0`, matching the JSON Schema
+    # `$id .../v0.1/...` and the per-interface SemVer scheme). buf's version-suffix rule only
+    # accepts `v1`+, so it is waived until the Phase-1 interface freeze reaches v1.
+    - PACKAGE_VERSION_SUFFIX
+breaking:
+  use:
+    - FILE

@@ -1,0 +1,22 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.control.pid
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference PID (proportional) controller (RM-P1-MIND-03) — clamped velocity setpoint
+    toward the GOTO target. A classical baseline behind Core's Controller sub-interface;
+    Guard-wrapped like any tier.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: control

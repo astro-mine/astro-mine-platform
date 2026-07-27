@@ -1,0 +1,710 @@
+{
+  "$defs": {
+    "AssetRef": {
+      "additionalProperties": false,
+      "description": "A reference to an available asset \u2014 its id, SADF capability tags, and SI budgets.\n\nResolved from Fleet SADF (allocate.md \u00a73): ``capability_tags`` are the Core\n:class:`~astro_mine.core.sadf.CapabilityTag`\\ s the asset declares (matched against a\ntask's ``required_capabilities``); ``budgets`` maps a named SI budget (e.g.\n``energy_j``, ``time_s``) to its capacity \u2014 consumed by the power/energy constraint\nbuilders in RM-P1-ALLOC-03.",
+      "properties": {
+        "asset_id": {
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "budgets": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Budgets",
+          "type": "object"
+        },
+        "capability_tags": {
+          "items": {
+            "$ref": "#/$defs/CapabilityTag"
+          },
+          "title": "Capability Tags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "asset_id"
+      ],
+      "title": "AssetRef",
+      "type": "object"
+    },
+    "CapabilityTag": {
+      "description": "Closed, Core-owned autonomy/capability vocabulary (dotted namespaces).\n\nDeclared by an asset and negotiated against by Allocate/Mind/Learn; also the\nsubstrate for export-control gating. Spans both flagship scenarios and all\nroadmap phases (RFC-0001 propulsion/return/anchoring tags included).",
+      "enum": [
+        "mobility.wheeled",
+        "mobility.tracked",
+        "mobility.legged",
+        "mobility.hop",
+        "mobility.orbiter",
+        "mobility.rocket",
+        "propulsion.chemical",
+        "propulsion.cryo_chemical",
+        "propulsion.electric_ion",
+        "propulsion.cold_gas",
+        "propulsion.solar_sail",
+        "excavation.bucket",
+        "excavation.auger",
+        "excavation.scoop",
+        "excavation.drill",
+        "sample_collection.drill",
+        "sample_collection.scoop",
+        "sample_collection.auger",
+        "sample_collection.pneumatic",
+        "sample_collection.capture_bag",
+        "manipulation.arm",
+        "manipulation.gripper",
+        "prospecting.neutron",
+        "prospecting.nir",
+        "prospecting.gpr",
+        "prospecting.mass_spec",
+        "prospecting.drill_assay",
+        "sensing.imaging",
+        "sensing.ranging",
+        "sensing.lidar",
+        "sensing.imu",
+        "sensing.odometry",
+        "sensing.contact",
+        "sensing.altimetry",
+        "sensing.thermal",
+        "comms.relay",
+        "comms.direct_to_earth",
+        "comms.dsn",
+        "comms.dtn",
+        "isru.thermal_extraction",
+        "isru.electrolysis",
+        "isru.purification",
+        "isru.storage",
+        "power.generation",
+        "power.storage",
+        "power.distribution",
+        "anchoring.anchor",
+        "anchoring.harpoon",
+        "anchoring.touch_and_go",
+        "anchoring.capture_bag",
+        "return.sample_canister",
+        "return.bulk_hauler",
+        "earth_interface.ballistic_capsule",
+        "staging",
+        "reusable",
+        "carrier.dispenser",
+        "operational_targeting",
+        "ground_truth_access",
+        "comms.live_mission_link_prediction"
+      ],
+      "title": "CapabilityTag",
+      "type": "string"
+    },
+    "EvaluationWindow": {
+      "additionalProperties": false,
+      "description": "How a metric binding is evaluated over time. Without one, a binding is evaluated\ncumulatively over the whole episode. A ``rolling`` window expresses rate/sustained\nobjectives (\"10 t per lunar day\") and requires ``duration_s``; ``cumulative`` and\n``per_phase`` forbid it (enforced in the loader). Time-windowing semantics are the\nmetric's job (Bench); this declares the intent.",
+      "properties": {
+        "duration_s": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration S"
+        },
+        "kind": {
+          "$ref": "#/$defs/WindowKind"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "EvaluationWindow",
+      "type": "object"
+    },
+    "MetricAggregation": {
+      "description": "How a metric's per-seed / per-episode values combine into one score\n(bench.md \u00a73; scenario \u00a713). Deterministic and content-addressed so a design-time\nscore and an operational reading of the same objective are comparable (LUNAR-TR-006).",
+      "enum": [
+        "mean",
+        "median",
+        "min",
+        "max",
+        "sum",
+        "p05",
+        "p95"
+      ],
+      "title": "MetricAggregation",
+      "type": "string"
+    },
+    "MetricBinding": {
+      "additionalProperties": false,
+      "description": "The objective->metric binding \u2014 the load-bearing contract.\n\nBinds one success criterion to a Bench metric with an explicit, quantitative\ntarget and tolerance (acceptance: \"binds each success criterion to a Bench metric\nwith target + tolerance\"). ``metric`` is the Bench metric key (resolved by Bench,\nnot Core \u2014 Core owns the binding shape, not the metric registry).",
+      "properties": {
+        "aggregation": {
+          "$ref": "#/$defs/MetricAggregation",
+          "default": "mean"
+        },
+        "direction": {
+          "$ref": "#/$defs/MetricDirection"
+        },
+        "evaluation_window": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvaluationWindow"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "metric": {
+          "title": "Metric",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "number"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Threshold"
+        },
+        "tolerance": {
+          "minimum": 0.0,
+          "title": "Tolerance",
+          "type": "number"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "direction",
+        "target",
+        "tolerance"
+      ],
+      "title": "MetricBinding",
+      "type": "object"
+    },
+    "MetricDirection": {
+      "description": "Whether a higher or lower metric value is better (scenario \u00a713 scoring).",
+      "enum": [
+        "higher_better",
+        "lower_better"
+      ],
+      "title": "MetricDirection",
+      "type": "string"
+    },
+    "Objective": {
+      "additionalProperties": false,
+      "description": "The optimization objective: a ``sense`` plus a reference to / inlining of a Core\n:class:`~astro_mine.core.objective.model.ObjectiveSpec` and optional scalarization\n``weights``.\n\nCore owns the objective\u2194metric binding (:mod:`astro_mine.core.objective`); Allocate only\nstates the sense it optimizes and the per-criterion weights it scalarizes with \u2014\noptimization lives above Core (core.md \u00a73). ``spec`` inlines the ObjectiveSpec;\n``objective_ref`` references it by content hash when it is resolved out-of-band.",
+      "properties": {
+        "objective_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Objective Ref"
+        },
+        "sense": {
+          "$ref": "#/$defs/ObjectiveSense",
+          "default": "maximize"
+        },
+        "spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ObjectiveSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Weights",
+          "type": "object"
+        }
+      },
+      "title": "Objective",
+      "type": "object"
+    },
+    "ObjectiveSense": {
+      "description": "Whether the objective is minimized or maximized (allocate.md \u00a73).",
+      "enum": [
+        "minimize",
+        "maximize"
+      ],
+      "title": "ObjectiveSense",
+      "type": "string"
+    },
+    "ObjectiveSpec": {
+      "additionalProperties": false,
+      "description": "An objective: an identity plus its measurable success criteria.\n\nAuthored by Studio (optionally via human-reviewed LLM intent capture) and\nconsumed by Bench/Ledger/Ops/View (core.md \u00a73). ``scenario_ref`` is an optional\ncontent reference to the ScenarioSpec the objective is stated against.",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "object"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "provenance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Provenance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "scenario_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scenario Ref"
+        },
+        "success_criteria": {
+          "items": {
+            "$ref": "#/$defs/SuccessCriterion"
+          },
+          "minItems": 1,
+          "title": "Success Criteria",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "success_criteria"
+      ],
+      "title": "ObjectiveSpec",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "description": "Reproducibility provenance (conventions.md \u00a75). Objectives are content-addressed\nso a design-time score and an operational reading reproduce (LUNAR-TR-006).",
+      "properties": {
+        "code_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Code Version"
+        },
+        "env_lockfile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Env Lockfile"
+        },
+        "input_hashes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Input Hashes",
+          "type": "array"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
+        },
+        "toolchain_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Toolchain Version"
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
+    "SolveBudget": {
+      "additionalProperties": false,
+      "description": "The time/quality budget a solve runs within (allocate.md \u00a72, principle 1/2).\n\n``wall_clock_deadline_s`` caps the anytime solve; ``target_gap`` the acceptable\noptimality gap; ``deterministic`` demands a reproducible plan (same model + seed +\npinned backend \u21d2 same plan, principle 8); ``seed`` roots that reproducibility;\n``workers`` bounds the backend's parallel search threads (a solver hint, honored only\nfor a **non-deterministic** solve \u2014 deterministic mode fixes the worker count so the plan\nstays byte-reproducible, RM-P1-ALLOC-02/07). ``workers`` is an append-only additive field\n(RM-P1-ALLOC-02); an absent value lets the backend choose.",
+      "properties": {
+        "deterministic": {
+          "default": true,
+          "title": "Deterministic",
+          "type": "boolean"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
+        },
+        "target_gap": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Gap"
+        },
+        "wall_clock_deadline_s": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wall Clock Deadline S"
+        },
+        "workers": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Workers"
+        }
+      },
+      "title": "SolveBudget",
+      "type": "object"
+    },
+    "SuccessCriterion": {
+      "additionalProperties": false,
+      "description": "One measurable criterion of an objective, bound to a metric.\n\n``required`` distinguishes a must-meet criterion from a soft/stretch goal;\n``weight`` supports scalarization in Studio's multi-objective trade-study engine\n(scenario \u00a78.3, LUNAR-FR-010) \u2014 optimization lives above Core, this only carries\nthe weight. ``deadline_s`` is an optional achieve-by deadline in SI seconds of\nepisode/sim time (``sim_time_s`` elsewhere); mission-epoch-relative deadlines are\nthe Mission/Phase model's job (RFC-0001, reserved P1).",
+      "properties": {
+        "binding": {
+          "$ref": "#/$defs/MetricBinding"
+        },
+        "deadline_s": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deadline S"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "weight": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weight"
+        }
+      },
+      "required": [
+        "id",
+        "binding"
+      ],
+      "title": "SuccessCriterion",
+      "type": "object"
+    },
+    "Task": {
+      "additionalProperties": false,
+      "description": "One task to be assigned: a Core ``TaskKind``, where, when, after-what, and worth-what.\n\n``kind`` is the Core task vocabulary (prospect/excavate/haul/\u2026); ``location`` is an\noptional Core :class:`~astro_mine.core.messages.model.Volume` target region;\n``resource_target_ref`` a content reference to the Prospect resource field/target the\ntask acts on. ``required_capabilities`` are the Core SADF capability tags an asset must\ndeclare to be *eligible* \u2014 the task\u2194asset match the assignment-cover constraint enforces\n(allocate.md \u00a76: constraints come from upstream truth). ``time_windows`` bound the start (as a\ndisjunction when there is more than one); ``precedence`` lists task ids that must precede this\none; ``value`` is its uncertain worth.\n\n``duration_s`` is the task's **declared nominal** occupancy of an asset (SI seconds) \u2014 the\ninterval length the per-asset ``NO_OVERLAP`` constraint reserves so one asset is never assigned\ntwo tasks at once (RM-P1-ALLOC-02). It is a *declared* nominal, not physics: where a per-pair\nduration is known (a tracked excavator and a wheeled rover cross the same slope differently)\nthe cached :class:`~astro_mine.allocate.constraints.CostTable` supersedes it, and Allocate\nre-derives neither (allocate.md \u00a76). ``0.0`` (the default) makes a task a zero-length point,\nwhich is exactly the pre-scheduling behavior.",
+      "properties": {
+        "duration_s": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "kind": {
+          "$ref": "#/$defs/TaskKind"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "$ref": "https://schemas.astro-mine.org/core/messages/v0.1/messages.schema.json#/$defs/Volume"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "precedence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Precedence",
+          "type": "array"
+        },
+        "required_capabilities": {
+          "items": {
+            "$ref": "#/$defs/CapabilityTag"
+          },
+          "title": "Required Capabilities",
+          "type": "array"
+        },
+        "resource_target_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resource Target Ref"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "time_windows": {
+          "items": {
+            "$ref": "#/$defs/TimeWindow"
+          },
+          "title": "Time Windows",
+          "type": "array"
+        },
+        "value": {
+          "$ref": "#/$defs/ValueEstimate"
+        }
+      },
+      "required": [
+        "task_id",
+        "kind",
+        "value"
+      ],
+      "title": "Task",
+      "type": "object"
+    },
+    "TaskKind": {
+      "description": "Typed task-directive kinds. Grows by RFC as autonomy components (Mind/Allocate)\ndefine the directives they emit (mind.md \u00a71; allocate.md \u00a73).",
+      "enum": [
+        "goto",
+        "sample",
+        "excavate",
+        "haul",
+        "dock",
+        "hop",
+        "charge",
+        "prospect",
+        "deploy",
+        "standby",
+        "custom"
+      ],
+      "title": "TaskKind",
+      "type": "string"
+    },
+    "TimeWindow": {
+      "additionalProperties": false,
+      "description": "A closed ``[start_s, end_s]`` availability window in SI seconds of episode/sim time.\n\nA task may declare **several** windows (an orbiter over the horizon twice, a PSR lit only\nbetween two shadow passes). They are genuinely *disjoint alternatives*: the compiler encodes\nthem as an exact disjunction (a ``WINDOW_SELECT`` variable per window), never as one\n``[min(start), max(end)]`` envelope \u2014 an envelope would silently admit a start inside an\navailability **gap** (RM-P1-ALLOC-02).",
+      "properties": {
+        "end_s": {
+          "title": "End S",
+          "type": "number"
+        },
+        "start_s": {
+          "title": "Start S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "start_s",
+        "end_s"
+      ],
+      "title": "TimeWindow",
+      "type": "object"
+    },
+    "ValueEstimate": {
+      "additionalProperties": false,
+      "description": "An uncertain scalar value: a ``mean`` with an optional ``variance``.\n\nValue and durations carry distributions, not point guesses (allocate.md \u00a72 principle 7);\nthe RM-P1-ALLOC-01 objective uses the ``mean``, and robust/stochastic formulations\n(RM-P1-ALLOC later) consume the ``variance``.",
+      "properties": {
+        "mean": {
+          "title": "Mean",
+          "type": "number"
+        },
+        "variance": {
+          "anyOf": [
+            {
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Variance"
+        }
+      },
+      "required": [
+        "mean"
+      ],
+      "title": "ValueEstimate",
+      "type": "object"
+    },
+    "WindowKind": {
+      "description": "How a metric binding is evaluated over time (the ``evaluation_window`` kind).\n\n- ``cumulative`` \u2014 over the whole episode/campaign (the default if no window is set);\n- ``rolling`` \u2014 over a rolling window of ``duration_s`` (rate / sustained objectives,\n  e.g. \"10 t per lunar day\");\n- ``per_phase`` \u2014 once per mission Phase (meaningful only for multi-phase Missions;\n  RFC-0001, reserved P1).\n\nA ``rolling`` window requires ``duration_s``; ``cumulative``/``per_phase`` forbid it\n(enforced in the loader).",
+      "enum": [
+        "cumulative",
+        "rolling",
+        "per_phase"
+      ],
+      "title": "WindowKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.astro-mine.org/allocate/v0.1/allocation-request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The complete allocation problem: tasks, assets, objective, and solve budget.\n\nThe Core-typed input to the allocation sub-interface. Structural validation enforces\nunique task/asset ids, that every ``precedence`` reference resolves to a known task and\nis not self-referential, and that the precedence relation is acyclic \u2014 so a compiled IR\nand any solve over it are well-defined (allocate.md \u00a73).",
+  "properties": {
+    "assets": {
+      "items": {
+        "$ref": "#/$defs/AssetRef"
+      },
+      "minItems": 1,
+      "title": "Assets",
+      "type": "array"
+    },
+    "budget": {
+      "$ref": "#/$defs/SolveBudget"
+    },
+    "objective": {
+      "$ref": "#/$defs/Objective"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "request_id",
+    "tasks",
+    "assets"
+  ],
+  "title": "AllocationRequest",
+  "type": "object"
+}

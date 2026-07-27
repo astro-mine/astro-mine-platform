@@ -1,0 +1,40 @@
+{
+  "optimality_gap": 0.0,
+  "plan": [
+    {
+      "asset_id": "excavator-1",
+      "tasks": [
+        {
+          "end_s": 1800.0,
+          "kind": "excavate",
+          "start_s": 1800.0,
+          "task_id": "excavate-crater-a"
+        }
+      ]
+    },
+    {
+      "asset_id": "hauler-1",
+      "tasks": [
+        {
+          "end_s": 3600.0,
+          "kind": "haul",
+          "start_s": 3600.0,
+          "task_id": "haul-to-plant"
+        }
+      ]
+    },
+    {
+      "asset_id": "prospector-rover-1",
+      "tasks": [
+        {
+          "end_s": 0.0,
+          "kind": "prospect",
+          "start_s": 0.0,
+          "task_id": "prospect-crater-a"
+        }
+      ]
+    }
+  ],
+  "realized_objective": 65.0,
+  "status": "optimal"
+}

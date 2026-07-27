@@ -1,0 +1,17 @@
+# NASA Deep Space Network ground complexes (RM-P1-LINK-13).
+# Approximate geodetic coordinates of the three DSN complexes; lon is degrees East
+# (negative West). New stations are added here as data — no Link code change.
+network: dsn
+stations:
+  - name: DSS-14-Goldstone
+    lat_deg: 35.4267
+    lon_deg: -116.8900
+    min_elevation_deg: 10.0
+  - name: DSS-63-Madrid
+    lat_deg: 40.4314
+    lon_deg: -4.2481
+    min_elevation_deg: 10.0
+  - name: DSS-43-Canberra
+    lat_deg: -35.4014
+    lon_deg: 148.9819
+    min_elevation_deg: 10.0

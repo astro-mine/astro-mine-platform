@@ -1,0 +1,57 @@
+{
+  "$comment": "Shared conformance vectors for the units guard rules (RFC-0007 Design §3; RM-P1-CORE-08). The data form of the contract tests every binding runs against its own require_* implementation to prove it enforces the same rules as the Core Python reference (units/validate.py). Each case is {name, valid, value}; `valid` is the verdict require_<kind>(value) MUST produce (return vs raise). Scope: body=EARTH with a WGS84/EPSG:4326 marker is VALID at the waist (rule 6 is a body/datum CONSISTENCY check, not a ban) — a component's stricter refusal of Earth CRSs (e.g. View) is component-local policy and MUST NOT be encoded here. The rule-4 finite-radius case (reference_radius_m = +inf) is exercised in-language, not here, because JSON has no infinity literal.",
+  "reference_frame": [
+    {"name": "body-fixed-with-center", "valid": true, "value": {"name": "MOON_ME", "frame_class": "body_fixed", "center": "MOON"}},
+    {"name": "inertial-no-center", "valid": true, "value": {"name": "J2000", "frame_class": "inertial"}},
+    {"name": "topocentric", "valid": true, "value": {"name": "SHACKLETON_TOPO", "frame_class": "topocentric", "center": "MOON"}},
+    {"name": "null", "valid": false, "value": null},
+    {"name": "empty-name", "valid": false, "value": {"name": "", "frame_class": "inertial"}},
+    {"name": "whitespace-in-name", "valid": false, "value": {"name": "MOON ME", "frame_class": "body_fixed"}},
+    {"name": "padded-name", "valid": false, "value": {"name": " J2000 ", "frame_class": "inertial"}},
+    {"name": "empty-center", "valid": false, "value": {"name": "MOON_ME", "frame_class": "body_fixed", "center": ""}},
+    {"name": "bad-frame-class", "valid": false, "value": {"name": "J2000", "frame_class": "galactic"}},
+    {"name": "missing-frame-class", "valid": false, "value": {"name": "J2000"}}
+  ],
+  "epoch": [
+    {"name": "tdb", "valid": true, "value": {"tdb_seconds": 0.0, "scale": "tdb"}},
+    {"name": "et-alias", "valid": true, "value": {"tdb_seconds": 1.23456789e8, "scale": "et"}, "$comment": "rule 3: ET is accepted everywhere TDB is (SPICE ET == TDB)"},
+    {"name": "null", "valid": false, "value": null},
+    {"name": "missing-scale", "valid": false, "value": {"tdb_seconds": 0.0}, "$comment": "scale is required — no implicit time scale"},
+    {"name": "bad-scale-utc", "valid": false, "value": {"tdb_seconds": 0.0, "scale": "utc"}},
+    {"name": "bad-scale-tai", "valid": false, "value": {"tdb_seconds": 0.0, "scale": "tai"}}
+  ],
+  "epoch_window": [
+    {"name": "ordered-tdb-et", "valid": true, "value": {"start": {"tdb_seconds": 0.0, "scale": "tdb"}, "end": {"tdb_seconds": 86400.0, "scale": "et"}}},
+    {"name": "null", "valid": false, "value": null},
+    {"name": "missing-end", "valid": false, "value": {"start": {"tdb_seconds": 0.0, "scale": "tdb"}}},
+    {"name": "equal-endpoints", "valid": false, "value": {"start": {"tdb_seconds": 1.0, "scale": "tdb"}, "end": {"tdb_seconds": 1.0, "scale": "tdb"}}, "$comment": "rule 5: end must be STRICTLY after start"},
+    {"name": "out-of-order", "valid": false, "value": {"start": {"tdb_seconds": 2.0, "scale": "tdb"}, "end": {"tdb_seconds": 1.0, "scale": "tdb"}}},
+    {"name": "end-bad-scale", "valid": false, "value": {"start": {"tdb_seconds": 0.0, "scale": "tdb"}, "end": {"tdb_seconds": 1.0, "scale": "utc"}}}
+  ],
+  "planetary_crs": [
+    {"name": "moon-geographic", "valid": true, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0}},
+    {"name": "moon-projected", "valid": true, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0, "projection": "+proj=stere +lat_0=-90 +R=1737400"}},
+    {"name": "earth-analog-wgs84", "valid": true, "value": {"body": "EARTH", "body_fixed_frame": "ITRF93", "reference_radius_m": 6378137.0, "projection": "+proj=longlat +datum=WGS84"}, "$comment": "rule 6: an Earth CRS on body EARTH is valid (Phase-2 Earth-analog deployments)"},
+    {"name": "earth-analog-epsg4326", "valid": true, "value": {"body": "EARTH", "body_fixed_frame": "ITRF93", "reference_radius_m": 6378137.0, "datum": "EPSG:4326"}},
+    {"name": "null", "valid": false, "value": null},
+    {"name": "zero-radius", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 0.0}},
+    {"name": "negative-radius", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": -1.0}},
+    {"name": "empty-body", "valid": false, "value": {"body": "", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0}},
+    {"name": "whitespace-body-fixed-frame", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON ME", "reference_radius_m": 1737400.0}},
+    {"name": "missing-radius", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME"}},
+    {"name": "moon-wgs84-datum", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0, "datum": "WGS84"}, "$comment": "rule 6: Earth datum marker on a non-Earth body is a defaulting bug"},
+    {"name": "moon-wgs84-projection", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0, "projection": "+proj=longlat +datum=WGS84"}},
+    {"name": "moon-epsg4326", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0, "projection": "EPSG:4326"}},
+    {"name": "moon-urn-ogc", "valid": false, "value": {"body": "MOON", "body_fixed_frame": "MOON_ME", "reference_radius_m": 1737400.0, "projection": "urn:ogc:def:crs:OGC:1.3:CRS84"}}
+  ],
+  "si_unit": [
+    {"name": "metre", "valid": true, "value": "m"},
+    {"name": "kilogram", "valid": true, "value": "kg"},
+    {"name": "watt", "valid": true, "value": "W"},
+    {"name": "dimensionless", "valid": true, "value": "dimensionless"},
+    {"name": "mass-fraction", "valid": true, "value": "mass_fraction"},
+    {"name": "unknown-unit", "valid": false, "value": "furlong"},
+    {"name": "composite-not-enumerated", "valid": false, "value": "kg/m3", "$comment": "composite units are SI-consistent strings validated by components, not enumerated at the waist"},
+    {"name": "empty", "valid": false, "value": ""}
+  ]
+}

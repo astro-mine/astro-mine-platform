@@ -1,0 +1,40 @@
+// SafetyVerdict v0.1 — canonical Protobuf wire form (RM-P1-GUARD-06).
+//
+// Mirrors the canonical JSON Schema (safety_verdict.schema.json) and the Pydantic model
+// (astro_mine.guard.audit.model). The auditable per-tick output of the Guard arbiter: the
+// certified action, the intervention flag + reason, the invoked spec clause(s), the active
+// layer, the barrier-margin certificate, and the reproducibility provenance (spec/model
+// content hashes, Guard code version, input content hash). The Core-catalogued, cross-language
+// interchange the async plane / Bench / View consume; the high-rate MCAP stream itself is
+// jsonschema-encoded (astro_mine.guard.audit.stream).
+//
+// Closed-vocabulary fields (layer, intervention, reason, backup_kind) are carried as `string`
+// for a byte-exact, drift-free round-trip and additive tolerance; nullable scalars use proto3
+// `optional`. Field tags are append-only and never reused (conventions.md §3) — a SafetySpec /
+// SafetyVerdict is a safety contract, so the wire form evolves additively only (buf breaking,
+// RFC-gated). Bindings are generated with buf (scripts/gen_proto.sh).
+
+syntax = "proto3";
+
+package astro_mine.guard.audit.v0;
+
+message SafetyVerdict {
+  string verdict_version = 1;  // "0.1"
+  string agent_id = 2;
+  int64 tick = 3;
+  double sim_time_s = 4;
+  string spec_id = 5;
+  string spec_content_hash = 6;
+  string compiled_content_hash = 7;
+  string guard_code_version = 8;
+  string layer = 9;  // "primary" | "shield" | "backup" (closed vocab carried as string)
+  string intervention = 10;  // "none" | "modified" | "fallback"
+  string reason = 11;  // certified | shield_corrected | scalar_violated | monitor_fired | ...
+  optional string backup_kind = 12;  // brake_to_stop | hold | safe_state; null on primary/shield
+  repeated string constraint_ids = 13;  // the fired spec clause ids
+  repeated double certified_action = 14;
+  double min_barrier_margin = 15;  // the safety certificate (+inf when no keep-out applies)
+  double action_divergence = 16;  // ‖certified - proposed‖ (derived shielding-cost scalar)
+  string inputs_content_hash = 17;
+  double shield_latency_us = 18;
+}

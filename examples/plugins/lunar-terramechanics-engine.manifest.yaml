@@ -1,0 +1,41 @@
+# A Sim RegimeEngine plugin for the anchor scenario: rover wheel–regolith
+# terramechanics on the lunar surface. Example plugin manifest (RM-P0-CORE-05).
+manifest_version: "0.1"
+manifest:
+  name: lunar-terramechanics-engine
+  version: 0.1.0
+  kind: regime_engine
+  license: Apache-2.0
+  description: >-
+    Reduced-order wheel–regolith terramechanics engine (Bekker–Wong) for the lunar
+    south-polar surface regime.
+  core_interfaces:
+    env: 0.1.0
+    sadf: 0.1.0
+    messages: 0.1.0
+  inputs:
+    - StateSample
+    - ActionBatch
+  outputs:
+    - StateSample
+  capability_tags:
+    - mobility.wheeled
+    - sensing.odometry
+  determinism_class: tolerance
+  regimes:
+    - surface
+  attributes:
+    fidelity_tier: reduced_order
+    error_budget: 0.1
+    reference_oracle: terramechanics.high_fidelity
+  provenance:
+    code_version: 0.1.0
+    toolchain_version: "python-3.12"
+    env_lockfile: uv.lock
+    input_hashes:
+      - "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    digest: "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  signature:
+    scheme: sigstore_cosign
+    value: "MEUCIQDexample"
+    certificate: "-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----"

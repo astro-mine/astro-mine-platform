@@ -1,0 +1,86 @@
+# Scenario 1 (lunar polar ice prospecting) — basic ISRU plant.
+# A fixed surface plant that thermally extracts water from hauled regolith, purifies it,
+# and stores it. The baseline value chain ends at stored water — no electrolysis or
+# cryo-propellant (scenario §15, deferred). Draws power from separate surface power
+# infrastructure (external supply), so it declares loads but no on-board source.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.isru-plant
+    name: Basic ISRU Plant
+    version: 0.2.0
+    kind: isru_plant
+    description: >-
+      Fixed thermal-extraction plant: extracts water from hauled regolith, purifies it,
+      and stores it. Value chain ends at stored water (no electrolysis).
+    labels:
+      scenario: lunar-polar-ice-prospecting
+
+  capabilities:
+    - isru.thermal_extraction
+    - isru.purification
+    - isru.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+
+  root_frame: base
+  frames:
+    - name: base
+    - name: hopper
+      parent: base
+      transform:
+        translation_m: { x: 0.0, y: 0.0, z: 1.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+
+  bodies:
+    - name: plant_chassis
+      frame: base
+      mass_kg: 600.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.8 }
+      inertia_kg_m2: { ixx: 300.0, iyy: 300.0, izz: 240.0 }
+
+  power:
+    # Powered by separate surface power infrastructure (external supply): loads only, so the
+    # lint power-balance check does not apply — a deliberate Phase-0 modeling choice.
+    loads_by_mode:
+      - { mode: idle, power_w: 100.0 }
+      - { mode: extract, power_w: 1500.0 }
+      - { mode: purify, power_w: 600.0 }
+
+  thermal:
+    operating_range_k: { min: 200.0, max: 420.0 }
+    survival_range_k: { min: 120.0, max: 450.0 }
+    dissipation_w: 400.0
+    radiator_area_m2: 3.0
+    heater_power_w: 200.0
+    surface_coupling: true
+
+  sensors:
+    - name: hopper_temp
+      kind: thermal_sensor
+      frame: hopper
+      observation_model: { noise_sigma: 0.5 }
+    - name: feed_cam
+      kind: imaging
+      frame: hopper
+      observation_model: { range_m: 5.0, fov_deg: 50.0 }
+    # The tank gauge (RFC-0003). Without it the plant fills a store nothing can read: Bench scores
+    # `water_mass` by matching a reading's species/unit against the scenario's water species, so an
+    # undeclared gauge makes a full tank indistinguishable from a swarm that produced nothing
+    # (astro-mine-fleet#40). `si_unit` is the Core token `kg` — `mass_kg` is not a known unit, and
+    # a gauge declaring it renders readings Bench silently skips.
+    - name: water_gauge
+      kind: resource_storage
+      frame: base
+      resource: { species: water, si_unit: kg }
+
+  payload:
+    capacity_kg: 1000.0
+    isru:
+      throughput_kg_hr: 10.0
+      plant_power_w: 1500.0
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: plant point-mass + ISRU throughput }
+    - { tier: kinematic, determinism_class: bit_exact, detail: rigid plant at a fixed surface pose }

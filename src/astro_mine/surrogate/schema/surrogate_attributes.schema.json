@@ -1,0 +1,135 @@
+{
+  "$defs": {
+    "Bound": {
+      "additionalProperties": false,
+      "description": "A closed interval ``[low, high]`` on one named input dimension.",
+      "properties": {
+        "high": {
+          "title": "High",
+          "type": "number"
+        },
+        "low": {
+          "title": "Low",
+          "type": "number"
+        }
+      },
+      "required": [
+        "low",
+        "high"
+      ],
+      "title": "Bound",
+      "type": "object"
+    },
+    "PhysicsDomain": {
+      "description": "The physics a surrogate approximates \u2014 the ``domain`` a manifest declares.\n\nTwo families share one contract (surrogate.md \u00a71, \u00a73; the domains are additive \u2014\n\"declare the state/action space and a ``SamplingPolicy``; the rest is reused\"):\n\n- **dynamical-step** surrogates behind Sim's physics-step tier (``regime_engine``):\n  granular/excavation contact (the MVP, ``LUNAR-TR-002``), wheel/soil\n  terramechanics, manipulation contact, and microgravity contact (RFC-0001, P3);\n- **field-query** surrogates behind a Worlds field model (``field_model``): a\n  learned illumination field (RM-P1-WORLDS-10) and, later, a thermal field.",
+      "enum": [
+        "granular_excavation",
+        "wheel_soil",
+        "manipulation_contact",
+        "microgravity_contact",
+        "illumination_field",
+        "thermal_field"
+      ],
+      "title": "PhysicsDomain",
+      "type": "string"
+    },
+    "ServedBackend": {
+      "description": "How the trained surrogate is served behind the Core contract (surrogate.md \u00a74, \u00a711).\n\n``onnx`` is the served form (content-addressed, cross-runtime) and the only one\nimplemented: :mod:`astro_mine.surrogate.serve` exports a self-contained ONNX graph and\nserves it through ONNX Runtime (RM-P1-SURR-04).\n\n``native_graph`` is the *declarable but unimplemented* fallback for the in-sim path when\nONNX cannot express an op. The manifest records the choice \u2014 so a loader knows what it is\nadmitting, and :func:`~astro_mine.surrogate.manifest.build_surrogate_manifest` will\nfaithfully carry it \u2014 but **no native-graph serving runtime exists**: the loaders\n(``load_served_surrogate``/``resolve_and_load``) handle only the ONNX bundle layer. The\nexcavation graph exports cleanly, so an export failure raises ``OnnxExportError`` rather\nthan falling back. Implementing the fallback is deferred past Phase 1.",
+      "enum": [
+        "onnx",
+        "native_graph"
+      ],
+      "title": "ServedBackend",
+      "type": "string"
+    },
+    "TrustRegion": {
+      "additionalProperties": false,
+      "description": "The declared, validated input domain a surrogate's bounds hold over.\n\nA box over named input dimensions \u2014 an excavation state space (soil cohesion, tool\ndepth, \u2026) *or* a field-query space (northing, easting, epoch_s, sun_elevation_deg).\n``in_domain``/OOD are defined against this box: a query outside it must raise the OOD\nflag, never a confident extrapolation (surrogate.md principle 3: \"Out-of-distribution\nsilence is forbidden\").",
+      "properties": {
+        "bounds": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Bound"
+          },
+          "minProperties": 1,
+          "title": "Bounds",
+          "type": "object"
+        }
+      },
+      "required": [
+        "bounds"
+      ],
+      "title": "TrustRegion",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.astro-mine.org/surrogate/v0.1/surrogate-attributes.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The surrogate-specific facets carried in ``PluginManifest.attributes``.\n\nTyped here (frozen, ``extra=\"forbid\"``) and folded into the manifest's open\n``attributes`` object via :meth:`model_dump`, so the facets are schema-checked and\nJSON-Schema-exportable without widening Core's manifest. ``error_report_digest``\nreferences the :class:`ErrorReport` by content hash \u2014 the signed manifest thereby\ncommits to the exact bound (surrogate.md \u00a79).",
+  "properties": {
+    "budget_horizon_steps": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Budget Horizon Steps",
+      "type": "integer"
+    },
+    "domain": {
+      "$ref": "#/$defs/PhysicsDomain"
+    },
+    "error_report_digest": {
+      "title": "Error Report Digest",
+      "type": "string"
+    },
+    "error_report_media_type": {
+      "default": "application/vnd.astro-mine.surrogate.error-report.v1+protobuf",
+      "title": "Error Report Media Type",
+      "type": "string"
+    },
+    "input_channels": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Input Channels",
+      "type": "array"
+    },
+    "native_graph_fallback": {
+      "title": "Native Graph Fallback",
+      "type": "boolean"
+    },
+    "output_channels": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Output Channels",
+      "type": "array"
+    },
+    "recommended_error_budget": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "minProperties": 1,
+      "title": "Recommended Error Budget",
+      "type": "object"
+    },
+    "served_backend": {
+      "$ref": "#/$defs/ServedBackend"
+    },
+    "trust_region": {
+      "$ref": "#/$defs/TrustRegion"
+    }
+  },
+  "required": [
+    "domain",
+    "input_channels",
+    "output_channels",
+    "trust_region",
+    "recommended_error_budget",
+    "served_backend",
+    "native_graph_fallback",
+    "error_report_digest"
+  ],
+  "title": "SurrogateAttributes",
+  "type": "object"
+}

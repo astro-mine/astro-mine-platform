@@ -1,0 +1,193 @@
+# Scenario 2 (NEO rendezvous + sample return) — a solar-electric carrier / sample-
+# return spacecraft. Exercises the RFC-0001 additions: propulsion (electric + a
+# chemical return stage), staging, return + earth-interface, deep-space comms
+# (X/Ka, DSN, DTN/CCSDS), microgravity anchoring + sample collection, carrier/
+# dispenser composability with sampler daughters, and multi-regime mobility.
+# Illustrative values, not commitments. Design-time only: no operational_targeting.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.neo-sep-carrier
+    name: NEO SEP Carrier / Sample-Return Spacecraft
+    version: 0.1.0
+    kind: propulsive_spacecraft
+    description: >-
+      Solar-electric carrier that cruises to a near-Earth object, anchors and
+      collects regolith samples, and returns a canister to an Earth-interface
+      ballistic capsule. Carries and disperses sampler daughters.
+    labels:
+      scenario: asteroid-mining
+      architecture: sep-mothership-sample-return
+
+  capabilities:
+    - mobility.orbiter
+    - propulsion.electric_ion
+    - propulsion.chemical
+    - staging
+    - reusable
+    - carrier.dispenser
+    - anchoring.anchor
+    - sample_collection.drill
+    - return.sample_canister
+    - earth_interface.ballistic_capsule
+    - comms.dsn
+    - comms.dtn
+    - comms.direct_to_earth
+    - sensing.imaging
+    - sensing.altimetry
+    - power.generation
+    - power.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+    messages: "0.1.0"
+
+  root_frame: bus
+  frames:
+    - name: bus
+    - name: hga
+      parent: bus
+      transform:
+        translation_m: { x: 1.5, y: 0.0, z: 0.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+    - name: sampler_bay
+      parent: bus
+      transform:
+        translation_m: { x: -1.0, y: 0.0, z: 0.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+
+  geometry:
+    - { role: visual, format: usd, uri: assets/neo_sep_carrier.usd, frame: bus, lod: 0 }
+    - { role: collision, format: usd, uri: assets/neo_sep_carrier_collision.usd, frame: bus }
+
+  bodies:
+    - name: bus
+      frame: bus
+      mass_kg: 2400.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.0 }
+      inertia_kg_m2: { ixx: 1800.0, iyy: 2100.0, izz: 1600.0 }
+
+  power:
+    sources:
+      - { name: sep_solar_array, kind: solar, nominal_power_w: 15000.0 }
+    storage:
+      - { name: bus_battery, capacity_j: 1.8e+7, max_charge_w: 2000.0, max_discharge_w: 4000.0 }
+    floor_w: 300.0
+    loads_by_mode:
+      - { mode: cruise, power_w: 12000.0 }
+      - { mode: proximity_ops, power_w: 1500.0 }
+      - { mode: sampling, power_w: 900.0 }
+
+  thermal:
+    operating_range_k: { min: 250.0, max: 320.0 }
+    survival_range_k: { min: 230.0, max: 340.0 }
+    dissipation_w: 600.0
+    radiator_area_m2: 6.0
+    heater_power_w: 120.0
+
+  sensors:
+    - name: narrow_angle_camera
+      kind: imaging
+      frame: bus
+      observation_model: { range_m: 50000.0, fov_deg: 2.0 }
+    - name: laser_altimeter
+      kind: altimeter
+      frame: bus
+      observation_model: { noise_sigma: 0.1, range_m: 12000.0 }
+    - name: star_tracker_imu
+      kind: imu
+      frame: bus
+
+  comms:
+    - name: hga_xband
+      band: x_band
+      node_role: space
+      antenna: { gain_dbi: 38.0, gain_pattern: patterns/hga_2m.csv, boresight_frame: hga, pointing_accuracy_deg: 0.05 }
+      eirp_dbw: 60.0
+      gt_db_per_k: 12.0
+      tx_power_w: 100.0
+      min_rate_bps: 1.0e+2
+      max_rate_bps: 5.0e+5
+      modcod_supported: ["ccsds_oqpsk_ldpc_r1_2", "ccsds_8psk_ldpc_r3_4"]
+      protocols: ["ccsds_spp", "ccsds_tc_tm", "cfdp", "dtn_bpv7"]
+      relay: false
+    - name: kaband_downlink
+      band: ka_band
+      node_role: space
+      antenna: { gain_dbi: 44.0, boresight_frame: hga, pointing_accuracy_deg: 0.03 }
+      eirp_dbw: 68.0
+      tx_power_w: 120.0
+      max_rate_bps: 5.0e+6
+      protocols: ["ccsds_spp", "dtn_bpv7"]
+
+  mobility:
+    regimes: [interplanetary_transit, proximity_orbit, surface]
+    contact:
+      - kind: anchor
+        max_slope_deg: 40.0
+        max_ground_pressure_pa: 500.0
+    anchoring:
+      max_force_n: 250.0
+
+  propulsion:
+    delta_v_budget_mps: 7200.0
+    systems:
+      - kind: electric_ion
+        thrust_n: 0.5
+        isp_s: 3000.0
+        power_w: 12000.0
+        propellant: { type: xenon, mass_kg: 900.0 }
+      - kind: chemical_biprop
+        thrust_n: 440.0
+        isp_s: 321.0
+        propellant: { type: mmh_nto, mass_kg: 600.0 }
+    staging:
+      - { dry_kg: 1800.0, propellant_kg: 900.0 }
+      - { dry_kg: 600.0, propellant_kg: 600.0 }
+
+  return:
+    capability: sample_canister
+    payload_capacity_kg: 50.0
+    earth_interface: ballistic_capsule
+
+  payload:
+    capacity_kg: 60.0
+    slots:
+      - { name: sampler_bay_1, frame: sampler_bay, accepts: [sampler], max_mass_kg: 120.0 }
+      - { name: canister_dock, frame: bus, accepts: [sample_canister], max_mass_kg: 80.0 }
+    isru:
+      throughput_kg_hr: 2.0
+      plant_power_w: 400.0
+
+  subassemblies:
+    - ref: astro-mine.fleet.neo-sampler-probe
+      mount_frame: sampler_bay
+      transform:
+        translation_m: { x: -1.2, y: 0.4, z: 0.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+    - ref: astro-mine.fleet.neo-sampler-probe
+      mount_frame: sampler_bay
+      transform:
+        translation_m: { x: -1.2, y: -0.4, z: 0.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+
+  flight_stacks: [sim, ccsds, dsn]
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: point-mass + Δv/propellant budget }
+    - tier: articulated
+      determinism_class: tolerance
+      detail: microgravity anchoring + sample collection contact
+      surrogate:
+        physics_domain: microgravity_contact
+        trust_region: small-body/rubble-pile-v1
+
+  interfaces:
+    observation_space: neo-carrier/obs-v1
+    action_space: neo-carrier/act-v1
+
+  provenance:
+    input_hashes: ["sha256:1111111111111111111111111111111111111111111111111111111111111111"]
+    code_version: "0.0.0"
+    toolchain_version: "sizing 0.0.0 / fleet-cli 0.0.0"
+    seed: 2

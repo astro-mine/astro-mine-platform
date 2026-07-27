@@ -1,0 +1,25 @@
+# The anchor lunar surface campaign expressed as a ONE-PHASE Mission (RFC-0001 §5):
+# a single `surface` phase, no transit or return — exactly a Phase-0 campaign, so it
+# validates with no author action and the multi-regime hooks stay unused. Illustrative.
+mission_version: "0.1"
+mission:
+  id: astro-mine.mission.lunar-polar-ice-prospecting.v1
+  name: Lunar Polar Water-Ice Prospecting
+  description: >-
+    The anchor lunar surface campaign as a one-phase Mission — a single `surface` phase
+    over the scout rover, bound to the anchor objective. No trajectory/maneuver artifacts.
+  objective_ref: astro-mine.objective.lunar-polar-ice-prospecting.v1
+  fleet:
+    - astro-mine.fleet.lunar-scout-rover
+  constraints:
+    schedule_s: 2.592e+6
+    export_gated: false
+  phases:
+    - id: surface_ops
+      regime: surface
+      environment_ref: astro-mine.world.shackleton-de-gerlache.v1
+      assets_active:
+        - astro-mine.fleet.lunar-scout-rover
+  provenance:
+    code_version: "0.0.0"
+    seed: 1

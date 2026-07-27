@@ -1,0 +1,29 @@
+stack_spec_version: "0.1"
+stack_spec:
+  id: reference-lunar-prospecting-allocate
+  name: Reference lunar-polar prospecting stack (Allocate delegation)
+  description: >-
+    The backend stack with the assignment delegated to Astro-Mine-Allocate (RM-P1-MIND-04):
+    the mission planner decomposes into prospect regions, the allocator tier delegates
+    who-does-what to the reference greedy allocator (a stand-in for the real AllocationPlanner)
+    through the Core Allocator sub-interface, and TAMP + control execute the assignment. Mind
+    embeds no solver. Swap the allocator plugin for astro_mine.allocate.AllocationPlanner via
+    the registry without touching the framework.
+  scenario_ref: lunar-polar-prospecting
+  tiers:
+    - role: mission
+      plugin: mind.mission.pddl
+      validity_horizon_s: 5.0
+      replan_triggers:
+        - kind: plan_expired
+    - role: allocator
+      plugin: mind.allocate.greedy
+      replan_triggers:
+        - kind: periodic
+          every_ticks: 3
+    - role: tamp
+      plugin: mind.tamp.sampling
+    - role: control
+      plugin: mind.control.pid
+  shield:
+    plugin: mind.reference.constraint_shield

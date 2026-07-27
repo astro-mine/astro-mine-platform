@@ -1,0 +1,63 @@
+# A mission-tier ContingentPlan for the anchor lunar campaign (RFC-0006; mind.md §5):
+# a time-stamped, validity-horizoned plan carrying the actions it proposes, the
+# assumptions it rests on, and the explicit branches an agent takes when a trigger fires
+# (comms loss, plan expiry) — act while valid, branch when not, reconcile on recovery.
+# Illustrative; the horizon and targets are not commitments.
+plan_version: "0.1"
+plan:
+  base:
+    plan_id: astro-mine.plan.lunar-polar-ice-prospecting.mission@0
+    tier: mission
+    validity:
+      issued_at_s: 0.0
+      horizon_s: 3600.0
+    actions:
+      actions:
+        - agent_id: scout-0
+          kind: task
+          sim_time_s: 0.0
+          task:
+            task_kind: prospect
+            priority: 1
+            prospect:
+              region:
+                frame: MOON_ME
+                center_m: { x: 0.0, y: 0.0, z: -1737400.0 }
+                dimensions_m: { x: 2000.0, y: 2000.0, z: 10.0 }
+                frame_ref:
+                  name: MOON_ME
+                  frame_class: body_fixed
+                  center: MOON
+              sensor_kinds:
+                - neutron_spectrometer
+              info_gain_target: 0.35
+        - agent_id: scout-1
+          kind: task
+          sim_time_s: 0.0
+          task:
+            task_kind: standby
+            priority: 0
+    assumptions:
+      - key: earth_contact
+        description: A DSN contact window is available within the plan horizon.
+        holds: true
+      - key: psr_traversable
+        description: The PSR approach corridor is within the rover's slope limit.
+        holds: null
+    provenance:
+      input_hashes:
+        - sha256:0000000000000000000000000000000000000000000000000000000000000000
+      code_version: astro-mine-mind 0.1.0
+      toolchain_version: python-3.12.4
+      env_lockfile: sha256:1111111111111111111111111111111111111111111111111111111111111111
+      seed: 7
+  branches:
+    - trigger: comms_lost
+      action: hold_cached
+      description: Keep executing the cached plan; log that it acted while stale.
+    - trigger: plan_expired
+      action: reconcile
+      description: Re-plan against the current belief state on the next contact.
+    - trigger: on_fallback
+      action: safe_idle
+      description: Park at the last safe waypoint and wait for supervision.

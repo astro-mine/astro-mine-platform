@@ -1,0 +1,69 @@
+{
+  "bed": {
+    "bed_width_m": 0.8,
+    "dt_s": 0.05,
+    "friction_coeff": 0.8390996311772799,
+    "gravity_m_s2": 1.6209332057793289,
+    "regolith_density_kg_m3": 1500.0,
+    "tool_height_m": 0.15
+  },
+  "measures": "cost_only",
+  "points": [
+    {
+      "dem_step_s": 0.021558495998760918,
+      "in_domain": false,
+      "max_neighbours": 6,
+      "mean_neighbours": 4.888888888888889,
+      "n_particles": 90,
+      "speedup": 9.289684285063831,
+      "surrogate_step_s": 0.0023206919995573116
+    },
+    {
+      "dem_step_s": 0.1492295930002001,
+      "in_domain": false,
+      "max_neighbours": 6,
+      "mean_neighbours": 5.416,
+      "n_particles": 250,
+      "speedup": 20.77513951392468,
+      "surrogate_step_s": 0.00718308499926934
+    },
+    {
+      "dem_step_s": 0.8414663940002356,
+      "in_domain": false,
+      "max_neighbours": 7,
+      "mean_neighbours": 5.592,
+      "n_particles": 500,
+      "speedup": 46.07310316967135,
+      "surrogate_step_s": 0.018263722999108722
+    },
+    {
+      "dem_step_s": 3.6490118380006606,
+      "in_domain": false,
+      "max_neighbours": 7,
+      "mean_neighbours": 5.656,
+      "n_particles": 1000,
+      "speedup": 68.20133638416435,
+      "surrogate_step_s": 0.053503523999097524
+    },
+    {
+      "dem_step_s": 15.185761726001147,
+      "in_domain": false,
+      "max_neighbours": 7,
+      "mean_neighbours": 5.664,
+      "n_particles": 2000,
+      "speedup": 89.63448627898295,
+      "surrogate_step_s": 0.16941874000076496
+    }
+  ],
+  "scenario_id": "lunar-polar-ice-excavation-fidelity-v1",
+  "spec_hash": "sha256:213ed92189d2054cc5a1cfd9a7e7b100fd87d3c744596bacd398b3dfaf43e3e7",
+  "surrogate": {
+    "content_hash": "sha256:39b4ae65f026e9b4897a9ccab8d638f7595f0286bc3b0cef4e24d31740068dc5",
+    "name": "excavation-gns",
+    "version": "0.4.0"
+  },
+  "toolchain": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3"
+  }
+}

@@ -1,0 +1,77 @@
+// The Sim EnvironmentService — the gRPC control plane over Core's Environment API.
+//
+// sim.md §3 names a `service/` module ("gRPC EnvironmentService + Ray-actor wrapper — the service
+// skin") and §6 names its shape ("as a gRPC EnvironmentService (server-streaming step) wrapped in a
+// Ray actor for distributed rollouts on Cloud"). This is that contract.
+//
+// The split follows conventions.md §3 and sim.md §11: **Protobuf** for the control plane (the RPC
+// envelopes below), **FlatBuffers** for the per-tick sensor/telemetry payload (the opaque
+// `observations` bytes — see astro_mine.sim.service._payload). A Protobuf decode per agent per tick
+// would dominate the step at swarm scale; a FlatBuffers frame is read by pointer offset.
+//
+// Schema evolution is append-only: never renumber or repurpose a tag (conventions.md §3).
+//
+// Regenerate the Python stubs with: python scripts/gen_proto.py
+syntax = "proto3";
+
+package astro_mine.sim.v1;
+
+// The environment's static description — everything that does NOT change per tick, so the high-rate
+// step stream never repeats it.
+message DescribeRequest {}
+
+message DescribeResponse {
+  // Every agent id that may appear in this environment (Core Environment API).
+  repeated string possible_agents = 1;
+  // The Core interface versions this environment is built against, e.g. {"env": "0.1.0"}. A client
+  // checks them against its own Core before driving the environment (RM-P0-CORE-07).
+  map<string, string> core_interfaces = 2;
+  // The SPICE name of the reference frame the observation poses are expressed in (e.g. "MOON_ME").
+  string frame_name = 3;
+  // The scenario's name and base timestep, for provenance.
+  string scenario = 4;
+  double dt_s = 5;
+}
+
+message ResetRequest {
+  // Overrides the scenario's seed when set. Reproducibility rides on this (conventions.md §11).
+  optional int64 seed = 1;
+}
+
+message ResetResponse {
+  // The initial per-agent observations, as a FlatBuffers ObservationFrame (conventions.md §3).
+  bytes observations = 1;
+  // The active agent set after reset.
+  repeated string agents = 2;
+}
+
+message StepRequest {
+  // The Core ActionBatch driving this step, as canonical JSON. It is the *control* plane (one
+  // message per step, not per agent per tick), so Protobuf/JSON cost is not on the hot path.
+  string action_batch_json = 1;
+  // How many ticks the server should stream back for this request. The server streams one
+  // StepResponse per tick and applies the same ActionBatch to each, so a client can amortize the
+  // round trip over a whole horizon (sim.md §6: server-streaming step).
+  int32 steps = 2;
+}
+
+message StepResponse {
+  // This tick's per-agent observations, as a FlatBuffers ObservationFrame.
+  bytes observations = 1;
+  int32 tick = 2;
+  double sim_time_s = 3;
+  double dt_s = 4;
+  // The Gym/PettingZoo terminal maps, per agent.
+  map<string, bool> terminations = 5;
+  map<string, bool> truncations = 6;
+  // The active agent set after this tick (it only ever shrinks — Core's attrition contract).
+  repeated string agents = 7;
+}
+
+// Sim's Core Environment API, served. The in-process library path is unaffected: this is additive.
+service EnvironmentService {
+  rpc Describe(DescribeRequest) returns (DescribeResponse);
+  rpc Reset(ResetRequest) returns (ResetResponse);
+  // Server-streaming: one response per tick (sim.md §3, §6).
+  rpc Step(StepRequest) returns (stream StepResponse);
+}

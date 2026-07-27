@@ -1,0 +1,78 @@
+# Astro-Mine-Cloud platform values.
+#
+# The three execution engines map to the three workload shapes (cloud.md §2 principle 3):
+#   - kuberay-operator : tightly-coupled Ray work (RL training, actor fleets, distributed solves)
+#   - argo-workflows   : DAG / embarrassingly-parallel batch sweeps
+#   - (native K8s Jobs): trivial one-shots -- no operator, always available
+# Kueue provides queueing/quotas/fair-share; the GPU Operator provides MIG + DCGM; the
+# Prometheus/Grafana/Loki stack provides observability. Toggle each per substrate via a profile.
+
+# --- execution engines -------------------------------------------------------------------
+kuberay-operator:
+  enabled: true
+
+argo-workflows:
+  enabled: true
+  controller:
+    workflowNamespaces: []  # cluster-scoped; tenants submit into their own namespaces
+  server:
+    enabled: true
+
+# --- scheduling --------------------------------------------------------------------------
+kueue:
+  enabled: true
+
+# --- GPU ---------------------------------------------------------------------------------
+gpu-operator:
+  enabled: false  # off by default (no GPUs on a laptop kind/k3s); prod profile turns it on
+  mig:
+    strategy: mixed
+  dcgmExporter:
+    enabled: true
+
+# --- observability -----------------------------------------------------------------------
+kube-prometheus-stack:
+  enabled: true
+
+loki:
+  enabled: true
+
+# --- Astro-Mine platform config (our own templates) --------------------------------------
+platform:
+  # Namespace the platform control plane installs into.
+  namespace: astro-mine-system
+
+# --- admission ---------------------------------------------------------------------------
+# Kyverno: the controller that *enforces* the ClusterPolicy below. Off by default -- an admission
+# policy with no signing key configured would refuse every pod on the cluster.
+kyverno:
+  enabled: false
+  features:
+    registryClient:
+      # Verify signatures from a plain-HTTP registry. Only ever true on a throwaway kind cluster
+      # (profiles/kind-admission.yaml); a real registry speaks TLS.
+      allowInsecure: false
+
+# Cosign-verified-images-only admission (RM-P1-CLOUD-05). The ClusterPolicy admits only signed
+# images carrying SLSA provenance + an SBOM -- the cluster-boundary enforcement of
+# astro_mine.cloud.tenancy.admission.admit().
+admission:
+  enabled: true
+  # PEM public key (or a KMS/keyless issuer ref) cosign verifies signatures against.
+  cosignPublicKey: ""
+  # Which images the rule covers, and which namespaces it applies in. SCOPE THESE ON ANY CLUSTER
+  # WHOSE OWN PLATFORM PODS ARE NOT SIGNED BY THIS KEY: `["*"]` across every namespace refuses the
+  # upstream operator images too -- including Kyverno's -- and takes the cluster down with it.
+  imageReferences:
+    - "*"
+  namespaces: []
+  # Require the SLSA-provenance + SBOM attestations (not just a signature), mirroring admit()'s
+  # require_slsa / require_sbom.
+  requireAttestations: true
+  # Offline verification: no Rekor transparency-log lookup, no SCT. True for a throwaway cluster
+  # signing with a local key pair; false wherever signatures are really published.
+  ignoreTlog: false
+
+# Observability wiring for the platform's own control plane (ServiceMonitor for Prometheus).
+observability:
+  enabled: true

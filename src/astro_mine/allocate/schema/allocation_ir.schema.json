@@ -1,0 +1,256 @@
+{
+  "$defs": {
+    "Constraint": {
+      "additionalProperties": false,
+      "description": "A linear constraint ``sum(coefficient * variable) <sense> rhs``.\n\nEvery constraint family \u2014 assignment cover, precedence, time window, and (from\nRM-P1-ALLOC-03) the physics-derived power/comms/terrain budgets \u2014 is carried in this\none structural form so a solver backend lowers it without knowing what it *means*.\n``kind`` labels the family for explanation/IIS reporting (allocate.md \u00a710) and for a\nbackend that has a native global-constraint encoding (CP-SAT no-overlap/cumulative).",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ConstraintKind"
+        },
+        "rhs": {
+          "title": "Rhs",
+          "type": "number"
+        },
+        "sense": {
+          "$ref": "#/$defs/ConstraintSense"
+        },
+        "terms": {
+          "items": {
+            "$ref": "#/$defs/ConstraintTerm"
+          },
+          "title": "Terms",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "sense",
+        "rhs"
+      ],
+      "title": "Constraint",
+      "type": "object"
+    },
+    "ConstraintKind": {
+      "description": "The kind of an IR :class:`~astro_mine.allocate.Constraint` (allocate.md \u00a73).\n\n``ASSIGNMENT_COVER``/``PRECEDENCE``/``TIME_WINDOW`` are the structural families the\nRM-P1-ALLOC-01 compiler emits, and ``LINEAR`` the generic power/comms/terrain-budget family\nthe RM-P1-ALLOC-03 builders add. ``NO_OVERLAP``/``CUMULATIVE`` are the **scheduling** families\nthe compiler emits per capacity-bearing resource (one asset does one task at a time): unlike\nevery other kind they are *not* the linear form ``sum(coefficient * variable) <sense> rhs`` \u2014\neach term names a task's start variable and carries its **interval size** as the coefficient,\nand the family's semantics live in :mod:`astro_mine.allocate.model.ir.schedule` (the one place\nthe CP-SAT lowering, the independent verifier, and the binding-constraint explanation all read\nthem from, so they can never disagree). Every other kind is carried structurally (terms + sense\n+ rhs) so any backend can lower it without knowing its physics.",
+      "enum": [
+        "assignment_cover",
+        "precedence",
+        "time_window",
+        "no_overlap",
+        "cumulative",
+        "linear"
+      ],
+      "title": "ConstraintKind",
+      "type": "string"
+    },
+    "ConstraintSense": {
+      "description": "The relational sense of a linear IR constraint (``lhs`` <sense> ``rhs``).",
+      "enum": [
+        "le",
+        "eq",
+        "ge"
+      ],
+      "title": "ConstraintSense",
+      "type": "string"
+    },
+    "ConstraintTerm": {
+      "additionalProperties": false,
+      "description": "One ``coefficient * variable`` term of a linear constraint's left-hand side.",
+      "properties": {
+        "coefficient": {
+          "title": "Coefficient",
+          "type": "number"
+        },
+        "var_ref": {
+          "title": "Var Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "var_ref",
+        "coefficient"
+      ],
+      "title": "ConstraintTerm",
+      "type": "object"
+    },
+    "DecisionVariable": {
+      "additionalProperties": false,
+      "description": "One decision variable of the optimization model.\n\n``kind`` is its domain type (binary/integer/continuous/interval); ``lower``/``upper``\nare optional closed bounds (a continuous start-time variable's window envelope, a\nbinary variable's ``[0, 1]``). ``semantic`` plus the optional ``task_ref``/``asset_ref``\nare the *allocation-domain* meaning of the variable \u2014 the seam by which a returned plan\nis mapped back onto variable values for independent feasibility verification\n(:func:`~astro_mine.allocate.verify_feasible`, the Guard-recheckable oracle). They carry\nno physics and do not bind a backend to any particular encoding.",
+      "properties": {
+        "asset_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asset Ref"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/VariableKind"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lower"
+        },
+        "semantic": {
+          "$ref": "#/$defs/VariableSemantic"
+        },
+        "task_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task Ref"
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upper"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "semantic"
+      ],
+      "title": "DecisionVariable",
+      "type": "object"
+    },
+    "ObjectiveSense": {
+      "description": "Whether the objective is minimized or maximized (allocate.md \u00a73).",
+      "enum": [
+        "minimize",
+        "maximize"
+      ],
+      "title": "ObjectiveSense",
+      "type": "string"
+    },
+    "ObjectiveTerm": {
+      "additionalProperties": false,
+      "description": "One ``coefficient * variable`` term of the (linear) objective.\n\nThe realized objective of a plan is exactly ``sum(coefficient * variable_value)`` over\nthese terms \u2014 the identity :func:`~astro_mine.allocate.verify_feasible` re-derives to\ncheck a reported objective is honest.",
+      "properties": {
+        "coefficient": {
+          "title": "Coefficient",
+          "type": "number"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "var_ref": {
+          "title": "Var Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "var_ref",
+        "coefficient"
+      ],
+      "title": "ObjectiveTerm",
+      "type": "object"
+    },
+    "VariableKind": {
+      "description": "The domain type of an IR :class:`~astro_mine.allocate.DecisionVariable`.\n\n``INTERVAL`` reserves the CP-SAT interval-variable idiom (start/size/end) for the\nscheduling encodings that land with the solver backends (RM-P1-ALLOC-02); the\nRM-P1-ALLOC-01 structural skeleton emits only ``BINARY`` assignment variables and\n``CONTINUOUS`` start-time variables.",
+      "enum": [
+        "binary",
+        "integer",
+        "continuous",
+        "interval"
+      ],
+      "title": "VariableKind",
+      "type": "string"
+    },
+    "VariableSemantic": {
+      "description": "What a decision variable *means* in allocation terms \u2014 the seam that lets a plan be\nmapped back onto IR variable values for verification (:mod:`astro_mine.allocate` verify).\n\nSolver-neutral but allocation-domain-typed: ``ASSIGNMENT`` is a binary \"asset does\ntask\" indicator, ``START_TIME`` a task's continuous start epoch, and ``WINDOW_SELECT`` a\nbinary \"this task runs in *this* one of its disjoint availability windows\" indicator \u2014 the\nselector that turns a task's plural ``time_windows`` into an exact **disjunction** rather\nthan a single min/max envelope that would admit a start inside an availability gap\n(RM-P1-ALLOC-02). Physics-derived semantics (power/energy/comms-window variables) arrive with\nthe constraint builders (RM-P1-ALLOC-03).",
+      "enum": [
+        "assignment",
+        "start_time",
+        "window_select"
+      ],
+      "title": "VariableSemantic",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.astro-mine.org/allocate/v0.1/allocation-ir.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The compiled, solver-neutral allocation problem.\n\nA flat set of ``variables``, ``constraints``, and ``objective_terms`` plus the\n``objective_sense`` and free-form ``metadata`` (e.g. the originating ``request_id``).\nEmitted by :func:`~astro_mine.allocate.compile_request` in stable sorted order so the\nwire form and :meth:`content_hash` are byte-stable for a fixed request (the\ndeterminism prerequisite for the seeded golden-plan gate, RM-P1-ALLOC-07).",
+  "properties": {
+    "constraints": {
+      "items": {
+        "$ref": "#/$defs/Constraint"
+      },
+      "title": "Constraints",
+      "type": "array"
+    },
+    "ir_version": {
+      "const": "0.1.0",
+      "default": "0.1.0",
+      "title": "Ir Version",
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Metadata",
+      "type": "object"
+    },
+    "objective_sense": {
+      "$ref": "#/$defs/ObjectiveSense"
+    },
+    "objective_terms": {
+      "items": {
+        "$ref": "#/$defs/ObjectiveTerm"
+      },
+      "title": "Objective Terms",
+      "type": "array"
+    },
+    "variables": {
+      "items": {
+        "$ref": "#/$defs/DecisionVariable"
+      },
+      "title": "Variables",
+      "type": "array"
+    }
+  },
+  "required": [
+    "objective_sense"
+  ],
+  "title": "AllocationIR",
+  "type": "object"
+}

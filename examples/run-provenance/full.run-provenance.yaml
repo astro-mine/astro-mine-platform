@@ -1,0 +1,34 @@
+# A fully populated run-provenance record — the shape Sim stamps into MCAP and Cloud
+# composes into its RunContext. Input hashes are content-addressed (sha256:<hex>, the
+# platform-wide digest form the issue-#19 helper produces).
+run_provenance_version: "0.1"
+run_provenance:
+  run_id: "run-20260701T000000Z-abcdef"
+  input_hashes:
+    - "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    - "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  engine_versions:
+    orbital: "basilisk-2.2.0"
+    mobility: "mujoco-3.1.6"
+  fidelity_tiers:
+    orbital: "kinematic"
+    excavation: "reduced_order"
+  seed: 42
+  seeds:
+    episode: 42
+    sensor_noise: 1337
+  code_version: "astro-mine-sim 0.1.0"
+  toolchain_version: "python-3.12.4"
+  env_lockfile: "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  error_budget_outcomes:
+    - name: "orbital_position"
+      within_budget: true
+      tier: "kinematic"
+      metric: "position_rms_m"
+      value: 12.5
+      tolerance: 50.0
+    - name: "coupling_residual"
+      within_budget: false
+      metric: "energy_residual_j"
+      value: 3.1
+      tolerance: 2.0

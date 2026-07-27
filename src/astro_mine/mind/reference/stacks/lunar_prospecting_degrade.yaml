@@ -1,0 +1,30 @@
+stack_spec_version: "0.1"
+stack_spec:
+  id: reference-lunar-prospecting-degrade
+  name: Reference lunar-polar prospecting stack (degrade-not-collapse)
+  description: >-
+    The hybrid-coordination stack (RM-P1-MIND-06): a centralized mission tier for global
+    coherence that degrades to decentralized neighbor coordination under comms loss. The
+    mission plan is validity-horizoned and carries a comms_lost trigger; under an injected
+    blackout its plan_expired replan is suppressed so agents act on cached intent
+    (act-while-stale) and reconcile on recovery — a defined safe-productive state, never
+    undefined behavior. Validated by the injected-blackout stress harness.
+  scenario_ref: lunar-polar-prospecting
+  coordination:
+    kind: hybrid
+  tiers:
+    - role: mission
+      plugin: mind.reference.mission
+      validity_horizon_s: 3.0
+      replan_triggers:
+        - kind: plan_expired
+        - kind: comms_lost
+    - role: tamp
+      plugin: mind.reference.tamp
+      replan_triggers:
+        - kind: periodic
+          every_ticks: 2
+    - role: control
+      plugin: mind.reference.control
+  shield:
+    plugin: mind.reference.constraint_shield

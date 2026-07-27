@@ -1,0 +1,16 @@
+# buf codegen — Python bindings (RM-P0-CORE-07).
+#
+# Generates the checked-in Python protobuf bindings (*_pb2.py / *_pb2.pyi) that
+# astro_mine.core.*.wire imports. Output lands in `src/` mirroring the proto path,
+# i.e. src/astro_mine/core/<comp>/_proto/<comp>_pb2.py — the import path downstream
+# already builds against.
+#
+# Remote plugins are PINNED for reproducibility (CX-REPRO): the v35 line emits
+# gencode for the protobuf 7.35 runtime pinned in pyproject.toml. Bump both
+# together. Run via `scripts/gen_proto.sh` (`npx @bufbuild/buf`).
+version: v2
+plugins:
+  - remote: buf.build/protocolbuffers/python:v35.1
+    out: src
+  - remote: buf.build/protocolbuffers/pyi:v35.1
+    out: src

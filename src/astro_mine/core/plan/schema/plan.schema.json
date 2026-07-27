@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.astro-mine.org/core/plan/v0.1/plan.schema.json",
+  "title": "Astro-Mine Core Plan / ContingentPlan v0.1",
+  "description": "The delay-tolerant plan contract (RFC-0006; mind.md §5): a time-stamped, validity-horizoned plan for one tier, with assumptions and explicit contingency branches. Canonical source of truth; the Pydantic models in astro_mine.core.plan.model mirror it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plan_version", "plan"],
+  "properties": {
+    "plan_version": { "const": "0.1" },
+    "plan": { "$ref": "#/$defs/ContingentPlan" }
+  },
+  "$defs": {
+    "PlanValidity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issued_at_s"],
+      "properties": {
+        "issued_at_s": { "type": "number" },
+        "horizon_s": { "type": ["number", "null"], "exclusiveMinimum": 0 }
+      }
+    },
+    "Assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key"],
+      "properties": {
+        "key": { "type": "string" },
+        "description": { "type": "string" },
+        "holds": { "type": ["boolean", "null"] }
+      }
+    },
+    "ContingencyBranch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger", "action"],
+      "properties": {
+        "trigger": { "type": "string" },
+        "action": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "PlanProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_hashes": { "type": "array", "items": { "type": "string" } },
+        "code_version": { "type": ["string", "null"] },
+        "toolchain_version": { "type": ["string", "null"] },
+        "env_lockfile": { "type": ["string", "null"] },
+        "seed": { "type": ["integer", "null"] }
+      }
+    },
+    "Plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_id", "tier", "validity"],
+      "properties": {
+        "plan_id": { "type": "string" },
+        "tier": { "type": "string" },
+        "validity": { "$ref": "#/$defs/PlanValidity" },
+        "actions": { "type": "object" },
+        "assumptions": { "type": "array", "items": { "$ref": "#/$defs/Assumption" } },
+        "provenance": {
+          "oneOf": [{ "$ref": "#/$defs/PlanProvenance" }, { "type": "null" }]
+        }
+      }
+    },
+    "ContingentPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base"],
+      "properties": {
+        "base": { "$ref": "#/$defs/Plan" },
+        "branches": { "type": "array", "items": { "$ref": "#/$defs/ContingencyBranch" } }
+      }
+    }
+  }
+}

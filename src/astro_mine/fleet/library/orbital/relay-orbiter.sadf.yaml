@@ -1,0 +1,101 @@
+# Scenario 1 (lunar polar ice prospecting) — relay orbiter.
+# The comms gateway: relays surface traffic from comms-denied PSRs and provides a
+# direct-to-Earth downlink. Phase 0 models it as a comms node, not a propulsive asset —
+# station-keeping propulsion is RFC-0001 content, deferred to Phase 3.
+sadf_version: "0.1"
+asset:
+  identity:
+    id: astro-mine.fleet.relay-orbiter
+    name: Relay Orbiter
+    version: 0.1.0
+    kind: orbiter
+    description: >-
+      Lunar relay orbiter: store-and-forward relay for surface assets in permanently
+      shadowed regions plus a direct-to-Earth downlink.
+    labels:
+      scenario: lunar-polar-ice-prospecting
+
+  capabilities:
+    - mobility.orbiter
+    - comms.relay
+    - comms.direct_to_earth
+    - power.generation
+    - power.storage
+
+  core_interface_versions:
+    sadf: "0.1.0"
+
+  root_frame: bus
+  frames:
+    - name: bus
+    - name: hga
+      parent: bus
+      transform:
+        translation_m: { x: 0.6, y: 0.0, z: 0.0 }
+        rotation_quat_xyzw: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+
+  bodies:
+    - name: bus
+      frame: bus
+      mass_kg: 250.0
+      center_of_mass_m: { x: 0.0, y: 0.0, z: 0.0 }
+      inertia_kg_m2: { ixx: 80.0, iyy: 90.0, izz: 70.0 }
+
+  power:
+    sources:
+      - { name: solar_array, kind: solar, nominal_power_w: 600.0 }
+    storage:
+      - { name: main_battery, capacity_j: 5.0e+6, max_charge_w: 300.0, max_discharge_w: 400.0 }
+    floor_w: 40.0
+    loads_by_mode:
+      - { mode: safe, power_w: 50.0 }
+      - { mode: nominal, power_w: 180.0 }
+      - { mode: downlink, power_w: 320.0 }
+
+  thermal:
+    operating_range_k: { min: 250.0, max: 320.0 }
+    survival_range_k: { min: 200.0, max: 350.0 }
+    dissipation_w: 120.0
+    radiator_area_m2: 1.2
+
+  sensors:
+    - name: star_tracker
+      kind: imaging
+      frame: bus
+      observation_model: { range_m: 1.0e+9, fov_deg: 8.0 }
+    - name: nav_imu
+      kind: imu
+      frame: bus
+
+  comms:
+    - name: s_band_relay
+      band: s_band
+      node_role: space
+      antenna: { gain_dbi: 12.0, boresight_frame: hga, pointing_accuracy_deg: 1.0 }
+      eirp_dbw: 18.0
+      gt_db_per_k: -6.0
+      tx_power_w: 40.0
+      min_rate_bps: 1.0e+4
+      max_rate_bps: 4.0e+6
+      modcod_supported: ["qpsk_r1_2", "qpsk_r3_4"]
+      protocols: ["ccsds_tc_tm", "cfdp"]
+      relay: true
+    - name: x_band_dte
+      band: x_band
+      node_role: space
+      antenna: { gain_dbi: 28.0, boresight_frame: hga, pointing_accuracy_deg: 0.3 }
+      eirp_dbw: 36.0
+      gt_db_per_k: 2.0
+      tx_power_w: 60.0
+      min_rate_bps: 5.0e+4
+      max_rate_bps: 2.0e+7
+      modcod_supported: ["qpsk_r1_2"]
+      protocols: ["ccsds_tc_tm"]
+      relay: false
+
+  mobility:
+    regimes: [proximity_orbit]
+
+  fidelity_profiles:
+    - { tier: massmodel, determinism_class: bit_exact, detail: bus point-mass + power/thermal }
+    - { tier: kinematic, determinism_class: bit_exact, detail: "rigid bus, attitude + orbit state" }

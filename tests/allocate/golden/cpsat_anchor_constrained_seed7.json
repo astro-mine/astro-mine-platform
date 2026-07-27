@@ -1,0 +1,70 @@
+{
+  "binding_constraints": [
+    {
+      "constraint_id": "twin_lo::excavate-crater-a",
+      "kind": "time_window",
+      "slack": 0.0,
+      "source": "request:time-window"
+    },
+    {
+      "constraint_id": "twin_lo::haul-to-plant",
+      "kind": "time_window",
+      "slack": 0.0,
+      "source": "request:time-window"
+    },
+    {
+      "constraint_id": "twin_lo::prospect-crater-a",
+      "kind": "time_window",
+      "slack": 0.0,
+      "source": "request:time-window"
+    }
+  ],
+  "objective_decomposition": {
+    "contributions": [
+      {
+        "family": "roi",
+        "task_id": null,
+        "value": 65.0
+      }
+    ],
+    "total": 65.0
+  },
+  "optimality_gap": 0.0,
+  "plan": [
+    {
+      "asset_id": "excavator-1",
+      "tasks": [
+        {
+          "end_s": 2700.0,
+          "kind": "excavate",
+          "start_s": 1800.0,
+          "task_id": "excavate-crater-a"
+        }
+      ]
+    },
+    {
+      "asset_id": "hauler-1",
+      "tasks": [
+        {
+          "end_s": 4200.0,
+          "kind": "haul",
+          "start_s": 3600.0,
+          "task_id": "haul-to-plant"
+        }
+      ]
+    },
+    {
+      "asset_id": "prospector-rover-1",
+      "tasks": [
+        {
+          "end_s": 600.0,
+          "kind": "prospect",
+          "start_s": 0.0,
+          "task_id": "prospect-crater-a"
+        }
+      ]
+    }
+  ],
+  "realized_objective": 65.0,
+  "status": "optimal"
+}

@@ -1,0 +1,20 @@
+{
+  "benchmark": "scale-iis",
+  "recorded_at": "2026-07-13T19:19:15.108941+00:00",
+  "ortools": "9.10.4067",
+  "allocate": "0.1.dev13",
+  "assets": 25,
+  "tasks": 252,
+  "ir_variables": 3136,
+  "ir_constraints": 1555,
+  "iis_s": 1.037,
+  "max_iis_s": 45.0,
+  "core_size": 3,
+  "core_size_unrefined": 3,
+  "max_core_size": 8,
+  "constraint_ids": [
+    "comms_hi::haul-040",
+    "prec::excavate-040->haul-040",
+    "twin_lo::excavate-040"
+  ]
+}

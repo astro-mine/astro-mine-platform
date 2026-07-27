@@ -1,0 +1,59 @@
+// Allocation IR v0.1 — canonical Protobuf wire form (RM-P1-ALLOC-01).
+//
+// The solver-neutral allocation problem that crosses a language boundary: Sim/Bench and
+// solver backends (which may be C++/Rust) consume the compiled IR by content hash to solve
+// or verify a plan (allocate.md §5). The AllocationRequest / Allocation request-response
+// types are Pydantic + JSON Schema only (the Core control-plane pattern — Core keeps the
+// plugin manifest schema/YAML only); the IR is the one type with a cross-language wire form.
+//
+// Mirrors the canonical JSON Schema (schema/allocation_ir.schema.json) and the Pydantic
+// models (astro_mine.allocate.model.ir.model). Field names match the models' JSON
+// projection so conversion round-trips through protobuf's json_format
+// (astro_mine.allocate.model.ir.wire). Closed-vocabulary fields (kind, semantic, sense) are
+// carried as `string` — the type authority is the Pydantic model / JSON Schema, and
+// string<->string keeps the round-trip byte-exact (the Core messages/sadf pattern). Nullable
+// singular fields use proto3 `optional` to preserve absence.
+//
+// Field tags are append-only and never reused (conventions.md §3).
+
+syntax = "proto3";
+
+package astro_mine.allocate.v0;
+
+message DecisionVariable {
+  string id = 1;
+  string kind = 2;  // VariableKind (closed vocab as string)
+  optional double lower = 3;
+  optional double upper = 4;
+  string semantic = 5;  // VariableSemantic (closed vocab as string)
+  optional string task_ref = 6;
+  optional string asset_ref = 7;
+}
+
+message ConstraintTerm {
+  string var_ref = 1;
+  double coefficient = 2;
+}
+
+message Constraint {
+  string id = 1;
+  string kind = 2;  // ConstraintKind (closed vocab as string)
+  repeated ConstraintTerm terms = 3;
+  string sense = 4;  // ConstraintSense (closed vocab as string)
+  double rhs = 5;
+}
+
+message ObjectiveTerm {
+  string id = 1;
+  string var_ref = 2;
+  double coefficient = 3;
+}
+
+message AllocationIR {
+  string ir_version = 1;
+  repeated DecisionVariable variables = 2;
+  repeated Constraint constraints = 3;
+  repeated ObjectiveTerm objective_terms = 4;
+  string objective_sense = 5;  // ObjectiveSense (closed vocab as string)
+  map<string, string> metadata = 6;
+}

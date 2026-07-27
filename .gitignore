@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/*
+# core's committed schema bundle (digest-compared by tests) is NOT a build output
+!dist/schema-bundle/
+.venv/
+.python-version.local
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Rust build outputs (guard safety core; core's validator parity crate)
+rust/target/
+validator/rust/target/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

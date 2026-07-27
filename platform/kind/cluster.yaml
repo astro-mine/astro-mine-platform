@@ -1,0 +1,51 @@
+# The ephemeral cluster the opt-in `cluster`-marked tests run against (cloud.md §10).
+#
+# Three nodes, not one: the chaos test takes a *whole worker away* mid-run (`docker kill`), and a
+# single-node cluster cannot survive losing its only node -- there would be nowhere to reschedule
+# the retry, so the test could only ever prove that the cluster dies.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: astro-mine
+
+# The node image is pinned by digest, not left to kind's default: the default tracks the kind
+# binary, so a kind bump would silently change the Kubernetes version under the tests. Keep this
+# in step with the kind version in .github/workflows/cluster-e2e.yml -- an image newer than the
+# kind binary will not boot. v1.34 is deliberately a little behind the newest: KubeRay, Kueue and
+# Kyverno all support it, and it stays inside kubectl's +/-1 minor skew window on the runner.
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.34.8@sha256:02722c2dedddcfc00febf5d27fbeb9b7b2c14294c82109ff4a85d89ac9ba3256
+    extraPortMappings:
+      # MinIO's NodePort, so the *host* half of the equivalence test reads and writes the same
+      # object store the pods do. One store, two endpoints -- that is the whole point: the host
+      # stages the job's inputs into it and reads the pod's outputs and provenance back out.
+      - containerPort: 30900
+        hostPort: 30900
+        protocol: TCP
+  - role: worker
+    image: kindest/node:v1.34.8@sha256:02722c2dedddcfc00febf5d27fbeb9b7b2c14294c82109ff4a85d89ac9ba3256
+  - role: worker
+    image: kindest/node:v1.34.8@sha256:02722c2dedddcfc00febf5d27fbeb9b7b2c14294c82109ff4a85d89ac9ba3256
+
+# The local registry, as containerd on the nodes must resolve it. `kind-registry` is a container
+# on the `kind` docker network (registry.sh puts it there), so the nodes resolve it via docker's
+# embedded DNS -- and it serves TLS (registry.sh), so up.sh writes an `https://` hosts.toml entry
+# that trusts the harness CA on each node (astro-mine-cloud#30).
+#
+# Note the registry is addressed as `kind-registry:5000`, NOT `localhost:5001`. Kyverno verifies
+# image signatures by fetching them from the registry *from inside its own pod*, where `localhost`
+# is the Kyverno pod itself. A name the whole cluster can resolve is the only reference that works
+# for the node (pulling), for Kyverno (verifying), and for the tests (pushing, via a container on
+# the same network).
+# The plugin is `io.containerd.cri.v1.images`, NOT `io.containerd.grpc.v1.cri`. The v1.34 node image
+# ships containerd 2.x, which split the old monolithic CRI plugin into `.cri.v1.runtime` and
+# `.cri.v1.images` and DROPPED the `registry.mirrors` / `registry.configs` blocks entirely. Patching
+# the 1.x path against a 2.x config does not warn -- it stops the CRI plugin loading, so the kubelet
+# dies on "unknown service runtime.v1.RuntimeService", no static pod ever starts, and kubeadm reports
+# a control-plane timeout four layers downstream from the actual cause.
+#
+# Mirrors now live in hosts.toml files under config_path, which up.sh writes onto each node.
+containerdConfigPatches:
+  - |-
+    [plugins."io.containerd.cri.v1.images".registry]
+      config_path = "/etc/containerd/certs.d"

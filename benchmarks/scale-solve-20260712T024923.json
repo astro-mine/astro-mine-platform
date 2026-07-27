@@ -1,0 +1,18 @@
+{
+  "benchmark": "scale-solve",
+  "recorded_at": "2026-07-12T02:49:23.897856+00:00",
+  "ortools": "9.10.4067",
+  "allocate": "0.1.dev9",
+  "assets": 25,
+  "tasks": 252,
+  "ir_variables": 3136,
+  "ir_constraints": 1555,
+  "forbidden_pairs": 399,
+  "compile_s": 0.236,
+  "solve_s": 0.782,
+  "deadline_s": 60.0,
+  "status": "optimal",
+  "optimality_gap": 1.85016187858864e-10,
+  "max_gap": 0.05,
+  "realized_objective": 6874.888324271966
+}

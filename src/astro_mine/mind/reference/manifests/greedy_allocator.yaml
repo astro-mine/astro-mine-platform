@@ -1,0 +1,24 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.allocate.greedy
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference greedy allocator (RM-P1-MIND-04) — the delegated-to stand-in for
+    Astro-Mine-Allocate: nearest-task assignment over the delegated AllocationRequest,
+    returning a good-enough incumbent with recorded seed provenance. Wrapped by the Mind
+    AllocationAdapter behind Core's Allocator sub-interface; the real CP-SAT AllocationPlanner
+    binds through the same adapter via the registry.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: allocator

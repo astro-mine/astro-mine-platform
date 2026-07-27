@@ -1,0 +1,66 @@
+apiVersion: v2
+name: astro-mine-cloud
+description: >-
+  The Astro-Mine-Cloud platform umbrella chart -- one Helm install of the curated scale-out
+  substrate on conformant Kubernetes: KubeRay (tightly-coupled Ray work), Argo Workflows (DAG /
+  fan-out batch), plain Kubernetes Jobs (one-shots), the NVIDIA GPU Operator (MIG + DCGM), Kueue
+  queueing, and the Prometheus/Grafana/Loki observability stack. See docs/architecture/cloud.md.
+type: application
+# The chart is SemVer'd (conventions.md §7, §13); appVersion tracks the astro-mine-cloud wheel.
+version: 0.1.0
+appVersion: 0.1.0
+kubeVersion: ">=1.29.0-0"
+keywords:
+  - astro-mine
+  - orchestration
+  - ray
+  - argo
+  - kubernetes
+home: https://github.com/astro-mine/astro-mine-cloud
+sources:
+  - https://github.com/astro-mine/astro-mine-cloud
+# Curated operator stack. Each dependency is gated by a `<name>.enabled` condition so a profile
+# (profiles/kind.yaml, profiles/prod.yaml) turns pieces on/off. Versions are starting pins --
+# `helm dependency build` resolves them from the upstream repos before install.
+dependencies:
+  # Kept in step with the workload image's Ray (2.56.0, platform/kind/workload.Dockerfile). 1.1.1 is
+  # from early 2024 and predates that Ray by two years; the operator builds the RayJob submitter
+  # around the Ray in the image, so a large skew between them is not worth carrying.
+  - name: kuberay-operator
+    version: "1.6.2"
+    repository: https://ray-project.github.io/kuberay-helm/
+    condition: kuberay-operator.enabled
+  - name: argo-workflows
+    version: "0.41.11"
+    repository: https://argoproj.github.io/argo-helm
+    condition: argo-workflows.enabled
+  # 0.8.1 no longer resolves: this is an OCI registry and it prunes old chart tags, unlike the
+  # HTTP index repos above, which keep every version they ever published. `helm dependency build`
+  # fails outright with "not found" -- so an OCI pin rots on a timescale the others do not, and
+  # the nightly cluster-e2e run is what will notice.
+  #
+  # 0.17.7 serves BOTH v1beta1 and v1beta2; sched/kueue.py speaks v1beta1.
+  - name: kueue
+    version: "0.17.7"
+    repository: oci://registry.k8s.io/kueue/charts
+    condition: kueue.enabled
+  - name: gpu-operator
+    version: "v24.6.1"
+    repository: https://nvidia.github.io/gpu-operator
+    condition: gpu-operator.enabled
+  - name: kube-prometheus-stack
+    version: "62.3.0"
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: kube-prometheus-stack.enabled
+  - name: loki
+    version: "6.10.0"
+    repository: https://grafana.github.io/helm-charts
+    condition: loki.enabled
+  # The admission controller the ClusterPolicy in templates/ needs. The chart *emitted* that
+  # policy from the start but never installed anything able to enforce it -- so
+  # "cosign-verified-images-only" (cloud.md §9) was a YAML file nothing read. Off by default:
+  # turning admission on without a signing key would refuse every pod on the cluster.
+  - name: kyverno
+    version: "3.2.6"
+    repository: https://kyverno.github.io/kyverno/
+    condition: kyverno.enabled

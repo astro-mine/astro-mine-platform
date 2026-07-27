@@ -1,0 +1,15 @@
+# Compiles the buf-generated Rust client (RM-P0-CORE-07) to prove the Core message
+# schemas build against the prost runtime. Generated sources come from
+# `scripts/gen_proto.sh --langs` (codegen/rust/generated, gitignored) and are
+# pulled in by src/lib.rs. prost matches the buf plugin community/neoeinstein-prost:v0.5.0.
+[package]
+name = "astro-mine-core-proto"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+prost = "0.14"
+
+[lib]
+path = "src/lib.rs"

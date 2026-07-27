@@ -1,0 +1,21 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.reference.control
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference scripted controller — clamped velocity setpoint toward the GOTO target. A
+    replaceable example; classical MPC/PID and ONNX controllers land in RM-P1-MIND-03.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: control

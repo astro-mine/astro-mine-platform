@@ -1,0 +1,12 @@
+{
+  "benchmark": "scale-gap-teeth",
+  "recorded_at": "2026-07-13T19:19:12.239899+00:00",
+  "ortools": "9.10.4067",
+  "allocate": "0.1.dev13",
+  "assets": 25,
+  "tasks": 252,
+  "optimal_objective": 3693.155631978931,
+  "wasteful_objective": 2932.5578841380543,
+  "wasteful_gap": 0.2593632514314151,
+  "max_gap": 0.05
+}

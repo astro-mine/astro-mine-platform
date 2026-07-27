@@ -1,0 +1,27 @@
+{
+  "astro_mine": {
+    "hub": {
+      "policy": {
+        "version": "1.0.0",
+        "allowed_licenses": [
+          "Apache-2.0",
+          "BSD-2-Clause",
+          "BSD-3-Clause",
+          "CC-BY-4.0",
+          "CC0-1.0",
+          "ISC",
+          "MIT"
+        ],
+        "verified_namespaces": [
+          "curated",
+          "verified"
+        ],
+        "gated_capability_tags": [
+          "comms.live_mission_link_prediction",
+          "ground_truth_access",
+          "operational_targeting"
+        ]
+      }
+    }
+  }
+}

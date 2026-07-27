@@ -1,0 +1,10 @@
+# The smallest valid plan document: a standing control-tier plan (no expiry, no actions,
+# no branches). `horizon_s: null` means the plan does not expire — a bare Plan is a
+# ContingentPlan with no branches (RFC-0006).
+plan_version: "0.1"
+plan:
+  base:
+    plan_id: astro-mine.plan.standing-control@0
+    tier: control
+    validity:
+      issued_at_s: 0.0

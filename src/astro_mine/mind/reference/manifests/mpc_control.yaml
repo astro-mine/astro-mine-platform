@@ -1,0 +1,22 @@
+manifest_version: "0.1"
+manifest:
+  name: mind.control.mpc
+  version: "0.1.0"
+  kind: policy
+  description: >-
+    Reference receding-horizon (MPC) controller (RM-P1-MIND-03) — reaches the GOTO target in
+    a fixed horizon, clamped to the speed limit. A classical baseline behind Core's Controller
+    sub-interface; Guard-wrapped like any tier.
+  core_interfaces:
+    policy: "0.1.0"
+    messages: "0.1.0"
+  determinism_class: bit_exact
+  inputs:
+    - Observation
+    - ActionBatch
+  outputs:
+    - ActionBatch
+  signature:
+    scheme: unsigned
+  attributes:
+    tier: control

@@ -1,0 +1,42 @@
+{
+  "schema": "astro-mine-worlds/gravity-validation/v0.1",
+  "body": "MOON",
+  "field": "GRGM1200A",
+  "description": "Published GRAIL-derived lunar gravity-field reference values, read directly from the PDS spherical-harmonic ASCII data record (SHADR) rather than a secondary table. astro_mine.worlds.gravity is regression-tested against this document (tests/test_gravity.py); worlds.md §10 / conventions.md §11 require exactly this — regression against a published reference with an explicit error budget.",
+  "source": {
+    "product": "gggrx_1200a_sha.tab",
+    "archive": "https://pds-geosciences.wustl.edu/grail/grail-l-lgrs-5-rdr-v1/grail_1001/shadr/",
+    "dataset_id": "LRO-L-LGRS-5-RDR-V1.0 (PDS Geosciences Node)",
+    "citation": "GRAIL GRGM1200A (GSFC degree-1200 solution). Goossens, S., et al. (2016), 'A Global Degree and Order 1200 Model of the Lunar Gravity Field Using GRAIL Mission Data', LPSC XLVII, abstract #1484. The product's PDS label names Lemoine, F.G., Goossens, S., Sabaka, T.J., Nicholas, J.B., Mazarico, E., et al. (2014), 'GRGM900C: A degree 900 lunar gravity model from GRAIL primary and extended mission data', Geophys. Res. Lett. 41, 3382-3389, doi:10.1002/2014GL060027 as its best reference.",
+    "retrieved": "2026-07-11"
+  },
+  "conventions": {
+    "normalization": "4-pi (geodesy) normalized Stokes coefficients; C(n,0) = Cbar(n,0) * sqrt(2n+1), J_n = -C(n,0).",
+    "tide": "Tide-free: the archived degree-2 coefficients exclude the permanent tide. Restoring it raises J2 by ~0.045% (to ~2.03305e-4; Konopliv et al. 2013, JGR-Planets 118, 1415-1434, doi:10.1002/jgre.20097, Table 4). The model pins the tide-free convention.",
+    "reference_radius_note": "The coefficients are normalized to R = 1738.0 km. This is NOT the lunar CRS datum (1737.4 km volumetric mean radius): a J_n term scales as (R/r)^n, so the field must be evaluated against its own R."
+  },
+  "reference": {
+    "gm_m3_s2": 4.9028001224453e12,
+    "reference_radius_m": 1738000.0,
+    "normalized_zonals": {
+      "C20": -9.0884339347424299e-05,
+      "C30": -3.1973308084610398e-06,
+      "C40": 3.23478084425701e-06
+    },
+    "unnormalized_zonals": {
+      "J2": 2.0322356087e-04,
+      "J3": 8.4593421784e-06,
+      "J4": -9.7043425328e-06
+    },
+    "mean_surface_gravity_m_s2": 1.62,
+    "mean_surface_gravity_source": "NASA/NSSDC Moon Fact Sheet (D. R. Williams), surface gravity 1.62 m/s^2 at the 1737.4 km volumetric mean radius."
+  },
+  "error_budget": {
+    "zonal_rel": 1e-9,
+    "zonal_rel_rationale": "The J_n the model evaluates must agree with the published archive coefficients to within round-off of the sqrt(2n+1) unnormalization - this is an exactness check on the constants and the conversion, not a physical tolerance. It fails loudly if a coefficient is edited, mistyped, or silently re-sourced from another field (the GSFC/JPL fields differ by ~6e-5 relative in J2, far above their formal sigma, so mixing them is a real error this catches).",
+    "mean_surface_gravity_rel": 0.005,
+    "mean_surface_gravity_rationale": "0.5% on the mean surface gravity against the published 1.62 m/s^2, which itself carries only 3 significant figures. Real lunar surface gravity varies by far more than this from topography and mascons, which a degree-4 zonal field does not model at all - so a tighter budget would be false precision.",
+    "truncation_rel": 1e-3,
+    "truncation_rationale": "The degree-4 truncation error budget: J3 and J4 together move the surface field by less than 1e-3 relative to a J2-only evaluation (they are ~4e-2 of J2 and enter with an extra (R/r)^n factor). This bounds what worlds.md §12's 'low-order' costs against a fuller expansion, and pins the DIRECTION of the model's approximations. The dropped latitudinal component g_phi (the model returns the radial magnitude only) is a separate, larger term - O(J2 * g) ~ 5e-4 m/s^2 - documented in gravity/_zonal.py."
+  }
+}
