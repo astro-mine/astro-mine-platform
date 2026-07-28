@@ -11,7 +11,7 @@ import trimesh
 
 from astro_mine.core.sadf import validate_sadf
 from astro_mine.core.sadf.enums import GeometryRole, JointType
-from astro_mine.fleet import cli, importers
+from astro_mine.fleet import importers
 from astro_mine.fleet.importers import _common, sdf
 from astro_mine.fleet.importers._common import ImportError_
 
@@ -336,38 +336,9 @@ def test_sdf_inertia_tensor_defaults_to_zero() -> None:
 # --- CLI -------------------------------------------------------------------------
 
 
-def run(*argv: str) -> int:
-    try:
-        cli.main(list(argv))
-    except SystemExit as exc:
-        return exc.code if isinstance(exc.code, int) else 1
-    return 0
 
 
-def test_cli_import_urdf(
-    urdf_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    out = tmp_path / "out" / "rover.sadf.json"
-    assert run("import", str(urdf_file), "-o", str(out)) == 0
-    assert out.is_file()
-    assert run("validate", str(out)) == 0  # the imported document is valid SADF
-    assert "imported imported.rover" in capsys.readouterr().out
-    # default assets dir sits next to the output
-    assert (tmp_path / "out" / "rover.sadf_assets").is_dir()
 
 
-def test_cli_import_sdf_with_explicit_format_and_assets_dir(sdf_file: Path, tmp_path: Path) -> None:
-    out = tmp_path / "rover.json"
-    assets = tmp_path / "geom"
-    assert (
-        run("import", str(sdf_file), "-o", str(out), "--assets-dir", str(assets), "--format", "sdf")
-        == 0
-    )
-    assert run("validate", str(out)) == 0
-    assert any(assets.glob("*.usda"))
 
 
-def test_cli_import_reports_error(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    bad = tmp_path / "missing.urdf"
-    assert run("import", str(bad), "-o", str(tmp_path / "o.json")) == 1
-    assert "fleet import" in capsys.readouterr().err

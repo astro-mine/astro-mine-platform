@@ -211,8 +211,14 @@ def test_worker_requires_a_seed(anchor: ScenarioSpec, tmp_path: Path) -> None:
         run_worker(["--scenario-id", anchor.scenario_id, "--policy-ref", BASELINE_REF], env={})
 
 
-def test_eval_worker_via_cli(anchor: ScenarioSpec, tmp_path: Path) -> None:
-    from astro_mine.bench.cli import main
+def test_eval_worker_via_python_m(anchor: ScenarioSpec, tmp_path: Path) -> None:
+    """The argv Cloud actually fans out — `python -m astro_mine.bench eval-worker …`.
+
+    Bench's user-facing verbs moved to astro-mine-cli, but this one did not: it is the
+    single-seed rollout Cloud builds per seed (RM-P1-BENCH-11) and the container backend
+    re-runs inside a sandbox, so it stays reachable exactly where its callers look for it.
+    """
+    from astro_mine.bench.__main__ import main
 
     rc = main(
         [

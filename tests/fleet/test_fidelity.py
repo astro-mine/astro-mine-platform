@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from astro_mine.core.sadf import enums, model
-from astro_mine.fleet import cli, fidelity
+from astro_mine.fleet import fidelity
 from astro_mine.fleet.fidelity import FidelityError
 
 T = enums.FidelityTier
@@ -121,12 +121,6 @@ def test_surrogate_descriptor_on_structural_tier_is_deferred() -> None:
 # --- CLI -------------------------------------------------------------------------
 
 
-def run(*argv: str) -> int:
-    try:
-        cli.main(list(argv))
-    except SystemExit as exc:
-        return exc.code if isinstance(exc.code, int) else 1
-    return 0
 
 
 def write_doc(path: Path, asset: model.Asset) -> Path:
@@ -136,48 +130,11 @@ def write_doc(path: Path, asset: model.Asset) -> Path:
     return path
 
 
-def test_cli_fidelity_lists_profiles(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    asset = make_asset(
-        [
-            prof(T.MASSMODEL, detail="mass/power only"),
-            prof(
-                T.ARTICULATED, detail="full linkage", determinism=enums.DeterminismClass.BIT_EXACT
-            ),
-        ]
-    )
-    path = write_doc(tmp_path / "rover.sadf.json", asset)
-    assert run("fidelity", str(path)) == 0
-    out = capsys.readouterr().out
-    assert "test.rover: 2 fidelity profile(s)" in out
-    # coarse -> fine ordering and details rendered
-    assert out.index("massmodel") < out.index("articulated")
-    assert "mass/power only" in out and "[bit_exact]" in out
 
 
-def test_cli_fidelity_json(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    path = write_doc(tmp_path / "a.json", make_asset([prof(T.MASSMODEL), prof(T.KINEMATIC)]))
-    assert run("fidelity", str(path), "--json") == 0
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["identity"] == "test.rover"
-    assert [p["tier"] for p in payload["profiles"]] == ["massmodel", "kinematic"]
 
 
-def test_cli_fidelity_single_fidelity_asset(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    path = write_doc(tmp_path / "s.json", make_asset([]))
-    assert run("fidelity", str(path)) == 0
-    assert "single-fidelity asset" in capsys.readouterr().out
 
 
-def test_cli_fidelity_rejects_duplicate_tiers(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    path = write_doc(tmp_path / "d.json", make_asset([prof(T.MASSMODEL), prof(T.MASSMODEL)]))
-    assert run("fidelity", str(path)) == 1
-    assert "fleet fidelity" in capsys.readouterr().err
 
 
-def test_cli_fidelity_missing_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    assert run("fidelity", str(tmp_path / "nope.json")) == 1
-    assert "cannot read file" in capsys.readouterr().err
