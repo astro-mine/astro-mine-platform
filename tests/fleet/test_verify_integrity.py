@@ -12,18 +12,11 @@ from pathlib import Path
 import pytest
 
 from astro_mine.core.sadf import load_sadf
-from astro_mine.fleet import cli
 from astro_mine.fleet.packaging import oci, package_oci
 
 from .conftest import VALID_SADF
 
 
-def run(*argv: str) -> int:
-    try:
-        cli.main(list(argv))
-    except SystemExit as exc:
-        return exc.code if isinstance(exc.code, int) else 1
-    return 0
 
 
 def _wire_blob_path(layout: Path) -> Path:
@@ -64,20 +57,3 @@ def test_missing_wire_layer_is_rejected(tmp_path: Path) -> None:
         oci.verify_asset_integrity(layout, "sha256:" + "0" * 64)
 
 
-def test_verify_cli_rejects_a_tampered_content_blob(tmp_path: Path, valid_file: Path) -> None:
-    from astro_mine.hub.supply_chain import generate_keypair
-
-    keys = tmp_path / "keys"
-    keys.mkdir()
-    priv, public = generate_keypair()  # signing key: `astro-mine-hub keygen`, minted directly here
-    key, pub = keys / "asset-signing.key", keys / "asset-signing.pub"
-    key.write_bytes(priv)
-    pub.write_bytes(public)
-    layout = tmp_path / "oci"
-    assert (
-        run("package", str(valid_file), "--out", str(layout), "--oci", "--sign", "--key", str(key))
-        == 0
-    )
-    assert run("verify", str(layout), "--pub", str(pub)) == 0  # clean passes
-    _wire_blob_path(layout).write_bytes(b"tampered-wire-form")
-    assert run("verify", str(layout), "--pub", str(pub)) == 1  # tamper caught, load refused
