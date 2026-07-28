@@ -1,6 +1,7 @@
 """Astro-Mine-Fleet — SADF asset library and authoring toolchain.
 
-The authoring :mod:`~astro_mine.fleet.cli`, :mod:`~astro_mine.fleet.importers`
+The authoring commands (`astro-mine fleet …`, in astro-mine-cli),
+:mod:`~astro_mine.fleet.importers`
 (URDF/SDF + USD/glTF geometry), physical-plausibility :mod:`~astro_mine.fleet.lint`,
 the reference asset :mod:`~astro_mine.fleet.library`, multi-fidelity
 :mod:`~astro_mine.fleet.fidelity` profiles, and content-addressed
