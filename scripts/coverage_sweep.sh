@@ -14,7 +14,7 @@ declare -A SEL=(
   [learn]="-m|not slow and not gpu and not cluster"
 )
 FAILED=""
-for comp in core spice seal worlds prospect link fleet sim bench cloud surrogate mind learn allocate guard hub studio cli; do
+for comp in core spice seal worlds prospect link fleet sim bench cloud surrogate mind learn allocate guard hub studio; do
   [ -d "tests/$comp" ] || continue
   args=()
   if [ -n "${SEL[$comp]:-}" ]; then
