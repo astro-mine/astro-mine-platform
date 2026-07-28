@@ -2,14 +2,17 @@
 
 The consolidated, single-package distribution of the Astro-Mine Python platform:
 every component — Core, Spice, Seal, Worlds, Prospect, Link, Fleet, Sim, Bench,
-Cloud, Surrogate, Mind, Learn, Allocate, Guard, Hub (client), Studio (library),
-and the `astro-mine` umbrella CLI — in one repository, one distribution, one
-`astro_mine` package.
+Cloud, Surrogate, Mind, Learn, Allocate, Guard, Hub (client), Studio (library)
+— in one repository, one distribution, one `astro_mine` package.
+
+It is a **library**. The command line is a separate distribution; see
+[Command line](#command-line) below.
 
 This repository is a **faithful consolidation, not a rewrite**. Code was copied
 mechanically from the 18 component repos; import paths (`astro_mine.<comp>`),
-public APIs, schemas and their `$id`s, CLI binaries, entry-point groups,
-configuration and environment-variable semantics, and algorithms are unchanged.
+public APIs, schemas and their `$id`s, plugin entry-point groups, configuration
+and environment-variable semantics, and algorithms are unchanged. The CLI is the
+one deliberate departure since: it moved out entirely (astro-mine-platform#1).
 See [docs/CONSOLIDATION_PLAN.md](docs/CONSOLIDATION_PLAN.md) for the migration
 contract, the small list of deliberate deviations (REST API surfaces and the
 TypeScript UIs are not migrated), and every place code had to be edited.
@@ -52,16 +55,6 @@ uv pip install -e ".[learn-rllib]"     # Ray RLlib + Torch training path
 uv pip install -e ".[sim-mujoco]"      # MuJoCo wheel-soil contact engine
 uv pip install -e ".[mind-onnx]"       # ONNX learned-controller tier
 ```
-
-## CLI
-
-All component binaries ship from this one distribution, unchanged:
-`astro-mine` (the umbrella), `astro-mine-core`, `astro-mine-sim`,
-`astro-mine-bench`, `astro-mine-fleet`, `astro-mine-worlds`, `astro-mine-link`,
-`astro-mine-prospect`, `astro-mine-guard`, `astro-mine-mind`,
-`astro-mine-learn`, `astro-mine-hub`, `astro-mine-cloud`, `astro-mine-studio`,
-plus the one-cycle deprecated aliases (`fleet`, `worlds`, `link`, `prospect`,
-`astro-mine-train`).
 
 ## Tests
 

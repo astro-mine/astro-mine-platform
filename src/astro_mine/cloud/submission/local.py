@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
+from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from astro_mine.cloud.submission._run import build_env, execute
@@ -29,6 +31,30 @@ if TYPE_CHECKING:
 __all__ = ["LocalBackend"]
 
 
+def _local_argv(command: Sequence[str]) -> list[str]:
+    """Retarget a leading bare ``python`` at the interpreter that is actually running.
+
+    A JobSpec's command is written for the **container** -- Bench's fan-out emits
+    ``["python", "-m", "astro_mine.bench", "eval-worker", …]``, and the workload image puts
+    the venv's interpreter first on ``PATH`` (``docker/Dockerfile``), so bare ``python`` is the
+    venv's. This backend runs that same argv on the host, where ``PATH`` is the developer's:
+    typically a system or conda interpreter with no ``astro_mine`` installed, so the job dies
+    with ``No module named 'astro_mine'`` and the caller reports something far less obvious --
+    for Bench, "no successful rollouts to score in this evaluation batch".
+
+    Here rather than in a dispatcher because *every* cluster-less path arrives here: the local
+    backend, and the Cloud dispatcher running against a ``DryRunClient``. Fixing one dispatcher
+    fixed one of them, which is how this was first mis-diagnosed (astro-mine-platform#3).
+
+    Only a bare ``python`` is rewritten. An absolute path, an explicit ``python3.12``, or any
+    other executable is the caller's stated choice and is left alone.
+    """
+    argv = list(command)
+    if argv and argv[0] == "python":
+        argv[0] = sys.executable
+    return argv
+
+
 class _SubprocessLauncher:
     def launch(self, *, job: JobSpec, inputs_dir: Path, outputs_dir: Path) -> int:
         if not job.command:
@@ -36,7 +62,9 @@ class _SubprocessLauncher:
         # Inherit the ambient env (PATH etc.) so non-absolute commands resolve, then
         # overlay the job's stable I/O contract.
         env = {**os.environ, **build_env(job, inputs_dir, outputs_dir, container=False)}
-        completed = subprocess.run(job.command, cwd=str(outputs_dir.parent), env=env, check=False)
+        completed = subprocess.run(
+            _local_argv(job.command), cwd=str(outputs_dir.parent), env=env, check=False
+        )
         return completed.returncode
 
 
