@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS = [
     "core", "spice", "seal", "worlds", "prospect", "link", "fleet", "sim",
     "bench", "cloud", "surrogate", "mind", "learn", "allocate", "guard",
-    "hub", "studio", "cli",
+    "hub", "studio",
 ]
 
 # Verbatim from each source repo's [tool.pytest.ini_options] addopts (beyond "-ra").

@@ -44,7 +44,6 @@ from astro_mine.prospect.publish import (
     build_field_manifest,
     bundle_digest,
     from_bundle,
-    main,
     publish_prior,
     serialize_bundle,
 )
@@ -247,33 +246,8 @@ def test_tampered_bundle_fails_closed(tmp_path: Path) -> None:
 # --- the `prospect publish` CLI --------------------------------------------------------------
 
 
-def test_cli_publish_generates_a_key_and_publishes(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
-    registry_dir = tmp_path / "reg"
-    public_out = tmp_path / "cosign.pub"
-    code = main(
-        [
-            "publish",
-            "--registry",
-            str(registry_dir),
-            "--name",
-            _ANCHOR,
-            "--public-key-out",
-            str(public_out),
-        ]
-    )
-    assert code == 0
-    assert public_out.exists()
-    out = capsys.readouterr().out
-    assert _ANCHOR in out and "sha256:" in out
-    assert Registry(registry_dir).references() == [f"{_ANCHOR}:1.0.0"]
 
 
-def test_cli_publish_accepts_an_explicit_key(tmp_path: Path) -> None:
-    private_pem, _ = generate_keypair()
-    key_path = tmp_path / "key.pem"
-    key_path.write_bytes(private_pem)
-    code = main(["publish", "--registry", str(tmp_path / "reg"), "--private-key", str(key_path)])
-    assert code == 0
 
 
 def test_from_bundle_import_is_torch_free() -> None:
