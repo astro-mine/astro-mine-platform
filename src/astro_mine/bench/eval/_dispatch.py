@@ -22,12 +22,6 @@ Backlog: RM-P1-BENCH-11 — https://github.com/astro-mine/astro-mine-bench/issue
 
 from __future__ import annotations
 
-import sys
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from astro_mine.cloud.submission.jobspec import JobSpec
-
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
@@ -96,24 +90,6 @@ class LocalBatchDispatcher:
         from astro_mine.cloud.submission.local import LocalBackend
 
         backend = LocalBackend()
-        return [backend.run(_here(job), store=store) for job in planned.sweep.expand()]
+        return [backend.run(job, store=store) for job in planned.sweep.expand()]
 
 
-def _here(job: JobSpec) -> JobSpec:
-    """Retarget a planned job's bare ``python`` at the interpreter that is actually running.
-
-    :func:`astro_mine.bench.eval.plan_batch` writes ``["python", "-m", "astro_mine.bench",
-    "eval-worker", …]``, and that is right for the *container*: the workload image puts the
-    venv's interpreter first on ``PATH`` (``docker/Dockerfile``), so bare ``python`` is the
-    venv's. Run the same argv locally and ``python`` resolves against the developer's ``PATH``
-    instead -- typically a system or conda interpreter with no ``astro_mine`` installed, so
-    every seed dies with ``No module named 'astro_mine'`` and collection then reports "no
-    successful rollouts to score".
-
-    Substituting here rather than at plan time is deliberate: the plan is the record of what
-    the fan-out was *asked* to run and is shared by the cluster path, which needs the bare name.
-    Only local execution knows it is local (astro-mine-platform#3).
-    """
-    if job.command and job.command[0] == "python":
-        return job.model_copy(update={"command": [sys.executable, *job.command[1:]]})
-    return job
