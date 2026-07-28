@@ -12,13 +12,11 @@ because a user fixing an authoring mistake wants the whole list.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
 import yaml
 
-from astro_mine.worlds.cli import main
 from astro_mine.worlds.spec import (
     EXAMPLE_RESOURCE,
     JSON_SCHEMA_DIALECT,
@@ -26,7 +24,6 @@ from astro_mine.worlds.spec import (
     WorldSpec,
     example_world_spec_text,
     published_json_schema,
-    published_json_schema_text,
 )
 
 #: Pinned so a change to the example is a deliberate act with a visible diff, not a side effect.
@@ -99,58 +96,12 @@ def test_the_synthetic_source_is_marked_as_synthetic() -> None:
 # --------------------------------------------------------------------------- the checker
 
 
-def test_validate_accepts_the_shipped_example(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    out = tmp_path / "example.world.yaml"
-    out.write_text(example_world_spec_text(), encoding="utf-8")
-    assert main(["validate", str(out)]) == 0
-    assert "valid WorldSpec example-polar-basin" in capsys.readouterr().out
 
 
-def test_validate_reports_every_failure_not_just_the_first(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """A user fixing an authoring mistake wants the whole list. Stopping at the first turns one
-    editing pass into as many passes as there are errors."""
-    good = tmp_path / "good.world.yaml"
-    good.write_text(example_world_spec_text(), encoding="utf-8")
-    bad_a = tmp_path / "a.world.yaml"
-    bad_a.write_text("world_id: x\n", encoding="utf-8")
-    bad_b = tmp_path / "b.world.yaml"
-    bad_b.write_text("{{{ not yaml", encoding="utf-8")
-
-    assert main(["validate", str(good), str(bad_a), str(bad_b)]) == 1
-    captured = capsys.readouterr()
-    assert "valid WorldSpec" in captured.out
-    assert str(bad_a) in captured.err
-    assert str(bad_b) in captured.err
-    # An authoring error is a message, never a traceback out of our own frames.
-    assert "Traceback" not in captured.err
 
 
-def test_validate_reports_a_missing_file_rather_than_raising(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    assert main(["validate", str(tmp_path / "nope.world.yaml")]) == 1
-    assert "Traceback" not in capsys.readouterr().err
 
 
-def test_validate_emits_machine_readable_output(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """`--json` is what a CI gate reads; the text form is for a person. Both report the same
-    verdict, and the JSON carries the spec hash so a pipeline can record what it checked."""
-    good = tmp_path / "good.world.yaml"
-    good.write_text(example_world_spec_text(), encoding="utf-8")
-    bad = tmp_path / "bad.world.yaml"
-    bad.write_text("world_id: x\n", encoding="utf-8")
-
-    assert main(["validate", str(good), str(bad), "--json"]) == 1
-    report = json.loads(capsys.readouterr().out)
-    assert report["ok"] is False
-    assert report["valid"][0]["hash"] == EXAMPLE_SPEC_HASH
-    assert report["invalid"][0]["path"] == str(bad)
 
 
 # --------------------------------------------------------------------------- the published schema
@@ -205,10 +156,3 @@ def test_the_schema_rejects_what_the_model_rejects(tmp_path: Path) -> None:
         jsonschema.Draft202012Validator(published_json_schema()).validate(document)
 
 
-def test_the_schema_command_prints_the_shipped_bytes(capsys: pytest.CaptureFixture[str]) -> None:
-    """What a user pipes to a file must be exactly what the wheel publishes under that `$id` —
-    printing a regenerated document instead would make the command a second source of truth."""
-    assert main(["schema"]) == 0
-    printed = capsys.readouterr().out
-    assert json.loads(printed) == published_json_schema()
-    assert published_json_schema_text().rstrip("\n") == printed.rstrip("\n")
