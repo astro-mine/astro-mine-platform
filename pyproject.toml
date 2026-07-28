@@ -15,7 +15,7 @@ build-backend = "maturin"
 [project]
 name = "astro-mine-platform"
 version = "0.1.0"
-description = "Astro-Mine-Platform — the consolidated Astro-Mine stack: Core, Spice, Seal, Worlds, Prospect, Link, Fleet, Sim, Bench, Cloud, Surrogate, Mind, Learn, Allocate, Guard, Hub, Studio, and the umbrella CLI, in one package."
+description = "Astro-Mine-Platform — the consolidated Astro-Mine stack as one library: Core, Spice, Seal, Worlds, Prospect, Link, Fleet, Sim, Bench, Cloud, Surrogate, Mind, Learn, Allocate, Guard, Hub and Studio. The CLI is astro-mine-cli."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "Apache-2.0"
@@ -142,75 +142,12 @@ allocate-mind = []                     # was: astro-mine-mind
 Homepage = "https://github.com/astro-mine/astro-mine-platform"
 Issues = "https://github.com/astro-mine/astro-mine-platform/issues"
 
-# Every console script from every component repo, verbatim (RFC-0011 naming, including
-# the one-cycle deprecated aliases). One distribution now provides them all.
-[project.scripts]
-astro-mine = "astro_mine.cli:main"
-astro-mine-bench = "astro_mine.bench.cli:main"
-astro-mine-cloud = "astro_mine.cloud.submission.cli:main"
-astro-mine-cloud-harness = "astro_mine.cloud.submission.harness:main"
-astro-mine-core = "astro_mine.core.cli:main"
-astro-mine-fleet = "astro_mine.fleet.cli:main"
-astro-mine-guard = "astro_mine.guard.cli:main"
-astro-mine-hub = "astro_mine.hub.client.cli:main"
-astro-mine-learn = "astro_mine.learn.train.run:main"
-astro-mine-link = "astro_mine.link.cli:main"
-astro-mine-mind = "astro_mine.mind.cli:main"
-astro-mine-prospect = "astro_mine.prospect.publish:main"
-astro-mine-sim = "astro_mine.sim.__main__:main"
-astro-mine-studio = "astro_mine.studio.cli:main"
-astro-mine-train = "astro_mine.learn.train.run:deprecated_alias"
-astro-mine-worlds = "astro_mine.worlds.cli:main"
-fleet = "astro_mine.fleet.cli:deprecated_alias"
-link = "astro_mine.link.cli:deprecated_alias"
-prospect = "astro_mine.prospect.publish:deprecated_alias"
-worlds = "astro_mine.worlds.cli:deprecated_alias"
-
-# All entry-point groups from all repos, merged verbatim. The umbrella CLI and the
-# Core plugin registry discover these through importlib.metadata exactly as before —
-# the groups are unchanged; only the providing distribution is now this one.
-[project.entry-points."astro_mine.cli"]
-cloud = "astro_mine.cloud.umbrella:cloud"
-fetch = "astro_mine.bench.umbrella:fetch"
-fleet = "astro_mine.fleet.umbrella:fleet"
-guard = "astro_mine.guard.umbrella:guard"
-link = "astro_mine.link.umbrella:link"
-list = "astro_mine.bench.umbrella:list_scenarios"
-mind = "astro_mine.mind.umbrella:mind"
-prospect = "astro_mine.prospect.umbrella:prospect"
-publish = "astro_mine.hub.umbrella:publish"
-pull = "astro_mine.hub.umbrella:pull"
-record = "astro_mine.sim.umbrella:record"
-run = "astro_mine.sim.umbrella:run"
-score = "astro_mine.bench.umbrella:score"
-search = "astro_mine.hub.umbrella:search"
-studio = "astro_mine.studio.umbrella:studio"
-submit = "astro_mine.bench.umbrella:submit"
-train = "astro_mine.learn.umbrella:train"
-verify = "astro_mine.hub.umbrella:verify"
-worlds = "astro_mine.worlds.umbrella:worlds"
-
-[project.entry-points."astro_mine.cli.validators"]
-core = "astro_mine.core.umbrella:validator"
-guard = "astro_mine.guard.umbrella:validator"
-mind = "astro_mine.mind.umbrella:validator"
-worlds = "astro_mine.worlds.umbrella:validator"
-
-[project.entry-points."astro_mine.cli.scaffolds"]
-asset = "astro_mine.fleet.umbrella:asset_scaffold"
-safety = "astro_mine.guard.scaffolds:safety_scaffold"
-stack = "astro_mine.mind.scaffolds:stack_scaffold"
-world = "astro_mine.worlds.umbrella:world_scaffold"
-
-[project.entry-points."astro_mine.cli.plugin_scaffolds"]
-algorithm = "astro_mine.learn.scaffolds:algorithm_scaffold"
-curriculum = "astro_mine.learn.scaffolds:curriculum_scaffold"
-field-model = "astro_mine.worlds.scaffolds:field_model_scaffold"
-provider = "astro_mine.sim.scaffolds:provider_scaffold"
-runner = "astro_mine.bench.scaffolds:runner_scaffold"
-solver = "astro_mine.allocate.scaffolds:solver_scaffold"
-tier = "astro_mine.mind.scaffolds:tier_scaffold"
-
+# This distribution ships NO console scripts and NO `astro_mine.cli*` entry points. Every
+# command lives in astro-mine-cli, which depends on this package and is the platform's only
+# CLI (astro-mine-platform#1 / astro-mine-cli#12; supersedes RFC-0011 §1/§2/§4/§5).
+#
+# The four groups below are the *plugin* registries the Core plugin system resolves. They are
+# not command surface and are untouched by that change.
 [project.entry-points."astro_mine.providers"]
 comms_model = "astro_mine.link.registry:from_bundle"
 observation_model = "astro_mine.prospect.sensors:likelihood_from_manifest"
