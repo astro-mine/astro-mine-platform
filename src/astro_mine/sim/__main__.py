@@ -145,8 +145,9 @@ def _run(args: argparse.Namespace) -> int:
 # --- Per-verb argument sets -------------------------------------------------------------------
 #
 # Each verb's flags live in one function so they can be attached to *either* parser: this package's
-# own `astro-mine-sim <verb>`, and the umbrella's `astro-mine <verb>` (RFC-0011 §3, wired in
-# astro_mine.sim.umbrella). Declaring them once is what stops the two surfaces from drifting — the
+# own container ENTRYPOINT and, historically, the umbrella's. The user-facing surface is now
+# `astro-mine sim <verb>` in astro-mine-cli, which carries its own copy of these flags under a
+# parser-parity test; what remains here is the argv Cloud runs. Declaring them once is what
 # `--scenario` container alias in particular must exist on both, since a Cloud workload and a
 # laptop are supposed to be the same run (cloud.md §4).
 
@@ -170,7 +171,7 @@ def add_run_arguments(parser: argparse.ArgumentParser) -> None:
 def _add_metakernel_argument(parser: argparse.ArgumentParser) -> None:
     """``--metakernel`` — shared by both verbs, because both can touch SPICE-backed geometry.
 
-    Declared once for the same reason the other flags are: this parser is also the umbrella's
+    Declared once for the same reason the other flags are: `astro-mine sim record` builds its
     (``astro-mine run`` / ``astro-mine record``, RFC-0011 §3), and a flag that exists on only one
     of the two surfaces is a drift the user pays for.
     """

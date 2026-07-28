@@ -105,6 +105,15 @@ extras: `hub[service]`, `cloud[serve]`, `studio[serve]` (REST-only);
 `bench[leaderboard]` is kept as `bench-leaderboard` minus fastapi/uvicorn
 (the library half still needs sqlalchemy/psycopg/pyjwt/httpx).
 
+> **SUPERSEDED (astro-mine-platform#1 / astro-mine-cli#12).** This section describes what the
+> consolidation did, and it was accurate then. It is no longer true of the platform: the CLI
+> surface has since been removed entirely. `[project.scripts]` is empty, the four
+> `astro_mine.cli*` entry-point groups are no longer declared here, and every command lives in
+> `astro-mine-cli`, which depends on this package. The four *plugin* groups below are unchanged.
+>
+> Left as written rather than edited, because this document is the record of the migration —
+> rewriting it would erase what was actually done in commit `fd91454`.
+
 ## 5. CLI & plugin surface (RFC-0011) — preserved exactly
 
 All 20 console scripts (16 prefixed binaries + `astro-mine` + the one-cycle

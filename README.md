@@ -14,6 +14,28 @@ See [docs/CONSOLIDATION_PLAN.md](docs/CONSOLIDATION_PLAN.md) for the migration
 contract, the small list of deliberate deviations (REST API surfaces and the
 TypeScript UIs are not migrated), and every place code had to be edited.
 
+## Command line
+
+This package ships **no console scripts**. The platform's command line is
+[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli), a separate distribution that
+depends on this one and provides the single `astro-mine` executable:
+
+```console
+$ pip install astro-mine-cli        # brings this package with it
+$ astro-mine <component> <verb>
+```
+
+Four `python -m` entry points remain here, because each is machine-facing plumbing something
+already depends on rather than a command a person types:
+
+| Entry point | Invoked by |
+|---|---|
+| `python -m astro_mine.cloud.submission.harness` | the in-pod harness (`cloud/engines/base.py`) |
+| `python -m astro_mine.sim` | the Docker `ENTRYPOINT` (`docker/Dockerfile`) |
+| `python -m astro_mine.bench eval-worker` | the per-seed argv Cloud fans out |
+| `python -m astro_mine.studio.orchestrate.worker` | the internal orchestrate worker |
+
+
 ## Install
 
 ```bash

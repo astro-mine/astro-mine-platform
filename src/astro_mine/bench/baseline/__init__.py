@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from astro_mine.bench.baseline._policy import BaselinePolicy
 from astro_mine.bench.baseline._registry import (
+    BUILTIN_RUNNERS,
     RUNNER_ENTRYPOINT_GROUP,
     BenchRunnerProvider,
     DefaultPolicyProvider,
@@ -37,6 +38,7 @@ from astro_mine.bench.baseline._runner import (
 )
 
 __all__ = [
+    "BUILTIN_RUNNERS",
     "REFERENCE_EPISODE_RUNNER_ID",
     "RUNNER_ENTRYPOINT_GROUP",
     "BaselinePolicy",

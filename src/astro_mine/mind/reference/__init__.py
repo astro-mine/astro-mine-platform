@@ -11,6 +11,7 @@ internals — the heavyweight backends (RM-P1-MIND-03) and the real Guard shield
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from importlib import resources
 
 from astro_mine.mind.bt.model import BehaviorTree
@@ -41,6 +42,8 @@ __all__ = [
     "ScriptedTampPlanner",
     "constraint_shield_plugin",
     "control_plugin",
+    "iter_manifest_resources",
+    "iter_stack_resources",
     "load_reference_bt",
     "load_reference_stack",
     "load_stack_resource",
@@ -79,3 +82,31 @@ def load_stack_resource(resource: str) -> StackSpecDocument:
 def load_reference_stack() -> StackSpecDocument:
     """Load and validate the shipped reference lunar-prospecting stack spec."""
     return load_stack_resource("lunar_prospecting.yaml")
+
+
+# --- shipped reference package data -------------------------------------------------------
+#
+# These moved here from `astro_mine.mind.cli` when the CLI surface left the platform
+# (astro-mine-platform#1). They were public API in that module -- `astro-mine mind stacks`
+# lists what they yield -- and they are package-data readers, not argv handling, so the CLI
+# was never their right home.
+
+_REFERENCE = "astro_mine.mind.reference"
+
+
+def iter_stack_resources() -> Iterator[str]:
+    """The shipped reference stack-spec filenames, sorted (from package data, wheel-safe)."""
+    yield from sorted(
+        entry.name
+        for entry in resources.files(_REFERENCE).joinpath("stacks").iterdir()
+        if entry.name.endswith(".yaml")
+    )
+
+
+def iter_manifest_resources() -> Iterator[str]:
+    """The shipped reference plugin-manifest filenames, sorted (from package data, wheel-safe)."""
+    yield from sorted(
+        entry.name
+        for entry in resources.files(_REFERENCE).joinpath("manifests").iterdir()
+        if entry.name.endswith(".yaml")
+    )

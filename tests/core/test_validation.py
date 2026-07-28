@@ -14,14 +14,11 @@ The tests pin the properties the issue is about:
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
-import zipfile
 from pathlib import Path
 
 import pytest
 
-from astro_mine.core import cli
+from astro_mine.core import validation as cli
 from astro_mine.core.schemas import CORE_JSON_SCHEMAS, core_schema
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -64,9 +61,9 @@ def test_no_kind_to_filename_map_in_the_source() -> None:
     The kind list must come from the registry; a ``{"objective": "objective.schema.json"}`` dict
     would be the #50/#52/#53 mistake with a new home.
     """
-    source = (ROOT / "src" / "astro_mine" / "core" / "cli.py").read_text(encoding="utf-8")
+    source = (ROOT / "src" / "astro_mine" / "core" / "validation.py").read_text(encoding="utf-8")
     for _pkg, filename in CORE_JSON_SCHEMAS:
-        assert filename not in source, f"{filename} is hard-coded in cli.py — derive it instead"
+        assert filename not in source, f"{filename} is hard-coded in validation.py — derive it instead"
 
 
 def test_every_document_schema_becomes_a_kind() -> None:
@@ -229,30 +226,8 @@ def test_model_layer_catches_what_schema_cannot() -> None:
 # --------------------------------------------------------------------------- CLI surface
 
 
-def test_validate_exit_code_and_json(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    good = tmp_path / "good.json"
-    good.write_text(
-        (EXAMPLES / "objectives" / "lunar-polar-ice-prospecting.objective.yaml").read_text(),
-        encoding="utf-8",
-    )
-    bad = tmp_path / "bad.yaml"
-    bad.write_text("objective_version: '0.1'\nobjective: {}\n", encoding="utf-8")
-
-    # One good, one bad → non-zero exit because *any* file failed.
-    code = cli.main(["--json", "validate", "--kind", "objective", str(good), str(bad)])
-    assert code == 1
-    payload = json.loads(capsys.readouterr().out)
-    by_valid = {row["file"].endswith("good.json"): row["valid"] for row in payload}
-    assert by_valid[True] is True and by_valid[False] is False
-
-    assert cli.main(["validate", "--kind", "objective", str(good)]) == 0
 
 
-def test_kinds_command_lists_from_registry(capsys: pytest.CaptureFixture[str]) -> None:
-    assert cli.main(["--json", "kinds"]) == 0
-    rows = json.loads(capsys.readouterr().out)
-    listed = {row["kind"]: row["schema_id"] for row in rows}
-    assert listed == {k.slug: k.schema_id for k in cli.iter_kinds()}
 
 
 def test_cross_file_ref_resolves_offline() -> None:
@@ -265,60 +240,6 @@ def test_cross_file_ref_resolves_offline() -> None:
 # --------------------------------------------------------------------------- the wheel boundary
 
 
-def test_wheel_carries_the_cli_and_its_schemas(tmp_path: Path) -> None:
-    """The CLI + every schema resource survive into a built wheel, and cross-refs resolve from it.
-
-    Consumers install a **wheel**, not this source tree. #55 shipped a plausible-but-wrong digest
-    because a fifth of the hashed inputs was absent from the wheel; a CLI that resolved schemas by
-    a path relative to ``__file__`` would work here and break for every real user. This builds a
-    real wheel, asserts the code, the console-script entry point, and all nine schemas are in it,
-    and runs a cross-ref (mission → units) validation loading the code **from the wheel** offline.
-    """
-    try:
-        subprocess.run(
-            ["uv", "build", "--wheel", "--out-dir", str(tmp_path)],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=300,
-        )
-    except (OSError, subprocess.SubprocessError) as exc:  # pragma: no cover - env-dependent
-        pytest.skip(f"could not build a wheel: {exc}")
-
-    wheels = list(tmp_path.glob("*.whl"))
-    assert len(wheels) == 1, f"expected exactly one wheel, got {wheels}"
-
-    extracted = tmp_path / "site"
-    with zipfile.ZipFile(wheels[0]) as whl:
-        names = set(whl.namelist())
-        assert "astro_mine/core/cli.py" in names, "the CLI module is missing from the wheel"
-        for _pkg, filename in CORE_JSON_SCHEMAS:
-            assert any(n.endswith(f"schema/{filename}") for n in names), (
-                f"{filename} is not packaged — an installed CLI could not resolve it"
-            )
-        entry_points = next(n for n in names if n.endswith(".dist-info/entry_points.txt"))
-        # maturin writes `name=target` without spaces; normalize before comparing.
-        registered = whl.read(entry_points).decode().replace(" ", "")
-        assert "astro-mine-core=astro_mine.core.cli:main" in registered
-        whl.extractall(extracted)
-
-    # Run the CLI loaded **from the extracted wheel** (deps come from this interpreter, offline).
-    mission = EXAMPLES / "mission" / "neo-sample-return-multiphase.mission.yaml"
-    program = (
-        "import sys; from astro_mine.core import cli;\n"
-        f"assert {str(extracted)!r} in cli.__file__, cli.__file__\n"
-        "sys.exit(cli.main(['validate', '--kind', 'mission', sys.argv[1]]))"
-    )
-    result = subprocess.run(
-        [sys.executable, "-c", program, str(mission)],
-        env={"PYTHONPATH": str(extracted), "PATH": ""},
-        capture_output=True,
-        text=True,
-    )
-    if f"{extracted}" not in result.stderr and result.returncode == 3:  # pragma: no cover
-        pytest.skip("could not force-load the wheel copy over an editable install")
-    assert result.returncode == 0, f"wheel CLI failed: {result.stdout}\n{result.stderr}"
 
 
 # ------------------------------------------------- self-identification without a $schema pointer

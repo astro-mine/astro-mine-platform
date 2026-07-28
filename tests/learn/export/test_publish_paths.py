@@ -122,14 +122,3 @@ def test_republishing_the_same_digest_is_idempotent(exported, tmp_path) -> None:
 # --- the CLI flag -------------------------------------------------------------------------------
 
 
-def test_cli_resolves_a_relative_export_path(tmp_path, monkeypatch) -> None:
-    """`--export` normalizes at parse time, so everything downstream sees one unambiguous place."""
-    from astro_mine.learn.train.run import _parser
-
-    monkeypatch.chdir(tmp_path)
-    args = _parser().parse_args(
-        ["--env-factory", "tests.learn.fakes:FakeSwarmWorld", "--export", "./policies"]
-    )
-
-    assert Path(args.export).is_absolute()
-    assert Path(args.export) == tmp_path.resolve() / "policies"

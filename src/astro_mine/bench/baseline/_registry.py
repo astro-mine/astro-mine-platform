@@ -138,6 +138,14 @@ fixture_runner_provider = _FixtureRunnerProvider()
 #: third-party runners (Sim's ``sim``) overlay via the entry-point group. Mirrors Learn's registry.
 _BUILTINS: dict[str, BenchRunnerProvider] = {"fixture": fixture_runner_provider}
 
+#: The runner ids this package provides itself, as names only.
+#:
+#: Public because a *scaffold* needs them and nothing else about the registry: `astro-mine
+#: plugin new runner` warns when the id a user picked would shadow a built-in, and it should
+#: not have to import the providers -- or reach into `_BUILTINS` -- to find that out. Exposing
+#: the keys keeps the providers themselves private (astro-mine-cli#12).
+BUILTIN_RUNNERS: frozenset[str] = frozenset(_BUILTINS)
+
 
 class RunnerNotAvailableError(RuntimeError):
     """A ``--runner`` name is not registered — e.g. ``sim`` without ``astro-mine-sim[bench]``."""

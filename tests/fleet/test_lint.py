@@ -13,7 +13,6 @@ from pathlib import Path
 import pytest
 
 from astro_mine.core.sadf import enums, model
-from astro_mine.fleet import cli
 from astro_mine.fleet.lint import PlausibilityFinding, lint_asset
 
 # --- builders --------------------------------------------------------------------
@@ -261,13 +260,6 @@ def test_finding_is_an_immutable_record() -> None:
 # --- CLI integration -------------------------------------------------------------
 
 
-def run(*argv: str) -> int:
-    """Invoke the CLI, returning the process exit code (0 when it does not exit)."""
-    try:
-        cli.main(list(argv))
-    except SystemExit as exc:
-        return exc.code if isinstance(exc.code, int) else 1
-    return 0
 
 
 def write_doc(path: Path, asset: model.Asset) -> Path:
@@ -277,26 +269,10 @@ def write_doc(path: Path, asset: model.Asset) -> Path:
     return path
 
 
-def test_cli_lint_passes_a_plausible_asset(tmp_path: Path) -> None:
-    path = write_doc(tmp_path / "ok.sadf.json", make_asset(bodies=[body()]))
-    assert run("lint", str(path)) == 0
 
 
-def test_cli_lint_rejects_schema_valid_but_implausible_asset(tmp_path: Path) -> None:
-    # negative inertia: structurally fine, physically impossible
-    path = write_doc(tmp_path / "bad.sadf.json", make_asset(bodies=[body(ixx=-1.0)]))
-    assert run("validate", str(path)) == 0  # passes Core's schema gate
-    assert run("lint", str(path)) == 1  # but fails physical-plausibility
 
 
-def test_cli_lint_json_carries_the_rule_id(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    path = write_doc(tmp_path / "bad.sadf.json", make_asset(bodies=[body(ixx=-1.0)]))
-    assert run("lint", str(path), "--json") == 1
-    payload = json.loads(capsys.readouterr().out)
-    assert payload["ok"] is False
-    assert "[inertia.positive_definite]" in payload["diagnostics"][0]["message"]
 
 
 def test_a_gauge_declaring_an_unknown_unit_is_a_finding() -> None:

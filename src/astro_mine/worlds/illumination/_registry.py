@@ -190,6 +190,14 @@ _BUILTINS: dict[str, FieldModelFactory] = {
     SURROGATE_BACKEND: _surrogate_backend,
 }
 
+#: The illumination backend names this package provides itself, as names only.
+#:
+#: Public for the scaffold's sake and no other reason: `astro-mine plugin new field-model`
+#: warns when the chosen name would shadow a built-in, and should not import a backend -- or
+#: reach into `_BUILTINS` -- to learn that (astro-mine-cli#12).
+BUILTIN_FIELD_MODELS: frozenset[str] = frozenset(_BUILTINS)
+
+
 
 def _advertised() -> dict[str, EntryPoint]:
     """Field models advertised in this environment, by backend id — **nothing is loaded**.

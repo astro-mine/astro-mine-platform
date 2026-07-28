@@ -74,6 +74,7 @@ if TYPE_CHECKING:
     from astro_mine.worlds.spec._model import WorldSpec
 
 __all__ = [
+    "BUILTIN_FIELD_MODELS",
     "BUNDLE_SCHEMA",
     "DEFAULT_BACKEND",
     "FIELD_MODEL_ENTRY_POINT_GROUP",
@@ -691,6 +692,7 @@ from astro_mine.worlds.illumination._raycast_gpu import (  # noqa: E402
     RayCastGpuIlluminationModel,
 )
 from astro_mine.worlds.illumination._registry import (  # noqa: E402
+    BUILTIN_FIELD_MODELS,
     FIELD_MODEL_ENTRY_POINT_GROUP,
     FIELD_MODEL_INTERFACE,
     FIELD_MODEL_INTERFACE_VERSION,

@@ -1,56 +1,23 @@
-"""``astro-mine-core validate`` — a checker for the Core-authored file formats.
+"""Core's document-format registry and validator — the library behind `astro-mine validate`.
 
-Core owns nine hand-authored formats (SADF, ObjectiveSpec, MissionSpec, Plan/ContingentPlan,
-plugin manifest, PolicyPackage, RunProvenance, the units vocabulary, the message catalog) and
-until now shipped **no CLI** — a user authoring one of them had no way to ask "is this valid?"
-short of writing Python. This module is the shell over the validators Core already ships
-(``core.md §1``: *"types and validators"*), and it adds **no** new dependency: ``jsonschema``,
-``pydantic``, ``pyyaml`` and ``referencing`` are all already Core dependencies.
+Nine authored formats are Core's: SADF, ObjectiveSpec, MissionSpec, Plan, the plugin manifest,
+PolicyPackage, RunProvenance and the message documents. This module knows which is which
+(:func:`resolve_kind`, from a document's ``$schema``/``$id``) and whether a given document
+satisfies its schema (:func:`validate_document`, :func:`validate_source`).
 
-**Dispatch is derived from the schema registry, never hand-maintained.** The set of known kinds,
-their ``$id``s, and the schemas they validate against all come from
-:data:`astro_mine.core.schemas.CORE_JSON_SCHEMAS` and :func:`astro_mine.core.schema_registry`
-(RFC-0009). There is no ``{kind: filename}`` map here — that is exactly the fourth-inventory drift
-the #50/#52/#53 cluster was about. Adding a tenth Core schema needs no change to this file; a test
-(``tests/test_cli.py``) pins that.
-
-**Honesty over a false pass.** A wrong-schema pass is worse than no checker, because it certifies a
-document nobody validated. So the CLI never guesses a schema by *resemblance*: a document that
-neither declares its ``$schema``, nor identifies itself completely (below), nor is given an
-explicit ``--kind`` fails with the list of known kinds. And the two ``$defs``-only *vocabulary*
-schemas (``units``, ``messages``) do not constrain a top-level document at all — validating a file
-against them would pass anything — so they are not offered as document kinds; the authored message
-documents (``action_batch``, ``contact_plan``) are.
-
-**Two ways a document can be self-describing, because one is not always available.** A ``$schema``
-pointer is the direct way. But a Core schema is ``additionalProperties: false`` at its root, so a
-SADF document **cannot carry one** — the pointer that would identify it is the one key its own
-format forbids. Requiring it would mean no SADF file on disk is routable by ``astro-mine validate``
-(RFC-0011 §6), which is exactly the state this module was in. So a document is also accepted as
-self-describing when it carries **every** root property its schema marks required **and** the
-``<format>_version`` discriminator matches that schema's ``const`` exactly.
-
-That is identification, not resemblance, and the difference is the whole of the rule. ``{"
-objective_version": "0.1"}`` still fails — it *looks* like an objective and is not one, missing the
-``objective`` member the format requires — and a test pins that it keeps failing. What passes is a
-document that states which format and version it is, in that format's own required vocabulary, and
-carries the structure to back the claim. Guard and Mind already route their formats this way
-(``safety_version``, ``stack_spec_version``); this is the same rule, made stricter by also
-demanding the rest of the required root.
-
-The dispatch functions (:func:`iter_kinds`, :func:`resolve_kind`, :func:`validate_document`) are
-importable so the umbrella ``astro-mine validate`` (RFC-0011) can route into them as a thin call
-rather than a rewrite.
+**This is library code, not a command line.** It lived in ``astro_mine.core.cli`` until the CLI
+surface moved out of the platform (astro-mine-platform#1), which made the old home a lie: only
+one of that module's seven public names was ever about argv. The checker is what
+`astro-mine core validate` and the federated `astro-mine validate` both call, so it has to live
+where both can reach it and where Core's own consumers can too.
 """
+
 
 from __future__ import annotations
 
-import argparse
 import dataclasses
 import importlib
-import json
-import sys
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable, Iterator
 from functools import cache, lru_cache
 from typing import Any
 
@@ -63,8 +30,8 @@ from astro_mine.core.schemas import CORE_JSON_SCHEMAS, core_schema, schema_regis
 __all__ = [
     "Issue",
     "Kind",
+    "KindError",
     "iter_kinds",
-    "main",
     "resolve_kind",
     "validate_document",
     "validate_source",
@@ -383,116 +350,17 @@ def validate_source(source: str | bytes, explicit_kind: str | None) -> tuple[Kin
 # --------------------------------------------------------------------------- CLI
 
 
-def _cmd_validate(args: argparse.Namespace) -> int:
-    results: list[dict[str, Any]] = []
-    failed = False
-    for path in args.file:
-        try:
-            source = _read(path)
-        except OSError as exc:
-            failed = True
-            _emit(args, path, None, [Issue("io", str(exc))], results)
-            continue
-        try:
-            kind, issues = validate_source(source, args.kind)
-        except (KindError, ValueError) as exc:
-            failed = True
-            _emit(args, path, None, [Issue("dispatch", str(exc))], results)
-            continue
-        if issues:
-            failed = True
-        _emit(args, path, kind, issues, results)
-
-    if args.json:
-        print(json.dumps(results, indent=2, default=str))
-    return 1 if failed else 0
 
 
-def _read(path: str) -> str:
-    if path == "-":
-        return sys.stdin.read()
-    with open(path, encoding="utf-8") as handle:
-        return handle.read()
 
 
-def _emit(
-    args: argparse.Namespace,
-    path: str,
-    kind: Kind | None,
-    issues: list[Issue],
-    sink: list[dict[str, Any]],
-) -> None:
-    ok = not issues
-    if args.json:
-        sink.append(
-            {
-                "file": path,
-                "kind": kind.slug if kind else None,
-                "valid": ok,
-                "issues": [issue.to_json() for issue in issues],
-            }
-        )
-        return
-    label = kind.slug if kind else "?"
-    if ok:
-        print(f"OK  {path}: valid {label}")
-    else:
-        print(f"FAIL {path}: {label}", file=sys.stderr)
-        for issue in issues:
-            print(issue.render(), file=sys.stderr)
 
 
-def _cmd_kinds(args: argparse.Namespace) -> int:
-    if args.json:
-        print(
-            json.dumps([{"kind": k.slug, "schema_id": k.schema_id} for k in iter_kinds()], indent=2)
-        )
-    else:
-        width = max((len(k.slug) for k in iter_kinds()), default=0)
-        for kind in iter_kinds():
-            print(f"{kind.slug:<{width}}  {kind.schema_id}")
-    return 0
 
 
-def add_validate_arguments(parser: argparse.ArgumentParser) -> None:
-    """`validate`'s own arguments — attached to both this CLI and the umbrella's.
-
-    Declared once so `astro-mine-core validate` and `astro-mine validate` (RFC-0011 §3, wired in
-    :mod:`astro_mine.core.umbrella`) cannot drift apart. Note that ``--json`` is *not* here: it is
-    a top-level flag on this parser, and the umbrella adapter re-adds it per verb, because on the
-    umbrella surface a component has no top level to hang it from.
-    """
-    parser.add_argument("file", nargs="+", help="path to a JSON/YAML document ('-' for stdin)")
-    parser.add_argument(
-        "--kind",
-        help="format to validate against (default: infer from the document's $schema). "
-        "Run 'astro-mine-core kinds' for the list.",
-    )
 
 
-def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="astro-mine-core",
-        description="Validate Core-authored file formats (SADF, ObjectiveSpec, MissionSpec, "
-        "Plan, plugin manifest, PolicyPackage, RunProvenance, message documents).",
-    )
-    parser.add_argument("--json", action="store_true", help="machine-readable output")
-    sub = parser.add_subparsers(dest="command", required=True)
-
-    validate = sub.add_parser("validate", help="validate one or more documents")
-    add_validate_arguments(validate)
-    validate.set_defaults(func=_cmd_validate)
-
-    kinds = sub.add_parser("kinds", help="list the known formats and their schema $ids")
-    kinds.set_defaults(func=_cmd_kinds)
-    return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    parser = _build_parser()
-    args = parser.parse_args(argv)
-    return int(args.func(args))
 
 
-if __name__ == "__main__":  # pragma: no cover
-    raise SystemExit(main())

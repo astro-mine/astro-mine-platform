@@ -106,19 +106,6 @@ def test_the_tensor_vocabulary_costs_nothing() -> None:
     assert result.stdout.strip()
 
 
-def test_the_umbrella_verb_and_scaffolds_are_reachable() -> None:
-    """What #30 actually cost a user: the umbrella's `train` verb and both plugin scaffolds are
-    entry points into this package, so an unimportable package made all three fail at the command
-    line with a traceback about ONNX Runtime."""
-    result = _run(
-        """
-        from astro_mine.learn.umbrella import train
-        from astro_mine.learn.scaffolds import algorithm_scaffold, curriculum_scaffold
-        print(train.name, algorithm_scaffold.name, curriculum_scaffold.name)
-        """
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.split() == ["train", "algorithm", "curriculum"]
 
 
 @pytest.mark.parametrize(

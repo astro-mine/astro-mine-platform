@@ -42,7 +42,6 @@ jobs:
           - { comp: guard, marks: "not sim and not slow" }
           - { comp: hub, marks: "not integration" }
           - { comp: studio }
-          - { comp: cli }
     name: test ${{ matrix.comp }}
     steps:
       - uses: actions/checkout@v4

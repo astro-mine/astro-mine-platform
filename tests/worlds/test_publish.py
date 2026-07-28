@@ -331,42 +331,5 @@ def test_from_bundle_requires_regolith(synthetic_dem: Path, tmp_path: Path) -> N
 # --- the `worlds` CLI ------------------------------------------------------------------------
 
 
-def test_cli_publishes_a_signed_bundle(
-    synthetic_dem: Path, synthetic_spice: Any, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    from astro_mine.hub.supply_chain import generate_keypair
-    from astro_mine.worlds.cli import main
-
-    bundle = _full_bundle(synthetic_dem, tmp_path, synthetic_spice.window)
-    # The signing key comes from `astro-mine-hub keygen` (the one signing-key command); here we mint
-    # one directly from the same primitive rather than routing through another package's CLI.
-    key = tmp_path / "cosign.key"
-    key.write_bytes(generate_keypair()[0])
-
-    registry = tmp_path / "registry"
-    code = main(
-        [
-            "publish",
-            str(bundle.path),
-            "--registry",
-            str(registry),
-            "--key",
-            str(key),
-            "--name",
-            _NAME,
-            "--version",
-            _VERSION,
-        ]
-    )
-    assert code == 0
-    out = capsys.readouterr().out
-    assert f"published {_NAME}:{_VERSION}" in out
-    # The published artifact is resolvable in the registry the CLI wrote.
-    assert Registry(registry).references() == [f"{_NAME}:{_VERSION}"]
 
 
-def test_cli_requires_a_subcommand() -> None:
-    from astro_mine.worlds.cli import main
-
-    with pytest.raises(SystemExit):
-        main([])

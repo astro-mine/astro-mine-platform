@@ -47,7 +47,7 @@ from astro_mine.prospect.publish._community import (
     serialize_recipe_spec,
 )
 from astro_mine.prospect.publish._manifest import build_field_manifest
-from astro_mine.prospect.publish._publish import deprecated_alias, main, publish_prior
+from astro_mine.prospect.publish._publish import publish_prior
 from astro_mine.prospect.publish._zarr import (
     DEFAULT_LEVELS,
     ENCODINGS,
@@ -82,10 +82,8 @@ __all__ = [
     "build_field_manifest",
     "build_recipe_manifest",
     "bundle_digest",
-    "deprecated_alias",
     "discover_priors",
     "from_bundle",
-    "main",
     "prior_from_bundle",
     "publish_community_prior",
     "publish_prior",
