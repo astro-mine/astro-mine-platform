@@ -32,9 +32,9 @@ pluggable realization behind a Core Policy/Planner sub-interface (`mind.md §3`)
 | `spec/`, `compose/`, `registry/` | declarative stack spec → validated hierarchy graph; plugin discovery/gating | MIND-01 |
 | `exec/` | the executive tick loop; `strategy.py` (direct composition) + `degrade.py` (comms-aware) + `plan.py` (behavior over Core's RFC-0006 `Plan`/`ContingentPlan`) + `build_strategy` seam | MIND-01, -06 |
 | `bt/` | behavior-tree execution — Groot/BT.CPP-v4 XML, node AST, deterministic reactive engine, `BehaviorTreeStrategy`. No native BT.CPP binding: none is distributed (re-scoped, see the package docstring) | **MIND-02** |
-| `mission/planner/` | PDDL/temporal mission backend — reference symbolic planner + `native/` **unified-planning** (Fast Downward/OPTIC/ENHSP) via `[pddl]` | **MIND-03** |
-| `tamp/` (`task/`, `motion/`) | symbolic task + sampling motion behind the `MotionPlanner` protocol — reference RRT + `native/` **OMPL** (RRT\*/PRM\*/BIT\*) + **FCL** via `[native]` | **MIND-03** |
-| `control/` (`policy/`) | classical PID/MPC + ONNX-Runtime learned controller (Core `OnnxPolicy`; `[onnx]`) | **MIND-03** |
+| `mission/planner/` | PDDL/temporal mission backend — reference symbolic planner + `native/` **unified-planning** (Fast Downward/OPTIC/ENHSP) via `[mind-pddl]` | **MIND-03** |
+| `tamp/` (`task/`, `motion/`) | symbolic task + sampling motion behind the `MotionPlanner` protocol — reference RRT + `native/` **OMPL** (RRT\*/PRM\*/BIT\*) + **FCL** via `[mind-native]` | **MIND-03** |
+| `control/` (`policy/`) | classical PID/MPC + ONNX-Runtime learned controller (Core `OnnxPolicy`; `[mind-onnx]`) | **MIND-03** |
 | `mission/allocate/` | thin adapter delegating assignment to Allocate over the Core `Allocator` sub-interface | **MIND-04** |
 | `guardrail/` | the single, mandatory shield egress + `ReportingShield` intervention provenance | **MIND-05** |
 | `coord/` | decentralized gossip/consensus. The validity-horizoned `Plan`/`ContingentPlan` artifacts are **Core-owned** (`astro_mine.core.plan`, RFC-0006); Mind layers behavior over them in `exec/plan.py` and no longer keeps a local copy | **MIND-06** |
@@ -49,8 +49,8 @@ traces; CI fails on drift).
 
 **Native backends.** The heavy engines named in `mind.md §4` bind behind these same Core contracts
 as optional extras, discovered through the ordinary plugin registry — `unified-planning`
-(`[pddl]`, plugin `mind.mission.up`), `OMPL`/`FCL` (`[native]`, plugin `mind.tamp.ompl`), ONNX
-Runtime (`[onnx]`), and MCAP (`[recording]`). Their providers defer the heavy import into the
+(`[mind-pddl]`, plugin `mind.mission.up`), `OMPL`/`FCL` (`[mind-native]`, plugin
+`mind.tamp.ompl`), ONNX Runtime (`[mind-onnx]`), and MCAP (`[mind-recording]`). Their providers defer the heavy import into the
 plugin *factory*, so a base install still discovers them and only *binding* one needs the extra.
 The pure-Python reference realizations remain the CI-tested default, carry the coverage gate, and
 are the golden-trace baseline (the native adapters are coverage-omitted and marker-deselected).

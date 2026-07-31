@@ -14,11 +14,13 @@ export. Learn is a *consumer* of Core contracts — it never widens the waist.
 > [architecture](https://github.com/astro-mine/docs/blob/main/architecture/learn.md)
 > and [Phase-1 roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/phase-1-autonomy-studio.md).
 
-> **Command renamed.** This CLI is `astro-mine-learn`; the old name `astro-mine-train` still works for one
-> deprecation cycle, printing a one-line notice to stderr, and is removed at the first
-> public-benchmark milestone. The prefix is normative ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
-> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md) §5) — it ends the
-> `PATH` land-grab of generic names and makes the package↔command mapping guessable.
+> **Where the commands live.** This package ships no console scripts. Learn's commands are
+> `astro-mine learn <flags>` (a flat group — no subcommand), provided by
+> [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) — a separate distribution that
+> depends on this one. There is one executable and one grammar
+> ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
+> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md)); the earlier
+> `astro-mine-learn` binary and its bare alias are both retired.
 
 ## Layout
 
@@ -33,7 +35,7 @@ src/astro_mine/learn/
 ├── export/        # ONNX export + typed sidecar; ONNX-Runtime equivalence gate; publish
 ├── track/         # experiment tracking (MLflow default) + provenance capture
 └── bench/         # the reference-score harness Bench consumes
-tests/             # mirrors the package layout
+tests/learn/       # mirrors the package layout
 ```
 
 ## Extras
@@ -75,14 +77,13 @@ One command trains a baseline on a single workstation (learn.md §7 tier 1). The
 and Learn never imports it:
 
 ```bash
-uv sync --extra rllib      # Ray RLlib + CPU Torch (the training path)
-uv pip install astro-mine-sim   # ships the offline reference environment
-uv run astro-mine-learn --algorithm mappo \
+uv sync --extra learn-rllib     # Ray RLlib + CPU Torch (the training path)
+astro-mine learn --algorithm mappo \
     --env-factory astro_mine.sim.reference:make_reference_env_and_assets \
     --seed 0 --iterations 100 --hidden-sizes 64,64
 ```
 
-`astro-mine-sim` ships a small synthetic three-agent scenario as package data — no content store,
+`astro_mine.sim.reference` ships a small synthetic three-agent scenario as package data — no content store,
 no registry, no network — which is what makes this command runnable as written. Swap in your own
 factory whenever you have one; `--env-factory` is a **replaceable seam, not a privileged path**.
 
@@ -129,22 +130,22 @@ the in-process run for the same seed.
 Mind/Guard/Bench consume (RM-P1-LEARN-05) and the commons' unit of exchange:
 
 ```bash
-uv sync --extra rllib --extra export
-uv run astro-mine-learn --algorithm mappo \
+uv sync --extra learn-rllib --extra learn-export
+astro-mine learn --algorithm mappo \
     --env-factory astro_mine.sim.reference:make_reference_env_and_assets \
     --seed 0 --iterations 100 --hidden-sizes 64,64 \
     --export ./policies
 ```
 
-The same command is reachable as `astro-mine train …` if
-[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) is installed — identical flags,
-because both surfaces are built from one argument definition. `astro-mine-train` remains the direct
-command and needs nothing else installed.
+The command comes from [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli), a separate
+distribution that depends on this one; this package ships no console scripts. Learn's group is flat
+— no subcommand — so the address is `astro-mine learn <flags>`, and there is no bare
+`astro-mine train` or `astro-mine-learn`.
 
 Each agent's actor becomes its own graph, written to a **content-addressed** store —
 `./policies/<hex>/{model.onnx,policy_package.json}` — and the `sha256:` graph digest of each is
 printed to stderr (the report JSON keeps stdout clean). That digest *is* the artifact identity:
-carry it to `astro-mine-hub publish` or a leaderboard submission.
+carry it to `astro-mine hub publish` or a leaderboard submission.
 
 Every graph passes the **ONNX-Runtime equivalence gate** before it is written — a graph that
 diverges from its Torch source fails the command non-zero and leaves nothing on disk. The
@@ -163,7 +164,7 @@ the trainer's step is a `BatchedStep` (every Learn baseline's is). `BatchedWorld
 realization (a jit-compiled, vmapped program over a device-resident batch — *not* a physics
 model).
 
-Without a batched world, without the `[jax]` extra, or on a workstation with no GPU, it degrades
+Without a batched world, without the `[learn-jax]` extra, or on a workstation with no GPU, it degrades
 **gracefully** to the sequential CPU loop — tier 1 must always work. `VectorExecutor.backend`
 reports which path was actually taken.
 
@@ -217,24 +218,25 @@ with TrackedRun(config, algorithm="mappo", comms=comms_cfg, backend=MlflowBacken
     run.log_export(trainer.export(), digests=digests)
 ```
 
-MLflow is the default backend (`[mlflow]` extra); with no backend it records into an
+MLflow is the default backend (`[learn-mlflow]` extra); with no backend it records into an
 `InMemoryBackend`, so a tier-1 run still gets its full provenance record with no server and no
 network.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv** (tier-1: trains a
-baseline on a single workstation before any cluster is involved).
+Learn is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup. Tier 1 trains a baseline on a single
+workstation before any cluster is involved.
 
 ```bash
-conda create -n astro-mine-learn python=3.12
-conda activate astro-mine-learn
-uv sync --extra rllib --extra export --extra eval --extra jax   # what CI installs
-uv run pytest -m "not slow and not gpu and not cluster"          # the CI gate
+uv sync --extra learn-rllib --extra learn-export \
+        --extra learn-eval --extra learn-jax     # what CI installs
+python scripts/test.py learn                     # the CI gate
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

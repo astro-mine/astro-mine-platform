@@ -25,9 +25,9 @@ src/astro_mine/seal/
 └── __init__.py        # facade: the public surface (and __version__)
 ```
 
-The signing/attestation stack consolidates `astro-mine-hub`'s `supply_chain/` module and
-dedupes the byte-compatible signer copies in Fleet and Guard; it depends only on
-tag-pinned `astro-mine-core` and `cryptography`.
+The signing/attestation stack consolidates Hub's `supply_chain/` module and dedupes the
+byte-compatible signer copies in Fleet and Guard. It is the platform's single home for the
+`cryptography` dependency; Core ships no crypto, by design.
 
 ## Verify twice, registry-agnostically
 
@@ -53,16 +53,16 @@ permissive default.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Seal is part of the [`astro-mine-platform`](../../../README.md) distribution — one repository, one
+environment, one test suite. See [`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup, then run
+this component's suite with its own CI selection:
 
 ```bash
-conda env create -f environment.yml   # provisions Python 3.12 + uv
-conda activate astro-mine-seal
-uv sync && uv run pytest
+python scripts/test.py seal
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

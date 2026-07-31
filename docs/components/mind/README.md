@@ -30,12 +30,12 @@ the stack spec, so swapping an engine is a spec edit, not a code change.
 
 | Tier | Reference — pure-Python, **bit-exact**, CI-tested default | Native engine — optional extra |
 |---|---|---|
-| Mission | `mind.mission.pddl` — generates a PDDL problem per replan, solves it deterministically | `mind.mission.up` — **unified-planning** over **Fast Downward** / OPTIC / ENHSP (`[pddl]`) |
-| TAMP | `mind.tamp.sampling` — symbolic task + pure-Python RRT | `mind.tamp.ompl` — **OMPL** RRT\*/PRM\*/BIT\* + **FCL** collision (`[native]`) |
-| Control | `mind.control.pid`, `mind.control.mpc` | `mind.control.onnx` — ONNX Runtime hosting a Learn policy (`[onnx]`) |
+| Mission | `mind.mission.pddl` — generates a PDDL problem per replan, solves it deterministically | `mind.mission.up` — **unified-planning** over **Fast Downward** / OPTIC / ENHSP (`[mind-pddl]`) |
+| TAMP | `mind.tamp.sampling` — symbolic task + pure-Python RRT | `mind.tamp.ompl` — **OMPL** RRT\*/PRM\*/BIT\* + **FCL** collision (`[mind-native]`) |
+| Control | `mind.control.pid`, `mind.control.mpc` | `mind.control.onnx` — ONNX Runtime hosting a Learn policy (`[mind-onnx]`) |
 
 ```bash
-uv sync --extra pddl --extra native   # install the real engines
+uv sync --extra mind-pddl --extra mind-native   # install the real engines
 uv run pytest -m "pddl or native"     # exercise them (deselected in CI)
 ```
 
@@ -115,19 +115,19 @@ for tier in graph.tiers:
 # control  -> mind.reference.control @ 0.1.0
 ```
 
-### The CLI — `astro-mine-mind`
+### The CLI — `astro-mine mind`
 
 ```bash
-astro-mine-mind stacks                         # list the shipped reference stacks + manifests
-astro-mine-mind validate lunar_prospecting.yaml# schema + a registry check (unregistered plugin = fail)
-astro-mine-mind compose  lunar_prospecting.yaml# tier -> plugin @ version, from which entry-point group
+astro-mine mind stacks                          # list the shipped reference stacks + manifests
+astro-mine mind validate lunar_prospecting.yaml # schema + a registry check (unregistered plugin = fail)
+astro-mine mind compose lunar_prospecting.yaml  # tier -> plugin @ version, from which entry-point group
 ```
 
 A bare name resolves against the shipped stacks, so the CLI works without a checkout. `validate`
 catches the failure a shape-only check misses — a stack binding a plugin no installed package
 registers fails with the entry-point group and the missing name (**the** most common real error).
 There is **no `run`**: stepping a stack needs a Core `Environment`, which is Sim's job — Mind must
-not import Sim (the narrow waist). Run an episode with `astro-mine-sim run` over a composed stack.
+not import Sim (the narrow waist). Run an episode with `astro-mine sim run` over a composed stack.
 
 ### The reference stacks — a curriculum
 
@@ -159,23 +159,23 @@ platform guide (Wave 22.5 / G2.8).
 src/astro_mine/mind/        # import path: astro_mine.mind
   reference/stacks/         # the 6 reference stack specs (package data)
   reference/manifests/      # the 13 tier/shield plugin manifests (package data)
-tests/                      # mirrors the package layout
+tests/mind/                 # mirrors the package layout
 ```
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for the module-by-module map.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Mind is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup.
 
 ```bash
-conda create -n astro-mine-mind python=3.12
-conda activate astro-mine-mind
-uv sync && uv run pytest
+python scripts/test.py mind
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

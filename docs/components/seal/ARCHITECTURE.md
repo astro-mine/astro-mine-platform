@@ -32,8 +32,8 @@ See also the [charter](https://github.com/astro-mine/docs/blob/main/charter/) (v
 and the [roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/) (phased delivery).
 
 > **Dependencies** — Seal is the platform's single home for the `cryptography` dependency
-> (Core ships no crypto, by design). It depends only on tag-pinned `astro-mine-core` and
-> `cryptography` — and, deliberately, on **no registry**: the `attest()` / `verify()`
+> (Core ships no crypto, by design). Beyond Core it needs only `cryptography` — and,
+> deliberately, **no registry**: the `attest()` / `verify()`
 > verify-twice orchestrators (`RM-P1-SEAL-03`) drive the `AttestationStore` port (`str`
 > digests, `bytes` payloads), so Hub adapts its OCI registry to Seal rather than Seal
 > depending on Hub.

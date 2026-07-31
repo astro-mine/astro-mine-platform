@@ -1,9 +1,26 @@
 # Downstream consumer example
 
-The canonical pattern for **consuming `astro-mine-core` during private incubation**
-(`docs/VERSIONING.md` §5): a **tag-pinned `uv` Git source**, resolved reproducibly with
+> **SUPERSEDED — the pattern below is no longer how anything consumes this platform.**
+> Consolidation merged all 18 component packages into one distribution and retired the whole
+> `[tool.uv.sources]` Git-pin matrix along with the per-component wheels
+> (`docs/CONSOLIDATION_PLAN.md` §4). There is no `astro-mine-core` distribution to pin, and no
+> sibling repo left copying this block. **Today a consumer writes
+> `dependencies = ["astro-mine-platform"]`** — or `astro-mine-cli`, which brings the platform with
+> it — and gets every component at once.
+>
+> It is left here, runnable and unedited, for two reasons. It still resolves: the
+> `astro-mine-core` repo and its `v0.1.0` tag both exist, so `uv sync --locked` works and the
+> example demonstrates what it always demonstrated. And it is the record of how the private
+> incubation actually distributed code before the consolidation — rewriting it would erase that
+> rather than correct it, the same reason `CONSOLIDATION_PLAN.md` §4 keeps its own superseded text.
+>
+> Retargeting it at `astro-mine-platform` would need a tag to pin, and this repo has cut none.
+> Pinning a branch is what the example itself argues against.
+
+The pattern, as it was: **consuming `astro-mine-core` during private incubation**
+(`docs/VERSIONING.md` §5) via a **tag-pinned `uv` Git source**, resolved reproducibly with
 `uv sync --locked`, authenticated in CI with a read-scoped PAT. Every sibling repo
-(worlds, prospect, fleet, sim, bench, link, cloud) copies this pattern — bump the tag at
+(worlds, prospect, fleet, sim, bench, link, cloud) copied this pattern — bumping the tag at
 each integration milestone.
 
 ## The mechanism

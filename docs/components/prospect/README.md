@@ -13,11 +13,13 @@ swarm updates by observing. Uncertainty is the product, not a footnote.
 > [architecture](https://github.com/astro-mine/docs/blob/main/architecture/prospect.md) and the
 > [Phase-1 roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/phase-1-autonomy-studio.md).
 
-> **Command renamed.** This CLI is `astro-mine-prospect`; the old name `prospect` still works for one
-> deprecation cycle, printing a one-line notice to stderr, and is removed at the first
-> public-benchmark milestone. The prefix is normative ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
-> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md) §5) — it ends the
-> `PATH` land-grab of generic names and makes the package↔command mapping guessable.
+> **Where the commands live.** This package ships no console scripts. Prospect's commands are
+> `astro-mine prospect publish`, provided by
+> [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) — a separate distribution that
+> depends on this one. There is one executable and one grammar
+> ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
+> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md)); the earlier
+> `astro-mine-prospect` binary and its bare alias are both retired.
 
 ## The shipped Shackleton priors
 
@@ -69,7 +71,7 @@ Alongside the catalog, `priors/` ships `RECIPE.md` (how the prior is derived), `
 `pds.py` (PDS raster conditioning), `provenance.py`, and `recipe.py`.
 
 > **Authoring a prior is Python, not a file format.** There is no `prior.yaml` — no `from_yaml`
-> exists anywhere in `src/`. Publishing a prior bundle works today (`astro-mine-prospect publish`);
+> exists anywhere in `src/`. Publishing a prior bundle works today (`astro-mine prospect publish`);
 > whether a hand-authored format *should* exist is an open design question, tracked as **G2.15** in
 > the platform's UX gap report.
 
@@ -87,24 +89,25 @@ src/astro_mine/prospect/    # import path: astro_mine.prospect
   calibration/  # the coverage gate + geostatistical sanity (variogram, LOO kriging CV)
   publish/      # content-addressed field bundles: Zarr store + .npy tar, Hub-published
   service/      # the optional distributed gRPC field service (TLS + OIDC + RBAC)
-tests/                      # mirrors the package layout
+tests/prospect/             # mirrors the package layout
 ```
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Prospect is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup.
 
 ```bash
-conda create -n astro-mine-prospect python=3.12
-conda activate astro-mine-prospect
-uv sync && uv run pytest
+python scripts/test.py prospect
 ```
 
-Optional extras: `[zarr]` (Zarr field storage), `[service]` (the gRPC field service), `[publish]`
-(Hub publishing), `[ingest]` (GDAL/rasterio PDS raster ingest). The importable core — fields, priors,
+Optional extras: `[prospect-zarr]` (Zarr field storage), `[prospect-service]` (the gRPC field
+service), `[prospect-publish]` (Hub publishing), `[prospect-ingest]` (GDAL/rasterio PDS raster
+ingest). The importable core — fields, priors,
 belief, info-gain — needs none of them, so the offline local tier runs on Core + numpy alone.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## Running the field service
 
@@ -137,4 +140,4 @@ export ASTRO_MINE_PROSPECT_INSECURE_DEV=1   # local dev only; never off-host
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

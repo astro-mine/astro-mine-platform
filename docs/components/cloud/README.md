@@ -26,10 +26,9 @@ src/astro_mine/cloud/       # import path: astro_mine.cloud
   sched/ autoscale/ gpu/    # Kueue + budgets; spot + checkpoint-resume; MIG/DCGM
   data/                     # lazy Zarr/COG/Parquet chunk-streaming + pull-through cache
   runs/ tenancy/            # MLflow + events; namespace isolation + cosign admission
-  serve/                    # FastAPI REST submission edge  [serve extra]
   k8s/                      # shared manifest helpers (labels, naming, YAML)
 platform/                   # Helm charts + kind/prod profiles (declarative infra, not the wheel)
-tests/                      # mirrors the package layout
+tests/cloud/                # mirrors the package layout
 ```
 
 ## Artifact I/O + provenance (`astro_mine.cloud.artifacts`)
@@ -54,9 +53,10 @@ ctx = RunContext(
 ctx.store(store)                                   # provenance is itself an artifact
 ```
 
-The S3 backend is optional — `pip install 'astro-mine-cloud[s3]'`. A local
-[`docker-compose.yml`](docker-compose.yml) brings up MinIO for the opt-in integration
-test: `docker compose up -d minio && MINIO_ENDPOINT=http://localhost:9000 uv run pytest -m minio`.
+The S3 backend is optional — `pip install 'astro-mine-platform[cloud-s3]'`. The opt-in
+integration test needs a MinIO on `$MINIO_ENDPOINT`:
+`MINIO_ENDPOINT=http://localhost:9000 uv run pytest -m minio`. Cloud's per-repo
+`docker-compose.yml` did not come across the consolidation, so bring one up yourself.
 
 ## Container packaging (`astro_mine.cloud.packaging`)
 
@@ -112,8 +112,7 @@ assert result.ok
 
 The workload reads inputs from `$ASTRO_MINE_INPUTS`, writes outputs to `$ASTRO_MINE_OUTPUTS`,
 and sees the seed in `$ASTRO_MINE_SEED`. Every run records a `RunContext` (image digest,
-seed, input hashes, outputs) in the store. The compose tier has a profile-gated example in
-[`docker-compose.yml`](docker-compose.yml); the opt-in real-Docker test runs with
+seed, input hashes, outputs) in the store. The opt-in real-Docker test runs with
 `ASTRO_MINE_DOCKER_IMAGE=<image@digest> uv run pytest -m docker`.
 
 ## Phase 1 — the scale-out substrate
@@ -134,21 +133,21 @@ sweep = SweepSpec(base=job, grid={"lr": [0.1, 0.2], "bs": [16, 32]}, max_paralle
 workflow = compile_sweep(sweep, namespace="acme")   # -> an Argo Workflow (4 fan-out tasks)
 ```
 
-The `astro-mine-cloud` CLI (`[project.scripts]`) drives it from the shell:
+[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) drives it from the shell (this
+package ships no console scripts):
 
 ```bash
-astro-mine-cloud submit job.json --backend cluster --input scenario.json=./scenario.json
-astro-mine-cloud expand sweep.json          # preview the expansion
-astro-mine-cloud compile job.json           # the engine manifest it would run as
+astro-mine cloud submit job.json --backend cluster --input scenario.json=./scenario.json
+astro-mine cloud expand sweep.json          # preview the expansion
+astro-mine cloud compile job.json           # the engine manifest it would run as
 ```
 
-The same handlers are reachable over **REST** for a control plane — a thin FastAPI edge
-(`[serve]` extra) that delegates to the identical `submit()`/engine paths (`POST /jobs`,
-`/jobs/compile`, `/sweeps/expand`, `/workflows/compile`):
-
-```bash
-uvicorn --factory astro_mine.cloud.serve.app:create_app
-```
+The same handlers were also reachable over **REST** — a thin FastAPI edge delegating to the
+identical `submit()`/engine paths. `astro_mine.cloud.serve` is **not** part of this distribution
+(`docs/CONSOLIDATION_PLAN.md` §"Not migrated") and its `[serve]` extra was dropped with it; the
+REST tier is destined for `astro-mine-api`, which is not stood up yet (roadmap `RM-DIST-03`).
+Manifest generation, the contracts, scheduling and the data layer are all reachable from Python
+without it.
 
 ### Scheduling, cost, resilience (`.sched`, `.autoscale`, `.gpu`)
 
@@ -159,16 +158,15 @@ and the resumed run reproduces the uninterrupted result; MIG profiles + DCGM for
 
 ### Data locality (`.data`)
 
-Lazy **chunk-range** reads of Zarr / COG / Parquet from any S3-compatible store (`[s3]`), plus a
+Lazy **chunk-range** reads of Zarr / COG / Parquet from any S3-compatible store (`[cloud-s3]`), plus a
 **pull-through cache** so a sweep's repeated reads are served from local scratch — never a bulk
 copy — and node-affinity hints to co-schedule onto cache-warm nodes.
 
 ### Reproducibility, tenancy, trust (`.runs`, `.tenancy`)
 
-Every job is an **MLflow** run recording its `RunContext` + content-addressed artifacts (`[mlflow]`);
-completion events go on NATS for Bench/Studio/Hub. The compose tier brings up a tracking server for
-the opt-in test: `docker compose up -d mlflow && MLFLOW_TRACKING_URI=http://localhost:5000 uv run
-pytest -m mlflow`. `tenant_manifests()` builds the
+Every job is an **MLflow** run recording its `RunContext` + content-addressed artifacts (`[cloud-mlflow]`);
+completion events go on NATS for Bench/Studio/Hub. The opt-in test needs a tracking server on
+`$MLFLOW_TRACKING_URI`: `MLFLOW_TRACKING_URI=http://localhost:5000 uv run pytest -m mlflow`. `tenant_manifests()` builds the
 namespace-per-tenant baseline (RBAC, quotas, **default-deny NetworkPolicies**); `admit()` and the
 shipped Kyverno policy enforce **cosign-verified-images-only** admission (signed + SLSA + SBOM +
 compatible Core version), refusing anything else at the cluster boundary.
@@ -195,39 +193,42 @@ uv run pytest -m cluster
 
 It runs in CI as the opt-in `cluster-e2e` workflow (nightly, on demand, or on a PR labelled
 `cluster-e2e`) — never in the default suite, which stays hermetic. See
-[`platform/README.md`](platform/README.md).
+[`platform/README.md`](../../../platform/README.md).
 
 ### Optional extras
 
-Heavy runtimes stay out of the sacred local tier: `pip install 'astro-mine-cloud[s3]'` (object
-I/O), `[cluster]` (pyyaml → render/apply manifests), `[mlflow]` (MLflow tracking), `[serve]`
-(the FastAPI REST edge). Manifest *generation*, contracts, scheduling, and data logic need none
-of them.
+Heavy runtimes stay out of the sacred local tier: `pip install 'astro-mine-platform[cloud-s3]'`
+(object I/O), `[cloud-cluster]` (pyyaml → render/apply manifests), `[cloud-mlflow]` (MLflow
+tracking), `[cloud-nats]` (completion events). Manifest *generation*, contracts, scheduling, and
+data logic need none of them. `[serve]` is gone rather than renamed — see above.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Cloud is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup.
 
 ```bash
-conda create -n astro-mine-cloud python=3.12
-conda activate astro-mine-cloud
-uv sync && uv run pytest
+python scripts/test.py cloud
 ```
 
-`uv run pytest` is hermetic — no Docker, no cluster, no account. The integration tests that need
+The default suite is hermetic — no Docker, no cluster, no account. The integration tests that need
 real infrastructure are **opt-in markers** and skip by default:
 
 ```bash
-docker compose up -d minio && MINIO_ENDPOINT=http://localhost:9000 uv run pytest -m minio
-docker compose up -d nats  && NATS_URL=nats://localhost:4222     uv run pytest -m nats
-docker compose up -d mlflow && MLFLOW_TRACKING_URI=http://localhost:5000 uv run pytest -m mlflow
-ASTRO_MINE_DOCKER_IMAGE=<image@digest>                            uv run pytest -m docker
+MINIO_ENDPOINT=http://localhost:9000       uv run pytest -m minio
+NATS_URL=nats://localhost:4222             uv run pytest -m nats
+MLFLOW_TRACKING_URI=http://localhost:5000  uv run pytest -m mlflow
+ASTRO_MINE_DOCKER_IMAGE=<image@digest>     uv run pytest -m docker
 ./platform/kind/up.sh && set -a && . ./platform/kind/harness.env && set +a
-                                                                  uv run pytest -m cluster
+                                           uv run pytest -m cluster
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+Each needs the named service already running; the per-repo `docker-compose.yml` that used to start
+MinIO/NATS/MLflow did not come across the consolidation.
+
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

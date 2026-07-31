@@ -12,16 +12,17 @@ never widen it.
 > [architecture](https://github.com/astro-mine/docs/blob/main/architecture/fleet.md)
 > and [Phase-0 roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/phase-0-commons-seed.md).
 
-> **Command renamed.** This CLI is `astro-mine-fleet`; the old name `fleet` still works for one
-> deprecation cycle, printing a one-line notice to stderr, and is removed at the first
-> public-benchmark milestone. The prefix is normative ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
-> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md) §5) — it ends the
-> `PATH` land-grab of generic names and makes the package↔command mapping guessable.
+> **Where the commands live.** This package ships no console scripts. Fleet's authoring commands are
+> `astro-mine fleet <verb>`, provided by [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli)
+> — a separate distribution that depends on this one. There is one executable and one grammar
+> ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
+> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md)); the earlier
+> `astro-mine-fleet` binary and its `fleet` alias are both retired.
 
 ## The shipped asset roster
 
 Six reference assets ship as package data under `src/astro_mine/fleet/library/`. They are not
-illustrations: packaged with `astro-mine-fleet package`, these six **are** six of the nine content
+illustrations: packaged with `astro-mine fleet package`, these six **are** six of the nine content
 pins in the anchor benchmark scenario (`lunar-polar-ice-prospecting-v1`).
 
 | Asset | Path | Capability tags |
@@ -46,8 +47,8 @@ Or validate and package one straight from the CLI:
 
 ```bash
 python -c "from importlib.resources import files; print(files('astro_mine.fleet').joinpath('library/manipulation/excavator.sadf.yaml'))"
-astro-mine-fleet validate <that path>
-astro-mine-fleet package  <that path>
+astro-mine fleet validate <that path>
+astro-mine fleet package  <that path>
 ```
 
 **Copy one of these rather than starting from `new`** when your vehicle resembles it: they carry
@@ -71,53 +72,58 @@ edit. Older digests stay immutable and still resolve.
 
 ```
 src/astro_mine/fleet/       # import path: astro_mine.fleet
-  cli/ importers/ exporters/ geometry/ lint/ library/ fidelity/ packaging/
-tests/                      # mirrors the package layout
+  importers/ exporters/ geometry/ lint/ library/ fidelity/ packaging/ catalog/ params/
+tests/fleet/                # mirrors the package layout
 ```
 
-The `fleet` console command is wired to `astro_mine.fleet.cli:main`.
+The commands below are argument parsing and output formatting over these modules, and live in
+[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) (`astro_mine.cli.fleet`). Anything
+a command can do is reachable from Python without it.
 
 ## CLI
 
 Fleet authors content against Core's SADF — it never defines a parallel schema.
 
 ```bash
-astro-mine-fleet new rover rover.sadf.yaml   # scaffold a minimal, valid SADF asset
-astro-mine-fleet validate rover.sadf.yaml    # structural + semantic validation (Core's gate)
-astro-mine-fleet lint *.sadf.yaml            # validity rule over many docs (--json for diagnostics)
-astro-mine-fleet resolve rover.sadf.yaml     # emit the canonical JSON form
-astro-mine-fleet package rover.sadf.yaml     # write a content-addressed (sha256) asset bundle
+astro-mine fleet new rover rover.sadf.yaml   # scaffold a minimal, valid SADF asset
+astro-mine fleet validate rover.sadf.yaml    # structural + semantic validation (Core's gate)
+astro-mine fleet lint *.sadf.yaml            # validity rule over many docs (--json for diagnostics)
+astro-mine fleet resolve rover.sadf.yaml     # emit the canonical JSON form
+astro-mine fleet package rover.sadf.yaml     # write a content-addressed (sha256) asset bundle
 ```
 
 Signed, content-addressed OCI packaging (RM-P0-FLEET-06) — the pre-Hub distribution
 that upgrades to Hub publish in P1:
 
 ```bash
-astro-mine-fleet keygen --out keys/                              # ECDSA P-256 asset-signing keypair
-astro-mine-fleet package rover.sadf.yaml --out dist/oci --oci \
+astro-mine hub keygen --out keys/                                # ECDSA P-256 asset-signing keypair
+astro-mine fleet package rover.sadf.yaml --out dist/oci --oci \
       --sign --key keys/asset-signing.key             # signed OCI artifact, addressed by digest
-astro-mine-fleet verify dist/oci --pub keys/asset-signing.pub    # re-hash bytes + verify signature, then load
+astro-mine fleet verify dist/oci --pub keys/asset-signing.pub    # re-hash bytes + verify signature, then load
 ```
+
+Key material is minted by `astro-mine hub keygen`, not by Fleet — there is one keygen on the
+platform, and Fleet's own `--key` help points at it.
 
 The OCI artifact wraps the SADF wire form + geometry as layers with the Core plugin
 manifest as its config (`application/vnd.astro-mine.asset.v1`); the signature (Core's
-cosign-modeled envelope, **not** a cosign artifact) attaches as an OCI referrer. `fleet
-verify` re-hashes every packaged blob against its content address and the signed digest,
-then loads the manifest through Core's `PluginRegistry`.
+cosign-modeled envelope, **not** a cosign artifact) attaches as an OCI referrer.
+`astro-mine fleet verify` re-hashes every packaged blob against its content address and the signed
+digest, then loads the manifest through Core's `PluginRegistry`.
 
 Phase 0 delivers signed OCI + content provenance (geometry/source hashes). Real
 cosign-keyless signatures, SLSA build provenance, and SBOM attestations land with Hub in
 Phase 1 — they hang on the same OCI referrer hook, so the upgrade is additive.
 
-Once assets are published to a Hub registry (`astro-mine-fleet publish … --registry <path>`),
-`astro-mine-fleet catalog` surfaces that registry as the **selectable robot menu** — the same catalog
+Once assets are published to a Hub registry (`astro-mine fleet publish … --registry <path>`),
+`astro-mine fleet catalog` surfaces that registry as the **selectable robot menu** — the same catalog
 Studio renders and Mind/Allocate read capability declarations from (RM-P1-FLEET-11):
 
 ```bash
-astro-mine-fleet catalog --registry hub/                       # the menu: each asset's kind + capability tags
-astro-mine-fleet catalog --registry hub/ --requires mobility.wheeled,excavation.drill
-astro-mine-fleet catalog --registry hub/ --preview rover:0.1.0  # a selected asset's glTF preview geometry refs
-astro-mine-fleet catalog --registry hub/ --preview rover:0.1.0 --materialize served/  # SADF JSON + glTF → documentUrl
+astro-mine fleet catalog --registry hub/                       # the menu: each asset's kind + capability tags
+astro-mine fleet catalog --registry hub/ --requires mobility.wheeled,excavation.drill
+astro-mine fleet catalog --registry hub/ --preview rover:0.1.0  # a selected asset's glTF preview geometry refs
+astro-mine fleet catalog --registry hub/ --preview rover:0.1.0 --materialize served/  # SADF JSON + glTF → documentUrl
 ```
 
 A Hub-published vehicle type appears here with **no Fleet code change** — the contract is the
@@ -129,20 +135,20 @@ Fleet converts **both ways** between SADF and the robot-description formats the 
 speaks — the bidirectional converters `fleet.md` §11 asks for, with SADF authoritative:
 
 ```bash
-astro-mine-fleet import rover.urdf -o rover.sadf.json      # URDF / SDF / USD  ->  SADF + USD/glTF geometry
-astro-mine-fleet export rover.sadf.json -o rover.urdf                    # SADF -> URDF (+ body-frame OBJ meshes)
-astro-mine-fleet export rover.sadf.json -o rover.sdf --format sdf        # SADF -> SDF  (Gazebo)
-astro-mine-fleet export rover.sadf.json -o rover.usda --format usd       # SADF -> USD stage (Sim/Studio/Isaac)
-astro-mine-fleet render rover.sadf.json -o preview.glb                   # a composed, posed preview/thumbnail
+astro-mine fleet import rover.urdf -o rover.sadf.json      # URDF / SDF / USD  ->  SADF + USD/glTF geometry
+astro-mine fleet export rover.sadf.json -o rover.urdf                    # SADF -> URDF (+ body-frame OBJ meshes)
+astro-mine fleet export rover.sadf.json -o rover.sdf --format sdf        # SADF -> SDF  (Gazebo)
+astro-mine fleet export rover.sadf.json -o rover.usda --format usd       # SADF -> USD stage (Sim/Studio/Isaac)
+astro-mine fleet render rover.sadf.json -o preview.glb                   # a composed, posed preview/thumbnail
 ```
 
 **Every export is lossy, and says so.** No robot-description format can hold a spacecraft's power
 budget, thermal envelope, sensor observation models, or capability tags — which is exactly why SADF
-exists. `astro-mine-fleet export` therefore *always* reports what the target could not carry, as structured
-diagnostics (`--json` gives `rule` / `path` / `message`, the same shape `astro-mine-fleet lint` emits):
+exists. `astro-mine fleet export` therefore *always* reports what the target could not carry, as structured
+diagnostics (`--json` gives `rule` / `path` / `message`, the same shape `astro-mine fleet lint` emits):
 
 ```bash
-astro-mine-fleet export rover.sadf.json -o rover.urdf --json | jq '.losses[].rule'
+astro-mine fleet export rover.sadf.json -o rover.urdf --json | jq '.losses[].rule'
 # "asset.block_dropped"  "joint.effort_unit"  "urdf.lod_dropped"  ...
 ```
 
@@ -157,7 +163,7 @@ two decimated tiers per link (alongside the convex collision hull), and a fideli
 — `massmodel` takes the coarsest, `articulated` the finest. URDF and SDF carry a single tier and say
 which; USD carries the whole ladder.
 
-`astro-mine-fleet render` composes an asset's visual geometry, posed by its frame tree, into one self-contained
+`astro-mine fleet render` composes an asset's visual geometry, posed by its frame tree, into one self-contained
 glTF or USD file — the preview Studio's robot menu and View's `<AssetPreview/>` widget show. It
 needs **no GPU, no renderer, and no network**, so the local tier always works. An asset that
 declares mass but no meshes (every Phase-0 reference asset) is previewed with its
@@ -166,16 +172,17 @@ reported, never passed off as geometry the asset claims.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Fleet is part of the [`astro-mine-platform`](../../../README.md) distribution — one repository, one
+environment, one test suite. See [`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup, then run
+this component's suite with its own CI selection:
 
 ```bash
-conda create -n astro-mine-fleet python=3.12
-conda activate astro-mine-fleet
-uv sync && uv run pytest
+python scripts/test.py fleet
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full
+workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.
