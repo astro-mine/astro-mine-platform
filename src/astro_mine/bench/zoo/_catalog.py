@@ -206,7 +206,7 @@ class FilesystemCatalog:
     """The packaged zoo, discovered by scanning this package — the tier-1 offline default.
 
     Adding a scenario is a new *document*, not a loader edit (bench.md §3). This is what
-    ``astro-mine-bench score`` and ``run(spec, policy)`` read, with no database anywhere in sight.
+    ``astro-mine bench score`` and ``run(spec, policy)`` read, with no database anywhere in sight.
     """
 
     def _discover(self) -> dict[str, Traversable]:

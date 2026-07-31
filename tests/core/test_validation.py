@@ -1,4 +1,4 @@
-"""``astro-mine-core validate`` — the CLI over the Core-authored formats (G2.5, astro-mine-core#61).
+"""``astro-mine core validate`` — the CLI over the Core-authored formats (G2.5, astro-mine-core#61).
 
 The tests pin the properties the issue is about:
 

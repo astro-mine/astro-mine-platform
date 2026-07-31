@@ -489,7 +489,7 @@ def test_fleet_only_content_never_reports_unresolved(published: dict[str, Any]) 
 def test_the_diagnostic_names_the_package_and_the_consequence(published: dict[str, Any]) -> None:
     """The operator-facing message: what is missing, what installs it, what it costs.
 
-    Content and code ship separately — `astro-mine-bench fetch` obtains the bundles, but rebuilding
+    Content and code ship separately — `astro-mine bench fetch` obtains the bundles, but rebuilding
     a world bundle into a `WorldProvider` is astro-mine-worlds' job — so a user who followed the
     documented quickstart can hold every digest and still have no physics.
     """
@@ -501,5 +501,5 @@ def test_the_diagnostic_names_the_package_and_the_consequence(published: dict[st
 
     assert "astro-mine-worlds" in message
     assert "astro-mine-prospect" in message
-    assert "astro-mine-bench fetch" in message  # names the half the user already did
+    assert "astro-mine bench fetch" in message  # names the half the user already did
     assert "test-world" in message

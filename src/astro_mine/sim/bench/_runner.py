@@ -370,7 +370,7 @@ class _OpenLoopPolicy:
 
 
 #: Env the ``sim`` runner reads for its content store when Bench passes none (its ``score`` CLI
-#: does): a local OCI-layout Hub registry, the same convention the ``astro-mine-sim run`` CLI uses.
+#: does): a local OCI-layout Hub registry, the same convention the ``astro-mine sim run`` CLI uses.
 _REGISTRY_ENV = "ASTRO_MINE_HUB_REGISTRY"
 
 
@@ -407,7 +407,7 @@ class _SimRunnerProvider:
         are ~12 km apart.
 
         Bench asks for this through its optional ``DefaultPolicyProvider`` seam when the caller
-        names no policy, so ``astro-mine-bench score --runner sim`` stops falling back to a mode
+        names no policy, so ``astro-mine bench score --runner sim`` stops falling back to a mode
         five of the anchor's six assets never declare. **The spec is what makes it honest**: the
         roster is resolved from ``spec.content.fleet``, i.e. the same pinned digests the episode
         runs on, rather than by artifact tag — a tag-resolved roster could describe a different
@@ -448,7 +448,7 @@ class _SimRunnerProvider:
         if not registry:
             raise RuntimeError(
                 f"the 'sim' runner needs a content store: set ${_REGISTRY_ENV} to a local "
-                "OCI-layout Hub registry (populate one with `astro-mine-bench fetch <scenario>`)."
+                "OCI-layout Hub registry (populate one with `astro-mine bench fetch <scenario>`)."
             )
         return open_bundle_store(registry)
 

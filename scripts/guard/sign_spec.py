@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-"""Offline dev signer for a SafetySpec — a thin shim over ``astro-mine-guard sign`` (GUARD-05).
+"""Offline dev signer for a SafetySpec — a thin shim over ``astro-mine guard sign`` (GUARD-05).
 
 The signing logic now lives **in the package** (:mod:`astro_mine.guard.cli`) so it is reachable from
 an installed wheel — ``scripts/`` is not packaged. This wrapper is kept only so the old invocation
 keeps working; it delegates to the CLI and duplicates nothing. Prefer:
 
-    astro-mine-guard sign anchor            # sign the shipped anchor spec's content hash
-    astro-mine-guard sign my.safety.yaml --verify --pub key.pub.pem
+    astro-mine guard sign anchor            # sign the shipped anchor spec's content hash
+    astro-mine guard sign my.safety.yaml --verify --pub key.pub.pem
 
 The signature is what a signature-requiring registry / the fail-closed signed-load gate
 (:mod:`astro_mine.guard.spec.signed`) then verifies. Untrusted authoring tooling — signing never

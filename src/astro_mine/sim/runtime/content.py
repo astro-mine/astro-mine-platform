@@ -248,7 +248,7 @@ def describe_unresolved(unresolved: Sequence[UnresolvedProvider]) -> str:
 
     Written to be pasted into an issue: it names every pin that resolved by digest but rebuilt
     nothing, the package that supplies it, and the metric that stops scoring as a result. Content
-    and code are fetched separately — ``astro-mine-bench fetch`` obtains the bundles, but rebuilding
+    and code are fetched separately — ``astro-mine bench fetch`` obtains the bundles, but rebuilding
     a world bundle into a ``WorldProvider`` is ``astro-mine-worlds``' job — so a user who followed
     the documented quickstart can have every digest and still no physics.
     """
@@ -256,7 +256,7 @@ def describe_unresolved(unresolved: Sequence[UnresolvedProvider]) -> str:
         f"{len(unresolved)} pinned input(s) resolved by digest but rebuilt no provider, so this "
         "run is blind to them:",
         *[item.describe() for item in unresolved],
-        "Content and code ship separately: `astro-mine-bench fetch` obtains the bundles; the "
+        "Content and code ship separately: `astro-mine bench fetch` obtains the bundles; the "
         "producer packages above rebuild them into live providers.",
     ]
     return "\n".join(lines)

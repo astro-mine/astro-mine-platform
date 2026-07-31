@@ -54,11 +54,12 @@ this measurement needs the Sim-backed runner, which Bench deliberately does not 
 Install the measurement environment (Bench stays core+pydantic; Sim reaches it through the
 injected EpisodeRunner seam):
 
-    uv pip install 'astro-mine-sim[dem,hub]' astro-mine-worlds astro-mine-prospect onnxruntime
+    uv pip install 'astro-mine-platform[sim-dem,sim-hub,sim-surrogate]'
 
-`astro-mine-worlds` is not optional here: without it no `world_provider` entry point is
-discovered, the pinned world silently resolves to `None`, and Sim falls back to its
-reduced-order regolith constants — measuring the surrogate against the wrong soil.
+Worlds is not optional here: without a discovered `world_provider` entry point the pinned world
+silently resolves to `None`, and Sim falls back to its reduced-order regolith constants —
+measuring the surrogate against the wrong soil. Consolidation makes that harder to get wrong,
+since the provider now ships in the same wheel rather than in a separate install.
 """
 
 

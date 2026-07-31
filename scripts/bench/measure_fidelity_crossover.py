@@ -62,7 +62,7 @@ DEFAULT_PARTICLES = (90, 250, 500, 1000, 2000)
 _INSTALL_HINT = """\
 this measurement needs the Sim-backed DEM engine, which Bench deliberately does not depend on:
 
-    uv pip install 'astro-mine-sim[dem,hub,surrogate]' astro-mine-worlds astro-mine-prospect
+    uv pip install 'astro-mine-platform[sim-dem,sim-hub,sim-surrogate]'
 """
 
 

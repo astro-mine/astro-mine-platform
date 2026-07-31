@@ -221,7 +221,10 @@ def run_worker(argv: Sequence[str] | None = None, *, env: Mapping[str, str] | No
     must never execute, import, or trust anything this process produced.
     """
     environment = os.environ if env is None else env
-    parser = argparse.ArgumentParser(prog="astro-mine-bench eval-worker")
+    # The argv this process is actually launched with (`_plan.build_command`,
+    # `sandbox._subprocess.worker_command`), not a CLI verb: `eval-worker` is deliberately not one
+    # (cli.md §10), so a `prog` naming a component binary printed a usage line nobody could type.
+    parser = argparse.ArgumentParser(prog="python -m astro_mine.bench eval-worker")
     parser.add_argument("--scenario-id", required=True)
     parser.add_argument("--policy-ref", required=True)
     parser.add_argument("--seed", type=int, default=None)
