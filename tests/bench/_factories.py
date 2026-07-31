@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Any
 
 from astro_mine.bench.baseline import BaselinePolicy
-from astro_mine.bench.metrics import BeliefSnapshot, EpisodeTrace, MetricValue, ScoringContext
+from astro_mine.bench.metrics import MetricValue
 from astro_mine.bench.scenario import (
     ContentPins,
     ContentRef,
@@ -45,6 +45,7 @@ from astro_mine.core.messages.enums import ActionKind
 from astro_mine.core.messages.model import Quat, Transform, Vec3
 from astro_mine.core.objective import MetricAggregation, MetricDirection
 from astro_mine.core.resource import FieldDistribution
+from astro_mine.core.scoring import BeliefSnapshot, EpisodeTrace, ScoringContext
 from astro_mine.core.units import MOON_BODY_FIXED
 
 

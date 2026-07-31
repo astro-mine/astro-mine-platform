@@ -49,7 +49,7 @@ from pathlib import Path
 from astro_mine.bench.baseline import load_runner_provider
 from astro_mine.bench.eval._plan import DEFAULT_RUNNER, METRICS_OUTPUT, SEED_ENV, TRACE_OUTPUT
 from astro_mine.bench.leaderboard._eval import resolve_policy
-from astro_mine.bench.metrics import EpisodeTrace, resolve_metrics
+from astro_mine.bench.metrics import resolve_metrics
 from astro_mine.bench.recording import FRAMES_TOPIC, PROVENANCE_ATTACHMENT
 from astro_mine.bench.sandbox import (
     WORKER_RESULT,
@@ -60,6 +60,7 @@ from astro_mine.bench.sandbox import (
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.bench.scenario._hash import content_hash
 from astro_mine.bench.zoo import load_scenario
+from astro_mine.core.scoring import EpisodeTrace
 
 __all__ = ["DEFAULT_RUNNER", "METRICS_COLUMNS", "REGISTRY_ENV", "run_worker"]
 
@@ -207,7 +208,8 @@ def run_worker(argv: Sequence[str] | None = None, *, env: Mapping[str, str] | No
 
     Loads the zoo scenario, resolves the submitted ``policy_ref``, drives the ``--runner`` named
     runner for the resolved seed, and computes each pinned metric's per-seed value. A runner that is
-    not registered (``sim`` without ``astro-mine-sim[bench]``) is reported back as a structured
+    not registered (``sim`` without ``astro-mine-platform[sim-bench]``) is reported back as a
+    structured
     failure like any other, never a traceback. Always writes the
     structured :class:`~astro_mine.bench.sandbox.WorkerResult` hand-back document (``result.json``);
     with ``--emit artifacts`` (the default, the Cloud scale-out path) it *also* writes the per-seed
@@ -235,7 +237,8 @@ def run_worker(argv: Sequence[str] | None = None, *, env: Mapping[str, str] | No
         help=(
             f"runner to roll the seed with (default: {DEFAULT_RUNNER}). '{DEFAULT_RUNNER}' is a "
             "deterministic trace fixture, not a physics engine; 'sim' runs the real Sim engine and "
-            "needs astro-mine-sim[bench] plus a content store in the image. The resolved runner id "
+            "needs astro-mine-platform[sim-bench] plus a content store in the image. The "
+            "resolved runner id "
             "is written into the outputs and stamped on the collected scorecard."
         ),
     )

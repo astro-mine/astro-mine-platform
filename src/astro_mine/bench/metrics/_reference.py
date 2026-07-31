@@ -18,8 +18,8 @@ import statistics
 from dataclasses import dataclass
 
 from astro_mine.bench.metrics._metric import Metric, MetricComputationError, MetricValue
-from astro_mine.bench.metrics._trace import EpisodeTrace
 from astro_mine.core.objective import MetricAggregation, MetricDirection
+from astro_mine.core.scoring import EpisodeTrace
 
 __all__ = [
     "REFERENCE_METRICS",

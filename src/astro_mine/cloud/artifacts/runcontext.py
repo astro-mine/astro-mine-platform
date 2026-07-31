@@ -27,7 +27,7 @@ from astro_mine.cloud._compat import validate_core_interface_version
 from astro_mine.cloud.artifacts import addressing
 
 if TYPE_CHECKING:
-    from astro_mine.cloud.artifacts.store import ArtifactStore
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = ["EnvironmentFingerprint", "RunContext", "code_version"]
 

@@ -28,8 +28,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from astro_mine.bench.metrics import EpisodeTrace, ScoringContext
 from astro_mine.core.messages import Observation
+from astro_mine.core.scoring import EpisodeTrace, ScoringContext
 
 __all__ = [
     "FRAMES_TOPIC",

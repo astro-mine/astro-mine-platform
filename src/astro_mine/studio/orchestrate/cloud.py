@@ -79,9 +79,9 @@ from .worker import (
 )
 
 if TYPE_CHECKING:  # pragma: no cover - the [cloud] extra is not in the base wheel
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.packaging import ImageRef
     from astro_mine.cloud.runs import CompletionEvent
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = [
     "LOCAL_IMAGE_DIGEST",
@@ -126,7 +126,7 @@ class MissingCloudExtra(ImportError):
     def __init__(self) -> None:
         super().__init__(
             "CloudDispatcher requires the optional [cloud] extra; install it with "
-            "`uv sync --extra cloud` (or `pip install astro-mine-studio[cloud]`). "
+            "`uv sync --extra cloud` (or `pip install astro-mine-platform[studio-cloud]`). "
             "LocalDispatcher needs no extra and remains the working local tier."
         )
 

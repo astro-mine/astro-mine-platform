@@ -1,6 +1,11 @@
-"""Content-addressed artifact stores.
+"""Content-addressed artifact stores — Cloud's backends for the Core contract.
 
-An :class:`ArtifactStore` reads and writes opaque byte payloads keyed by their content
+The :class:`~astro_mine.core.artifacts.ArtifactStore` *protocol* is Core's (conventions.md
+§3.3): Bench types against it too, and a shape two components share belongs at the waist. What
+is here is every part of it that needs a filesystem or a network — the backends, the address
+scheme, and the root convention.
+
+A store reads and writes opaque byte payloads keyed by their content
 address (:func:`~astro_mine.cloud.artifacts.addressing.content_address`).
 :class:`FilesystemArtifactStore` is the default, dependency-free local backend -- it
 keeps the sacred single-workstation tier working with no daemon, no cloud, and no
@@ -19,7 +24,6 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Protocol, runtime_checkable
 from uuid import uuid4
 
 from astro_mine.cloud.artifacts.addressing import content_address, parse_address
@@ -27,7 +31,6 @@ from astro_mine.cloud.artifacts.addressing import content_address, parse_address
 __all__ = [
     "DEFAULT_ROOT",
     "DEFAULT_ROOT_ENV",
-    "ArtifactStore",
     "FilesystemArtifactStore",
 ]
 
@@ -36,23 +39,6 @@ __all__ = [
 #: at the same path -- the CLOUD-02 backend-equivalence contract.
 DEFAULT_ROOT_ENV = "ASTRO_MINE_ARTIFACT_ROOT"
 DEFAULT_ROOT = ".astro-mine/artifacts"
-
-
-@runtime_checkable
-class ArtifactStore(Protocol):
-    """A content-addressed byte store: ``put`` returns the address, ``get`` round-trips."""
-
-    def put(self, data: bytes) -> str:
-        """Store *data* and return its ``sha256:<hex>`` content address."""
-        ...
-
-    def get(self, address: str) -> bytes:
-        """Return the bytes stored at *address*; raise ``KeyError`` if absent."""
-        ...
-
-    def exists(self, address: str) -> bool:
-        """Return whether an object is stored at *address*."""
-        ...
 
 
 class FilesystemArtifactStore:

@@ -25,6 +25,7 @@ from astro_mine.fleet.catalog import (
 )
 from astro_mine.fleet.library import load_reference
 from astro_mine.fleet.packaging.hub import HubError, publish_asset
+from astro_mine.hub.registry import open_registry
 from astro_mine.hub.supply_chain import generate_keypair
 
 
@@ -32,7 +33,7 @@ def _publish_roster(registry, names):
     """Sign+publish each reference asset in ``names`` to ``registry``."""
     private_pem, _ = generate_keypair()
     for name in names:
-        publish_asset(load_reference(name), registry, sign_key=private_pem)
+        publish_asset(load_reference(name), open_registry(str(registry)), sign_key=private_pem)
 
 
 def _novel_geometry_asset() -> SadfDocument:
@@ -87,7 +88,8 @@ def _publish_geometry_asset(registry, base_dir) -> str:
             GeometryRef(role=GeometryRole.VISUAL, format=fmt, uri=uri, frame=cp.asset.root_frame)
         )
     private_pem, _ = generate_keypair()
-    publish_asset(load_sadf(canonical_json(cp)), registry, sign_key=private_pem, base_dir=base_dir)
+    publish_asset(load_sadf(canonical_json(cp)), open_registry(str(registry)),
+        sign_key=private_pem, base_dir=base_dir)
     return "example.hopper-mk1:0.1.0"
 
 
@@ -134,14 +136,14 @@ def test_the_menu_is_assets_only_even_when_another_kind_declares_robot_tags(tmp_
 
     # The policy is in the registry — this is a menu filter, not a publish failure.
     from astro_mine.hub.client import catalog_from_registry
-    from astro_mine.hub.registry import Registry
+    from astro_mine.hub.registry import Registry, open_registry
 
     assert {e.kind for e in catalog_from_registry(Registry(reg)).all()} == {"asset", "policy"}
 
-    menu = list_menu(reg)
+    menu = list_menu(open_registry(str(reg)))
     assert [m.reference for m in menu] == ["astro-mine.fleet.prospecting-rover:0.1.0"]
     # ...and the tag it shares with the rover does not pull it back in.
-    wheeled = list_menu(reg, requires=["mobility.wheeled"])
+    wheeled = list_menu(open_registry(str(reg)), requires=["mobility.wheeled"])
     assert [m.reference for m in wheeled] == ["astro-mine.fleet.prospecting-rover:0.1.0"]
 
 
@@ -149,7 +151,7 @@ def test_menu_lists_published_assets_with_vehicle_kind_and_tags(tmp_path):
     reg = tmp_path / "reg"
     _publish_roster(reg, ["excavator", "relay_orbiter", "prospecting_rover"])
 
-    menu = list_menu(reg)
+    menu = list_menu(open_registry(str(reg)))
     assert [m.reference for m in menu] == sorted(m.reference for m in menu)  # deterministic order
     assert all(isinstance(m, MenuEntry) for m in menu)
 
@@ -170,10 +172,12 @@ def test_requires_filters_by_declared_capability(tmp_path):
     _publish_roster(reg, ["excavator", "relay_orbiter", "prospecting_rover"])
 
     # Single tag: only wheeled ground assets (Core's satisfies rule, not Fleet planner logic).
-    assert {m.kind for m in list_menu(reg, requires=["mobility.wheeled"])} == {"excavator", "rover"}
-    assert {m.kind for m in list_menu(reg, requires=["comms.relay"])} == {"orbiter", "rover"}
+    assert {m.kind for m in list_menu(open_registry(str(reg)),
+        requires=["mobility.wheeled"])} == {"excavator", "rover"}
+    assert {m.kind for m in list_menu(open_registry(str(reg)),
+        requires=["comms.relay"])} == {"orbiter", "rover"}
     # Multiple tags are ANDed: only the prospecting rover both drives and drills.
-    both = list_menu(reg, requires=["mobility.wheeled", "excavation.drill"])
+    both = list_menu(open_registry(str(reg)), requires=["mobility.wheeled", "excavation.drill"])
     assert [m.kind for m in both] == ["rover"]
 
 
@@ -182,35 +186,35 @@ def test_requires_rejects_a_tag_outside_cores_vocabulary(tmp_path):
     _publish_roster(reg, ["relay_orbiter"])
     # An unknown tag is a Core RFC, never a Fleet-private extension — fail loudly.
     with pytest.raises(CapabilityError):
-        list_menu(reg, requires=["not.a.real.tag"])
+        list_menu(open_registry(str(reg)), requires=["not.a.real.tag"])
 
 
 def test_new_hub_published_type_appears_with_preview_and_no_fleet_change(tmp_path):
     """The Fleet Phase-1 exit criterion: a new vehicle kind arrives as content, not a code edit."""
     reg = tmp_path / "reg"
     private_pem, _ = generate_keypair()
-    publish_asset(_novel_geometry_asset(), reg, sign_key=private_pem)
+    publish_asset(_novel_geometry_asset(), open_registry(str(reg)), sign_key=private_pem)
 
-    entry = {m.reference: m for m in list_menu(reg)}["example.hopper-mk1:0.1.0"]
+    entry = {m.reference: m for m in list_menu(open_registry(str(reg)))}["example.hopper-mk1:0.1.0"]
     assert entry.kind == "hopper"  # a kind Fleet's code has never enumerated
     assert entry.name == "Hopper Mk1"
 
     # The single-asset preview widget (VIEW-03) resolves its geometry by format.
-    gltf = asset_preview(reg, entry.reference, fmt="gltf")
+    gltf = asset_preview(open_registry(str(reg)), entry.reference, fmt="gltf")
     assert [(r.role.value, r.uri) for r in gltf] == [("visual", "hopper.glb")]
-    usd = asset_preview(reg, entry.reference, fmt=GeometryFormat.USD)
+    usd = asset_preview(open_registry(str(reg)), entry.reference, fmt=GeometryFormat.USD)
     assert [r.uri for r in usd] == ["hopper.usda"]
 
 
 def test_preview_of_a_mass_model_asset_is_empty(tmp_path):
     reg = tmp_path / "reg"
     _publish_roster(reg, ["relay_orbiter"])  # reference assets ship no geometry
-    assert asset_preview(reg, "astro-mine.fleet.relay-orbiter:0.1.0") == []
+    assert asset_preview(open_registry(str(reg)), "astro-mine.fleet.relay-orbiter:0.1.0") == []
 
 
 def test_empty_registry_yields_an_empty_menu(tmp_path):
     (tmp_path / "reg").mkdir()
-    assert list_menu(tmp_path / "reg") == []
+    assert list_menu(open_registry(str(tmp_path / "reg"))) == []
 
 
 def test_materialize_preview_writes_a_servable_document_and_geometry(tmp_path):
@@ -218,7 +222,7 @@ def test_materialize_preview_writes_a_servable_document_and_geometry(tmp_path):
     ref = _publish_geometry_asset(reg, tmp_path / "src")
 
     out = tmp_path / "served"
-    document = materialize_preview(reg, ref, out)
+    document = materialize_preview(open_registry(str(reg)), ref, out)
 
     # The returned path is the SADF-JSON documentUrl target, at the served-dir root.
     assert document.parent == out
@@ -235,7 +239,8 @@ def test_materialize_preview_of_mass_model_writes_only_the_document(tmp_path):
     _publish_roster(reg, ["relay_orbiter"])  # geometry-less reference asset
 
     out = tmp_path / "served"
-    document = materialize_preview(reg, "astro-mine.fleet.relay-orbiter:0.1.0", out)
+    document = materialize_preview(open_registry(str(reg)),
+        "astro-mine.fleet.relay-orbiter:0.1.0", out)
     assert document.is_file()
     assert list(out.rglob("*.glb")) == []  # no geometry blobs to serve
 
@@ -256,8 +261,9 @@ def test_materialize_preview_rejects_a_path_traversal_uri(tmp_path):
         )
     )
     private_pem, _ = generate_keypair()
-    publish_asset(load_sadf(canonical_json(cp)), reg, sign_key=private_pem, base_dir=src)
+    publish_asset(load_sadf(canonical_json(cp)), open_registry(str(reg)), sign_key=private_pem,
+        base_dir=src)
 
     # Core does not reject a "../" geometry uri, so materialize_preview must fail closed itself.
     with pytest.raises(HubError, match="escapes the output directory"):
-        materialize_preview(reg, "example.evil:0.1.0", tmp_path / "served")
+        materialize_preview(open_registry(str(reg)), "example.evil:0.1.0", tmp_path / "served")

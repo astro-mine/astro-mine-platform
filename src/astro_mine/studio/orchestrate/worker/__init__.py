@@ -38,6 +38,8 @@ import importlib
 import os
 from pathlib import Path
 
+import svcs
+
 from astro_mine.core.objective import ObjectiveDocument, from_wire, to_wire
 
 from ..._base import FrozenStudioModel
@@ -129,6 +131,26 @@ def run_request(
     return EvaluationOutcome(evaluated=evaluated)
 
 
+def _container() -> svcs.Container:
+    """The worker's composition root: bind :class:`SiblingClients` to the factory named by env.
+
+    One of the four places the platform is assembled into an application (conventions.md §3.3),
+    and one of only two inside this distribution that may import ``svcs`` — the layering suite
+    allows it here by name and nowhere else.
+
+    This root is the clearest case for the container in the tree, because the wiring already
+    existed in hand-rolled form: :func:`load_clients` resolves a ``"module:factory"`` string from
+    the environment and calls it, which is a one-entry registry with no type on it. Registering it
+    as a factory *for* :class:`SiblingClients` is the same indirection with the contract named, and
+    it puts the binding where a reader looks for it.
+
+    Built, used, and dropped — no module-level container (§3.3).
+    """
+    registry = svcs.Registry()
+    registry.register_factory(SiblingClients, load_clients)
+    return svcs.Container(registry)
+
+
 def main() -> int:
     """The ``python -m astro_mine.studio.orchestrate.worker`` entry point."""
     inputs = Path(os.environ["ASTRO_MINE_INPUTS"])
@@ -136,7 +158,8 @@ def main() -> int:
 
     request = EvaluationRequest.model_validate_json((inputs / REQUEST_INPUT).read_bytes())
     objective = from_wire((inputs / OBJECTIVE_INPUT).read_bytes())
-    outcome = run_request(request, objective, clients=load_clients())
+    with _container() as services:
+        outcome = run_request(request, objective, clients=services.get(SiblingClients))
 
     (outputs / OUTCOME_OUTPUT).write_text(outcome.model_dump_json())
     return 0

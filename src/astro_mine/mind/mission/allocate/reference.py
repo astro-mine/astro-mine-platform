@@ -1,7 +1,7 @@
 """Reference greedy allocator — the delegated-to stand-in for Astro-Mine-Allocate (RM-P1-MIND-04).
 
 A deterministic solver behind the Core :class:`~astro_mine.core.policy.protocol.Allocator`
-sub-interface: it reads the :class:`~astro_mine.mind.mission.allocate.model.AllocationRequest` the
+sub-interface: it reads the :class:`~astro_mine.core.plan.allocation.AllocationRequest` the
 adapter published under ``allocation.request``, assigns each asset to its nearest unassigned task
 (greedy, stable), and returns the assignment as per-agent ``PROSPECT`` directives — TAMP's
 roles/regions. It answers immediately with an ``incumbent`` (the anytime contract's good-enough
@@ -28,17 +28,18 @@ from astro_mine.core.messages.model import (
     TaskDirective,
     Vec3,
 )
-from astro_mine.core.policy.model import DecisionContext
-from astro_mine.core.registry.loader import load_manifest
-from astro_mine.core.registry.model import PluginManifest
-from astro_mine.mind.mission.allocate.adapter import ALLOCATION_REQUEST_KEY, AllocationAdapter
-from astro_mine.mind.mission.allocate.model import (
+from astro_mine.core.plan.allocation import (
+    ALLOCATION_REQUEST_KEY,
     Allocation,
+    AllocationAdapter,
     AllocationProvenance,
     AllocationRequest,
     Assignment,
 )
-from astro_mine.mind.registry.registry import TierPlugin
+from astro_mine.core.policy.model import DecisionContext
+from astro_mine.core.registry.loader import load_manifest
+from astro_mine.core.registry.model import PluginManifest
+from astro_mine.core.registry.tier import TierPlugin
 
 __all__ = ["GreedyReferenceAllocator", "greedy_allocator_plugin"]
 

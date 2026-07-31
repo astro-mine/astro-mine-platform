@@ -21,7 +21,7 @@ from pydantic import BaseModel, ConfigDict
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from astro_mine.cloud.artifacts.store import ArtifactStore
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = ["Checkpoint", "CheckpointStore", "Preempted", "run_checkpointed"]
 

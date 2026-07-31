@@ -16,12 +16,13 @@ from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.policy.protocol import Policy
 from astro_mine.core.registry.enums import DeterminismClass, PluginKind, SignatureScheme
 from astro_mine.core.registry.model import PluginManifest, Signature
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.bt.model import BehaviorTree
 from astro_mine.mind.compose import compose
 from astro_mine.mind.compose.graph import HierarchyGraph
 from astro_mine.mind.exec import Executive, RunResult
 from astro_mine.mind.reference import load_reference_bt, load_reference_stack, load_stack_resource
-from astro_mine.mind.registry import TierPlugin, TierRegistry
+from astro_mine.mind.registry import TierRegistry
 from astro_mine.mind.spec.model import ShieldBinding, StackSpecDocument
 from astro_mine.mind.trace import to_canonical_json
 from tests.mind.support.toy_env import ToyProspectingEnv

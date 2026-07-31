@@ -22,6 +22,7 @@ from pathlib import Path
 
 __all__ = [
     "COMPANIONS",
+    "COMPOSITION_ROOTS",
     "CORE",
     "CORE_DEPENDENCY_FLOOR",
     "Edge",
@@ -57,6 +58,23 @@ CORE_DEPENDENCY_FLOOR = frozenset(
 #: import in this direction is a cycle across distributions; ``svcs`` is barred because a container
 #: inside a component is a service locator (§3.3).
 FORBIDDEN_DISTRIBUTIONS = ("astro_mine.cli", "astro_mine.api", "svcs")
+
+#: The composition roots inside this distribution, and the only files in it that may import
+#: ``svcs``. conventions.md §3.3 names four places the platform is assembled into an application;
+#: two of them are other distributions (``astro-mine-cli``, ``astro-mine-api``) and these are the
+#: two that live here.
+#:
+#: The allowlist is a literal path list rather than a pattern, and that is the point: adding a
+#: composition root should require editing this line and defending it in review. A root is not a
+#: component that happens to wire things — it is an *application entrypoint*, reached by ``python
+#: -m`` or a container ``ENTRYPOINT`` and never imported by anything else in the tree.
+#:
+#: The CLI/API half of the rule has no exemption at all. A composition root may hold a container;
+#: nothing here may import the distributions that depend on this one.
+COMPOSITION_ROOTS = (
+    "src/astro_mine/cloud/submission/harness.py",  # the Cloud in-pod worker
+    "src/astro_mine/studio/orchestrate/worker/",  # Studio's orchestration worker
+)
 
 #: An import kind. ``runtime`` is module scope and costs import time (§8); ``type-only`` is under
 #: ``TYPE_CHECKING``; ``deferred`` is inside a function body. All three are design dependencies and
@@ -197,7 +215,9 @@ def components(root: Path) -> frozenset[str]:
     return frozenset(
         child.name
         for child in root.iterdir()
-        if child.is_dir() and not child.name.startswith(("_", ".")) and (child / "__init__.py").is_file()
+        if child.is_dir()
+        and not child.name.startswith(("_", "."))
+        and (child / "__init__.py").is_file()
     )
 
 
@@ -225,7 +245,8 @@ def _declared_exports(tree: ast.Module) -> frozenset[str] | None:
     for node in tree.body:
         if not isinstance(node, ast.Assign):
             continue
-        if not any(isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets):
+        targets = node.targets
+        if not any(isinstance(t, ast.Name) and t.id == "__all__" for t in targets):
             continue
         if isinstance(node.value, ast.List | ast.Tuple):
             return frozenset(
@@ -389,22 +410,28 @@ def check_private_imports(
     return violations
 
 
-def check_forbidden_distributions(imports: Iterable[Import]) -> list[str]:
+def check_forbidden_distributions(
+    imports: Iterable[Import], roots: Sequence[str] = COMPOSITION_ROOTS
+) -> list[str]:
     """§3.3 — no component imports the CLI or API distribution, and none imports ``svcs``.
 
     The ``svcs`` half is the one that matters most: it is what keeps the container at the
-    composition roots and stops it becoming a service locator inside a component.
+    composition roots and stops it becoming a service locator inside a component. ``roots`` are
+    the files exempt from *that* half only — the CLI/API half admits no exemption, because an
+    import of a distribution that depends on this one is a cycle wherever it appears.
     """
     violations: list[str] = []
     for imp in imports:
-        if imp.file.startswith(("src/astro_mine/cli/", "src/astro_mine/api/")):
-            continue
+        at_root = any(imp.file.startswith(root) for root in roots)
         for forbidden in FORBIDDEN_DISTRIBUTIONS:
-            if imp.module == forbidden or imp.module.startswith(f"{forbidden}."):
-                violations.append(
-                    f"{imp.location}: imports {imp.module} — a component MUST NOT import "
-                    f"{forbidden!r} (§3.3)"
-                )
+            if imp.module != forbidden and not imp.module.startswith(f"{forbidden}."):
+                continue
+            if forbidden == "svcs" and at_root:
+                continue
+            violations.append(
+                f"{imp.location}: imports {imp.module} — a component MUST NOT import "
+                f"{forbidden!r} (§3.3)"
+            )
     return violations
 
 
@@ -431,7 +458,8 @@ def check_surface_isolation(repo_root: Path) -> list[str]:
             for line in source.read_text(encoding="utf-8").splitlines():
                 if "@astro-mine/" in line and "-ui" in line and "import" in line:
                     violations.append(
-                        f"{source.relative_to(repo_root)}: surface imports another surface — {line.strip()}"
+                        f"{source.relative_to(repo_root)}: surface imports another surface "
+                        f"— {line.strip()}"
                     )
     return violations
 

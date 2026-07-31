@@ -14,7 +14,7 @@ provider that wraps ``AllocationPlanner`` as the ``allocator``-role tier plugin,
    tier is Allocate's CP-SAT planner — *not* Mind's ``GreedyReferenceAllocator`` stand-in
    (RM-P1-MIND-04);
 4. driving that stack's allocator produces per-agent role directives and the Mind-side
-   :class:`~astro_mine.mind.mission.allocate.model.Allocation` provenance a delegated decision
+   :class:`~astro_mine.core.plan.allocation.Allocation` provenance a delegated decision
    reproduces from.
 
 The whole test skips when Mind is not installed — the ``[mind]`` extra is optional, and Allocate's
@@ -54,15 +54,15 @@ from astro_mine.allocate.mind import (  # noqa: E402
     MindAllocationSolver,
     allocation_planner_plugin,
 )
-from astro_mine.mind.compose.composer import compose  # noqa: E402 - after the skip guard
-from astro_mine.mind.mission.allocate.adapter import (  # noqa: E402
+from astro_mine.core.plan.allocation import (  # noqa: E402
     ALLOCATION_REQUEST_KEY,
     AllocationAdapter,
 )
+from astro_mine.core.registry.tier import TierPlugin  # noqa: E402
+from astro_mine.mind.compose.composer import compose  # noqa: E402 - after the skip guard
 from astro_mine.mind.mission.allocate.reference import GreedyReferenceAllocator  # noqa: E402
 from astro_mine.mind.registry.registry import (  # noqa: E402
     ENTRY_POINT_GROUP,
-    TierPlugin,
     TierRegistry,
 )
 from astro_mine.mind.spec.enums import TierRole  # noqa: E402
@@ -282,7 +282,7 @@ def test_an_infeasible_delegation_degrades_to_an_empty_batch_not_an_exception() 
         AllocationProvenance,
         AllocationStatus,
     )
-    from astro_mine.mind.mission.allocate.adapter import assemble_request
+    from astro_mine.core.plan.allocation import assemble_request
 
     solver = MindAllocationSolver(backend="trivial-stub")
     request = assemble_request(_observations("rover-0"), _mission_decomposition(_region(10.0)))

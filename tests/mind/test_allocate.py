@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 from astro_mine.core.messages.model import ActionBatch
-from astro_mine.core.policy.model import DecisionContext
-from astro_mine.mind.mission.allocate import (
+from astro_mine.core.plan.allocation import (
     ALLOCATION_REQUEST_KEY,
     AllocationAdapter,
     assemble_request,
 )
+from astro_mine.core.policy.model import DecisionContext
 from astro_mine.mind.mission.allocate.reference import GreedyReferenceAllocator
 from astro_mine.mind.mission.planner.reference import ReferenceMissionPlanner
 from astro_mine.mind.spec.enums import TIER_ORDER, TierRole

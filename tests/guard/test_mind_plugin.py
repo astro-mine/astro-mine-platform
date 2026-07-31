@@ -9,7 +9,7 @@ What is asserted here is the *binding*, from the consumer's side:
    through the ``astro_mine.mind.tier_plugins`` entry point Guard's ``[mind]`` extra publishes, and
    the manifest passes Core's registry gates.
 2. ``instantiate`` yields a **working** :class:`PolicyShield` — a Core ``Policy`` *and* a Mind
-   :class:`~astro_mine.mind.guardrail.report.ReportingShield` — enforcing the real,
+   :class:`~astro_mine.core.policy.guardrail.ReportingShield` — enforcing the real,
    content-addressed anchor ``SafetySpec``.
 3. Driven through Mind's own egress (:func:`~astro_mine.mind.guardrail.shield.shield_egress`), it
    **actually intervenes**: an unsafe proposal is corrected by the Rust core, and the intervention
@@ -37,9 +37,9 @@ from tests.guard.conftest import ANCHOR_PATH, COARSE_SAMPLE_PERIOD_S, SAFE_SIGNA
 pytest.importorskip("astro_mine.guard._core", reason="Rust safety core not built (run `uv sync`)")
 pytest.importorskip("astro_mine.mind", reason="the [mind] extra is not installed")
 
+from astro_mine.core.policy.guardrail import InterventionKind, ReportingShield
 from astro_mine.guard.mind import PLUGIN_NAME, GuardShield
 from astro_mine.guard.wrap import MappingSignalResolver
-from astro_mine.mind.guardrail.report import InterventionKind, ReportingShield
 from astro_mine.mind.guardrail.shield import shield_egress
 from astro_mine.mind.registry.registry import TierRegistry
 

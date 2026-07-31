@@ -36,9 +36,9 @@ if TYPE_CHECKING:
     from astro_mine.bench.leaderboard._models import Submission
     from astro_mine.bench.leaderboard._store import LeaderboardStore
     from astro_mine.bench.scenario import ScenarioSpec
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.runs import EventPublisher
     from astro_mine.cloud.sched import CostRates
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = ["AdmissionDenied", "assert_batch_reproducible", "run_evaluation_batch"]
 
@@ -84,6 +84,31 @@ def run_evaluation_batch(
     Cloud's ``BudgetExceeded`` when a submission would exceed its compute cap — halting the batch so
     no submission runs past its budget.
     """
+    # --- why Bench knows about Cloud's scheduling at all (platform#5 §2, third bullet) ---
+    #
+    # The question that issue asks is whether `EventPublisher`, `BudgetLedger` and `CostRates`
+    # belong at the waist, or whether Bench should not know about them at all. The answer is
+    # neither, and the reasoning is worth keeping next to the code rather than in a merged PR:
+    #
+    # *They do not move to Core.* `EventPublisher` is a Protocol with users in two components, so
+    # §3.3 would put it at the waist — except that it names `CompletionEvent`, and that names
+    # `RunStatus`. Moving the protocol drags Cloud's whole run-lifecycle vocabulary into the narrow
+    # waist to buy one annotation, and core.md §2 principle 1 prices that correctly: every addition
+    # to Core is permanent. `CostRates` and `BudgetLedger` are worse candidates still — what a
+    # GPU-hour costs and how a budget is charged are scheduling *policy*, which §2.2 keeps out of
+    # Core by construction.
+    #
+    # *Bench already inverts the two that matter.* `publisher` and `cost_rates` arrive as injected
+    # parameters and default to nothing; every import of them is `TYPE_CHECKING` or deferred, so
+    # the local tier runs with no bus, no budget and no cluster, and Bench pays nothing at import
+    # time (§8). That is the shape §3.2 rule 4 describes, not a defect.
+    #
+    # *One genuine remainder.* The two constructions below are Bench enforcing admission and
+    # charging budget — scheduling, done by the benchmark, around Cloud's primitives rather than
+    # by Cloud. The fix is to hand this function an already-configured dispatcher that enforces
+    # both, which is a restructure of the eval loop (AdmissionDenied ordering, BudgetExceeded
+    # halting) rather than a move, and it is filed as its own issue rather than smuggled into a
+    # refactor whose whole claim is that every step was a move plus a signature change.
     from astro_mine.cloud.runs import NullPublisher, emit_completion
     from astro_mine.cloud.sched import BudgetLedger, QueueAdmission
 

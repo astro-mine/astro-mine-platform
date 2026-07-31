@@ -18,10 +18,10 @@ from astro_mine.bench.metrics import (
     MetricValue,
     NightsSurvived,
     PsrAreaCharacterized,
-    ScoringContext,
     WaterMass,
 )
 from astro_mine.core.messages.model import SensorReading
+from astro_mine.core.scoring import ScoringContext
 from tests.bench._factories import belief, belief_snapshot, make_observation, make_trace
 
 ANCHOR_METRIC_NAMES = (

@@ -19,6 +19,7 @@ from pathlib import Path
 import pytest
 
 from tests.platform._layering import (
+    COMPOSITION_ROOTS,
     CORE_DEPENDENCY_FLOOR,
     Edge,
     Import,
@@ -43,27 +44,17 @@ PACKAGE_ROOT = REPO_ROOT / "src" / "astro_mine"
 #: the reason that justifies it — the in-repo mirror of each component document's §6. §11 fails the
 #: build on an edge that is not here, and on an entry here that no longer describes a real edge.
 #:
-#: These three are the platform's whole lateral surface, and all three share the shape §3.2 calls
-#: acceptable: the dependency is confined to one adapter module named for the other component, and
-#: it exists so the *provider* can implement the *host's* plugin protocol. Each carries the same
-#: defect, which is why each is temporary — the abstraction lives in a component instead of at the
-#: waist. platform#5 moves them to Core and empties this table.
-RECORDED_RUNTIME_EDGES: dict[tuple[str, str], str] = {
-    ("allocate", "mind"): (
-        "astro_mine.allocate.mind — the CP-SAT planner implements Mind's TierPlugin contract and "
-        "speaks its allocation-delegation DTOs. Dissolves when both move to Core."
-    ),
-    ("guard", "mind"): (
-        "astro_mine.guard.mind.plugin — the PolicyShield implements Mind's TierPlugin contract and "
-        "reports through mind.guardrail's ShieldReport. Dissolves when both move to Core."
-    ),
-    ("sim", "bench"): (
-        "astro_mine.sim.bench — the Sim-backed runner implements Bench's EpisodeRunner/Runner "
-        "seams and returns Bench's scoring vocabulary. Points UP the layer table (§3.2 rule 3): "
-        "Bench drives Sim through EpisodeRunner and never imports Sim, so this arrow is backwards. "
-        "Dissolves when the scoring vocabulary moves to Core."
-    ),
-}
+#: It is empty, and that is the outcome of platform#5 rather than an accident of a young codebase.
+#: Three edges were listed here when this suite was written — ``allocate -> mind``, ``guard ->
+#: mind``, ``sim -> bench`` — and each existed for the same reason: a shared abstraction living in
+#: a component instead of at the waist. ``TierPlugin``, the guardrail report, the allocation
+#: delegation contract and the episode-scoring vocabulary moved to Core, and all three dissolved
+#: without a single behaviour change.
+#:
+#: Adding an entry is meant to be a deliberate act. It needs the matching §6 paragraph in the docs
+#: repo, and a reviewer who agrees that §3.2 rule 2's test — "could the collaborator be a Protocol
+#: the caller passes in?" — is genuinely answered *no*.
+RECORDED_RUNTIME_EDGES: dict[tuple[str, str], str] = {}
 
 
 @pytest.fixture(scope="module")
@@ -97,6 +88,23 @@ def test_no_component_reaches_into_another_privately(tree: Survey) -> None:
 def test_no_component_imports_the_cli_api_or_svcs(tree: Survey) -> None:
     """§3.3. The container lives at the composition roots; a component never sees one."""
     assert check_forbidden_distributions(tree.imports) == []
+
+
+def test_only_the_composition_roots_import_svcs(tree: Survey) -> None:
+    """§3.3. The exemption is real, and it is exactly two files wide.
+
+    Asserted from the other direction as well, because an allowlist nobody checks the far side of
+    grows: every ``svcs`` import in the tree must be at a listed root, and each listed root must
+    still exist.
+    """
+    importers = {imp.file for imp in tree.imports if imp.module.split(".")[0] == "svcs"}
+    assert importers, "the composition roots should be wiring with svcs; none imports it"
+    for file in sorted(importers):
+        assert any(file.startswith(root) for root in COMPOSITION_ROOTS), (
+            f"{file} imports svcs but is not a declared composition root"
+        )
+    for root in COMPOSITION_ROOTS:
+        assert (REPO_ROOT / root).exists(), f"declared composition root {root} no longer exists"
 
 
 def test_no_surface_imports_another_surface() -> None:
@@ -139,7 +147,9 @@ def test_lateral_edge_report(tree: Survey, capsys: pytest.CaptureFixture[str]) -
 # --- every check fires ---------------------------------------------------------------------
 
 
-def _edge(src: str, dst: str, module: str, *, kind: str = "runtime", names: tuple[str, ...] = ()) -> Edge:
+def _edge(
+    src: str, dst: str, module: str, *, kind: str = "runtime", names: tuple[str, ...] = ()
+) -> Edge:
     return Edge(src, dst, module, names, kind, f"src/astro_mine/{src}/thing.py", 1)
 
 
@@ -202,9 +212,22 @@ def test_exported_name_passes() -> None:
     assert check_private_imports([edge], {"astro_mine.bench.metrics": frozenset({"score"})}) == []
 
 
-@pytest.mark.parametrize("module", ["astro_mine.cli", "astro_mine.cli.bench", "svcs", "svcs.Registry"])
+@pytest.mark.parametrize(
+    "module", ["astro_mine.cli", "astro_mine.cli.bench", "svcs", "svcs.Registry"]
+)
 def test_forbidden_distribution_check_fires(module: str) -> None:
     imp = Import(module, (), "runtime", "src/astro_mine/sim/runtime/episode.py", 7)
+    assert check_forbidden_distributions([imp])
+
+
+def test_a_composition_root_may_import_svcs() -> None:
+    imp = Import("svcs", (), "runtime", "src/astro_mine/cloud/submission/harness.py", 44)
+    assert check_forbidden_distributions([imp]) == []
+
+
+def test_a_composition_root_may_not_import_the_cli() -> None:
+    """The exemption covers the container, not the distribution boundary."""
+    imp = Import("astro_mine.cli", (), "runtime", "src/astro_mine/cloud/submission/harness.py", 44)
     assert check_forbidden_distributions([imp])
 
 

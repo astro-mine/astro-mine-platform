@@ -25,7 +25,6 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from astro_mine.bench.metrics import BeliefSnapshot, EpisodeTrace, ScoringContext
 from astro_mine.bench.scenario import ResolvedScenario
 from astro_mine.bench.scenario._hash import content_hash
 from astro_mine.core.messages import (
@@ -37,6 +36,7 @@ from astro_mine.core.messages import (
 from astro_mine.core.messages.model import Quat, Transform, Vec3
 from astro_mine.core.policy import DecisionContext, Policy
 from astro_mine.core.resource import FieldDistribution
+from astro_mine.core.scoring import BeliefSnapshot, EpisodeTrace, ScoringContext
 from astro_mine.core.units import MOON_BODY_FIXED
 
 __all__ = [

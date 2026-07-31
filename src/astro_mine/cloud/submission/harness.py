@@ -41,6 +41,8 @@ import os
 import sys
 from typing import TYPE_CHECKING
 
+import svcs
+
 from astro_mine.cloud.artifacts.store import DEFAULT_ROOT_ENV, FilesystemArtifactStore
 from astro_mine.cloud.k8s import ENV_JOBSPEC
 from astro_mine.cloud.submission._run import execute
@@ -50,11 +52,11 @@ from astro_mine.cloud.submission.jobspec import JobSpec
 # which is exactly what the local backend is on a workstation. Sharing it (rather than
 # re-implementing it) is what makes the two runs equivalent by construction.
 from astro_mine.cloud.submission.local import _SubprocessLauncher
+from astro_mine.core.artifacts import ArtifactStore
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.submission.result import RunResult
 
 __all__ = [
@@ -129,6 +131,24 @@ def parse_sentinels(text: str) -> tuple[str, int] | None:
     return address, exit_code
 
 
+def _container() -> svcs.Container:
+    """The harness's composition root: bind the Core protocols this entrypoint composes.
+
+    One of the four places the platform is assembled into an application (conventions.md §3.3),
+    and the only reason ``svcs`` may be imported anywhere under ``astro_mine`` — the layering
+    suite allows it here by name and nowhere else. What it buys over calling
+    :func:`build_store` inline is that the *binding* is now stated in one place, so an operator
+    reading this module sees which contract is satisfied by which implementation without reading
+    :func:`run`.
+
+    The container is built, used, and dropped. There is no module-level registry, because a
+    container that outlives its root is a service locator (§3.3).
+    """
+    registry = svcs.Registry()
+    registry.register_factory(ArtifactStore, build_store)
+    return svcs.Container(registry)
+
+
 def main() -> int:
     """The container entrypoint: run the JobSpec in ``$ASTRO_MINE_JOBSPEC``, print the sentinels.
 
@@ -144,7 +164,8 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
-    result = run(JobSpec.model_validate_json(raw), build_store())
+    with _container() as services:
+        result = run(JobSpec.model_validate_json(raw), services.get(ArtifactStore))
     print(f"{RUN_CONTEXT_SENTINEL}{result.run_context_address}", flush=True)
     print(f"{EXIT_CODE_SENTINEL}{result.exit_code}", flush=True)
     return result.exit_code

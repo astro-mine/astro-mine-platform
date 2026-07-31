@@ -11,10 +11,10 @@ a drop-in replacement for its reference ``ConstraintShield``. Three things make 
    batch exactly as it would read any wrapped planner's proposal. (RFC-0006 spells out this exact
    construction.)
 
-2. **The report seam.** Mind's :class:`~astro_mine.mind.guardrail.report.ReportingShield` protocol
+2. **The report seam.** Mind's :class:`~astro_mine.core.policy.guardrail.ReportingShield` protocol
    lets a shield surface *what it did* without Mind importing Guard. :class:`GuardShield`
    implements it by draining Guard's own ``SafetyVerdict`` stream (RM-P1-GUARD-06) into a
-   :class:`~astro_mine.mind.guardrail.report.ShieldReport` — so the trace's ``clauses`` are the
+   :class:`~astro_mine.core.policy.guardrail.ShieldReport` — so the trace's ``clauses`` are the
    invoked ``SafetySpec`` constraint ids (RFC-0004) and the ``certificate`` is the verdict's
    content hash, not an inference from a batch diff.
 
@@ -37,16 +37,16 @@ from typing import Any
 from astro_mine.core.env.model import AgentId
 from astro_mine.core.messages.enums import ControlMode
 from astro_mine.core.messages.model import ActionBatch, Observation
+from astro_mine.core.policy.guardrail import InterventionKind, ShieldReport
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.loader import load_manifest as _load_core_manifest
 from astro_mine.core.registry.model import PluginManifest
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.guard.audit.model import SafetyVerdict
 from astro_mine.guard.audit.sink import CollectingSink
 from astro_mine.guard.spec import compile_spec, load_safety_spec
 from astro_mine.guard.spec.compiler import DEFAULT_SAMPLE_PERIOD_S
 from astro_mine.guard.wrap import ActionPolicy, CoreConfig, PolicyShield
-from astro_mine.mind.guardrail.report import InterventionKind, ShieldReport
-from astro_mine.mind.registry.registry import TierPlugin
 
 __all__ = ["PLUGIN_NAME", "GuardShield", "guard_shield_plugin", "load_manifest"]
 

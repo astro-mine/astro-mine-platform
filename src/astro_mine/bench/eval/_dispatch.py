@@ -26,10 +26,10 @@ from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
     from astro_mine.bench.eval._plan import PlannedEvaluation
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.k8s import Manifest
     from astro_mine.cloud.submission.cluster import ClusterClient
     from astro_mine.cloud.submission.result import RunResult
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = ["BatchDispatcher", "CloudBatchDispatcher", "LocalBatchDispatcher"]
 

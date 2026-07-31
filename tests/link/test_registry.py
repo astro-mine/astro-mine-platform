@@ -31,7 +31,12 @@ from astro_mine.core.messages import ContactInterval, ContactNode, ContactPlan
 from astro_mine.core.messages.enums import NodeRole
 from astro_mine.core.registry import PluginKind, PluginManifest, PluginRegistry
 from astro_mine.hub.client import HubClient
-from astro_mine.hub.registry import ArtifactExistsError, Registry, artifact_media_type
+from astro_mine.hub.registry import (
+    ArtifactExistsError,
+    Registry,
+    artifact_media_type,
+    open_registry,
+)
 from astro_mine.hub.supply_chain import SupplyChainError, generate_keypair
 from astro_mine.link.cache import plan_digest
 from astro_mine.link.products import ConnectivitySampler
@@ -87,7 +92,7 @@ def _input_hashes() -> dict[str, str]:
 def _publish(registry_path: Path, key: bytes) -> Any:
     return publish_contact_plan(
         _plan(),
-        registry_path=registry_path,
+        registry=open_registry(str(registry_path)),
         name=_NAME,
         version=_VERSION,
         scenario_id=_SCENARIO,

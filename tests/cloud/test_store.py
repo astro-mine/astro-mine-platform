@@ -12,9 +12,9 @@ from astro_mine.cloud.artifacts import addressing
 from astro_mine.cloud.artifacts.store import (
     DEFAULT_ROOT,
     DEFAULT_ROOT_ENV,
-    ArtifactStore,
     FilesystemArtifactStore,
 )
+from astro_mine.core.artifacts import ArtifactStore
 
 
 def test_put_get_round_trip(tmp_path: Path) -> None:

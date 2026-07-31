@@ -37,7 +37,7 @@ from typing import Any
 
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
-from astro_mine.mind.registry.registry import TierPlugin
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.tamp.motion.reference import Obstacle, Point
 
 __all__ = ["OmplMotionPlanner", "ompl_tamp_plugin"]
@@ -101,7 +101,7 @@ class OmplMotionPlanner:
         except ImportError as exc:  # pragma: no cover - exercised only without the extra
             raise MotionPlanningError(
                 "the OMPL motion backend needs the [native] extra: "
-                "pip install 'astro-mine-mind[native]'"
+                "pip install 'astro-mine-platform[mind-native]'"
             ) from exc
 
         ou.setLogLevel(ou.LogLevel.LOG_ERROR)  # OMPL is chatty; keep stdout the decision trace
@@ -149,7 +149,7 @@ class OmplMotionPlanner:
         except ImportError as exc:  # pragma: no cover - exercised only without the extra
             raise MotionPlanningError(
                 "the OMPL motion backend needs the [native] extra (python-fcl): "
-                "pip install 'astro-mine-mind[native]'"
+                "pip install 'astro-mine-platform[mind-native]'"
             ) from exc
 
         keep_outs = [

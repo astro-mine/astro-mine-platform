@@ -15,7 +15,7 @@ This module is the real thing behind both. The dependency direction is one-way a
 (conventions.md §1.1; bench.md §2.2): **Bench never imports Sim**, so the runner that satisfies
 Bench's
 seams lives *here*, in the Sim repo, and Bench receives it by injection. It is optional
-(``astro-mine-sim[bench]``) and nothing in Sim's runtime imports it.
+(``astro-mine-platform[sim-bench]``) and nothing in Sim's runtime imports it.
 
 The path is real end to end: the scenario's pinned content is resolved through the RM-P1-SIM-01
 :class:`~astro_mine.sim.runtime.ContentResolver` (never a hand-authored fixture), the episode is run
@@ -43,10 +43,8 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from astro_mine.bench.baseline import ScoringRefused
-from astro_mine.bench.harness import RunOutcome
-from astro_mine.bench.metrics import resolve_metrics, score
 from astro_mine.core.messages.model import ActionBatch
+from astro_mine.core.scoring import EpisodeScorer, RunOutcome, ScoringRefused
 from astro_mine.sim.bench._policy import ValueChainPolicy, mode_table
 from astro_mine.sim.bench._scenario import ResolvedRun, sim_scenario_from_spec
 from astro_mine.sim.bench._scoring import episode_trace_from
@@ -66,11 +64,11 @@ from astro_mine.sim.runtime.timing import TimingRecorder
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from astro_mine.bench.metrics import EpisodeTrace, ScoringContext
     from astro_mine.bench.scenario import ResolvedScenario, ScenarioSpec
     from astro_mine.core.messages.model import Observation
     from astro_mine.core.policy import DecisionContext, Policy
     from astro_mine.core.resource import ResourceField
+    from astro_mine.core.scoring import EpisodeTrace, ScoringContext
     from astro_mine.sim.comms import ConnectivitySource
     from astro_mine.sim.engines import EngineFactory
     from astro_mine.sim.runtime.content import BundleStore, ProviderFactory
@@ -308,12 +306,28 @@ class SimHarnessRunner:
     reproduced.
 
     A harness runner takes no policy (the gate measures the environment's reproducibility, not a
-    submission's), so it drives the episode open-loop unless a ``policy`` is supplied."""
+    submission's), so it drives the episode open-loop unless a ``policy`` is supplied.
+
+    **The scorer is injected, and required.** A ``RunOutcome`` carries metric values, and resolving
+    a scenario's metric references to implementations is the benchmark's job, not the engine's.
+    Sim used to call ``bench.metrics.resolve_metrics``/``score`` directly — reaching for a
+    collaborator it could be given, which is what §3.3 forbids and what made ``sim -> bench`` a
+    runtime lateral edge pointing up the layer table. It now takes a Core
+    :class:`~astro_mine.core.scoring.EpisodeScorer`; Bench passes its own
+    :func:`~astro_mine.bench.metrics.scored_metric_values` when it constructs the runner. There is
+    no default, because a default would have to be a Bench import."""
 
     __name__ = SIM_RUNNER_ID
 
-    def __init__(self, episodes: SimEpisodeRunner, *, policy: Policy | None = None) -> None:
+    def __init__(
+        self,
+        episodes: SimEpisodeRunner,
+        *,
+        scorer: EpisodeScorer,
+        policy: Policy | None = None,
+    ) -> None:
         self._episodes = episodes
+        self._scorer = scorer
         self._policy = policy
 
     def __call__(self, resolved: ResolvedScenario, seed: int) -> RunOutcome:
@@ -321,9 +335,11 @@ class SimHarnessRunner:
         policy: Policy = self._policy or _OpenLoopPolicy()
         trace, run = self._episodes.run(resolved, policy, seed)
         episode = self._episodes.to_episode_trace(trace, run)
-        metrics = resolve_metrics(resolved.spec.metrics)
-        card = score(
-            {seed: episode}, metrics, scenario_id=resolved.scenario_id, runner=SIM_RUNNER_ID
+        values = self._scorer(
+            {seed: episode},
+            resolved.spec.metrics,
+            scenario_id=resolved.scenario_id,
+            runner=SIM_RUNNER_ID,
         )
         return RunOutcome(
             determinism_key=trace.content_hash,  # Sim's own gate key — one artifact, not two
@@ -335,8 +351,7 @@ class SimHarnessRunner:
             # authoritative score is the Scorecard from `bench.baseline.run`, which keeps None as
             # None.
             metrics={
-                aggregate.metric: (0.0 if aggregate.value is None else float(aggregate.value))
-                for aggregate in card.metrics
+                metric: (0.0 if value is None else float(value)) for metric, value in values.items()
             },
         )
 
@@ -375,8 +390,12 @@ class _SimRunnerProvider:
     def episode_runner(self, store: object | None = None) -> SimEpisodeRunner:
         return SimEpisodeRunner(store=self._resolve_store(store))
 
-    def harness_runner(self, store: object | None = None) -> SimHarnessRunner:
-        return SimHarnessRunner(SimEpisodeRunner(store=self._resolve_store(store)))
+    def harness_runner(
+        self, store: object | None = None, *, scorer: EpisodeScorer
+    ) -> SimHarnessRunner:
+        return SimHarnessRunner(
+            SimEpisodeRunner(store=self._resolve_store(store)), scorer=scorer
+        )
 
     def default_policy(self, spec: ScenarioSpec, store: object | None = None) -> Policy:
         """The anchor baseline for this scenario — a value-chain policy (#61, #64).

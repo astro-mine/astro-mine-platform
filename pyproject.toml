@@ -33,6 +33,8 @@ classifiers = [
 dependencies = [
   # core
   "pydantic>=2.7",          # core, sim, bench, link, mind, cloud
+  "svcs>=25.1",             # the composition roots ONLY (conventions.md §3.3); no component
+                            # may import it, and the layering suite fails the build if one does
   "jsonschema>=4.22",       # core, guard, mind, studio
   "referencing>=0.35",      # core
   "pyyaml>=6.0",            # core, worlds, mind, guard, hub  (hub said >=6; same set)

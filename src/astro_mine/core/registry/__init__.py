@@ -24,14 +24,18 @@ Public API:
   :func:`load_schema`;
 - the registry — :class:`PluginRegistry` and its gates'
   :class:`RegistryError` / :class:`ManifestValidationError` / :class:`IncompatibleManifest`
-  / :class:`UnsignedManifest`.
+  / :class:`UnsignedManifest`;
+- the policy-plugin declaration — :class:`TierPlugin` (+ :data:`TierFactory`), the manifest/factory
+  pair an instantiating host resolves from an entry point. Core owns it because Allocate and Guard
+  both implement it (conventions.md §3.3); the host that gates and instantiates is Mind's
+  :class:`~astro_mine.mind.registry.TierRegistry`.
 
 Backlog: RM-P0-CORE-05 — https://github.com/astro-mine/astro-mine-core/issues/5
 """
 
 from __future__ import annotations
 
-from astro_mine.core.registry import enums, loader, model, registry
+from astro_mine.core.registry import enums, loader, model, registry, tier
 from astro_mine.core.registry.enums import (
     CapabilityTag,
     PluginKind,
@@ -59,6 +63,7 @@ from astro_mine.core.registry.registry import (
     UnsignedManifest,
     Verifier,
 )
+from astro_mine.core.registry.tier import TierFactory, TierPlugin
 
 __all__ = [
     "CapabilityTag",
@@ -75,6 +80,8 @@ __all__ = [
     "Signature",
     "SignatureKind",
     "SignatureScheme",
+    "TierFactory",
+    "TierPlugin",
     "UnsignedManifest",
     "Verifier",
     "enums",
@@ -83,5 +90,6 @@ __all__ = [
     "loader",
     "model",
     "registry",
+    "tier",
     "validate_manifest",
 ]

@@ -22,8 +22,8 @@ from astro_mine.cloud.runs.events import RunObserver, RunStatus
 from astro_mine.cloud.submission.result import RunResult
 
 if TYPE_CHECKING:
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.submission.jobspec import JobSpec
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = ["Launcher", "build_env", "execute", "pre_run_context"]
 

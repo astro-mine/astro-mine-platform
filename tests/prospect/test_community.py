@@ -20,7 +20,7 @@ import pytest
 
 from astro_mine.core.registry import PluginKind, PluginManifest
 from astro_mine.hub.client import HubClient
-from astro_mine.hub.registry import Registry
+from astro_mine.hub.registry import Registry, open_registry
 from astro_mine.hub.supply_chain import generate_keypair
 from astro_mine.prospect.field import FieldGrid
 from astro_mine.prospect.priors import load_prior
@@ -165,7 +165,7 @@ def test_discover_lists_community_priors_and_recipes(tmp_path: Path) -> None:
     )
     publish_recipe(_spec(), registry_path=reg, publisher="lab-b", private_key_pem=private_pem)
 
-    found = discover_priors(reg)
+    found = discover_priors(open_registry(str(reg)))
     kinds = {a.kind for a in found}
     assert "resource_field_backend" in kinds
     assert "prior_recipe" in kinds

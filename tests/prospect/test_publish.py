@@ -29,7 +29,7 @@ import pytest
 from astro_mine.core.registry import PluginKind, PluginManifest
 from astro_mine.core.resource import ResourceField, check_resource_field
 from astro_mine.hub.client import HubClient
-from astro_mine.hub.registry import Registry
+from astro_mine.hub.registry import Registry, open_registry
 from astro_mine.hub.registry._oci import blob_path
 from astro_mine.hub.supply_chain import SupplyChainError, generate_keypair
 from astro_mine.prospect.belief import sample_ground_truth
@@ -204,7 +204,8 @@ def test_ground_truth_is_never_serialized_into_the_bundle() -> None:
 def test_publish_verify_pull_and_reopen_via_entry_point(tmp_path: Path) -> None:
     private_pem, public_pem = generate_keypair()
     prior = load_prior(grid=_small_grid())
-    artifact = publish_prior(prior, registry_path=tmp_path / "reg", private_key_pem=private_pem)
+    artifact = publish_prior(prior, registry=open_registry(str(tmp_path / "reg")),
+        private_key_pem=private_pem)
     assert artifact.reference == f"{_ANCHOR}:1.0.0"
 
     # A consumer opens the *same* registry with the trusted key — only Core + Hub, no prospect.
@@ -224,15 +225,18 @@ def test_publish_verify_pull_and_reopen_via_entry_point(tmp_path: Path) -> None:
 def test_two_clean_publishes_resolve_the_identical_digest(tmp_path: Path) -> None:
     private_pem, _ = generate_keypair()
     prior = load_prior(_ANCHOR)
-    one = publish_prior(prior, registry_path=tmp_path / "a", private_key_pem=private_pem)
-    two = publish_prior(prior, registry_path=tmp_path / "b", private_key_pem=private_pem)
+    one = publish_prior(prior, registry=open_registry(str(tmp_path / "a")),
+        private_key_pem=private_pem)
+    two = publish_prior(prior, registry=open_registry(str(tmp_path / "b")),
+        private_key_pem=private_pem)
     assert one.digest == two.digest  # reproducible: two checkouts pin the same field
 
 
 def test_tampered_bundle_fails_closed(tmp_path: Path) -> None:
     private_pem, public_pem = generate_keypair()
     prior = load_prior(grid=_small_grid())
-    artifact = publish_prior(prior, registry_path=tmp_path / "reg", private_key_pem=private_pem)
+    artifact = publish_prior(prior, registry=open_registry(str(tmp_path / "reg")),
+        private_key_pem=private_pem)
 
     registry = Registry(tmp_path / "reg")
     config_digest = registry.read_manifest(artifact.digest)["config"]["digest"]

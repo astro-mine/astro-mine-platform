@@ -29,11 +29,15 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from astro_mine.core.sadf import SadfDocument, load_sadf
 from astro_mine.fleet.capabilities import assert_open_commons
 from astro_mine.fleet.packaging import oci
 from astro_mine.fleet.packaging._content import build_asset_content
+
+if TYPE_CHECKING:
+    from astro_mine.hub.registry import RegistryClient
 
 __all__ = ["HubError", "HubPublication", "discover_asset", "publish_asset", "pull_asset"]
 
@@ -65,7 +69,7 @@ def _require_hub() -> None:
 
 def publish_asset(
     doc: SadfDocument,
-    registry_path: str | Path,
+    registry: RegistryClient,
     *,
     sign_key: bytes,
     base_dir: str | Path | None = None,
@@ -85,15 +89,13 @@ def publish_asset(
     """
     _require_hub()
     from astro_mine.hub.client import HubClient
-    from astro_mine.hub.registry import Blob, open_registry
+    from astro_mine.hub.registry import Blob
 
     assert_open_commons(doc.asset.capabilities)  # export-control publish gate (fleet.md §9)
     content = build_asset_content(doc, base_dir)
     identity = doc.asset.identity
 
-    # `open_registry` dispatches on the string: a filesystem path → the local OCI-layout store
-    # (unchanged), a registry URL like `ghcr.io/astro-mine` → the remote OCI Distribution client.
-    client = HubClient(open_registry(registry_path))
+    client = HubClient(registry)
     layers = [Blob(blob.media_type, blob.data) for blob in content.layers]
     artifact = client.publish(
         name=identity.id,
@@ -116,7 +118,7 @@ def publish_asset(
 
 
 def pull_asset(
-    registry_path: str | Path,
+    registry: RegistryClient,
     reference: str,
     *,
     trusted_public_key_pem: bytes | None = None,
@@ -133,10 +135,8 @@ def pull_asset(
     """
     _require_hub()
     from astro_mine.hub.client import HubClient
-    from astro_mine.hub.registry import open_registry
     from astro_mine.hub.supply_chain import DEFAULT_REQUIRED
 
-    registry = open_registry(registry_path)
     client = HubClient(registry, trusted_public_key_pem=trusted_public_key_pem)
     demanded = tuple(DEFAULT_REQUIRED) if require is None else tuple(require)
     digest = (
@@ -151,7 +151,7 @@ def pull_asset(
 
 
 def discover_asset(
-    registry_path: str | Path, name: str, *, version_spec: str = ""
+    registry: RegistryClient, name: str, *, version_spec: str = ""
 ) -> tuple[str, str]:
     """Discover an asset in a Hub registry's catalog by *name*; return ``(reference, digest)``.
 
@@ -162,10 +162,8 @@ def discover_asset(
     """
     _require_hub()
     from astro_mine.hub.client import HubClient, catalog_from_registry
-    from astro_mine.hub.registry import open_registry
     from astro_mine.hub.resolve import ResolutionRequest
 
-    registry = open_registry(registry_path)
     client = HubClient(registry, catalog=catalog_from_registry(registry))
     primary = client.resolve(ResolutionRequest(name=name, version_spec=version_spec)).primary
     return primary.reference, primary.digest

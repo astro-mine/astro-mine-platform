@@ -23,7 +23,6 @@ import pytest
 from pydantic import ValidationError
 
 from astro_mine.bench.baseline import BaselinePolicy, reference_episode_runner, run
-from astro_mine.bench.metrics import EpisodeTrace
 from astro_mine.bench.report import (
     PerformanceReport,
     SeedSpeedup,
@@ -33,6 +32,7 @@ from astro_mine.bench.report import (
 )
 from astro_mine.bench.scenario import ResolvedScenario
 from astro_mine.bench.zoo import load_scenario
+from astro_mine.core.scoring import EpisodeTrace
 
 FIDELITY_ID = "lunar-polar-ice-excavation-fidelity-v1"
 

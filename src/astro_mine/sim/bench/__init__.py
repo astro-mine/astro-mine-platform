@@ -24,14 +24,17 @@ Bench receives it by **injection**::
 and the determinism gate the same way::
 
     from astro_mine.bench.harness import assert_reproducible
+    from astro_mine.bench.metrics import scored_metric_values
     from astro_mine.sim.bench import SIM_RUNNER_ID, SimEpisodeRunner, SimHarnessRunner
 
-    gate = SimHarnessRunner(SimEpisodeRunner(store=store))
+    gate = SimHarnessRunner(SimEpisodeRunner(store=store), scorer=scored_metric_values)
     result = assert_reproducible(spec, gate, runner_id=SIM_RUNNER_ID)
 
-Optional (``astro-mine-sim[bench]``) and inert: nothing in Sim's runtime imports this package, so
-the
-base wheel stays Bench-free.
+The ``scorer`` is Bench's, passed in: resolving a scenario's metric references is the benchmark's
+job, and handing it to the runner is what keeps Sim from importing Bench (conventions.md §3.3).
+
+Optional (``astro-mine-platform[sim-bench]``) and inert: nothing in Sim's runtime imports this
+package, so the base wheel stays Bench-free.
 
 **Which paths are still the fixture.** Injecting the runner is the *caller's* choice, and Bench's
 defaults are unchanged — so anything that does not pass ``runner=`` still runs the reference
@@ -88,7 +91,7 @@ __all__ = [
 
 _BENCH_HINT = (
     "the Sim-backed Bench runner requires astro-mine-bench; "
-    "install it with: pip install 'astro-mine-sim[bench]'"
+    "install it with: pip install 'astro-mine-platform[sim-bench]'"
 )
 
 #: Which private module each public name lives in — the lazy-import map that keeps Bench off the

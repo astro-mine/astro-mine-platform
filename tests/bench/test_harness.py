@@ -21,7 +21,6 @@ from astro_mine.bench.harness import (
     EnvironmentStamp,
     LockfileNotFound,
     Result,
-    RunOutcome,
     assert_reproducible,
     build_toolchain,
     environment_stamp,
@@ -33,6 +32,7 @@ from astro_mine.bench.harness import (
 )
 from astro_mine.bench.scenario import ResolvedScenario, ScenarioSpec, resolve_scenario
 from astro_mine.bench.zoo import ANCHOR_SCENARIO_ID, load_scenario
+from astro_mine.core.scoring import RunOutcome
 
 ANCHOR_METRICS = frozenset(
     {
