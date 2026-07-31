@@ -10,13 +10,13 @@ Same-inputs-same-seed-same-output is a hard requirement, not a default: every ru
 
 ## Install
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**. The base install is small and
-offline — reduced-order engines, no GPU, no cloud, no Bench. Heavier tiers are opt-in extras.
+Sim installs as part of `astro-mine-platform`. The base install is small and offline — reduced-order
+engines, no GPU, no cloud, no Bench. Heavier tiers are opt-in extras.
 
 ```bash
-conda create -n astro-mine-sim python=3.12 && conda activate astro-mine-sim
-uv sync                 # base runtime
-uv run astro-mine-sim --help
+uv pip install -e .                 # the platform, base runtime
+uv pip install astro-mine-cli       # the command line, if you want one
+astro-mine sim --help
 ```
 
 ## The reference environment — zero content, zero setup
@@ -70,7 +70,7 @@ The always-available local path: run a self-contained Sim `Scenario` document an
 [MCAP](https://mcap.dev/). No account, no cloud, no content resolution.
 
 ```bash
-astro-mine-sim record --scenario-file my_scenario.json --seed 7 --out run.mcap
+astro-mine sim record --scenario-file my_scenario.json --seed 7 --out run.mcap
 # prints the run's Trace.content_hash (the determinism key); re-running the same inputs prints it again
 ```
 
@@ -78,11 +78,10 @@ The MCAP holds the timestamped, schema-tagged state/observation stream — repla
 [`astro-mine-view`](https://github.com/astro-mine/astro-mine-view), or score it in
 [Bench](https://github.com/astro-mine/astro-mine-bench).
 
-Both verbs are also reachable from the platform's umbrella CLI, if
-[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) is installed — `astro-mine run`
-and `astro-mine record`, with identical flags (both surfaces are built from the same argument
-definitions, container alias included). `astro-mine-sim` remains the direct command and needs
-nothing else installed.
+Both verbs come from [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli), a separate
+distribution that depends on this one; this package ships no console scripts. There is one address
+for every command on the platform — `astro-mine <component> <verb>` — so it is `astro-mine sim run`
+and `astro-mine sim record`, and no bare `astro-mine run` or `astro-mine-sim`.
 
 ## The two scenario schemas — know which you have
 
@@ -92,49 +91,49 @@ you:
 | | Sim `Scenario` | Bench `ScenarioSpec` |
 |---|---|---|
 | **What** | A *materialized, runnable episode* — concrete agents, `dt_s`, horizon, fidelity | A *declarative benchmark task* — pins world/fleet/prospect/link content **by hash**, plus seeds, metrics, budgets |
-| **Identified by** | a **file path** (a JSON document) | an **id** (e.g. `lunar-polar-ice-prospecting-v1`, from `astro-mine-bench list`) |
+| **Identified by** | a **file path** (a JSON document) | an **id** (e.g. `lunar-polar-ice-prospecting-v1`, from `astro-mine bench list`) |
 | **Owned by** | this repo (`astro_mine.sim.runtime`) | [Bench](https://github.com/astro-mine/astro-mine-bench) (`astro_mine.bench.scenario`) |
-| **CLI** | `astro-mine-sim record --scenario-file …` | `astro-mine-sim run <id>` |
-| **Needs** | nothing beyond the base install | the `[bench]` + `[hub]` extras and fetched content |
+| **CLI** | `astro-mine sim record --scenario-file …` | `astro-mine sim run <id>` |
+| **Needs** | nothing beyond the base install | the `[sim-bench]` + `[sim-hub]` extras and fetched content |
 
 `run` bridges the two: it loads the Bench `ScenarioSpec` by id, resolves its pinned content from a
 local Hub registry, and materializes a Sim `Scenario` via `sim_scenario_from_spec`
 ([RM-P1-SIM-01](https://github.com/astro-mine/docs/blob/main/roadmap/phase-1-autonomy-and-studio.md)).
 
 ```bash
-uv sync --extra bench --extra hub
-# resolve the anchor's pinned content into a local registry first (see astro-mine-bench fetch),
+uv sync --extra sim-bench --extra sim-hub
+# resolve the anchor's pinned content into a local registry first (see `astro-mine bench fetch`),
 # then point --registry (or $ASTRO_MINE_HUB_REGISTRY) at it:
-astro-mine-sim run lunar-polar-ice-prospecting-v1 --registry ./hub-registry --seed 1001 --out anchor.mcap
+astro-mine sim run lunar-polar-ice-prospecting-v1 --registry ./hub-registry --seed 1001 --out anchor.mcap
 ```
 
 ### Content is not code — you need both
 
-`astro-mine-bench fetch <scenario>` obtains the anchor's pinned content by digest and prints the
+`astro-mine bench fetch <scenario>` obtains the anchor's pinned content by digest and prints the
 store path. It fetches **content**. Rebuilding a world bundle back into a live `WorldProvider` is
-`astro-mine-worlds`' job, and Sim reaches it through the `astro_mine.providers` entry-point group
-rather than by importing it — so the producer packages have to be installed too:
-
-```bash
-pip install astro-mine-worlds astro-mine-prospect astro-mine-link
-```
+Worlds' job, and Sim reaches it through the `astro_mine.providers` entry-point group rather than by
+importing it — so the producers have to be **present**. Since consolidation they always are: all
+three are modules in the one distribution, and there is nothing extra to install.
 
 | pin | producer | without it |
 |---|---|---|
-| world | `astro-mine-worlds` | no terrain/illumination — `nights_survived` cannot score |
-| prospect | `astro-mine-prospect` | no sealed field — `discovery_latency` never trips, ISRU sees no abundance |
-| link | `astro-mine-link` | no contact plan — `comms_robustness` cannot score |
+| world | `astro_mine.worlds` | no terrain/illumination — `nights_survived` cannot score |
+| prospect | `astro_mine.prospect` | no sealed field — `discovery_latency` never trips, ISRU sees no abundance |
+| link | `astro_mine.link` | no contact plan — `comms_robustness` cannot score |
+
+The table is kept because the *failure modes* are unchanged — a pin can still fail to rebuild, and
+this is what each costs when it does.
 
 A Sim-backed anchor run also needs a **SPICE metakernel** for the body-fixed frames the world
 resolves against. Kernels are not shipped — obtain SPK/PCK/FK/LSK kernels from
 [NAIF](https://naif.jpl.nasa.gov/naif/data.html) and list them in a `.tm` — and supply it either way:
 
 ```bash
-astro-mine-sim run <scenario-id> --metakernel /kernels/lunar.tm
+astro-mine sim run <scenario-id> --metakernel /kernels/lunar.tm
 export ASTRO_MINE_SPICE_METAKERNEL=/kernels/lunar.tm    # or once, for the shell
 ```
 
-The env var is also how the **scoring** path gets a pool: `astro-mine-bench score --runner sim`
+The env var is also how the **scoring** path gets a pool: `astro-mine bench score --runner sim`
 passes Sim a content store and nothing else — Bench has no vocabulary for SPICE and must not grow
 one (conventions.md §1.1) — so the `sim` runner reads `$ASTRO_MINE_SPICE_METAKERNEL` itself, exactly
 as it already resolves its store from `$ASTRO_MINE_HUB_REGISTRY`.
@@ -144,10 +143,10 @@ the SPK pool **up front** (`spice.md` §10): a kernel set that stops short of a 
 fails in the first second rather than ~18,000 ticks in. A run that needs no geometry — `record` on a
 self-contained scenario — needs no kernels and no configuration.
 
-**Sim tells you when this is wrong rather than scoring blind.** `astro-mine-bench score --runner
+**Sim tells you when this is wrong rather than scoring blind.** `astro-mine bench score --runner
 sim` **refuses** a scenario whose pinned providers did not rebuild — a scorecard is a claim, and
-there is no honest use for scoring the anchor against a world that was never loaded. `astro-mine-sim
-run` warns and proceeds, because recording a partial run is a legitimate ask at the library tier,
+there is no honest use for scoring the anchor against a world that was never loaded.
+`astro-mine sim run` warns and proceeds, because recording a partial run is a legitimate ask at the library tier,
 and a run that *was* blind records that fact in its own provenance. Pass
 `SimEpisodeRunner(allow_unresolved_content=True)` to score anyway, deliberately.
 
@@ -155,7 +154,7 @@ and a run that *was* blind records that fact in its own provenance. Pass
 
 ## The anchor baseline
 
-`astro-mine-bench score --runner sim` scores a **capability-aware mode policy**
+`astro-mine bench score --runner sim` scores a **capability-aware mode policy**
 (`astro_mine.sim.bench._policy`). Bench asks this package for it through its optional
 `DefaultPolicyProvider` seam, so the baseline is chosen by the runner that resolves the content, not
 guessed by a CLI that cannot read a SADF document.
@@ -222,15 +221,15 @@ works. A scenario that selects a tier without its extra fails with a clear messa
 
 | Extra | Unlocks |
 |---|---|
-| `hub` | Resolve content-pinned bundles from a Hub registry (the `run` path) |
-| `bench` | The Sim-backed [Bench](https://github.com/astro-mine/astro-mine-bench) runner — real-physics scoring + the determinism gate (`astro_mine.sim.bench`) |
-| `dem` | High-fidelity DEM granular-excavation engine (numpy soft-sphere) |
-| `surrogate` | The learned [Surrogate](https://github.com/astro-mine/astro-mine-surrogate) fidelity tier (ONNX Runtime) |
-| `brax` / `ray` | Brax/MJX GPU-vectorized contact/training tier, and Ray fan-out |
-| `mujoco` | The MuJoCo articulated wheel-soil mobility/contact tier |
-| `orekit` | The Orekit higher-fidelity orbital propagator (bundled JVM) |
-| `report` | Error-budget reports as Parquet (per-tier deviation-vs-reference) |
-| `service` | The gRPC `EnvironmentService` skin |
+| `sim-hub` | Resolve content-pinned bundles from a Hub registry (the `run` path) |
+| `sim-bench` | The Sim-backed [Bench](https://github.com/astro-mine/astro-mine-bench) runner — real-physics scoring + the determinism gate (`astro_mine.sim.bench`) |
+| `sim-dem` | High-fidelity DEM granular-excavation engine (numpy soft-sphere) |
+| `sim-surrogate` | The learned [Surrogate](https://github.com/astro-mine/astro-mine-surrogate) fidelity tier (ONNX Runtime) |
+| `sim-brax` / `sim-ray` | Brax/MJX GPU-vectorized contact/training tier, and Ray fan-out |
+| `sim-mujoco` | The MuJoCo articulated wheel-soil mobility/contact tier |
+| `sim-orekit` | The Orekit higher-fidelity orbital propagator (bundled JVM) |
+| `sim-report` | Error-budget reports as Parquet (per-tier deviation-vs-reference) |
+| `sim-service` | The gRPC `EnvironmentService` skin |
 
 ## Layout
 
@@ -249,19 +248,21 @@ src/astro_mine/sim/         # import path: astro_mine.sim
   bench/          # the Sim-backed Bench runner ([bench] extra) — Bench never imports Sim
   reference/      # the offline reference Scenario + Core-typed env/asset factories (no extra)
   validation/     # scenario/document validation
-tests/                      # mirrors the package layout
+tests/sim/                  # mirrors the package layout
 ```
 
 ## Development
 
+Sim is part of the [`astro-mine-platform`](../../../README.md) distribution — one repository, one
+environment, one test suite. See [`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup, then:
+
 ```bash
-uv sync && uv run pytest
-uv run ruff check
+python scripts/test.py sim
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow, and the
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow, and the
 [architecture](https://github.com/astro-mine/docs/blob/main/architecture/sim.md) for the design.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

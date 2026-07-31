@@ -26,11 +26,15 @@ src/astro_mine/hub/         # import path: astro_mine.hub
 ├── policy/       license + export-control gating (Python or OPA/Rego) + append-only audit log
 │   └── rego/     the versioned policy bundle: download.rego + data.json
 ├── curation/     open/curated/verified namespaces; yank/deprecate/promote
-├── api/          FastAPI/OpenAPI façade + ASGI entrypoint          ([service] extra)
-└── client/       the astro-mine-hub SDK (resolve/verify/pull/publish/cache) + CLI
-                  (publish/search/resolve/pull/verify/keygen)
-ui/                @astro-mine/hub-ui — the Hub console surface (RFC-0010; own Node toolchain)
+└── client/       the Hub SDK: resolve / verify / pull / publish / cache
 ```
+
+Neither `api/` nor `ui/` is here. The FastAPI façade and the `@astro-mine/hub-ui` console surface
+are two of the things the consolidation did not migrate (`docs/CONSOLIDATION_PLAN.md` §"Not
+migrated"); they live in the [`astro-mine-hub`](https://github.com/astro-mine/astro-mine-hub) repo
+until `astro-mine-api` stands up. The commands below come from
+[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) — this package ships no console
+scripts.
 
 ## Using the client (no hosted Hub)
 
@@ -39,16 +43,16 @@ registry — `ghcr.io/astro-mine`, a private Zot/Harbor, `http://localhost:5000`
 from the standard Docker sources (`docker login`, credential helpers, `GITHUB_TOKEN` for ghcr).
 
 ```bash
-astro-mine-hub keygen  --out ./keys                  # the one signing-key command: cosign.key + cosign.pub
-astro-mine-hub publish --registry ./reg --name pol --version 1.0.0 \
+astro-mine hub keygen  --out ./keys                  # the one signing-key command: cosign.key + cosign.pub
+astro-mine hub publish --registry ./reg --name pol --version 1.0.0 \
     --kind policy --manifest manifest.json --key ./keys/cosign.key --layer policy.onnx
-astro-mine-hub search  --registry ./reg --semantic "excavation"
-astro-mine-hub resolve --registry ./reg --name pol --spec ">=1.0.0,<2.0.0"
-astro-mine-hub verify  --registry ./reg pol:1.0.0    # re-verify the supply chain, fail closed
+astro-mine hub search  --registry ./reg --semantic "excavation"
+astro-mine hub resolve --registry ./reg --name pol --spec ">=1.0.0,<2.0.0"
+astro-mine hub verify  --registry ./reg pol:1.0.0    # re-verify the supply chain, fail closed
 
 # the same commands against a real registry — no hosted Hub, no `oras` binary
-astro-mine-hub pull --registry ghcr.io/astro-mine pol:1.0.0                  # the Core manifest
-astro-mine-hub pull --registry ghcr.io/astro-mine pol:1.0.0 --payload --out ./artifacts
+astro-mine hub pull --registry ghcr.io/astro-mine pol:1.0.0                  # the Core manifest
+astro-mine hub pull --registry ghcr.io/astro-mine pol:1.0.0 --payload --out ./artifacts
 ```
 
 Every pull **re-verifies before it returns bytes** — the manifest's signature/SLSA/SBOM *and* each
@@ -95,12 +99,12 @@ scenario's world, fleet assets, resource prior, and contact plan. Producers own 
 each component's `publish` builds, signs (with a **supplied** key — mandatory), and pushes its own
 artifact through the shared Hub client; there is no separate publishing service.
 
-Consumers verify against a **pinned org public key** — [`anchor-signing.pub`](anchor-signing.pub),
+Consumers verify against a **pinned org public key** — [`anchor-signing.pub`](../../../anchor-signing.pub),
 committed here (a public key is not secret; the private half stays in the org's secure store) — not
 one carried alongside the artifact, so a tampered registry cannot swap both. Pass it with
-`astro-mine-hub verify … --trusted-key anchor-signing.pub`. For the manual, by-component procedure
+`astro-mine hub verify … --trusted-key anchor-signing.pub`. For the manual, by-component procedure
 that publishes the nine-artifact anchor set (and the org-key / trust-anchor prerequisites), see
-[docs/publishing-the-anchor-content-set.md](docs/publishing-the-anchor-content-set.md).
+[publishing-the-anchor-content-set.md](../../hub/publishing-the-anchor-content-set.md).
 
 ## Optional backends
 
@@ -109,29 +113,27 @@ dependency on them:
 
 | Backend | Why | How |
 |---|---|---|
-| **PostgreSQL + pgvector** | catalog facets in SQL + HNSW semantic top-k at 10^5–10^6 scale | `[service]` extra; SQLite is the fallback |
+| **PostgreSQL + pgvector** | catalog facets in SQL + HNSW semantic top-k at 10^5–10^6 scale | needs `sqlalchemy` + `psycopg`; SQLite is the fallback |
 | **A served embedding model** | real (non-hashing) vectors for "find something like this" | `HUB_EMBEDDING_URL` (OpenAI-compatible `/v1/embeddings`) |
 | **OPA + the Rego bundle** | license/export-control rules evolve as a bundle release, not a code change | `HUB_OPA_URL` (sidecar) or `HUB_POLICY_ENGINE=opa` (binary) |
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**; a polyglot repo — the
-`ui/` React app has its own Node toolchain (`ui/README.md`). The offline gates run on one
-workstation (no cloud/account beyond the CI token that pulls private Core).
+Hub is part of the [`astro-mine-platform`](../../../README.md) distribution — one repository, one
+environment, one test suite. See [`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup. The
+offline gates run on one workstation, with no cloud and no account:
 
 ```bash
-uv sync --extra service                 # + the FastAPI/SQLAlchemy service tier
-uv run ruff check . && uv run mypy src && uv run pytest -m "not integration" --cov
-(cd ui && npm ci && npm run lint && npm run test -- --run && npm run build)
+python scripts/test.py hub              # the default selection: -m "not integration"
 ```
 
 The **integration** tests (`-m integration`) exercise the real backends — PostgreSQL/pgvector, a
-real **Zot** OCI registry, and **OPA** evaluating the Rego bundle; `docker compose up -d` brings up
-the backing stack (see `docker-compose.yml`). Serve the
-hosted API with `uvicorn --factory astro_mine.hub.api._asgi:make_app`.
+real **Zot** OCI registry, and **OPA** evaluating the Rego bundle — and need each one already
+running; the per-repo `docker-compose.yml` that started them did not come across the consolidation.
+There is no hosted API to serve from here: `astro_mine.hub.api` is not part of this distribution.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

@@ -35,7 +35,7 @@ The Phase-1 MVP (`RM-P1-ALLOC-01`…`08`) is in place; the map from the design d
 | §2 anytime | `astro_mine.allocate.anytime` | Streaming incumbents with **monotone** bounds, an explicit gap, an honest deadline status, and the warm-start seam. |
 | §9/§10 explain | `astro_mine.allocate.explain` | Binding constraints (which window/floor/keep-out bound the plan), objective decomposition, and an **irreducible infeasible set** (CP-SAT assumptions + a deletion filter). |
 | §8 determinism & scale | `tests/test_cpsat_determinism.py`, `tests/test_scale_benchmark.py` | Seeded golden plans/certificates, and the marker-gated **scale benchmark** (25 assets / 252 tasks, three-day horizon) that measures the Phase-1 exit criterion. |
-| RFC-0006 sibling binding | `astro_mine.allocate.mind` | The optional **`[mind]` extra**: registers the real `AllocationPlanner` as Mind's `allocator`-role tier plugin, with no `mind → allocate` base dependency. |
+| RFC-0006 sibling binding | `astro_mine.allocate.mind` | The optional **`[allocate-mind]` extra**: registers the real `AllocationPlanner` as Mind's `allocator`-role tier plugin, with no `mind → allocate` base dependency. |
 
 Not yet here (per allocate.md §12, Phase-1-later/Phase-2+): the MILP track and cross-solver
 consistency tests, learned `guidance` (GNN warm starts, learning-to-branch), `decompose`
@@ -45,5 +45,5 @@ notable gap in the objective — today's coefficients are per-task, so any feasi
 
 > **Runtime dependencies.** `astro-mine-core` (the narrow waist), `protobuf` (the IR wire form),
 > and **OR-Tools** CP-SAT — the Phase-1 MVP backend, so it is a core dependency, not an extra
-> (Gurobi is the only optional solver, allocate.md §4). `astro-mine-mind` is pulled in only by the
-> optional `[mind]` extra.
+> (Gurobi is the only optional solver, allocate.md §4). Mind's binding is pulled in only by the
+> optional `[allocate-mind]` extra.

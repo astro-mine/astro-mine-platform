@@ -112,7 +112,7 @@ active-learning acquisition) labeled against a high-fidelity oracle. The package
 imports Sim** — the dependency is inverted behind a Core-typed **`RolloutOracle`** seam, the
 same way Bench injects Sim's `EpisodeRunner`. CI and every default path use
 `reference_rollout_oracle`, a numpy-only deterministic granular proxy; a caller with the
-`[datagen]` extra supplies the Sim-backed DEM adapter.
+`[surrogate-datagen]` extra supplies the Sim-backed DEM adapter.
 
 ```python
 from astro_mine.surrogate.datagen import (
@@ -253,28 +253,28 @@ CPU-pinned torch). The heavier surfaces are optional extras, so a consumer that 
 
 | Extra | Pulls | Needed for |
 |---|---|---|
-| `serve` | `onnx`, `onnxruntime`, `onnxscript` | `astro_mine.surrogate.serve` — export, ONNX Runtime, load |
-| `datasets` | `zarr`, `pyarrow`, `scipy` | `astro_mine.surrogate.datagen` / `retrain` — design, store, retrain |
-| `publish` | `astro-mine-hub` | signing + publishing a served surrogate to a registry |
-| `datagen` | `astro-mine-sim[dem]` | regenerating the DEM fixture (`scripts/gen_dem_dataset.py`) only |
+| `surrogate-serve` | `onnx`, `onnxruntime`, `onnxscript` | `astro_mine.surrogate.serve` — export, ONNX Runtime, load |
+| `surrogate-datasets` | `zarr`, `pyarrow`, `scipy` | `astro_mine.surrogate.datagen` / `retrain` — design, store, retrain |
+| `surrogate-publish` | (empty marker) | signing + publishing a served surrogate to a registry — Hub is now in-package |
+| `surrogate-datagen` | (empty marker; wants `[sim-dem]`) | regenerating the DEM fixture (`scripts/gen_dem_dataset.py`) only |
 
-The `datagen` extra is **not** a dependency and is never installed in CI — it exists only so
+The `surrogate-datagen` extra is **not** a dependency and is never installed in CI — it exists only so
 `scripts/gen_dem_dataset.py` can drive Sim's high-fidelity DEM engine to regenerate the frozen
 fixture. The package itself never imports Sim: high-fidelity data arrives through the
 `RolloutOracle` seam as a content-addressed dataset.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Surrogate is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup.
 
 ```bash
-conda create -n astro-mine-surrogate python=3.12
-conda activate astro-mine-surrogate
-uv sync && uv run pytest
+python scripts/test.py surrogate
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

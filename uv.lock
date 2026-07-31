@@ -302,6 +302,7 @@ dependencies = [
     { name = "referencing" },
     { name = "scipy" },
     { name = "spiceypy" },
+    { name = "svcs" },
     { name = "torch", version = "2.13.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin') or (python_full_version >= '3.15' and extra == 'extra-19-astro-mine-platform-learn-mlflow' and extra == 'extra-19-astro-mine-platform-learn-rllib') or (sys_platform != 'darwin' and extra == 'extra-19-astro-mine-platform-learn-mlflow' and extra == 'extra-19-astro-mine-platform-learn-rllib')" },
     { name = "torch", version = "2.13.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "python_full_version >= '3.15' or (python_full_version < '3.15' and extra == 'extra-19-astro-mine-platform-learn-mlflow' and extra == 'extra-19-astro-mine-platform-learn-rllib') or sys_platform != 'darwin'" },
     { name = "trimesh" },
@@ -575,6 +576,7 @@ requires-dist = [
     { name = "scipy", marker = "extra == 'surrogate-datasets'", specifier = ">=1.11" },
     { name = "spiceypy", specifier = ">=6.0" },
     { name = "sqlalchemy", marker = "extra == 'bench-leaderboard'", specifier = ">=2.0" },
+    { name = "svcs", specifier = ">=25.1" },
     { name = "torch", specifier = ">=2.2", index = "https://download.pytorch.org/whl/cpu" },
     { name = "torch", marker = "extra == 'learn-rllib'", specifier = ">=2.4", index = "https://download.pytorch.org/whl/cpu" },
     { name = "trimesh", specifier = ">=4.12.2" },
@@ -5319,6 +5321,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/eb/e3/7c1dc7381d9f8ab7d854328ebfa884e62cb3f3d8549ddfd37c7814f42afa/starlette-1.3.1.tar.gz", hash = "sha256:05d0213193f2fbaae60e2ecb593b4add4262ad4e46536b54abe36f11a71724e0", size = 2703240, upload-time = "2026-06-12T09:23:11.602Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/bb/2799cc2ede3ed41131f8975621e7213dfc7ef4acbbaadfa440f32500c370/starlette-1.3.1-py3-none-any.whl", hash = "sha256:c7372aae11c3c3f26a42df7bd626cec2f47d03483d261d369516a615a53714c6", size = 73632, upload-time = "2026-06-12T09:23:10.017Z" },
+]
+
+[[package]]
+name = "svcs"
+version = "26.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "typing-extensions", marker = "python_full_version < '3.15' or (extra == 'extra-19-astro-mine-platform-learn-mlflow' and extra == 'extra-19-astro-mine-platform-learn-rllib')" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/50/ea/10957367bf49b401a8100ff434f453a340cc30c9c2fc3b2367e6c282f03d/svcs-26.1.0.tar.gz", hash = "sha256:71550e3b228d529448136d78013b2d65528eec4632b8779f8f89c1d8585eed99", size = 906116, upload-time = "2026-07-13T10:09:38.322Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5e/8c/5f9441100851bea8f4735cf54a2980d2ad9300a5933c1d5e416448fd789a/svcs-26.1.0-py3-none-any.whl", hash = "sha256:87428c6371af6ae5d0936193613ba4e463118f36b43e15a708f417a8e0b85520", size = 23609, upload-time = "2026-07-13T10:09:36.945Z" },
 ]
 
 [[package]]

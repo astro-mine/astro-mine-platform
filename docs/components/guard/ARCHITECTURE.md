@@ -21,7 +21,7 @@ file is the conventional pointer back to that source of truth
 
 > **Trusted safety core (Rust).** Guard's trusted computing base — the `arbiter`, `shields`,
 > `monitors`, `backup`, and `spec` evaluator ([`guard.md` §3–4](https://github.com/astro-mine/docs/blob/main/architecture/guard.md))
-> — is a small, deterministic, allocation-free **Rust** crate in [`rust/`](rust/), added in
+> — is a small, deterministic, allocation-free **Rust** crate in [`rust/`](../../../rust/), added in
 > **RM-P1-GUARD-02**. It builds and tests standalone (no Python) for the edge, and the wheel is
 > **maturin**-built so it bundles the core as the `astro_mine.guard._core` PyO3 extension. The
 > Python layer under `src/` (spec authoring, the `wrap`/`models`/`audit` modules, and the
@@ -46,12 +46,12 @@ file is the conventional pointer back to that source of truth
 
 Where this repo deliberately departs from [`guard.md`](https://github.com/astro-mine/docs/blob/main/architecture/guard.md),
 the decision is recorded here rather than left to be rediscovered from the code. ADRs live in
-[`docs/adr/`](docs/adr/).
+[`docs/adr/`](../../guard/adr/).
 
 | ADR | Decision | Deviates from |
 |---|---|---|
-| [ADR-0001](docs/adr/0001-cbf-qp-solver.md) | The CBF-QP shield solves its per-tick program with a bespoke **allocation-free Dykstra projection** inside the TCB, **not** by linking OSQP/Clarabel. The shield *hard-certifies its own output*, so solver error can only cause a fallback, never an unsafe action — which is what makes an ~80-line kernel acceptable, and what keeps the TCB small enough to be **Kani-verifiable** (`rust/src/verify.rs`). Clarabel stays the reference optimizer the in-TCB solver is cross-validated against in CI (`rust/tests/clarabel_crosscheck.rs`). | `guard.md` §4, §11 (which name OSQP/Clarabel as the solver) |
-| [ADR-0002](docs/adr/0002-mode-task-allowlist-in-safetyspec.md) | The **MODE/TASK directive allowlist lives in the `SafetySpec`**, not in `CoreConfig`. The gate's effective allowlist is `spec ∩ config`, and a **spec that is silent grants nothing** — configuration may only *narrow* the reviewed grant, never create a permission. A config-only grant was an expressible `passthrough`, on the one actuation path the shield cannot project or correct, in the one artifact with no integrity story. | Ratified as **RFC-0004 Amendment 2** (an additive extension of the contract, not a deviation) |
+| [ADR-0001](../../guard/adr/0001-cbf-qp-solver.md) | The CBF-QP shield solves its per-tick program with a bespoke **allocation-free Dykstra projection** inside the TCB, **not** by linking OSQP/Clarabel. The shield *hard-certifies its own output*, so solver error can only cause a fallback, never an unsafe action — which is what makes an ~80-line kernel acceptable, and what keeps the TCB small enough to be **Kani-verifiable** (`rust/src/verify.rs`). Clarabel stays the reference optimizer the in-TCB solver is cross-validated against in CI (`rust/tests/clarabel_crosscheck.rs`). | `guard.md` §4, §11 (which name OSQP/Clarabel as the solver) |
+| [ADR-0002](../../guard/adr/0002-mode-task-allowlist-in-safetyspec.md) | The **MODE/TASK directive allowlist lives in the `SafetySpec`**, not in `CoreConfig`. The gate's effective allowlist is `spec ∩ config`, and a **spec that is silent grants nothing** — configuration may only *narrow* the reviewed grant, never create a permission. A config-only grant was an expressible `passthrough`, on the one actuation path the shield cannot project or correct, in the one artifact with no integrity story. | Ratified as **RFC-0004 Amendment 2** (an additive extension of the contract, not a deviation) |
 
 > **Machine-checked kernels (`rust/src/verify.rs`).** `guard.md` §9.3 makes Kani-style verification
 > amenability a design goal of keeping the TCB tiny. The load-bearing kernels — the brake law's

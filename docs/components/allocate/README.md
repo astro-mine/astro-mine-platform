@@ -47,23 +47,22 @@ src/astro_mine/allocate/
 │                 #   + the registry third-party backends register into (see below)
 ├── anytime/      # Incumbent/bound streaming, deadline status, warm-start seam
 ├── explain/      # Binding constraints, objective decomposition, IIS
-└── mind.py       # The optional [mind] tier-plugin binding (see below)
-tests/            # mirrors the package layout
+└── mind.py       # The optional [allocate-mind] tier-plugin binding (see below)
+tests/allocate/   # mirrors the package layout
 ```
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**. This is the local
-tier — it runs on one workstation, no cloud or account required.
+Allocate is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup. This is the local tier — it runs on
+one workstation, no cloud and no account required.
 
 ```bash
-conda create -n astro-mine-allocate python=3.12
-conda activate astro-mine-allocate
-uv sync             # resolves against the tag-pinned astro-mine-core (v0.2.0)
-uv run pytest
+python scripts/test.py allocate
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## Contributing a solver backend
 
@@ -131,14 +130,14 @@ promptly-extracted irreducible infeasible set on a localized conflict. Each run 
 (instance size, IR size, wall clock, gap, pinned OR-Tools version) under `benchmarks/`, and the
 scheduled `scale-bench` workflow uploads them so the trend is tracked over time.
 
-## The `[mind]` extra — binding into an autonomy stack
+## The `[allocate-mind]` extra — binding into an autonomy stack
 
 Per RFC-0006's sibling-binding convention, Allocate ships the binding that lets
 [Mind](https://github.com/astro-mine/astro-mine-mind) delegate assignment to the **real** CP-SAT
 planner — with **no `mind → allocate` dependency in either base package**:
 
 ```bash
-uv pip install "astro-mine-allocate[mind]"
+uv pip install "astro-mine-platform[allocate-mind]"
 ```
 
 The extra registers `allocate.planner` under Mind's `astro_mine.mind.tier_plugins` entry-point
@@ -166,4 +165,4 @@ Without the extra, Mind keeps using its in-repo `GreedyReferenceAllocator` stand
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

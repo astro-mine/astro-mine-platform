@@ -20,7 +20,7 @@ mission performance — never safety. Fail safe, never fail open. **Safety-criti
 ```
 src/astro_mine/guard/       # import path: astro_mine.guard (Python orchestration + spec)
 rust/                       # the trusted safety core (TCB) — Rust crate, PyO3 extension
-tests/                      # Python tests; rust/tests/ holds the core's Rust gates
+tests/guard/                # Python tests; rust/tests/ holds the core's Rust gates
 ```
 
 The trusted core (`arbiter`, `shields`, `monitors`, `backup`, and the compiled `spec`
@@ -32,29 +32,29 @@ modules (`models/ coord/ wrap/ audit/`, the `PolicyShield` wrapper) follow. See
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**; the Rust core needs a
-**stable Rust toolchain** (the maturin build compiles it during `uv sync`).
+Guard is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup. The Rust core needs a **stable Rust
+toolchain**, which the maturin build compiles during `uv sync`.
 
 ```bash
-conda create -n astro-mine-guard python=3.12
-conda activate astro-mine-guard
-uv sync && uv run pytest          # builds + tests the Python side (incl. the PyO3 core)
+python scripts/test.py guard      # the Python side, incl. the PyO3 core
 cd rust && cargo test             # the standalone Rust TCB gates
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
-## Command-line interface — `astro-mine-guard`
+## Command-line interface — `astro-mine guard`
 
 The spec tooling from a shell. Four verbs; pass `anchor` as the spec to use Guard's **shipped
 reference anchor SafetySpec** (lunar polar water-ice prospecting), which resolves from package data
 (`astro_mine.guard.reference.load_anchor_safety_spec()`) — no checkout required.
 
 ```bash
-astro-mine-guard validate my.safety.yaml         # schema + fail-safe checks, actionable errors
-astro-mine-guard compile  anchor --out m.json    # → content-addressed CompiledSafetyModel + hash
-astro-mine-guard falsify  --trials 16            # seeded adversarial search on the anchor scenario
-astro-mine-guard sign     anchor --verify        # offline cosign signature over the content hash
+astro-mine guard validate my.safety.yaml         # schema + fail-safe checks, actionable errors
+astro-mine guard compile  anchor --out m.json    # → content-addressed CompiledSafetyModel + hash
+astro-mine guard falsify  --trials 16            # seeded adversarial search on the anchor scenario
+astro-mine guard sign     anchor --verify        # offline cosign signature over the content hash
 ```
 
 `validate`/`compile`/`sign` load **without** the compiled Rust core. `falsify` needs it for the
@@ -77,7 +77,7 @@ safety case's integrity story are:
   verdict (verify-twice). The signing primitive **mirrors** `astro-mine-hub`'s ECDSA-P256 signer
   on the Core `Signature` type (the accepted `fleet → hub → guard` signer-duplication pattern —
   never a sibling import). `require_signature=False` stays the local/dev default (RFC-0004,
-  opt-in signing); `astro-mine-guard sign` is the offline dev signer (the packaged home of the
+  opt-in signing); `astro-mine guard sign` is the offline dev signer (the packaged home of the
   former `scripts/sign_spec.py`). Production trusted-key distribution beyond the dev key is decided
   with Hub (RFC-0004).
 - **Adversarial falsification (the central validation gate).** `astro_mine.guard.falsify` is
@@ -89,4 +89,4 @@ safety case's integrity story are:
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

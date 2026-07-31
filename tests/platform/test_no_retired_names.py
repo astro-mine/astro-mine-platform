@@ -140,28 +140,58 @@ _PROG_BINARY = re.compile(
 #: that rule later cannot start demanding an edit to content that must not change.
 _FROZEN_BY_HASH_OR_HISTORY = frozenset({"pins.json", "scenario.json", "PROVENANCE.md"})
 
+#: The one **directory** excluded, for the same reason as the files above: it is history.
+#:
+#: ``examples/downstream-consumer/`` demonstrates the pre-consolidation distribution pattern — a
+#: tag-pinned ``[tool.uv.sources]`` Git source for ``astro-mine-core``, resolved with ``uv sync
+#: --locked``. Consolidation retired that pattern wholesale (``docs/CONSOLIDATION_PLAN.md`` §4), and
+#: its README now says so at the top; what is left below the banner is the record of how private
+#: incubation actually shipped code.
+#:
+#: It is excluded rather than rewritten because the hint is **not dead**: the ``astro-mine-core``
+#: repository and its ``v0.1.0`` tag both exist, so ``uv sync --locked`` still resolves. That makes
+#: it the one place in the tree where a retired *distribution* name is a working instruction, which
+#: is exactly what the install-hint rule cannot tell apart — the rule matches a name, not whether a
+#: Git remote answers. Retargeting it at ``astro-mine-platform`` would need a tag to pin, and this
+#: repository has cut none; pinning a branch is what the example itself argues against.
+_FROZEN_EXAMPLE_DIR = "downstream-consumer"
+
 #: How far past an install verb to keep looking. Comfortably clears a wrapped string literal and
 #: its indentation without running into the next statement.
 _HINT_WINDOW = 160
 
 
 def _source_files() -> list[Path]:
-    """The package **and** ``scripts/``.
+    """The package, ``scripts/``, **and the two document trees a reader actually meets first**.
 
     ``scripts/`` was outside platform#6's scan and carried two dead install lines because of it —
     including one telling the reader to ``uv pip install`` three retired distributions. A script a
     contributor is told to run is as user-facing as a degradation message, and having the four
     checks disagree about which tree they cover is the seam this file exists to close.
+
+    ``docs/`` and ``examples/`` were outside platform#8's scan for the same reason and carried
+    more than ``src/`` and ``scripts/`` combined: **91 invocations and 25 install hints**
+    (platform#10). They are the per-repo READMEs consolidation copied in, each written for a repo
+    that shipped its own wheel and its own binary, and both premises are now false. The audience is
+    what makes them worth the sweep — a degradation message is read by someone already running the
+    code, mid-task; a README is read by someone deciding whether to use the thing at all, which is
+    the more expensive place to be wrong.
+
+    The position rule was the open question here: it keys on a retired name being the first token
+    of a code span, a quoted literal, or a line, and markdown prose is full of sentences that begin
+    with a package name. It over-fired on none of the 4,142 lines swept, so no markdown-specific
+    rule was needed — the delimiters that make a command a command are the same in a docstring and
+    in a README.
     """
-    roots = (PACKAGE_ROOT, REPO_ROOT / "scripts")
+    roots = (PACKAGE_ROOT, REPO_ROOT / "scripts", REPO_ROOT / "docs", REPO_ROOT / "examples")
     return [
         path
         for root in roots
         for path in sorted(root.rglob("*"))
         if path.is_file()
         and "__pycache__" not in path.parts
-        and path.suffix
-        in {".py", ".yaml", ".yml", ".json", ".md", ".toml", ".cfg", ".txt", ".sh"}
+        and _FROZEN_EXAMPLE_DIR not in path.parts
+        and path.suffix in {".py", ".yaml", ".yml", ".json", ".md", ".toml", ".cfg", ".txt", ".sh"}
     ]
 
 
@@ -273,8 +303,7 @@ def test_nothing_invokes_a_retired_binary() -> None:
         for match in _INVOCATION.finditer(text):
             line = text.count("\n", 0, match.start()) + 1
             offences.append(
-                f"{path.relative_to(REPO_ROOT)}:{line}: invokes "
-                f"`{match.group(1)} {match.group(2)}`"
+                f"{path.relative_to(REPO_ROOT)}:{line}: invokes `{match.group(1)} {match.group(2)}`"
             )
         for match in _PROG_BINARY.finditer(text):
             line = text.count("\n", 0, match.start()) + 1
@@ -349,6 +378,38 @@ def test_the_frozen_files_are_real_and_still_carry_retired_names() -> None:
     frozen = [path for path in _source_files() if path.name in _FROZEN_BY_HASH_OR_HISTORY]
     assert frozen, "no frozen file found; the exclusion no longer matches anything"
     assert [path for path in frozen if _INVOCATION.search(path.read_text(encoding="utf-8"))]
+
+
+def test_the_frozen_example_directory_is_real_and_still_needs_excluding() -> None:
+    """Same contract as above, for the one directory-level carve-out (platform#10).
+
+    Two claims, because either one failing means the exclusion has stopped earning its keep. The
+    directory must still exist — a carve-out for a deleted path is dead config. And it must still
+    contain the thing it was carved out for: an install hint naming a retired distribution. If a
+    later change retargets that example at ``astro-mine-platform``, this fails and asks for the
+    exclusion to go, rather than leaving a silent hole where the scan does not look.
+    """
+    frozen_dir = REPO_ROOT / "examples" / _FROZEN_EXAMPLE_DIR
+    assert frozen_dir.is_dir(), f"{frozen_dir} is gone; drop the exclusion"
+
+    offending: list[str] = []
+    for path in sorted(frozen_dir.rglob("*")):
+        if not path.is_file() or path.suffix not in {".md", ".toml", ".py"}:
+            continue
+        text = path.read_text(encoding="utf-8")
+        for verb in _INSTALL_VERB.finditer(text):
+            window = text[verb.start() : verb.start() + _HINT_WINDOW]
+            offending.extend(_RETIRED_NAME.findall(window))
+    assert offending, f"{frozen_dir} no longer names a retired distribution; drop the exclusion"
+
+
+def test_the_frozen_example_is_excluded_from_the_scan() -> None:
+    """The exclusion is what it claims to be: nothing under that directory is scanned.
+
+    Asserted directly rather than inferred from the other tests passing, because "the sweep is
+    clean" and "the sweep skipped it" look identical from the outside.
+    """
+    assert not [path for path in _source_files() if _FROZEN_EXAMPLE_DIR in path.parts]
 
 
 @pytest.mark.parametrize(

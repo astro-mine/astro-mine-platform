@@ -35,16 +35,16 @@ tests/                       # SPICE geometry + kernel tests (synthetic kernels,
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Spice is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup.
 
 ```bash
-conda create -n astro-mine-spice python=3.12
-conda activate astro-mine-spice
-uv sync && uv run pytest
+python scripts/test.py spice
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

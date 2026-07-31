@@ -13,19 +13,21 @@ regolith terramechanics parameters — the physical substrate every scenario run
 > and [Phase-0 roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/phase-0-commons-seed.md).
 > Phase 0 builds the **lunar south-polar (Shackleton–de Gerlache)** world only.
 
-> **Command renamed.** This CLI is `astro-mine-worlds`; the old name `worlds` still works for one
-> deprecation cycle, printing a one-line notice to stderr, and is removed at the first
-> public-benchmark milestone. The prefix is normative ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
-> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md) §5) — it ends the
-> `PATH` land-grab of generic names and makes the package↔command mapping guessable.
+> **Where the commands live.** This package ships no console scripts. Worlds's commands are
+> `astro-mine worlds <verb>`, provided by
+> [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) — a separate distribution that
+> depends on this one. There is one executable and one grammar
+> ([`conventions.md §13`](https://github.com/astro-mine/docs/blob/main/architecture/conventions.md),
+> [RFC-0011](https://github.com/astro-mine/docs/blob/main/rfc/0011-umbrella-cli.md)); the earlier
+> `astro-mine-worlds` binary and its bare alias are both retired.
 
 ## Layout
 
 ```
 src/astro_mine/worlds/      # import path: astro_mine.worlds
   crs/ terrain/ fields/ gravity/ illumination/ thermal/ regolith/
-  ingest/ bodies/ provider/ spec/ cli/
-tests/                      # mirrors the package layout
+  ingest/ bodies/ provider/ spec/
+tests/worlds/               # mirrors the package layout
 validation/                 # committed published references + error budgets (worlds.md §10)
 ```
 
@@ -206,9 +208,9 @@ one-time pull against a per-load hour, which is the trade `LUNAR-TR-004` cares a
 ### A content hash covers content, not the toolchain
 
 Worlds hashes cover the arrays and the parameters that determine them. The **toolchain** is recorded
-in every manifest and deliberately *not* hashed (`worlds/_hashing.py`). It used to be, and because
-`astro-mine-worlds` is versioned by hatch-vcs — so its version tracks git commit distance — a
-bit-identical world rebuilt one commit later minted a different `terrain_hash` and `world_hash`.
+in every manifest and deliberately *not* hashed (`worlds/_hashing.py`). It used to be, and because the
+per-repo version was hatch-vcs-derived — so it tracked git commit distance — a bit-identical world
+rebuilt one commit later minted a different `terrain_hash` and `world_hash`.
 Content-addressing was really commit-addressing. Nothing is lost by excluding it: every hash covers
 its own bytes (each Zarr store's `store_hash` folds into `world_hash`), so a toolchain that writes
 different bytes still moves the hash — through the bytes.
@@ -223,7 +225,7 @@ python scripts/build_shackleton_anchor.py --convert \
     --horizon-frame grid --abcorr NONE \
     --psr-start 2025-01-01T00:00:00 --psr-days 365 --psr-step-hours 12 --psr-semantics seasonal
 
-astro-mine-worlds publish out/shackleton/bundle --registry <hub-registry> --key <cosign.key>
+astro-mine worlds publish out/shackleton/bundle --registry <hub-registry> --key <cosign.key>
 ```
 
 Those flags are not arbitrary: they are exactly the harness `validation/shackleton_psr.reference.json`
@@ -289,16 +291,16 @@ Sim's job (RM-P0-SIM-10).
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Worlds is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup.
 
 ```bash
-conda create -n astro-mine-worlds python=3.12
-conda activate astro-mine-worlds
-uv sync && uv run pytest
+python scripts/test.py worlds
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

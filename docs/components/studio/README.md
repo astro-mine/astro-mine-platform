@@ -4,69 +4,75 @@
 intent into a scored [Campaign](https://github.com/astro-mine/docs/blob/main/architecture/core.md):
 capture an objective, run a trade study across the autonomy stack, and hand back the
 best-scored design — with optional, provider-abstracted LLM-assisted intent capture.
-Studio also ships a React/TypeScript front end over a FastAPI service; both arrive with
-the `RM-P1-STUDIO-*` feature issues (this seed stands up the Python library only).
+Studio also has a React/TypeScript front end over a FastAPI service — neither of which is in this
+repository; see [What is here, and what is not](#what-is-here-and-what-is-not).
 
-> **Status:** Phase 1. Importable `astro_mine.studio` library (intent capture, trade-study engine,
-> design loop, campaign hand-off, reproducibility, Hub publish/terrain seams) plus the React front
-> end that embeds View for 3D inspection — RM-P1-STUDIO-01..07. See the
+> **Status:** Phase 1. The importable `astro_mine.studio` library — intent capture, trade-study
+> engine, design loop, campaign hand-off, reproducibility, Hub publish/terrain seams — is what this
+> distribution provides (RM-P1-STUDIO-01..07). The REST surface and the View-embedding front end
+> ship elsewhere. See the
 > [architecture](https://github.com/astro-mine/docs/blob/main/architecture/studio.md)
 > and [Phase-1 roadmap](https://github.com/astro-mine/docs/blob/main/roadmap/phase-1-autonomy-studio.md).
 
-## Quickstart
+## What is here, and what is not
 
-One command takes a clone to a running Studio — **offline, no account, no cluster** (CX-LOCAL):
+**The library is here. The server and the UI are not.** Studio's REST surface
+(`astro_mine.studio.api`) and its React front end were deliberately left out of the consolidation
+(`docs/CONSOLIDATION_PLAN.md` §"Not migrated"); the REST tier is destined for `astro-mine-api`,
+which is not stood up yet (roadmap `RM-DIST-03`). So there is **no `serve` you can run from this
+repo, and nothing to install that would give you one** — no `astro-mine-studio` distribution, and
+no `[serve]` extra: it was dropped along with the routes it existed to pull in.
 
-```bash
-# 1. Install the library + the local server (uvicorn) + the Hub client, in one extra.
-uv sync --extra serve            # or: pip install "astro-mine-studio[serve]"
+`astro-mine studio serve` still exists as a command, and says exactly that before exiting non-zero:
 
-# 2. Build the standalone web UI once (Node ≥ 20.19, pnpm). `build:harness` emits the browsable
-#    app (ui/dist-harness); plain `pnpm build` emits the library the console composes, not a page.
-cd ui && pnpm install && pnpm build:harness && cd ..
-
-# 3. Serve. Point --registry at a local OCI-layout Hub registry holding your content.
-astro-mine-studio serve --registry /path/to/hub-registry
-#   → http://127.0.0.1:8000   (open it in a browser)
+```console
+$ astro-mine studio serve
+astro-mine studio serve needs the Studio REST surface (astro_mine.studio.api), which is not
+included in astro-mine-platform.
+  The REST tier ships in astro-mine-api (docs: architecture/api.md), which is not stood up yet
+  — roadmap RM-DIST-03.
+  No released distribution provides it today, so there is nothing to install.
 ```
 
-`serve` composes the backend with its Hub seams **wired from the local registry**, mounts the built
-UI at `/`, and prints an honest startup banner naming every seam and its state:
+The verb is kept rather than dropped because that message is the useful behaviour: removing it
+would make `astro-mine --help` claim the platform has less than it does, and a reader following an
+older tutorial would get "unknown component" instead of one line telling them where the surface
+lives. It exits `1` — nothing was served, so it does not report success.
 
+## Quickstart — the library
+
+Everything the trade-study engine does is reachable from Python, offline, with no account and no
+cluster (CX-LOCAL). That half came across whole:
+
+```python
+from astro_mine.studio.intent import capture_intent      # objective capture + its validation gate
+from astro_mine.studio.designspace import run_trade_study  # the search across the autonomy stack
+from astro_mine.studio.compare import build_comparison   # the Pareto/trade-off view
+from astro_mine.studio.campaign import author_campaign   # freeze the winner into a Campaign
 ```
-  Astro-Mine Studio
-  → http://127.0.0.1:8000
-  UI:   mounted from ui/dist-harness
-  Seams:
-    ✓ publishing: signing with anchor-dev.key.pem
-    ✓ terrain: verifying against anchor-dev.pub.pem
-    ✓ catalog: listing assets from /path/to/hub-registry
-    ✓ asset preview: verifying against anchor-dev.pub.pem
-  Seed: …
-```
 
-**Content is verified, not trusted.** Reads (terrain, catalog, asset preview) verify pulled bytes
-against a **trusted public key**; published campaigns are signed with a **signing key**. Both default
-to the `anchor-dev` dev keypair a workspace registry ships under `<registry>/keys/` — override with
-`--trusted-key` / `--signing-key` (or `ASTRO_MINE_STUDIO_TRUSTED_KEY` / `_SIGNING_KEY`).
-
-Common flags: `--host`/`--port`, `--registry` (or `$ASTRO_MINE_HUB_REGISTRY`), `--ui-dir`,
-`--no-ui`, `--cache-dir`, `--no-seed`. `astro-mine-studio serve --help` lists them all.
-
-**Degrades honestly, never blank.** Run with no `--registry` and the intent/study/comparison routes
-still work; the 5 Hub-backed routes answer `503` with a reason the UI shows. Run before `pnpm build`
-and the root URL explains how to build the UI rather than 404-ing. Nothing crashes.
+**Content is verified, not trusted.** The Hub seams read and write through a local OCI-layout
+registry: reads (terrain, catalog, asset preview) verify pulled bytes against a **trusted public
+key**, and published campaigns are signed with a **signing key**. Both default to the `anchor-dev`
+dev keypair a workspace registry ships under `<registry>/keys/`, and are settable through
+`ASTRO_MINE_STUDIO_TRUSTED_KEY` / `ASTRO_MINE_STUDIO_SIGNING_KEY` — the same environment variables
+the eventual server reads, so the wiring is unchanged when it arrives.
 
 ## Layout
 
 ```
 src/astro_mine/studio/      # import path: astro_mine.studio
-  cli.py                    #   `astro-mine-studio serve` — compose + serve the local tier
+  intent/ designspace/      #   objective capture; the trade-study search
+  campaign/ orchestrate/    #   freeze a winner; fan the design loop out
   hub/                      #   ->Hub / <-Hub seams: publish a design, materialize a world
   compare.py                #   the Pareto/trade-off view, with uncertainty
-tests/                      # mirrors the package layout
-ui/                         # the React front end: comparison plots + embedded View (see ui/README.md)
+tests/studio/               # mirrors the package layout
 ```
+
+Neither `api/` nor `ui/` is here — the FastAPI routes and the React front end are the two halves
+the consolidation did not migrate. They live in the
+[`astro-mine-studio`](https://github.com/astro-mine/astro-mine-studio) repo until `astro-mine-api`
+stands up.
 
 ## Publishing to Hub
 
@@ -116,17 +122,18 @@ GET /worlds/shackleton-de-gerlache-v1:0.2.0
 The bundle must carry the `tiles_anchor` that `RM-P1-WORLDS-16` publishes; View refuses one without
 it rather than mis-placing the terrain.
 
-**Two static mounts.** `serve` (and any deployment that passes the cache dirs) mounts the two
-digest-keyed content caches — **not** the UI — at fixed prefixes: `WORLD_STATIC_PREFIX =
-/worlds/files` and `ASSET_STATIC_PREFIX = /assets/files`. These serve the verified world bundles and
-asset geometry the embedded View fetches. The built UI is a separate mount at `/` (see Quickstart).
+**Two static mounts.** Any deployment that passes the cache dirs mounts the two digest-keyed content
+caches — **not** the UI — at fixed prefixes: `WORLD_STATIC_PREFIX = /worlds/files` and
+`ASSET_STATIC_PREFIX = /assets/files`. These serve the verified world bundles and asset geometry the
+embedded View fetches; the built UI is a separate mount at `/`. The prefixes are stated here because
+the cache layout is this package's, even though the server that mounts them is not.
 
 ## Trade-study backends
 
 Search backends are swappable behind one interface (`designspace.search.SearchBackend`); a study
 picks one by name. The built-in **NSGA-II** (`nsga2`, `nsga2-lhs`) needs no extra. **Optuna** is the
 first external engine (`studio.md` §11 names Optuna · Ax/BoTorch · pymoo · Ray Tune) and ships behind
-`[optuna]`:
+`[studio-optuna]`:
 
 ```python
 from astro_mine.studio.designspace import registered_backends, run_trade_study
@@ -151,7 +158,7 @@ Ax/BoTorch, pymoo, and Ray Tune remain **documented seams**, not silent omission
 ## Fanning a design loop out to Cloud
 
 `run_batch` holds a `JobDispatcher`. `LocalDispatcher` runs the loop in-process; `CloudDispatcher`
-runs the *same* loop over `cloud.submit()` (`[cloud]` extra), for the local and docker backends —
+runs the *same* loop over `cloud.submit()` (`[studio-cloud]` extra), for the local and docker backends —
 and the cluster backend once a `ClusterClient` is supplied:
 
 ```python
@@ -180,36 +187,38 @@ how batches are fanned out.
 
 ## Extras — what each unlocks
 
-The base wheel imports only Core (+ FastAPI) — no sibling packages. Each optional dependency is
-imported lazily, so importing `astro_mine.studio` never pulls it, and a command that needs one fails
-with an install hint rather than an `ImportError`:
+Each optional dependency is imported lazily, so importing `astro_mine.studio` never pulls it, and a
+path that needs one fails with an install hint rather than an `ImportError`. Extras are
+component-prefixed platform-wide, because bare names collided across the 18 merged pyprojects:
 
 | Extra | Unlocks |
 |---|---|
-| `[serve]` | `astro-mine-studio serve` — `uvicorn` + the `[hub]` client, so one install yields a fully-wired offline Studio (nothing 503s by default). |
-| `[hub]` | The publish / terrain / catalog / preview seams. Without it those 5 routes answer `503`; `tests/test_api_hub.py` asserts the API layer never imports `astro_mine.hub`. |
-| `[optuna]` | The Optuna trade-study backend (the built-in NSGA-II needs no extra). |
-| `[cloud]` | `CloudDispatcher` — fan a design loop out over `cloud.submit()`. |
-| `[llm]` | The optional, provider-abstracted LLM-assisted intent path. |
+| `[studio-hub]` | The publish / terrain / catalog / preview seams. Without it those five seams degrade to a stated reason rather than a blank. |
+| `[studio-optuna]` | The Optuna trade-study backend (the built-in NSGA-II needs no extra). |
+| `[studio-cloud]` | `CloudDispatcher` — fan a design loop out over `cloud.submit()`. |
+| `[studio-llm]` | The optional, provider-abstracted LLM-assisted intent path. |
+
+`[serve]` is **gone**, not renamed: it existed to pull `uvicorn` in for the REST surface, and that
+surface is not part of this distribution. `fastapi` was dropped from the base dependencies for the
+same reason.
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**. Local-first
-(conventions §7 tier-1): the library imports and runs on one workstation against the
-Core narrow waist.
+Studio is part of the [`astro-mine-platform`](../../../README.md) distribution — one
+repository, one environment, one test suite. See
+[`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup. Studio is local-first
+(`conventions.md` §7 tier 1): the library imports and runs on one workstation against the Core
+narrow waist.
 
 ```bash
-conda create -n astro-mine-studio python=3.12
-conda activate astro-mine-studio
-uv sync --extra serve && uv run pytest    # --extra serve pulls the [hub] client the API tests bind
-uv run ruff check . && uv run mypy src
+python scripts/test.py studio
 ```
 
-For the web UI, see [`ui/README.md`](ui/README.md). The one-command `astro-mine-studio serve` in the
-[Quickstart](#quickstart) is the supported way to run the whole thing end to end.
+The React front end is not in this repo — see
+[What is here, and what is not](#what-is-here-and-what-is-not).
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.

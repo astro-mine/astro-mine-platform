@@ -22,34 +22,34 @@ src/astro_mine/bench/       # import path: astro_mine.bench  (local scoring: ast
   scenario/ zoo/ metrics/ harness/ baseline/ leaderboard/ submit/ eval/ recording/ report/ sandbox/
 policy/bench.rego           # the leaderboard authorization policy (OPA; same rules in-process)
 deploy/                     # Prometheus scrape config + the Grafana submission-pipeline dashboard
-tests/                      # mirrors the package layout
+tests/bench/                # mirrors the package layout
 TRUST_BOUNDARY.md           # what the submission sandbox protects — and what it does not
 ```
+
+`policy/`, `deploy/` and `TRUST_BOUNDARY.md` sit at the repo root: Bench resolves them by
+root-relative path, so consolidation kept them where the code already looked for them.
 
 ## Usage
 
 **Local scoring (offline, no account, no cloud)** — clone, run the anchor, score a baseline:
 
 ```bash
-astro-mine-bench score          # or: python -m astro_mine.bench score
-astro-mine-bench score --json   # machine-readable scorecard
-astro-mine-bench list           # scenarios in the zoo
+astro-mine bench score          # the scorecard
+astro-mine bench score --json   # machine-readable
+astro-mine bench list           # scenarios in the zoo
 ```
 
-The same four verbs are also reachable from the platform's umbrella CLI, if
-[`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) is installed:
+The command line is [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli), a separate
+distribution that depends on this one; this package ships no console scripts. There is one address
+for every command on the platform — `astro-mine <component> <verb>` — so `score` is reached as
+`astro-mine bench score` and nowhere else.
 
-```bash
-astro-mine score     astro-mine fetch     astro-mine submit     astro-mine list
-```
+`python -m astro_mine.bench` is **not** a second spelling of it. That module provides exactly one
+machine-facing entry point, `eval-worker` — the per-seed rollout Cloud fans out — and anything else
+exits 2 with a message saying so.
 
-Identical flags — both surfaces are built from the same argument definitions, so neither can grow
-a flag the other lacks. The umbrella is the discoverable front door for someone who does not yet
-know which package owns an action (RFC-0011); `astro-mine-bench` remains the direct command and
-needs nothing else installed.
-
-Or from Python — inject any Core `Policy` (a Sim-backed runner from `astro-mine-sim` slots into
-the same seam; Bench itself stays dependency-clean, `core + pydantic`):
+Or from Python — inject any Core `Policy` (the Sim-backed runner in `astro_mine.sim.bench` slots
+into the same seam; Bench itself stays dependency-clean, `core + pydantic`):
 
 ```python
 from astro_mine.bench.baseline import BaselinePolicy, run
@@ -61,9 +61,15 @@ scorecard = run(load_scenario(ANCHOR_SCENARIO_ID), BaselinePolicy())
 **Hosted leaderboard (submit-policy-we-run + held-out seeds + sampled re-execution)** — an
 optional service tier; the local tier above needs none of it:
 
+The FastAPI route module is **not** part of `astro-mine-platform` (`docs/CONSOLIDATION_PLAN.md`
+§"Not migrated") — the REST tier is destined for `astro-mine-api`, which is not stood up yet
+(roadmap `RM-DIST-03`), so there is nothing to install for it today. The leaderboard *library*
+underneath it did come across, behind the `bench-leaderboard` extra, and `create_app()` raises a
+message saying exactly this rather than failing on an import.
+
 ```bash
-pip install -e '.[leaderboard,observability]'
-CORE_REPO_TOKEN=<gh token> docker compose up --build   # FastAPI + Postgres/pgvector
+pip install -e '.[bench-leaderboard,bench-observability]'   # the library half
+docker compose up --build                                   # Postgres/pgvector
 
 # Reads are account-free — the board, scorecards, provenance, replays:
 curl localhost:8000/leaderboard/lunar-polar-ice-prospecting-v1
@@ -79,11 +85,11 @@ curl -X POST localhost:8000/submissions -H "Authorization: Bearer $TOKEN" \
 with a hand-assembled JSON body:
 
 ```bash
-pip install -e '.[submit]'
+pip install -e '.[bench-submit]'
 export ASTRO_MINE_BENCH_TOKEN=<oidc token>       # never a flag: a token on argv lands in `ps`
 
 # The path a community submission should take: an artifact referenced by digest.
-astro-mine-bench submit --hub-ref sha256:… \
+astro-mine bench submit --hub-ref sha256:… \
   --scenario-id lunar-polar-ice-prospecting-v1 --to https://board.example --wait
 ```
 
@@ -102,8 +108,8 @@ terminal status and prints the resulting submission and its rank; without `--wai
 printed along with the command to resume:
 
 ```bash
-astro-mine-bench submit --job <job-id> --to https://board.example --wait
-astro-mine-bench submit … --json          # machine-readable, like `score --json`
+astro-mine bench submit --job <job-id> --to https://board.example --wait
+astro-mine bench submit … --json          # machine-readable, like `score --json`
 ```
 
 Identity comes from the verified token and **only** from the token — no flag can set it, and the
@@ -113,7 +119,7 @@ extra installed.
 
 The hosted tier runs every submitted policy **out-of-process in a sandbox** — no network egress,
 hard CPU/memory/time caps — because a submission is untrusted code (bench.md §9). Read
-[TRUST_BOUNDARY.md](TRUST_BOUNDARY.md) before exposing a leaderboard to the public internet: it
+[TRUST_BOUNDARY.md](../../../TRUST_BOUNDARY.md) before exposing a leaderboard to the public internet: it
 states exactly what each sandbox tier does and does not protect against. Hub-digest submissions are
 additionally verified for a **cosign signature, SLSA provenance, and an SBOM** before they execute,
 reusing [Seal](https://github.com/astro-mine/astro-mine-seal)'s primitives via the Hub client —
@@ -134,22 +140,23 @@ database). Setting `ASTRO_MINE_BENCH_CATALOG_DSN` switches discovery to the **Po
 catalog (bench.md §5) — spec/version/lineage index plus similarity search:
 
 ```bash
-astro-mine-bench zoo-sync --dsn "$DSN"                  # seed it from the packaged zoo
-astro-mine-bench zoo-search --dsn "$DSN" "ice prospecting endurance"
+astro-mine bench zoo-sync --dsn "$DSN"                  # seed it from the packaged zoo
+astro-mine bench zoo-search --dsn "$DSN" "ice prospecting endurance"
 ```
 
 ## Development
 
-Targets **Python 3.12** with a per-repo **conda** env and **uv**.
+Bench is part of the [`astro-mine-platform`](../../../README.md) distribution — one repository, one
+environment, one test suite. See [`docs/DEVELOPMENT.md`](../../DEVELOPMENT.md) for setup, then run
+this component's suite with its own CI selection:
 
 ```bash
-conda create -n astro-mine-bench python=3.12
-conda activate astro-mine-bench
-uv sync && uv run pytest
+python scripts/test.py bench
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+See [CONTRIBUTING.md](https://github.com/astro-mine/.github/blob/main/CONTRIBUTING.md) for the full
+workflow.
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE). Copyright Astro-Mine project contributors.
+Apache-2.0 — see [LICENSE](../../../LICENSE). Copyright Astro-Mine project contributors.
