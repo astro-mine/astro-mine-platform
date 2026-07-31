@@ -60,7 +60,7 @@ def test_no_metakernel_configured_is_a_no_op(
 ) -> None:
     """The zero-prerequisite path must stay zero-prerequisite (CX-LOCAL).
 
-    `astro-mine-sim record` on the shipped reference scenario needs no geometry at all. If this
+    `astro-mine sim record` on the shipped reference scenario needs no geometry at all. If this
     ever furnishes, or raises, that path acquires a NAIF download as a prerequisite.
     """
     calls = _stub_load(monkeypatch)

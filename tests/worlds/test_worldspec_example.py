@@ -1,4 +1,4 @@
-"""The shipped `WorldSpec` example, and the `astro-mine-worlds validate` checker (G2.11).
+"""The shipped `WorldSpec` example, and the `astro-mine worlds validate` checker (G2.11).
 
 Worlds has been able to read a WorldSpec from YAML since the model existed and shipped no YAML: the
 only real spec was authored in Python inside the anchor build script, so a user had nothing to copy
@@ -124,11 +124,11 @@ def test_the_shipped_schema_is_what_the_model_generates() -> None:
     behind the code it claims to describe — which is worse than shipping none, because a consumer
     would be validating against a contract nobody honours. Regenerate rather than hand-edit:
 
-        astro-mine-worlds schema > src/astro_mine/worlds/spec/schema/worldspec.schema.json
+        astro-mine worlds schema > src/astro_mine/worlds/spec/schema/worldspec.schema.json
     """
     assert published_json_schema() == WorldSpec.json_schema(), (
         "the shipped WorldSpec schema is stale; regenerate it with "
-        "`astro-mine-worlds schema > src/astro_mine/worlds/spec/schema/worldspec.schema.json`"
+        "`astro-mine worlds schema > src/astro_mine/worlds/spec/schema/worldspec.schema.json`"
     )
 
 

@@ -1199,7 +1199,7 @@ def test_the_pinned_worlds_soil_and_gravity_actually_reach_the_physics(
 
 # --- the runner provider: Bench's `astro_mine.bench.runners` entry point (RM-P0-SIM-11) ----------
 #
-# `astro-mine-bench score --runner sim` resolves this provider by name through the entry-point group
+# `astro-mine bench score --runner sim` resolves this provider by name through the entry-point group
 # bench#58 defined, and injects the runner it returns. Bench never imports Sim (conventions.md §1.1;
 # bench.md §2.2) — the direction is one-way.
 
@@ -1224,7 +1224,7 @@ def test_provider_resolves_the_store_from_the_env(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     # When Bench passes no store (its `score` CLI does not), the provider opens the one named by
-    # $ASTRO_MINE_HUB_REGISTRY — the same convention `astro-mine-sim run` uses.
+    # $ASTRO_MINE_HUB_REGISTRY — the same convention `astro-mine sim run` uses.
     monkeypatch.setenv(_REGISTRY_ENV, str(tmp_path))
     assert isinstance(sim_runner_provider.episode_runner(), SimEpisodeRunner)
     assert isinstance(
@@ -1424,14 +1424,14 @@ def test_scoring_refuses_a_run_whose_pinned_providers_did_not_rebuild(
 ) -> None:
     """A scorecard is a claim, so the scoring path refuses to produce one from a blind run (#67).
 
-    `astro-mine-bench fetch` obtains the content; rebuilding a world bundle into a `WorldProvider`
+    `astro-mine bench fetch` obtains the content; rebuilding a world bundle into a `WorldProvider`
     is astro-mine-worlds' job. A user with every digest and no producers installed would otherwise
     score `nights_survived` for a mission with no measured night and `comms_robustness` for a swarm
     nothing masked — while the provenance says the content was all there.
     """
     blind = SimEpisodeRunner(store=content["store"], provider_factories={})
 
-    # Bench's own type, not a bare RuntimeError: it is what lets `astro-mine-bench score` present a
+    # Bench's own type, not a bare RuntimeError: it is what lets `astro-mine bench score` present a
     # deliberate refusal as an actionable error while an engine bug keeps its traceback
     # (astro-mine-bench#79). A caller must never have to match on message text to tell them apart.
     with pytest.raises(ScoringRefused, match="refusing to score") as excinfo:
