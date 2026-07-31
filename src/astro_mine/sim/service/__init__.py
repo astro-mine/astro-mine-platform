@@ -9,7 +9,7 @@ is the second half of that; the first half is unchanged.
 **Additive, never a replacement.** The in-process path — construct a
 :class:`~astro_mine.sim.runtime.Simulator`, call ``reset``/``step`` — is untouched, and remains the
 always-works local tier (CX-LOCAL). Nothing in ``astro_mine.sim``'s runtime imports this package;
-gRPC arrives only with the ``astro-mine-sim[service]`` extra.
+gRPC arrives only with the ``astro-mine-platform[sim-service]`` extra.
 
 Four pieces:
 
@@ -63,7 +63,7 @@ __all__ = [
 
 _SERVICE_HINT = (
     "the Sim service skin requires gRPC + FlatBuffers (grpcio, protobuf, flatbuffers); "
-    "install it with: pip install 'astro-mine-sim[service]'"
+    "install it with: pip install 'astro-mine-platform[sim-service]'"
 )
 
 #: Which private module each public name lives in — the lazy-import map. Keeping the gRPC-dependent
@@ -86,7 +86,8 @@ _EXPORTS = {
 def __getattr__(name: str) -> object:
     """Resolve a public name by importing its module on first access (PEP 562).
 
-    Raises a clear :class:`ModuleNotFoundError` naming ``astro-mine-sim[service]`` when the gRPC /
+    Raises a clear :class:`ModuleNotFoundError` naming ``astro-mine-platform[sim-service]``
+    when the gRPC /
     FlatBuffers stack is absent — the same "the error tells you which extra to install" contract the
     engine factories follow."""
     module_name = _EXPORTS.get(name)

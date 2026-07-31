@@ -71,7 +71,7 @@ def _run(args: argparse.Namespace) -> int:
     if importlib.util.find_spec("astro_mine.bench") is None:
         print(
             "error: `run` executes a Bench ScenarioSpec and needs astro-mine-bench; "
-            "install it with `pip install 'astro-mine-sim[bench]'`.",
+            "install it with `pip install 'astro-mine-platform[sim-bench]'`.",
             file=sys.stderr,
         )
         return 2
@@ -96,7 +96,7 @@ def _run(args: argparse.Namespace) -> int:
     except ImportError:
         print(
             "error: resolving pinned content needs the Hub client; "
-            "install it with `pip install 'astro-mine-sim[hub]'`.",
+            "install it with `pip install 'astro-mine-platform[sim-hub]'`.",
             file=sys.stderr,
         )
         return 2

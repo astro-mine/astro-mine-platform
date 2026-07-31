@@ -357,7 +357,8 @@ class ServiceAuth:
 class InsecureDevAuth:
     """The **local-dev only** posture: no TLS, no tokens — every RPC served to whoever connects.
 
-    It exists so that ``pip install astro-mine-prospect[service]`` and a local round-trip still work
+    It exists so that ``pip install astro-mine-platform[prospect-service]`` and a local
+    round-trip still work
     without standing up an IdP (prospect.md §7's local tier; ``LUNAR-TR-004``). It is never the
     default and cannot be reached by omission: :func:`~astro_mine.prospect.service.server.serve`
     accepts it only when the caller passes it explicitly, the :data:`INSECURE_DEV_ENV_VAR`

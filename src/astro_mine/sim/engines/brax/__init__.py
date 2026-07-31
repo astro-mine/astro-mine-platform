@@ -43,7 +43,7 @@ __all__ = [
 
 _BRAX_HINT = (
     "the Brax/MJX contact engine requires the JAX stack (jax, brax, mujoco); "
-    "install it with: pip install 'astro-mine-sim[brax]'"
+    "install it with: pip install 'astro-mine-platform[sim-brax]'"
 )
 
 
@@ -55,7 +55,8 @@ def brax_contact_engine_factory(scenario: Scenario, rng: RngStreams) -> RegimeEn
     The real contact tier is :func:`mjx_contact_engine_factory`.
 
     Lazy-imports the JAX kernel so the engine set stays importable — and the manifest registrable —
-    without JAX. Raises a clear :class:`ModuleNotFoundError` naming ``astro-mine-sim[brax]`` only
+    without JAX. Raises a clear :class:`ModuleNotFoundError` naming
+    ``astro-mine-platform[sim-brax]`` only
     when a scenario actually selects the tier without the JAX stack installed."""
     try:
         from astro_mine.sim.engines.brax._engine import build_brax_contact_engine
@@ -73,7 +74,8 @@ def mjx_contact_engine_factory(scenario: Scenario, rng: RngStreams) -> RegimeEng
     is the cheaper reduced-order JAX kernel kept alongside it.
 
     Lazy-imports the MJX kernel, so registering the manifest needs no JAX; raises a clear
-    :class:`ModuleNotFoundError` naming ``astro-mine-sim[brax]`` when the stack is absent."""
+    :class:`ModuleNotFoundError` naming ``astro-mine-platform[sim-brax]`` when the stack is
+    absent."""
     try:
         from astro_mine.sim.engines.brax._mjx import build_mjx_contact_engine
     except ModuleNotFoundError as exc:  # jax/brax/mujoco absent
@@ -113,7 +115,7 @@ def build_vectorized_rollout(
     """Build the GPU-batched N-env rollout over the scenario's ``brax_contact`` agents (``[brax]``).
 
     Lazy-imports the batched JAX path; raises a clear :class:`ModuleNotFoundError` naming
-    ``astro-mine-sim[brax]`` when the JAX stack is absent. See
+    ``astro-mine-platform[sim-brax]`` when the JAX stack is absent. See
     :func:`~astro_mine.sim.engines.brax._batch.build_vectorized_rollout`."""
     try:
         from astro_mine.sim.engines.brax._batch import (

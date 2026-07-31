@@ -12,9 +12,11 @@ the ``astro_mine.providers`` entry point — never importing :mod:`astro_mine.pr
 Security invariant (``RM-P0-PROSPECT-05``): only the **public belief prior** is published; the
 sealed :class:`~astro_mine.prospect.belief.ground_truth.GroundTruthField` is never serialized.
 
-``astro-mine-hub`` is a **publish-time** dependency (``pip install astro-mine-prospect[publish]``):
-:func:`publish_prior` imports it lazily, so :func:`from_bundle` — the field-loading path — needs
-only Core + numpy.
+:mod:`astro_mine.hub` is a **publish-time** collaborator: :func:`publish_prior` imports it lazily,
+so :func:`from_bundle` — the field-loading path — needs only Core + numpy. Consolidation put Hub
+in the same distribution, so there is nothing extra to install;
+``astro-mine-platform[prospect-publish]`` survives as an empty alias for the install line that used
+to matter.
 """
 
 from __future__ import annotations

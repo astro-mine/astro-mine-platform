@@ -42,7 +42,7 @@ if TYPE_CHECKING:  # `httpx` is the [submit] extra; annotations must not require
 
 _INSTALL_HINT = (
     "`submit` needs an HTTP client, which is not in the base package: install it with "
-    "`uv sync --extra submit` (or `pip install 'astro-mine-bench[submit]'`)"
+    "`uv sync --extra submit` (or `pip install 'astro-mine-platform[bench-submit]'`)"
 )
 
 

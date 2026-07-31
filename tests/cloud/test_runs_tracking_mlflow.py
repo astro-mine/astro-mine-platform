@@ -216,5 +216,5 @@ def test_tracking_uri_defaults_to_mlflows_own_resolution(
 def test_missing_extra_raises_an_actionable_error(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setitem(sys.modules, "mlflow", None)
     monkeypatch.setitem(sys.modules, "mlflow.tracking", None)
-    with pytest.raises(ModuleNotFoundError, match=r"astro-mine-cloud\[mlflow\]"):
+    with pytest.raises(ModuleNotFoundError, match=r"astro-mine-platform\[cloud-mlflow\]"):
         MlflowTrackingClient()

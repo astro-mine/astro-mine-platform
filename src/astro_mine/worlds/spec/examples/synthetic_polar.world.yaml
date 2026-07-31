@@ -4,7 +4,7 @@
 # and had no YAML to read: the only real spec was authored in Python inside the anchor build
 # script, so there was nothing to start from and nothing to check what you wrote against.
 #
-#   astro-mine validate <path>              # or `astro-mine-worlds validate <path>`
+#   astro-mine validate <path>              # or `astro-mine worlds validate <path>`
 #   astro-mine new world my.world.yaml      # scaffold one of these
 #
 # This is deliberately NOT the anchor world. The anchor's region is derived from the ingested LOLA

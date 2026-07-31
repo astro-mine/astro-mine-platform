@@ -37,7 +37,7 @@ __all__ = [
 
 _MUJOCO_HINT = (
     "the MuJoCo articulated mobility tier requires the MuJoCo contact solver (mujoco, numpy); "
-    "install it with: pip install 'astro-mine-sim[mujoco]'"
+    "install it with: pip install 'astro-mine-platform[sim-mujoco]'"
 )
 
 
@@ -46,7 +46,7 @@ def mujoco_mobility_engine_factory(scenario: Scenario, rng: RngStreams) -> Regim
 
     Lazy-imports the contact solver so the engine set stays importable — and the manifest
     registrable — without MuJoCo. Raises a clear :class:`ModuleNotFoundError` naming
-    ``astro-mine-sim[mujoco]``
+    ``astro-mine-platform[sim-mujoco]``
     only when a scenario actually selects the tier without it."""
     try:
         from astro_mine.sim.engines.mujoco._engine import build_mujoco_mobility_engine

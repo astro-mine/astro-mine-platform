@@ -42,5 +42,5 @@ def test_gate_runner_sim_without_sim_is_a_clean_error(
     code = _load_gate().main(["--runner", "sim"])  # type: ignore[attr-defined]
     err = capsys.readouterr().err
     assert code == 2
-    assert "astro-mine-sim[bench]" in err
+    assert "astro-mine-platform[sim-bench]" in err
     assert "Traceback" not in err

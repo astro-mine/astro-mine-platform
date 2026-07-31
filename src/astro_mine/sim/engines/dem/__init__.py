@@ -32,7 +32,8 @@ def dem_granular_engine_factory(scenario: Scenario, rng: RngStreams) -> RegimeEn
 
     Lazy-imports the numpy kernel so the engine set stays importable — and the manifest
     registrable — without numpy. Raises a clear :class:`ModuleNotFoundError` (from the import)
-    only if a scenario actually selects the DEM tier without ``astro-mine-sim[dem]`` installed.
+    only if a scenario actually selects the DEM tier without ``astro-mine-platform[sim-dem]``
+    installed.
     """
     from astro_mine.sim.engines.dem._engine import build_dem_engine
 

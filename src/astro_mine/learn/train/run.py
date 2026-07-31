@@ -64,7 +64,7 @@ DEFAULT_EXPORT_VERSION = "0.1.0"
 #: actionable install line, never a traceback (CX-LOCAL).
 _EXPORT_INSTALL_HINT = (
     "--export needs the ONNX toolchain from the optional [export] extra; install it with "
-    "`uv sync --extra export` (or `pip install 'astro-mine-learn[export]'`) and re-run"
+    "`uv sync --extra export` (or `pip install 'astro-mine-platform[learn-export]'`) and re-run"
 )
 
 #: RunContext environment-variable names — the Learn<->Cloud contract. Cloud injects the
@@ -146,7 +146,7 @@ def _load_dotted(dotted: str, *, flag: str) -> Any:
         raise ValueError(
             f"{flag} {dotted!r}: cannot import {module_name!r} ({exc}). "
             f"Install the package that provides it — e.g. the reference environment ships in "
-            f"astro-mine-sim (`uv pip install astro-mine-sim`)."
+            f"astro-mine-platform (`uv pip install astro-mine-platform`)."
         ) from exc
     try:
         target = getattr(module, attr)

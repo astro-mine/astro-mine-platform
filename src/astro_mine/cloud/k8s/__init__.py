@@ -156,7 +156,7 @@ def to_yaml(manifests: Manifest | Iterable[Manifest]) -> str:
     except ModuleNotFoundError as exc:  # pragma: no cover - exercised only without [cluster]
         raise ModuleNotFoundError(
             "to_yaml() needs pyyaml; install the 'cluster' extra: pip install "
-            "'astro-mine-cloud[cluster]'"
+            "'astro-mine-platform[cloud-cluster]'"
         ) from exc
     docs = [manifests] if isinstance(manifests, dict) else list(manifests)
     rendered: str = yaml.safe_dump_all(docs, sort_keys=True, default_flow_style=False)

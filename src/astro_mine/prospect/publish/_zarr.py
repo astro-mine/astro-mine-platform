@@ -102,7 +102,7 @@ def _zarr() -> Any:
     except ImportError as exc:  # pragma: no cover - only reachable without the optional extra
         raise ImportError(
             "Zarr field storage needs the optional 'zarr' extra: "
-            "pip install astro-mine-prospect[zarr]"
+            "pip install astro-mine-platform[prospect-zarr]"
         ) from exc
     return zarr
 

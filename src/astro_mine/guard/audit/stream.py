@@ -9,7 +9,8 @@ conventions.md §4/§5). Mirrors ``astro_mine.sim.recording``.
 **Best-effort, never on the safety path (safety-critical MUST).** A ``PolicyShield`` calls
 :meth:`VerdictStream.write_verdict` *after* the certified action is fixed, so this module swallows
 every write fault (encoding, IO, back-pressure) — a dropped log never changes the certified action
-(guard.md §8, §9.1). ``mcap`` is an **optional extra** (``astro-mine-guard[recording]``), imported
+(guard.md §8, §9.1). ``mcap`` is an **optional extra**
+(``astro-mine-platform[guard-recording]``), imported
 lazily, so the base package stays core + pydantic and the safety path carries zero
 telemetry dependencies — importing this module never imports ``mcap``.
 """

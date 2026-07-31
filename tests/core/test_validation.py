@@ -63,7 +63,9 @@ def test_no_kind_to_filename_map_in_the_source() -> None:
     """
     source = (ROOT / "src" / "astro_mine" / "core" / "validation.py").read_text(encoding="utf-8")
     for _pkg, filename in CORE_JSON_SCHEMAS:
-        assert filename not in source, f"{filename} is hard-coded in validation.py — derive it instead"
+        assert filename not in source, (
+            f"{filename} is hard-coded in validation.py — derive it instead"
+        )
 
 
 def test_every_document_schema_becomes_a_kind() -> None:

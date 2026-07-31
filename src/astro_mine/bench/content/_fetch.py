@@ -74,7 +74,7 @@ STORE_ENV = "ASTRO_MINE_HUB_REGISTRY"
 
 _INSTALL_HINT = (
     "`fetch` needs the Hub client, which is not in the base package: install it with "
-    "`uv sync --extra fetch` (or `pip install 'astro-mine-bench[fetch]'`)"
+    "`uv sync --extra fetch` (or `pip install 'astro-mine-platform[bench-fetch]'`)"
 )
 
 

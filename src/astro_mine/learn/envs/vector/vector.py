@@ -114,7 +114,8 @@ class VectorExecutor:
             if backend == "jax":
                 raise ImportError(
                     "backend='jax' was requested but the GPU-vectorized world could not be "
-                    "built — install the optional extra: `pip install astro-mine-learn[jax]`"
+                    "built — install the optional extra: "
+                    "`pip install astro-mine-platform[learn-jax]`"
                 ) from exc
             # auto: no JAX here → the sequential CPU loop, which always works.
             return None

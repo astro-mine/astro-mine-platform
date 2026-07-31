@@ -42,7 +42,7 @@ __all__ = [
 
 _OREKIT_HINT = (
     "the Orekit orbital tier requires the Orekit JPype binding and a JVM "
-    "(orekit-jpype, jdk4py); install it with: pip install 'astro-mine-sim[orekit]'"
+    "(orekit-jpype, jdk4py); install it with: pip install 'astro-mine-platform[sim-orekit]'"
 )
 
 
@@ -51,7 +51,8 @@ def orekit_orbital_engine_factory(scenario: Scenario, rng: RngStreams) -> Regime
 
     Lazy-imports the Orekit-backed engine (and boots the JVM) so the engine set stays importable —
     and the manifest registrable — with no JVM present. Raises a clear :class:`ModuleNotFoundError`
-    naming ``astro-mine-sim[orekit]`` only when a scenario actually selects the tier without it."""
+    naming ``astro-mine-platform[sim-orekit]`` only when a scenario actually selects the tier
+    without it."""
     try:
         from astro_mine.sim.engines.orekit._engine import build_orekit_orbital_engine
     except ModuleNotFoundError as exc:  # orekit_jpype / jdk4py absent

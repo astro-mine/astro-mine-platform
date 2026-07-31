@@ -108,7 +108,7 @@ class RedisJobStatusStore:
         except ModuleNotFoundError as exc:  # pragma: no cover - requires the [redis] extra
             raise ModuleNotFoundError(
                 "RedisJobStatusStore.from_url needs the 'redis' extra: "
-                "pip install 'astro-mine-cloud[redis]'"
+                "pip install 'astro-mine-platform[cloud-redis]'"
             ) from exc
         return cls(redis.Redis.from_url(url), ttl_seconds=ttl_seconds)  # pragma: no cover
 

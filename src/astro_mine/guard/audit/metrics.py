@@ -14,7 +14,8 @@ to compute (it owns the two rollouts); this module only emits the per-tick data 
 
 :func:`write_metrics_parquet` lands the per-tick table in **Parquet** (``pyarrow``) so Bench and
 analysis read the columnar metrics; Bench also consumes the raw verdicts through its MCAP decoder
-(``bench/recording``). ``pyarrow`` is an **optional extra** (``astro-mine-guard[metrics]``),
+(``bench/recording``). ``pyarrow`` is an **optional extra**
+(``astro-mine-platform[guard-metrics]``),
 imported lazily — importing this module never imports ``pyarrow``.
 """
 

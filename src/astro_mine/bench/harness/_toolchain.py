@@ -11,7 +11,7 @@ installed as a dependency, the dependency set that decides whether a run reprodu
 consumer — the engines, solvers, and Core pin that produced the physics. So the lockfile is resolved
 from the caller, the environment, or the working directory, and never from Bench's install location:
 deriving it from ``__file__`` only ever resolved in a source checkout, which broke the
-``pip install astro-mine-bench`` tier that bench.md §7 requires to always work.
+``pip install astro-mine-cli`` tier that bench.md §7 requires to always work.
 
 Backlog: RM-P0-BENCH-04 — https://github.com/astro-mine/astro-mine-bench/issues/4
 """
