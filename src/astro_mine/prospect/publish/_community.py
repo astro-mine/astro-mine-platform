@@ -24,7 +24,6 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
@@ -37,7 +36,7 @@ from astro_mine.prospect.publish._bundle import bundle_digest
 from astro_mine.prospect.publish._publish import publish_prior
 
 if TYPE_CHECKING:
-    from astro_mine.hub.registry import PublishedArtifact
+    from astro_mine.hub.registry import PublishedArtifact, RegistryClient
 
 __all__ = [
     "RECIPE_SPEC_MEDIA_TYPE",
@@ -170,7 +169,7 @@ def build_recipe_manifest(
 def publish_community_prior(
     prior: Prior,
     *,
-    registry_path: str | Path,
+    registry: RegistryClient,
     publisher: str,
     private_key_pem: bytes,
     name: str | None = None,
@@ -188,7 +187,7 @@ def publish_community_prior(
     """
     return publish_prior(
         prior,
-        registry_path=registry_path,
+        registry=registry,
         private_key_pem=private_key_pem,
         name=name,
         version=version,
@@ -200,7 +199,7 @@ def publish_community_prior(
 def publish_recipe(
     spec: PriorRecipeSpec,
     *,
-    registry_path: str | Path,
+    registry: RegistryClient,
     publisher: str,
     private_key_pem: bytes,
     namespace: str = COMMUNITY_NAMESPACE,
@@ -212,12 +211,12 @@ def publish_recipe(
     hash — so :func:`resolve_recipe` can prove the recipe reproduces the same fitted field.
     """
     from astro_mine.hub.client import HubClient
-    from astro_mine.hub.registry import Blob, open_registry
+    from astro_mine.hub.registry import Blob
 
     prior = spec.build()
     spec_bytes = serialize_recipe_spec(spec)
     manifest = build_recipe_manifest(spec, prior, spec_sha256=bundle_digest(spec_bytes))
-    client = HubClient(open_registry(registry_path))
+    client = HubClient(registry)
     return client.publish(
         name=recipe_reference_name(spec.recipe),
         version=spec.recipe_version,
@@ -233,7 +232,7 @@ def publish_recipe(
 def resolve_recipe(
     reference: str,
     *,
-    registry_path: str | Path,
+    registry: RegistryClient,
     trusted_public_key_pem: bytes | None = None,
 ) -> Prior:
     """Pull a published prior-recipe by ``reference`` and re-fit it, fail-closed on reproduction
@@ -246,9 +245,7 @@ def resolve_recipe(
     raises ``ValueError`` — a recipe that does not reproduce its published field is rejected.
     """
     from astro_mine.hub.client import HubClient
-    from astro_mine.hub.registry import open_registry
 
-    registry = open_registry(registry_path)
     client = HubClient(registry, trusted_public_key_pem=trusted_public_key_pem)
     # Require the full signed supply chain when a trusted key is given (a signed contribution);
     # otherwise verify integrity/digest only, so an unsigned community recipe still resolves.
@@ -292,7 +289,7 @@ class DiscoveredArtifact:
     recipe: str
 
 
-def discover_priors(registry_path: str | Path) -> tuple[DiscoveredArtifact, ...]:
+def discover_priors(registry: RegistryClient) -> tuple[DiscoveredArtifact, ...]:
     """List the community prior fields and prior-recipes a local registry holds (sorted by
     reference).
 
@@ -301,9 +298,7 @@ def discover_priors(registry_path: str | Path) -> tuple[DiscoveredArtifact, ...]
     and surfaces the ``resource_field_backend`` (fitted fields) and ``prior_recipe`` (recipes)
     artifacts with their species/recipe facets, so a consumer can pick one to resolve by digest.
     """
-    from astro_mine.hub.registry import open_registry
 
-    registry = open_registry(registry_path)
     found: list[DiscoveredArtifact] = []
     for reference in registry.references():
         descriptor = registry.resolve(reference)

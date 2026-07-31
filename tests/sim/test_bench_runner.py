@@ -24,14 +24,13 @@ import pytest
 
 from astro_mine.bench.baseline import (
     BaselinePolicy,
-    ScoringRefused,
     assert_score_reproducible,
     run,
 )
 from astro_mine.bench.baseline import run as bench_run
 from astro_mine.bench.baseline._runner import EpisodeRunner, reference_episode_runner
 from astro_mine.bench.harness import Runner, assert_reproducible, lockfile_digest, reproduce
-from astro_mine.bench.metrics import EpisodeTrace, ScoringContext
+from astro_mine.bench.metrics import scored_metric_values
 from astro_mine.bench.scenario import (
     ContentPins,
     ContentRef,
@@ -76,6 +75,7 @@ from astro_mine.core.sadf.model import (
     ThermalBudget,
     Vec3,
 )
+from astro_mine.core.scoring import EpisodeTrace, ScoringContext, ScoringRefused
 from astro_mine.core.units import J2000_EPOCH, MOON_BODY_FIXED, Epoch, ReferenceFrame, TimeScale
 from astro_mine.core.world import (
     Illumination,
@@ -499,7 +499,7 @@ def test_the_sim_runner_satisfies_benchs_episode_runner_protocol(
     # Bench's EpisodeRunner protocol". Structural, not nominal — Bench never imports Sim.
     runner: EpisodeRunner = _runner(content, tmp_path)
     assert callable(runner)
-    harness: Runner = SimHarnessRunner(_runner(content, tmp_path))
+    harness: Runner = SimHarnessRunner(_runner(content, tmp_path), scorer=scored_metric_values)
     assert callable(harness)
     # And it identifies itself, so a Result records that real physics produced it.
     assert runner.__name__ == SIM_RUNNER_ID  # type: ignore[union-attr]
@@ -725,7 +725,7 @@ def test_benchs_determinism_gate_passes_with_the_sim_runner_injected(
     # Acceptance criterion: "Bench's determinism gate passes with the Sim-backed runner injected, on
     # the anchor scenario, reproducibly across repeated runs (same seed => same result)".
     spec = _spec(content)
-    gate = SimHarnessRunner(_runner(content, tmp_path))
+    gate = SimHarnessRunner(_runner(content, tmp_path), scorer=scored_metric_values)
 
     result = assert_reproducible(spec, gate, runner_id=SIM_RUNNER_ID)
 
@@ -746,7 +746,7 @@ def test_the_gate_pins_sims_own_lockfile(content: dict[str, Any], tmp_path: Path
     pins the lockfile that actually governs a Sim-backed run's reproducibility.
     """
     spec = _spec(content)
-    gate = SimHarnessRunner(_runner(content, tmp_path))
+    gate = SimHarnessRunner(_runner(content, tmp_path), scorer=scored_metric_values)
 
     result = assert_reproducible(spec, gate, runner_id=SIM_RUNNER_ID)
 
@@ -761,7 +761,7 @@ def test_the_gates_determinism_key_is_sims_own_trace_hash(
     from astro_mine.sim.runtime import run_episode
 
     runner = _runner(content, tmp_path)
-    gate = SimHarnessRunner(runner)
+    gate = SimHarnessRunner(runner, scorer=scored_metric_values)
     resolved = resolve_scenario(_spec(content))
 
     outcome = gate(resolved, 1001)
@@ -794,7 +794,7 @@ def test_a_different_seed_really_produces_a_different_run(
     # A guard that the gate has teeth: if every seed produced the same trace, "reproducible" would
     # be
     # vacuously true.
-    gate = SimHarnessRunner(_runner(content, tmp_path))
+    gate = SimHarnessRunner(_runner(content, tmp_path), scorer=scored_metric_values)
     resolved = resolve_scenario(_spec(content))
     assert gate(resolved, 1001).determinism_key != gate(resolved, 1002).determinism_key
 
@@ -1214,7 +1214,10 @@ def test_provider_builds_the_sim_runners_from_an_explicit_store() -> None:
     # A store passed explicitly is honoured as-is (no env, no open); the runners are the real ones.
     store = object()  # opaque: SimEpisodeRunner holds it until a run resolves content
     assert isinstance(sim_runner_provider.episode_runner(store), SimEpisodeRunner)
-    assert isinstance(sim_runner_provider.harness_runner(store), SimHarnessRunner)
+    assert isinstance(
+        sim_runner_provider.harness_runner(store, scorer=scored_metric_values),
+        SimHarnessRunner,
+    )
 
 
 def test_provider_resolves_the_store_from_the_env(
@@ -1224,7 +1227,9 @@ def test_provider_resolves_the_store_from_the_env(
     # $ASTRO_MINE_HUB_REGISTRY — the same convention `astro-mine-sim run` uses.
     monkeypatch.setenv(_REGISTRY_ENV, str(tmp_path))
     assert isinstance(sim_runner_provider.episode_runner(), SimEpisodeRunner)
-    assert isinstance(sim_runner_provider.harness_runner(), SimHarnessRunner)
+    assert isinstance(
+        sim_runner_provider.harness_runner(scorer=scored_metric_values), SimHarnessRunner
+    )
 
 
 def test_provider_without_a_store_or_env_is_a_clear_error(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -53,7 +53,7 @@ class MissingBackendExtra(ImportError):
         super().__init__(
             f"the {backend!r} search backend requires the optional [{extra}] extra; "
             f"install it with `uv sync --extra {extra}` "
-            f"(or `pip install astro-mine-studio[{extra}]`)"
+            f"(or `pip install astro-mine-platform[studio-{extra}]`)"
         )
         self.backend = backend
         self.extra = extra

@@ -160,7 +160,7 @@ def test_missing_jax_stack_raises_a_clean_error(monkeypatch: pytest.MonkeyPatch)
         lambda: build_vectorized_rollout(scenario, RngStreams(0), n_envs=4),
         lambda: fan_out(scenario, RngStreams(0), actions=ActionBatch(), steps=1),
     ):
-        with pytest.raises(ModuleNotFoundError, match=r"astro-mine-sim\[brax\]"):
+        with pytest.raises(ModuleNotFoundError, match=r"astro-mine-platform\[sim-brax\]"):
             call()
 
 

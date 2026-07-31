@@ -20,7 +20,7 @@ import pytest
 
 from astro_mine.core.registry import PluginKind, PluginManifest
 from astro_mine.hub.client import HubClient
-from astro_mine.hub.registry import Registry
+from astro_mine.hub.registry import Registry, open_registry
 from astro_mine.hub.supply_chain import generate_keypair
 from astro_mine.prospect.field import FieldGrid
 from astro_mine.prospect.priors import load_prior
@@ -64,7 +64,7 @@ def test_community_prior_publishes_and_reopens_by_digest(tmp_path: Path) -> None
     prior = load_prior(grid=_small_grid())
     artifact = publish_community_prior(
         prior,
-        registry_path=tmp_path / "reg",
+        registry=open_registry(str(tmp_path / "reg")),
         publisher="an-external-lab",
         private_key_pem=private_pem,
     )
@@ -94,14 +94,15 @@ def test_recipe_publishes_and_resolves_by_refitting(tmp_path: Path) -> None:
     spec = _spec()
     artifact = publish_recipe(
         spec,
-        registry_path=tmp_path / "reg",
+        registry=open_registry(str(tmp_path / "reg")),
         publisher="an-external-lab",
         private_key_pem=private_pem,
     )
     assert artifact.reference == f"{recipe_reference_name(_ANCHOR)}:1.0.0"
 
     rebuilt = resolve_recipe(
-        artifact.reference, registry_path=tmp_path / "reg", trusted_public_key_pem=public_pem
+        artifact.reference, registry=open_registry(str(tmp_path / "reg")),
+            trusted_public_key_pem=public_pem
     )
     # The recipe re-fits the same prior the spec's author fitted (content hash matches).
     assert isinstance(rebuilt, Prior)
@@ -114,19 +115,20 @@ def test_resolve_recipe_rejects_a_prior_reference(tmp_path: Path) -> None:
     # A resource_field_backend (fitted-field) artifact is not a recipe — resolving it as one fails.
     artifact = publish_community_prior(
         load_prior(grid=_small_grid()),
-        registry_path=tmp_path / "reg",
+        registry=open_registry(str(tmp_path / "reg")),
         publisher="lab",
         private_key_pem=private_pem,
     )
     with pytest.raises(ValueError, match="not a prior_recipe"):
-        resolve_recipe(artifact.reference, registry_path=tmp_path / "reg")
+        resolve_recipe(artifact.reference, registry=open_registry(str(tmp_path / "reg")))
 
 
 def test_resolve_recipe_fails_closed_on_reproduction_drift(tmp_path: Path) -> None:
     private_pem, _ = generate_keypair()
     spec = _spec()
     publish_recipe(
-        spec, registry_path=tmp_path / "reg", publisher="lab", private_key_pem=private_pem
+        spec, registry=open_registry(str(tmp_path / "reg")), publisher="lab",
+            private_key_pem=private_pem
     )
 
     # Tamper with the published prior_content_hash so the rebuilt prior no longer matches it.
@@ -148,7 +150,7 @@ def test_resolve_recipe_fails_closed_on_reproduction_drift(tmp_path: Path) -> No
         layers=[Blob(mt, data) for mt, data in layers.items()],
     )
     with pytest.raises(ValueError, match="does not reproduce"):
-        resolve_recipe(reference, registry_path=poisoned)
+        resolve_recipe(reference, registry=open_registry(str(poisoned)))
 
 
 # --- discovery -------------------------------------------------------------------------------
@@ -159,13 +161,14 @@ def test_discover_lists_community_priors_and_recipes(tmp_path: Path) -> None:
     reg = tmp_path / "reg"
     publish_community_prior(
         load_prior(grid=_small_grid()),
-        registry_path=reg,
+        registry=open_registry(str(reg)),
         publisher="lab-a",
         private_key_pem=private_pem,
     )
-    publish_recipe(_spec(), registry_path=reg, publisher="lab-b", private_key_pem=private_pem)
+    publish_recipe(_spec(), registry=open_registry(str(reg)), publisher="lab-b",
+        private_key_pem=private_pem)
 
-    found = discover_priors(reg)
+    found = discover_priors(open_registry(str(reg)))
     kinds = {a.kind for a in found}
     assert "resource_field_backend" in kinds
     assert "prior_recipe" in kinds

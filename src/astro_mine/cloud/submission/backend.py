@@ -15,10 +15,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.runs.events import RunObserver
     from astro_mine.cloud.submission.jobspec import JobSpec
     from astro_mine.cloud.submission.result import RunResult
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = [
     "Backend",

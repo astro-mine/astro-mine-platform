@@ -22,7 +22,7 @@ from importlib.metadata import PackageNotFoundError, version
 
 from astro_mine.mind.compose import ComposeError, HierarchyGraph, compose
 from astro_mine.mind.exec import Executive, RunResult
-from astro_mine.mind.registry import TierPlugin, TierRegistry
+from astro_mine.mind.registry import TierRegistry
 from astro_mine.mind.spec import StackSpec, StackSpecDocument, load_stack_spec
 from astro_mine.mind.trace import DecisionTrace, to_canonical_json
 
@@ -34,7 +34,6 @@ __all__ = [
     "RunResult",
     "StackSpec",
     "StackSpecDocument",
-    "TierPlugin",
     "TierRegistry",
     "__version__",
     "compose",

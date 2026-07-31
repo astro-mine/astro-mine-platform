@@ -27,7 +27,6 @@ from astro_mine.cloud.artifacts.s3 import S3ArtifactStore
 from astro_mine.cloud.artifacts.store import (
     DEFAULT_ROOT,
     DEFAULT_ROOT_ENV,
-    ArtifactStore,
     FilesystemArtifactStore,
 )
 
@@ -35,7 +34,6 @@ __all__ = [
     "ALGORITHM",
     "DEFAULT_ROOT",
     "DEFAULT_ROOT_ENV",
-    "ArtifactStore",
     "EnvironmentFingerprint",
     "FilesystemArtifactStore",
     "RunContext",

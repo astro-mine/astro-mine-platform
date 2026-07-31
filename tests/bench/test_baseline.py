@@ -22,11 +22,12 @@ from astro_mine.bench.baseline import (
     run,
 )
 from astro_mine.bench.harness import DeterminismError, Runner, reference_runner
-from astro_mine.bench.metrics import EpisodeTrace, Scorecard
+from astro_mine.bench.metrics import Scorecard
 from astro_mine.bench.scenario import ResolvedScenario, ScenarioSpec, resolve_scenario
 from astro_mine.bench.zoo import ANCHOR_SCENARIO_ID, load_scenario
 from astro_mine.core.messages.enums import ActionKind
 from astro_mine.core.policy import DecisionContext, Policy, check_policy
+from astro_mine.core.scoring import EpisodeTrace
 
 from ._factories import make_observation, make_scenario_spec
 
@@ -185,7 +186,7 @@ class _PolicylessProvider:
     def episode_runner(self, store: object | None = None) -> EpisodeRunner:
         return reference_episode_runner
 
-    def harness_runner(self, store: object | None = None) -> Runner:
+    def harness_runner(self, store: object | None = None, *, scorer: object = None) -> Runner:
         return reference_runner
 
 

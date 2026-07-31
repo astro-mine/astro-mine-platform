@@ -16,7 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from astro_mine.bench.scenario._hash import content_hash
 
-__all__ = ["EnvironmentStamp", "ReproductionReport", "Result", "RunOutcome", "SeedResult"]
+__all__ = ["EnvironmentStamp", "ReproductionReport", "Result", "SeedResult"]
 
 
 class _Model(BaseModel):
@@ -34,17 +34,6 @@ class EnvironmentStamp(_Model):
 
     python: str
     platform: str
-
-
-class RunOutcome(_Model):
-    """One runner execution's deterministic output for a single ``(scenario, seed)``.
-
-    ``determinism_key`` is the runner's byte-for-byte reproducibility digest (mirrors Sim's
-    ``Trace.content_hash``); ``metrics`` are the per-metric scalar scores for this seed.
-    """
-
-    determinism_key: str
-    metrics: dict[str, float]
 
 
 class SeedResult(_Model):

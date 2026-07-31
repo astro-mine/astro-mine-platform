@@ -42,6 +42,8 @@ jobs:
           - { comp: guard, marks: "not sim and not slow" }
           - { comp: hub, marks: "not integration" }
           - { comp: studio }
+          # Not a component: the platform-wide layering suite (conventions.md §11).
+          - { comp: platform }
     name: test ${{ matrix.comp }}
     steps:
       - uses: actions/checkout@v4

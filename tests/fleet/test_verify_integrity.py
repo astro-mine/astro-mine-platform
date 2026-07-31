@@ -17,8 +17,6 @@ from astro_mine.fleet.packaging import oci, package_oci
 from .conftest import VALID_SADF
 
 
-
-
 def _wire_blob_path(layout: Path) -> Path:
     _, manifest = oci.read_asset_artifact(layout)
     wire = next(layer for layer in manifest["layers"] if layer["mediaType"] == oci.MEDIA_SADF_WIRE)

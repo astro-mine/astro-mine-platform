@@ -280,7 +280,7 @@ def test_explicitly_requesting_jax_fails_loudly() -> None:
     def missing_jax():
         raise ImportError("No module named 'jax'")
 
-    with pytest.raises(ImportError, match=r"\[jax\]"):
+    with pytest.raises(ImportError, match=r"\[learn-jax\]"):
         VectorExecutor(_env_factory, num_envs=2, batched_world=missing_jax, backend="jax")
     with pytest.raises(ValueError, match="batched_world"):
         VectorExecutor(_env_factory, num_envs=2, backend="jax")

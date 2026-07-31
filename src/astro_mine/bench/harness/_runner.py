@@ -13,9 +13,9 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from astro_mine.bench.harness._models import RunOutcome
 from astro_mine.bench.scenario import ResolvedScenario
 from astro_mine.bench.scenario._hash import content_hash
+from astro_mine.core.scoring import RunOutcome
 
 __all__ = ["REFERENCE_RUNNER_ID", "Runner", "reference_runner"]
 

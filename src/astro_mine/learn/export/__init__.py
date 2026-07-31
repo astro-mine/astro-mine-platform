@@ -144,8 +144,9 @@ def __getattr__(name: str) -> Any:
             raise
         raise ModuleNotFoundError(
             f"`astro_mine.learn.export.{name}` needs {missing!r}, which is in the optional "
-            f"[{extra}] extra — install it with `pip install 'astro-mine-learn[{extra}]'` "
-            f"(or `uv add 'astro-mine-learn[{extra}]'`). The base wheel deliberately omits it: "
+            f"[{extra}] extra — install it with `pip install 'astro-mine-platform[learn-{extra}]'` "
+            f"(or `uv add 'astro-mine-platform[learn-{extra}]'`). The base wheel deliberately "
+            f"omits it: "
             f"a policy *consumer* needs neither ONNX Runtime nor Torch.",
             name=exc.name,
             path=exc.path,

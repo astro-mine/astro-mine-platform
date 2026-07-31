@@ -43,10 +43,10 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
     from pathlib import Path
 
-    from astro_mine.bench.metrics import EpisodeTrace, ScoringContext
     from astro_mine.bench.scenario import ResolvedScenario
     from astro_mine.core.policy import Policy
     from astro_mine.core.provenance.model import ErrorBudgetOutcome
+    from astro_mine.core.scoring import EpisodeTrace, ScoringContext
     from astro_mine.sim.engines import RegimeEngine
     from astro_mine.sim.engines.surrogate._loader import LoadedSurrogate
     from astro_mine.sim.runtime.content import BundleStore, ProviderFactory

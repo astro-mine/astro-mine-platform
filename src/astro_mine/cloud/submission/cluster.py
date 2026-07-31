@@ -44,10 +44,10 @@ from astro_mine.cloud.submission.result import RunResult
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.k8s import Manifest
     from astro_mine.cloud.runs.events import RunStatus
     from astro_mine.cloud.submission.jobspec import JobSpec
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = [
     "ClusterBackend",

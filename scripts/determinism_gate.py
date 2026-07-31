@@ -29,6 +29,7 @@ import sys
 
 from astro_mine.bench.baseline import RunnerNotAvailableError, load_runner_provider
 from astro_mine.bench.harness import DeterminismError, assert_reproducible
+from astro_mine.bench.metrics import scored_metric_values
 from astro_mine.bench.zoo import ANCHOR_SCENARIO_ID, load_scenario
 
 #: A local, importable baseline policy the scale-out gate fans out under submit-policy-we-run.
@@ -80,7 +81,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         result = assert_reproducible(
             load_scenario(args.scenario_id),
-            provider.harness_runner(),
+            # The gate is a composition point: it resolves the runner by name and supplies
+            # Bench's own scorer, because resolving a scenario's metric references is Bench's
+            # job and not the runner's (astro-mine-platform#5).
+            provider.harness_runner(scorer=scored_metric_values),
             runner_id=provider.runner_id,
         )
         rc = _eval_batch_gate(args.scenario_id)

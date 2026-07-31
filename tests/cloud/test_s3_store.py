@@ -13,7 +13,7 @@ from moto import mock_aws
 
 from astro_mine.cloud.artifacts import addressing
 from astro_mine.cloud.artifacts.s3 import S3ArtifactStore
-from astro_mine.cloud.artifacts.store import ArtifactStore
+from astro_mine.core.artifacts import ArtifactStore
 
 BUCKET = "astro-mine-test"
 REGION = "us-east-1"

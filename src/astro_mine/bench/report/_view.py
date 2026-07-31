@@ -29,7 +29,7 @@ from pydantic import BaseModel, ConfigDict
 from astro_mine.bench.leaderboard._eval import rank
 from astro_mine.bench.leaderboard._models import Integrity, MetricScore, Submission
 from astro_mine.bench.leaderboard._objects import blob_digest
-from astro_mine.bench.metrics import ScoringContext
+from astro_mine.core.scoring import ScoringContext
 
 __all__ = [
     "ViewLeaderboard",

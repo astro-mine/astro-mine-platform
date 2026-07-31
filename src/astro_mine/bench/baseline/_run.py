@@ -28,9 +28,10 @@ from astro_mine.bench.baseline._runner import (
     resolve_episode_runner_id,
 )
 from astro_mine.bench.harness import DeterminismError
-from astro_mine.bench.metrics import EpisodeTrace, Scorecard, resolve_metrics, score
+from astro_mine.bench.metrics import Scorecard, resolve_metrics, score
 from astro_mine.bench.scenario import ScenarioSpec, resolve_scenario
 from astro_mine.core.policy import Policy
+from astro_mine.core.scoring import EpisodeTrace
 
 __all__ = ["assert_score_reproducible", "run"]
 

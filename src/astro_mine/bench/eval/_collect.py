@@ -36,8 +36,8 @@ from astro_mine.bench.metrics import Metric, aggregate_scores, resolve_metrics
 if TYPE_CHECKING:
     from astro_mine.bench.leaderboard._models import Integrity, Submission, SubmissionRequest
     from astro_mine.bench.scenario import ScenarioSpec
-    from astro_mine.cloud.artifacts.store import ArtifactStore
     from astro_mine.cloud.submission.result import RunResult
+    from astro_mine.core.artifacts import ArtifactStore
 
 __all__ = ["collect_submission", "read_metrics_parquet"]
 

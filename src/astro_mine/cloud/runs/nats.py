@@ -39,7 +39,8 @@ def _require_nats() -> Any:  # pragma: no cover - requires the [nats] extra
         import nats
     except ModuleNotFoundError as exc:
         raise ModuleNotFoundError(
-            "the NATS eventing backend needs the 'nats' extra: pip install 'astro-mine-cloud[nats]'"
+            "the NATS eventing backend needs the 'nats' extra: "
+            "pip install 'astro-mine-platform[cloud-nats]'"
         ) from exc
     return nats
 

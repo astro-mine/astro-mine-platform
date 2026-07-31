@@ -18,7 +18,7 @@ from astro_mine.fleet.library import load_reference
 from astro_mine.fleet.packaging import oci
 from astro_mine.fleet.packaging.hub import HubError, discover_asset, publish_asset, pull_asset
 from astro_mine.fleet.templates import resolve_family
-from astro_mine.hub.registry import ArtifactExistsError, Blob, Registry
+from astro_mine.hub.registry import ArtifactExistsError, Blob, Registry, open_registry
 from astro_mine.hub.supply_chain import SupplyChainError, generate_keypair
 
 
@@ -26,13 +26,14 @@ def test_signed_publish_then_pull_and_verify_by_content_hash(tmp_path):
     doc = load_reference("relay_orbiter")
     private_pem, public_pem = generate_keypair()
 
-    result = publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+    result = publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
     assert result.signed and result.namespace == "open"
     assert result.reference == "astro-mine.fleet.relay-orbiter:0.1.0"
     assert result.digest.startswith("sha256:")
 
     # Pull BY CONTENT HASH (the manifest digest); the full supply chain re-verifies before trust.
-    restored = pull_asset(tmp_path / "reg", result.digest, trusted_public_key_pem=public_pem)
+    restored = pull_asset(open_registry(str(tmp_path / "reg")), result.digest,
+        trusted_public_key_pem=public_pem)
     assert to_wire(restored) == to_wire(doc)  # byte-identical rehydration
 
 
@@ -40,7 +41,7 @@ def test_json_layer_keeps_its_pinned_media_type(tmp_path):
     # Sim rehydrates the Asset from the SADF JSON layer -> its media type must not drift.
     doc = load_reference("prospecting_rover")
     private_pem, _ = generate_keypair()
-    result = publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+    result = publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
 
     manifest = Registry(tmp_path / "reg").read_manifest(result.digest)
     media_types = {layer["mediaType"] for layer in manifest["layers"]}
@@ -51,9 +52,9 @@ def test_json_layer_keeps_its_pinned_media_type(tmp_path):
 def test_catalog_metadata_is_discoverable(tmp_path):
     doc = load_reference("hauler")
     private_pem, _ = generate_keypair()
-    result = publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+    result = publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
 
-    reference, digest = discover_asset(tmp_path / "reg", doc.asset.identity.id)
+    reference, digest = discover_asset(open_registry(str(tmp_path / "reg")), doc.asset.identity.id)
     assert reference == result.reference
     assert digest == result.digest
 
@@ -61,7 +62,7 @@ def test_catalog_metadata_is_discoverable(tmp_path):
 def test_tampered_pull_fails_closed(tmp_path):
     doc = load_reference("excavator")
     private_pem, public_pem = generate_keypair()
-    result = publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+    result = publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
 
     # Corrupt the stored SADF wire blob; verify-before-trust must reject it.
     manifest = Registry(tmp_path / "reg").read_manifest(result.digest)
@@ -69,7 +70,8 @@ def test_tampered_pull_fails_closed(tmp_path):
     blob = tmp_path / "reg" / "blobs" / "sha256" / wire["digest"].split(":", 1)[1]
     blob.write_bytes(b"tampered")
     with pytest.raises(SupplyChainError):
-        pull_asset(tmp_path / "reg", result.digest, trusted_public_key_pem=public_pem)
+        pull_asset(open_registry(str(tmp_path / "reg")), result.digest,
+            trusted_public_key_pem=public_pem)
 
 
 def test_publish_requires_a_signing_key(tmp_path):
@@ -78,21 +80,27 @@ def test_publish_requires_a_signing_key(tmp_path):
     This used to store the artifact with no attestations, leaving a consumer to pull it with an
     empty requirement set (astro-mine-hub#32)."""
     doc = load_reference("isru_plant")
+    registry = open_registry(str(tmp_path / "reg"))
     with pytest.raises(TypeError, match="sign_key"):
-        publish_asset(doc, tmp_path / "reg")  # type: ignore[call-arg]
-    assert not (tmp_path / "reg").exists()
+        publish_asset(doc, registry)  # type: ignore[call-arg]
+    # Nothing was published. Asserting on the *contents* rather than on the directory's absence:
+    # opening the registry is the caller's act now that Fleet takes one injected, so the layout
+    # exists before the refusal. An empty OCI layout is not a stored artifact, and "no artifact"
+    # was always the invariant this test meant (astro-mine-hub#32).
+    assert registry.references() == []
 
 
 def test_resolved_family_publishes_and_republish_is_rejected(tmp_path):
     doc = resolve_family("surface-rover", {"chassis_mass_kg": 300.0}, variant="m300")
     private_pem, public_pem = generate_keypair()
-    result = publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+    result = publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
 
     # name:version is immutable -- a re-publish is refused (hub.md §2.1).
     with pytest.raises(ArtifactExistsError):
-        publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+        publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
 
-    restored = pull_asset(tmp_path / "reg", result.digest, trusted_public_key_pem=public_pem)
+    restored = pull_asset(open_registry(str(tmp_path / "reg")), result.digest,
+        trusted_public_key_pem=public_pem)
     assert restored.asset.identity.id == "astro-mine.fleet.surface-rover.m300"
 
 
@@ -108,7 +116,7 @@ def test_publish_refuses_a_gated_capability_tag(tmp_path):
     )
     doc = SadfDocument(sadf_version="0.1", asset=asset)
     with pytest.raises(CapabilityError, match="reserved/gated"):
-        publish_asset(doc, tmp_path / "reg", sign_key=private_pem)
+        publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
 
 
 def test_geometry_layer_and_provenance_are_published(tmp_path):
@@ -126,7 +134,8 @@ def test_geometry_layer_and_provenance_are_published(tmp_path):
         ],
     )
     doc = SadfDocument(sadf_version="0.1", asset=asset)
-    result = publish_asset(doc, tmp_path / "reg", base_dir=tmp_path, sign_key=private_pem)
+    result = publish_asset(doc, open_registry(str(tmp_path / "reg")), base_dir=tmp_path,
+        sign_key=private_pem)
 
     registry = Registry(tmp_path / "reg")
     manifest = registry.read_manifest(result.digest)
@@ -150,4 +159,4 @@ def test_pull_without_a_json_layer_errors(tmp_path):
         layers=[Blob("application/octet-stream", b"opaque")],
     )
     with pytest.raises(HubError, match="no SADF JSON layer"):
-        pull_asset(tmp_path / "reg", artifact.digest, verify=False)
+        pull_asset(open_registry(str(tmp_path / "reg")), artifact.digest, verify=False)

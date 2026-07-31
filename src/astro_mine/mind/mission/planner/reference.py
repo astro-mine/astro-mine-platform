@@ -29,8 +29,8 @@ from astro_mine.core.messages.model import (
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.mission.planner.pddl import PddlProblem, region_name, render_problem
-from astro_mine.mind.registry.registry import TierPlugin
 
 __all__ = ["FRAME", "ReferenceMissionPlanner", "pddl_mission_plugin", "region_volume"]
 

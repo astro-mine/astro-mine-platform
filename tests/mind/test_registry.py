@@ -8,10 +8,10 @@ from astro_mine.core.messages.model import ActionBatch
 from astro_mine.core.registry.enums import DeterminismClass, PluginKind, SignatureScheme
 from astro_mine.core.registry.model import PluginManifest, Signature
 from astro_mine.core.registry.registry import IncompatibleManifest, UnsignedManifest
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.registry import (
     NotAPolicyPlugin,
     PluginNotRegistered,
-    TierPlugin,
     TierRegistry,
 )
 

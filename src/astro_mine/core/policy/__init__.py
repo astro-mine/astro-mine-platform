@@ -23,7 +23,10 @@ Public API:
   :class:`IoSignature`, :class:`TensorSpec`, :class:`PolicyAssumptions`) and its
   :func:`load_policy_package` / :func:`validate_policy_package`; the adapter
   :class:`OnnxPolicy` (+ :data:`InferenceFn`);
-- conformance — :func:`check_policy`, :func:`check_composition`, :class:`PolicyContractError`.
+- conformance — :func:`check_policy`, :func:`check_composition`, :class:`PolicyContractError`;
+- the shield-report side-channel — :class:`ShieldReport` (+ :class:`InterventionKind`) and the
+  optional :class:`ReportingShield` protocol. Guard produces the report and Mind's executive reads
+  it, so by §3.3 the contract is Core's rather than either component's.
 
 Backlog: RM-P0-CORE-03 — https://github.com/astro-mine/astro-mine-core/issues/3
 """
@@ -31,7 +34,16 @@ Backlog: RM-P0-CORE-03 — https://github.com/astro-mine/astro-mine-core/issues/
 from __future__ import annotations
 
 from astro_mine.core.env.model import AgentId
-from astro_mine.core.policy import compose, conformance, enums, loader, model, onnx, protocol
+from astro_mine.core.policy import (
+    compose,
+    conformance,
+    enums,
+    guardrail,
+    loader,
+    model,
+    onnx,
+    protocol,
+)
 from astro_mine.core.policy.compose import ComposedPolicy
 from astro_mine.core.policy.conformance import (
     PolicyContractError,
@@ -39,6 +51,11 @@ from astro_mine.core.policy.conformance import (
     check_policy,
 )
 from astro_mine.core.policy.enums import TensorDType
+from astro_mine.core.policy.guardrail import (
+    InterventionKind,
+    ReportingShield,
+    ShieldReport,
+)
 from astro_mine.core.policy.loader import (
     PolicyPackageError,
     PolicyPackageValidationError,
@@ -71,6 +88,7 @@ __all__ = [
     "Controller",
     "DecisionContext",
     "InferenceFn",
+    "InterventionKind",
     "IoSignature",
     "MissionPlanner",
     "ModelRef",
@@ -82,6 +100,8 @@ __all__ = [
     "PolicyPackageDocument",
     "PolicyPackageError",
     "PolicyPackageValidationError",
+    "ReportingShield",
+    "ShieldReport",
     "TaskMotionPlanner",
     "TensorDType",
     "TensorSpec",
@@ -90,6 +110,7 @@ __all__ = [
     "compose",
     "conformance",
     "enums",
+    "guardrail",
     "load_policy_package",
     "load_schema",
     "loader",

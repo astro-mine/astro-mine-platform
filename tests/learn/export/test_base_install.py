@@ -143,7 +143,7 @@ def test_touching_the_machinery_names_the_extra_it_needs(symbol: str, extra: str
     assert result.returncode == 0, result.stderr
     message = result.stdout
     assert f"[{extra}]" in message
-    assert f"astro-mine-learn[{extra}]" in message
+    assert f"astro-mine-platform[learn-{extra}]" in message
 
 
 def test_an_unknown_attribute_is_still_an_attribute_error() -> None:

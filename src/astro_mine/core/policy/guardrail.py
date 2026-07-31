@@ -1,20 +1,25 @@
 """The shield-report seam — structured Guard-intervention provenance (RM-P1-MIND-05).
 
-Principle 7 makes Guard the single output path; RM-P1-MIND-05 makes *what the shield did*
-observable in the decision trace without Mind ever importing Guard. The Core Policy contract
-fixes a shield's return type (``decide(obs, ctx) -> ActionBatch``), so a shield cannot hand
-back its verdict inline. This module is the neutral side-channel: a Mind-owned
-:class:`ShieldReport` value and a :class:`ReportingShield` protocol a shield MAY implement to
-expose the report for its most recent ``decide``.
+Guard is the single output path, and RM-P1-MIND-05 makes *what the shield did* observable in the
+decision trace without Mind ever importing Guard. The Core Policy contract fixes a shield's return
+type (``decide(obs, ctx) -> ActionBatch``), so a shield cannot hand back its verdict inline. This
+module is the neutral side-channel: a :class:`ShieldReport` value and a :class:`ReportingShield`
+protocol a shield MAY implement to expose the report for its most recent ``decide``.
+
+**Why this lives at the waist.** It is a two-sided contract with an implementor on one side and a
+consumer on the other: Guard's ``PolicyShield`` produces the report, Mind's executive reads it. It
+began as Mind's, which made Guard import Mind to implement Mind's protocol — inversion with the
+abstraction in the wrong place (conventions.md §3.2, §3.3: "Core owns the Protocol when two or more
+components share it"). Moving it here is what dissolves the ``guard -> mind`` edge; nothing about
+the seam itself changed.
 
 The executive reads the report — if the bound shield is a :class:`ReportingShield` — after
 :func:`~astro_mine.mind.guardrail.shield.shield_egress`, and folds its clause/certificate
 provenance into the trace's :class:`~astro_mine.mind.trace.model.ShieldRecord`. Guard's real
-``PolicyShield`` (RM-P1-GUARD-03) is made a :class:`ReportingShield` by the companion
-``astro-mine-guard`` entry-point shim, which reads Guard's ``SafetyVerdict`` stream
-(RM-P1-GUARD-06) — so the binding is a registry swap, not a Mind edit, and the ``clauses``
-are the invoked ``SafetySpec`` constraint ids (RFC-0004). A shield that is not a
-:class:`ReportingShield` still records faithfully: the executive falls back to
+``PolicyShield`` (RM-P1-GUARD-03) is made a :class:`ReportingShield` by its own entry-point shim,
+which reads Guard's ``SafetyVerdict`` stream (RM-P1-GUARD-06) — so the binding is a registry swap,
+not a Mind edit, and the ``clauses`` are the invoked ``SafetySpec`` constraint ids (RFC-0004). A
+shield that is not a :class:`ReportingShield` still records faithfully: the executive falls back to
 change-detection (did the emitted batch differ from the proposed one).
 """
 

@@ -4,7 +4,8 @@ A runner is an **in-process plugin** (conventions.md §7: *"in-process plugins u
 points"*), discovered by name — never imported. Bench seeds the dependency-clean ``fixture`` runner
 as a built-in (always available, no metadata refresh — the base ``score`` command is sacred,
 conventions.md §7 tier 1 / CX-LOCAL) and overlays third-party runners discovered through the
-entry-point group, so an injected Sim runner from ``astro-mine-sim[bench]`` resolves **without
+entry-point group, so an injected Sim runner from ``astro-mine-platform[sim-bench]`` resolves
+**without
 importing** ``astro_mine.sim`` (conventions.md §1.1 — no private side-channels; the base package
 stays core + pydantic, and ``Bench MUST NOT import Sim``, bench.md §2.2). Reference implementations
 ship as replaceable examples (conventions.md §1.3); this mirrors Learn's registry — built-ins
@@ -31,6 +32,7 @@ from astro_mine.bench.baseline._runner import (
 from astro_mine.bench.harness import Runner, reference_runner
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.core.policy import Policy
+from astro_mine.core.scoring import EpisodeScorer
 
 __all__ = [
     "RUNNER_ENTRYPOINT_GROUP",
@@ -49,7 +51,8 @@ RUNNER_ENTRYPOINT_GROUP = "astro_mine.bench.runners"
 #: actionable install line, never a traceback). Mirrors Sim's own ``_BENCH_HINT``.
 _SIM_INSTALL_HINT = (
     "the 'sim' runner is provided by astro-mine-sim; install it with "
-    "`pip install 'astro-mine-sim[bench]'` (or `uv pip install 'astro-mine-sim[bench]'`), "
+    "`pip install 'astro-mine-platform[sim-bench]'` "
+    "(or `uv pip install 'astro-mine-platform[sim-bench]'`), "
     "then fetch the anchor content so a Sim-backed run has a store to read"
 )
 
@@ -62,8 +65,15 @@ class BenchRunnerProvider(Protocol):
     harness ``Result``. ``episode_runner`` returns the scoring-path
     :class:`~astro_mine.bench.baseline.EpisodeRunner`; ``harness_runner`` the determinism-gate
     :class:`~astro_mine.bench.harness.Runner`. ``store`` is the content store an engine-backed
-    runner reads (a Sim bundle store, resolved by ``astro-mine-bench fetch``); the fixture ignores
+    runner reads (a Sim bundle store, resolved by ``astro-mine bench fetch``); the fixture ignores
     it. Typed as ``object`` so Bench never names a Sim type.
+
+    ``harness_runner`` is handed a ``scorer`` because a ``RunOutcome`` carries metric values and
+    resolving a scenario's metric references to implementations is Bench's job. An engine-backed
+    runner used to import ``bench.metrics`` for itself; passing
+    :func:`~astro_mine.bench.metrics.scored_metric_values` in is the inversion of that
+    (conventions.md §3.3), and it is the mirror image of ``store``: each side is handed what the
+    other owns rather than importing it.
     """
 
     @property
@@ -71,7 +81,7 @@ class BenchRunnerProvider(Protocol):
 
     def episode_runner(self, store: object | None = None) -> EpisodeRunner: ...
 
-    def harness_runner(self, store: object | None = None) -> Runner: ...
+    def harness_runner(self, store: object | None = None, *, scorer: EpisodeScorer) -> Runner: ...
 
 
 @runtime_checkable
@@ -127,7 +137,9 @@ class _FixtureRunnerProvider:
     def episode_runner(self, store: object | None = None) -> EpisodeRunner:
         return reference_episode_runner
 
-    def harness_runner(self, store: object | None = None) -> Runner:
+    def harness_runner(self, store: object | None = None, *, scorer: EpisodeScorer) -> Runner:
+        """The fixture synthesizes its own scores from the scenario hash, so ``scorer`` is unused —
+        accepted to satisfy the protocol, not ignored by oversight."""
         return reference_runner
 
 
@@ -148,26 +160,8 @@ BUILTIN_RUNNERS: frozenset[str] = frozenset(_BUILTINS)
 
 
 class RunnerNotAvailableError(RuntimeError):
-    """A ``--runner`` name is not registered — e.g. ``sim`` without ``astro-mine-sim[bench]``."""
-
-
-class ScoringRefused(RuntimeError):
-    """A runner declined to score, deliberately — part of the runner contract, not a failure.
-
-    An engine-backed runner may find that scoring this scenario would produce a claim it cannot
-    support: the canonical case is a pin that resolved by digest but rebuilt no provider, so the
-    run would report metrics for content it never modelled (``astro-mine-sim#67``). A scorecard is
-    a published claim, and there is no honest use for one made against a world that was never
-    loaded — so the runner **raises** rather than returning a degraded trace, because a refusal
-    that can be ignored will be.
-
-    It is a distinct type so a caller can present it as an error a *user* can act on — the message
-    names what is missing and which package supplies it — while a genuine engine bug keeps its
-    traceback. Bench's own CLI does exactly that. Matching on message text would work today and rot
-    tomorrow (``#79``).
-
-    Raised by the runner and caught by whoever drives it; Bench never raises it itself.
-    """
+    """A ``--runner`` name is not registered — e.g. ``sim`` without
+    ``astro-mine-platform[sim-bench]``."""
 
 
 def load_runner_provider(name: str) -> BenchRunnerProvider:

@@ -45,6 +45,7 @@ from astro_mine.core.messages.model import (
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.mission.planner.pddl import (
     PddlProblem,
     prospecting_domain,
@@ -52,7 +53,6 @@ from astro_mine.mind.mission.planner.pddl import (
     render_problem,
 )
 from astro_mine.mind.mission.planner.reference import DEFAULT_SPACING_M, region_volume
-from astro_mine.mind.registry.registry import TierPlugin
 
 __all__ = ["UnifiedPlanningMissionPlanner", "up_mission_plugin"]
 
@@ -107,7 +107,7 @@ class UnifiedPlanningMissionPlanner:
         except ImportError as exc:  # pragma: no cover - exercised only without the extra
             raise MissionPlanningError(
                 "the unified-planning mission backend needs the [pddl] extra: "
-                "pip install 'astro-mine-mind[pddl]'"
+                "pip install 'astro-mine-platform[mind-pddl]'"
             ) from exc
 
         # unified-planning prints an engine credits banner on first use; silence it so a Mind

@@ -13,13 +13,14 @@ from pathlib import Path
 import pytest
 from mcap.writer import Writer
 
-from astro_mine.bench.metrics import REFERENCE_METRICS, ScoringContext, score
+from astro_mine.bench.metrics import REFERENCE_METRICS, score
 from astro_mine.bench.recording import (
     FRAMES_TOPIC,
     DecodedRecording,
     RecordingError,
     decode_recording,
 )
+from astro_mine.core.scoring import ScoringContext
 
 from ._factories import make_observation
 

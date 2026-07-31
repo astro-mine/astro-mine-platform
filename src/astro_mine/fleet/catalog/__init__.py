@@ -51,6 +51,7 @@ from astro_mine.fleet.packaging.hub import HubError, _require_hub, pull_asset
 
 if TYPE_CHECKING:  # avoid importing the Hub stack just to type a helper
     from astro_mine.hub.index import CatalogEntry
+    from astro_mine.hub.registry import RegistryClient
 
 __all__ = ["MenuEntry", "asset_preview", "list_menu", "materialize_preview"]
 
@@ -92,7 +93,7 @@ def _menu_entry(entry: CatalogEntry) -> MenuEntry:
 
 
 def list_menu(
-    registry_path: str | Path,
+    registry: RegistryClient,
     *,
     requires: Iterable[CapabilityTag | str] | None = None,
 ) -> list[MenuEntry]:
@@ -118,10 +119,9 @@ def list_menu(
     """
     _require_hub()
     from astro_mine.hub.client import catalog_from_registry
-    from astro_mine.hub.registry import Registry
 
     required = as_tags(requires) if requires is not None else None
-    catalog = catalog_from_registry(Registry(registry_path))
+    catalog = catalog_from_registry(registry)
     entries = [
         _menu_entry(entry)
         for entry in catalog.all()
@@ -132,7 +132,7 @@ def list_menu(
 
 
 def asset_preview(
-    registry_path: str | Path,
+    registry: RegistryClient,
     reference: str,
     *,
     fmt: GeometryFormat | str = GeometryFormat.GLTF,
@@ -153,7 +153,7 @@ def asset_preview(
     """
     want = GeometryFormat(fmt)
     doc = pull_asset(
-        registry_path,
+        registry,
         reference,
         trusted_public_key_pem=trusted_public_key_pem,
         verify=verify,
@@ -163,7 +163,7 @@ def asset_preview(
 
 
 def materialize_preview(
-    registry_path: str | Path,
+    registry: RegistryClient,
     reference: str,
     out_dir: str | Path,
     *,
@@ -188,10 +188,9 @@ def materialize_preview(
     """
     _require_hub()
     from astro_mine.hub.client import HubClient
-    from astro_mine.hub.registry import Registry
     from astro_mine.hub.supply_chain import DEFAULT_REQUIRED
 
-    registry = Registry(registry_path)
+
     client = HubClient(registry, trusted_public_key_pem=trusted_public_key_pem)
     demanded = tuple(DEFAULT_REQUIRED) if require is None else tuple(require)
     digest = (

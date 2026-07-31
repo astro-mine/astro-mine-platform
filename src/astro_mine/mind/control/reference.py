@@ -33,7 +33,7 @@ from astro_mine.core.messages.model import (
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
-from astro_mine.mind.registry.registry import TierPlugin
+from astro_mine.core.registry.tier import TierPlugin
 
 __all__ = ["MpcController", "PidController", "mpc_control_plugin", "pid_control_plugin"]
 

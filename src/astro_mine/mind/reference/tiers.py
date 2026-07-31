@@ -40,11 +40,11 @@ from astro_mine.core.messages.model import (
     Vec3,
     Volume,
 )
+from astro_mine.core.policy.guardrail import InterventionKind, ShieldReport
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
-from astro_mine.mind.guardrail.report import InterventionKind, ShieldReport
-from astro_mine.mind.registry.registry import TierPlugin
+from astro_mine.core.registry.tier import TierPlugin
 
 __all__ = [
     "ConstraintShield",
@@ -186,7 +186,7 @@ class ConstraintShield:
     (RM-P1-MIND-05). It projects every actuator VELOCITY setpoint onto a hard
     speed-magnitude ceiling (a ``kinematic_limit`` constraint, RFC-0004): a setpoint over the
     ceiling is scaled back onto it (a ``shield_edit``), and the intervention is surfaced
-    through the :class:`~astro_mine.mind.guardrail.report.ReportingShield` seam so it lands in
+    through the :class:`~astro_mine.core.policy.guardrail.ReportingShield` seam so it lands in
     the decision trace with its clause id. Independence holds structurally: the ceiling is the
     shield's, not the controller's — a learned or classical tier cannot raise it. Deterministic
     (a pure function of the proposed batch), so a seeded run reproduces its interventions."""

@@ -25,27 +25,25 @@ from astro_mine.bench._version import __version__
 from astro_mine.bench.baseline import REFERENCE_EPISODE_RUNNER_ID, run
 from astro_mine.bench.metrics import (
     AggregateScore,
-    EpisodeTrace,
     Metric,
     MetricRegistry,
     Scorecard,
-    ScoringContext,
     reference_metric_manifest,
     reference_registry,
     resolve_metrics,
     score,
+    scored_metric_values,
 )
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.bench.zoo import list_scenarios, load_scenario
+from astro_mine.core.scoring import EpisodeTrace
 
 __all__ = [
     "AggregateScore",
-    "EpisodeTrace",
     "Metric",
     "MetricRegistry",
     "ScenarioSpec",
     "Scorecard",
-    "ScoringContext",
     "__version__",
     "list_scenarios",
     "load_scenario",
@@ -55,6 +53,7 @@ __all__ = [
     "run",
     "score",
     "score_episode",
+    "scored_metric_values",
 ]
 
 

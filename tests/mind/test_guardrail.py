@@ -8,11 +8,12 @@ import pytest
 
 from astro_mine.core.messages.enums import ActionKind, ControlMode
 from astro_mine.core.messages.model import Action, ActionBatch, ActuatorCommand
+from astro_mine.core.policy.guardrail import InterventionKind, ReportingShield, ShieldReport
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.registry import UnsignedManifest
 from astro_mine.mind.compose import compose
 from astro_mine.mind.exec import Executive
-from astro_mine.mind.guardrail import InterventionKind, ReportingShield, ShieldReport, shield_egress
+from astro_mine.mind.guardrail import shield_egress
 from astro_mine.mind.reference import ConstraintShield
 from astro_mine.mind.registry import TierRegistry
 from astro_mine.mind.spec.enums import TierRole

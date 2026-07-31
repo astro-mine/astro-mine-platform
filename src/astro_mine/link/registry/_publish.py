@@ -17,7 +17,6 @@ Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/2
 from __future__ import annotations
 
 from collections.abc import Mapping
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from astro_mine.core.messages import ContactPlan
@@ -30,7 +29,7 @@ from astro_mine.link.registry._manifest import (
 )
 
 if TYPE_CHECKING:
-    from astro_mine.hub.registry import PublishedArtifact
+    from astro_mine.hub.registry import PublishedArtifact, RegistryClient
 
 __all__ = ["publish_contact_plan"]
 
@@ -38,7 +37,7 @@ __all__ = ["publish_contact_plan"]
 def publish_contact_plan(
     plan: ContactPlan,
     *,
-    registry_path: str | Path,
+    registry: RegistryClient,
     name: str,
     version: str,
     scenario_id: str,
@@ -49,8 +48,12 @@ def publish_contact_plan(
     namespace: str = "open",
     publisher: str = "local",
 ) -> PublishedArtifact:
-    """Serialize, manifest, sign, and publish ``plan`` to the local OCI registry at
-    ``registry_path``.
+    """Serialize, manifest, sign, and publish ``plan`` to the OCI ``registry`` the caller supplies.
+
+    The registry is **injected**, not opened from a path here: it has two implementations — the
+    local OCI-layout store and the remote OCI Distribution client — and choosing between them is
+    the caller's decision, not Link's (conventions.md §3.3). The ``HubClient`` wrapped around it is
+    not injected, because there is exactly one signer and it is Hub's.
 
     Returns the :class:`~astro_mine.hub.registry.PublishedArtifact` — its immutable
     ``name:version`` reference and its **content digest** (the OCI image-manifest digest a consumer,
@@ -74,10 +77,10 @@ def publish_contact_plan(
     """
     try:
         from astro_mine.hub.client import HubClient
-        from astro_mine.hub.registry import Blob, open_registry
+        from astro_mine.hub.registry import Blob
     except ImportError as exc:  # pragma: no cover - exercised only without the optional dep
         raise LinkRegistryError(
-            "publishing a contact plan needs the Hub client; install astro-mine-link[hub] "
+            "publishing a contact plan needs the Hub client; install astro-mine-platform[link-hub] "
             "(astro-mine-hub is git-pinned in pyproject.toml [tool.uv.sources])"
         ) from exc
 
@@ -98,9 +101,7 @@ def publish_contact_plan(
         description=description,
         input_hashes=sources,
     )
-    # `open_registry` dispatches on the string: a filesystem path → the local OCI-layout store
-    # (unchanged), a registry URL like `ghcr.io/astro-mine` → the remote OCI Distribution client.
-    client = HubClient(open_registry(registry_path))
+    client = HubClient(registry)
     return client.publish(
         name=name,
         version=version,

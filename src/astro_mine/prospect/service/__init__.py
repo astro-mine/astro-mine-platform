@@ -16,7 +16,8 @@ the explicitly-opt-in, loopback-only :class:`InsecureDevAuth` for local developm
 unauthenticated default.
 
 ``grpcio`` is an optional dependency (the ``service`` extra:
-``pip install astro-mine-prospect[service]``); importing this subpackage requires it. The core
+``pip install astro-mine-platform[prospect-service]``); importing this subpackage requires it.
+The core
 library (fields, belief, infogain, priors, publish) never imports it.
 """
 

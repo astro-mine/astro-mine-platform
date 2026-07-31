@@ -103,7 +103,7 @@ class MlflowTrackingClient:
         except ModuleNotFoundError as exc:
             raise ModuleNotFoundError(
                 "MlflowTrackingClient needs the 'mlflow' extra: pip install "
-                "'astro-mine-cloud[mlflow]'"
+                "'astro-mine-platform[cloud-mlflow]'"
             ) from exc
         self._client: Any = MlflowClient(tracking_uri=tracking_uri)
         self._experiment_ids: dict[str, str] = {}

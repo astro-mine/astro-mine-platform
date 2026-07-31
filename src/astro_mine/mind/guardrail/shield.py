@@ -24,9 +24,9 @@ from typing import Protocol, runtime_checkable
 
 from astro_mine.core.env.model import AgentId
 from astro_mine.core.messages.model import ActionBatch, Observation
+from astro_mine.core.policy.guardrail import ReportingShield
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.policy.protocol import Policy
-from astro_mine.mind.guardrail.report import ReportingShield
 from astro_mine.mind.trace.model import ShieldRecord
 
 __all__ = ["Shield", "shield_egress"]
@@ -37,7 +37,7 @@ class Shield(Policy, Protocol):
     """A safety shield — a Core :class:`Policy` that wraps another policy's output and
     returns a certified action. A nominal marker (like Core's tier sub-interfaces): it adds
     no methods over ``decide``, documenting the role Guard's ``PolicyShield`` fills. A shield
-    that also implements :class:`~astro_mine.mind.guardrail.report.ReportingShield` surfaces
+    that also implements :class:`~astro_mine.core.policy.guardrail.ReportingShield` surfaces
     structured intervention provenance into the trace (RM-P1-MIND-05)."""
 
 
@@ -57,8 +57,8 @@ def shield_egress(
     proposed batch to an emitted one (RM-P1-MIND-05).
 
     Intervention provenance: if ``shield`` is a
-    :class:`~astro_mine.mind.guardrail.report.ReportingShield`, its
-    :class:`~astro_mine.mind.guardrail.report.ShieldReport` supplies ``intervened`` and the
+    :class:`~astro_mine.core.policy.guardrail.ReportingShield`, its
+    :class:`~astro_mine.core.policy.guardrail.ShieldReport` supplies ``intervened`` and the
     invoked clause/certificate detail (Guard's ``PolicyShield`` reports its ``SafetyVerdict``
     this way). Otherwise the record falls back to change-detection — whether the emitted
     batch differs from the proposed one."""

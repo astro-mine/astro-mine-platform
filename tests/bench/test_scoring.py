@@ -10,7 +10,6 @@ import pytest
 
 from astro_mine.bench.baseline import REFERENCE_EPISODE_RUNNER_ID
 from astro_mine.bench.metrics import (
-    EpisodeTrace,
     MetricAggregation,
     MetricDirection,
     MetricValue,
@@ -18,6 +17,7 @@ from astro_mine.bench.metrics import (
     score,
 )
 from astro_mine.bench.scenario import MetricRef
+from astro_mine.core.scoring import EpisodeTrace
 from tests.bench._factories import make_observation, make_trace
 
 #: An arbitrary runner identity for scoring-kernel tests (the kernel records it, never resolves it).

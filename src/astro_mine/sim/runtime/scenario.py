@@ -167,7 +167,7 @@ class DemGranularDynamics(_Spec):
     excavator SADF — carried on the scenario for now, like the reduced-order params above. The **DEM
     numerics** (particle count/radius, contact stiffness, bed width, settle steps) size the
     reference bed; keep them modest — the engine is CPU-bound and sub-millisecond per step.
-    Selecting this tier requires the ``astro-mine-sim[dem]`` extra (numpy).
+    Selecting this tier requires the ``astro-mine-platform[sim-dem]`` extra (numpy).
     """
 
     kind: Literal["dem_granular"] = "dem_granular"
@@ -196,7 +196,7 @@ class BraxContactDynamics(_Spec):
     engine [Learn](learn.md) trains swarm-scale policies on (sim.md §8, §11). Behaviourally it is
     the reduced-order :class:`MobilityDynamics` model (so the drawbar-pull oracle cross-checks it);
     its value is the XLA-compiled batched step. Selecting this tier requires the
-    ``astro-mine-sim[brax]`` extra (jax/brax/mujoco); the Ray fan-out also needs ``[ray]``.
+    ``astro-mine-platform[sim-brax]`` extra (jax/brax/mujoco); the Ray fan-out also needs ``[ray]``.
 
     ``batch_size`` is the default number of parallel envs the vectorized rollout builds;
     ``init_speed_jitter_mps`` (0 by default) is the std-dev of a seeded per-env/per-agent initial-
@@ -222,7 +222,8 @@ class OrekitOrbitalDynamics(_Spec):
     Dormand-Prince 8(5,3)** integrator under a real force model: Newtonian central gravity plus the
     central body's **J2 oblateness** term, which pure two-body motion cannot represent. Set ``j2``
     to ``0.0`` to recover pure two-body dynamics (how the tier is regressed against the closed-form
-    Keplerian oracle). Selecting this tier requires the ``astro-mine-sim[orekit]`` extra; it needs
+    Keplerian oracle). Selecting this tier requires the ``astro-mine-platform[sim-orekit]``
+    extra; it needs
     no ``orekit-data`` download.
     """
 
@@ -253,7 +254,7 @@ class MujocoMobilityDynamics(_Spec):
     from the resolved content a scenario pins via
     :func:`~astro_mine.sim.runtime.content.mujoco_dynamics_from_content`, rather than being
     hand-authored. The defaults below are the reduced-order lunar-anchor values for a scenario that
-    pins no content. Selecting this tier requires the ``astro-mine-sim[mujoco]`` extra.
+    pins no content. Selecting this tier requires the ``astro-mine-platform[sim-mujoco]`` extra.
     """
 
     kind: Literal["mujoco_mobility"] = "mujoco_mobility"
@@ -286,7 +287,8 @@ class MjxContactDynamics(_Spec):
 
     ``batch_size`` is the default number of parallel envs the vectorized rollout builds;
     ``init_speed_jitter_mps`` (0 by default) is the std-dev of a seeded per-env initial-velocity
-    perturbation for domain randomization. Selecting this tier requires ``astro-mine-sim[brax]``
+    perturbation for domain randomization. Selecting this tier requires
+    ``astro-mine-platform[sim-brax]``
     (jax/brax/mujoco); the Ray fan-out also needs ``[ray]``.
     """
 

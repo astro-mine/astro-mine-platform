@@ -573,7 +573,7 @@ def test_worker_reports_an_unavailable_runner_as_data(anchor: ScenarioSpec, tmp_
     assert rc == 1
     result = WorkerResult.model_validate_json((tmp_path / WORKER_RESULT).read_text())
     assert result.ok is False
-    assert "astro-mine-sim[bench]" in (result.error or "")
+    assert "astro-mine-platform[sim-bench]" in (result.error or "")
     assert result.runner is None  # it never got far enough to resolve one
 
 

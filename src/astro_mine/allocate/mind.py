@@ -5,7 +5,8 @@ RFC-0006's **sibling-binding convention** ("The sibling-binding convention (Guar
 entry-point group (conventions.md §7), and the *siblings* bind there — so co-installing Mind and
 Allocate wires the **real** CP-SAT solver into a Mind stack with **no ``mind → allocate`` dependency
 in either base package**. Base Mind keeps shipping its deterministic ``GreedyReferenceAllocator``
-stand-in; a deployment that wants the real thing installs ``astro-mine-allocate[mind]`` and names
+stand-in; a deployment that wants the real thing installs ``astro-mine-platform[allocate-mind]``
+and names
 this plugin in its :class:`~astro_mine.mind.spec.model.StackSpec`. Nothing else changes.
 
 This module is the *only* place in Allocate that imports ``astro_mine.mind``, and it is reachable
@@ -14,7 +15,7 @@ package stays Mind-free (allocate.md §6: the narrow waist; the ``[mind]`` extra
 dependency).
 
 **What the shim adapts.** Mind's ``AllocationAdapter``
-(:mod:`astro_mine.mind.mission.allocate.adapter`)
+(:mod:`astro_mine.core.plan.allocation`)
 publishes a *Mind-owned* delegation DTO under the shared ``allocation.request``
 ``DecisionContext.extras`` key — deliberately minimal (a region to visit per task, a position per
 asset), because Mind must not depend on Allocate's rich request type (mind.md §6; RFC-0006
@@ -34,7 +35,7 @@ instantiates it like any tier) that:
    region, each agent an ``AssetRef``), solves it with the real planner, and
 3. maps the plan back to per-agent ``PROSPECT`` directives — the roles/regions Mind's TAMP tier
    consumes — while exposing the solve as a Mind
-   :class:`~astro_mine.mind.mission.allocate.model.Allocation` through Mind's optional
+   :class:`~astro_mine.core.plan.allocation.Allocation` through Mind's optional
    ``AllocationReporter`` seam, so a delegated decision carries the solver + seed provenance that
    reproduces it (RM-P1-MIND-04; RM-P1-ALLOC-07).
 """
@@ -66,22 +67,23 @@ from astro_mine.core.messages.model import (
     ProspectTask,
     TaskDirective,
 )
-from astro_mine.core.policy.model import DecisionContext
-from astro_mine.core.registry import PluginManifest
-from astro_mine.mind.mission.allocate.adapter import ALLOCATION_REQUEST_KEY, AllocationAdapter
-from astro_mine.mind.mission.allocate.model import (
-    Allocation as MindAllocation,
-)
-from astro_mine.mind.mission.allocate.model import (
-    AllocationProvenance as MindProvenance,
-)
-from astro_mine.mind.mission.allocate.model import (
-    AllocationRequest as MindAllocationRequest,
-)
-from astro_mine.mind.mission.allocate.model import (
+from astro_mine.core.plan.allocation import (
+    ALLOCATION_REQUEST_KEY,
+    AllocationAdapter,
     Assignment,
 )
-from astro_mine.mind.registry.registry import TierPlugin
+from astro_mine.core.plan.allocation import (
+    Allocation as MindAllocation,
+)
+from astro_mine.core.plan.allocation import (
+    AllocationProvenance as MindProvenance,
+)
+from astro_mine.core.plan.allocation import (
+    AllocationRequest as MindAllocationRequest,
+)
+from astro_mine.core.policy.model import DecisionContext
+from astro_mine.core.registry import PluginManifest
+from astro_mine.core.registry.tier import TierPlugin
 
 __all__ = [
     "PLUGIN_NAME",
@@ -210,7 +212,7 @@ def _as_allocation_request(
     - Each task must start **now** (a single ``[0, 0]`` window) and occupies its agent for a unit
       interval, so the per-asset ``NO_OVERLAP`` constraint (RM-P1-ALLOC-02) gives every agent a
       capacity of exactly one task this tick. That is not an embellishment: Mind's
-      :class:`~astro_mine.mind.mission.allocate.model.Allocation` reports ``by_agent`` as a 1:1 map
+      :class:`~astro_mine.core.plan.allocation.Allocation` reports ``by_agent`` as a 1:1 map
       and the adapter re-decides each tick, so "one role per agent per decision" *is* the contract.
     - Regions beyond the agent count are **deferred to the next replan** rather than making the
       exactly-one cover unsatisfiable. Mind's own reference allocator drops the same surplus (it
@@ -277,7 +279,7 @@ def allocation_planner_plugin() -> TierPlugin:
     :meth:`TierRegistry.from_entry_points
     <astro_mine.mind.registry.registry.TierRegistry.from_entry_points>` discovers it with no Mind
     change at all. The factory wraps the solver in Mind's own
-    :class:`~astro_mine.mind.mission.allocate.adapter.AllocationAdapter` — the same shape Mind's
+    :class:`~astro_mine.core.plan.allocation.AllocationAdapter` — the same shape Mind's
     reference allocator plugin uses — so the mission tier's decomposition is assembled into the
     delegated request, and the solver's provenance is captured back through the adapter's reporter
     seam. ``params`` may select the solver ``backend`` (default CP-SAT) and the anytime

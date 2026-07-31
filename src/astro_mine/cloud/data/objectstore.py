@@ -81,7 +81,7 @@ def _load_boto3() -> Any:
         import boto3
     except ModuleNotFoundError as exc:  # pragma: no cover - only without the [s3] extra
         raise ModuleNotFoundError(
-            "S3ObjectStore needs the 's3' extra: pip install 'astro-mine-cloud[s3]'"
+            "S3ObjectStore needs the 's3' extra: pip install 'astro-mine-platform[cloud-s3]'"
         ) from exc
     return boto3
 

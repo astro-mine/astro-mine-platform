@@ -59,7 +59,7 @@ class TierDecisionRecord:
 class ShieldRecord:
     """The mandatory shield stage's record for this tick (RM-P1-MIND-05): which shield
     plugin ran, whether it ``intervened``, and — when the shield is a
-    :class:`~astro_mine.mind.guardrail.report.ReportingShield` — the intervention
+    :class:`~astro_mine.core.policy.guardrail.ReportingShield` — the intervention
     provenance: ``kind`` (shield-edit / monitor-breach / backup-activation), the invoked
     ``SafetySpec`` ``clauses`` (RFC-0004), and an opaque ``certificate`` handle into the
     ``SafetyVerdict`` audit stream (RM-P1-GUARD-06). The reference pass-through shield never

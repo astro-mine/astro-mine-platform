@@ -16,7 +16,6 @@ from astro_mine.bench.harness._models import (
     EnvironmentStamp,
     ReproductionReport,
     Result,
-    RunOutcome,
     SeedResult,
 )
 from astro_mine.bench.harness._reproduce import (
@@ -45,7 +44,6 @@ __all__ = [
     "LockfileNotFound",
     "ReproductionReport",
     "Result",
-    "RunOutcome",
     "Runner",
     "SeedResult",
     "assert_reproducible",

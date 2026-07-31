@@ -1,10 +1,10 @@
 """S3-compatible artifact store (MinIO local, or any S3 backend).
 
-Implements the :class:`~astro_mine.cloud.artifacts.store.ArtifactStore` contract
+Implements the :class:`~astro_mine.core.artifacts.ArtifactStore` contract
 against an S3-compatible object store through a single boto3 client, so the same
 content-addressed I/O runs against local MinIO (``docker compose up minio``) or a cloud
 object store without a code change (``cloud.md`` §5, §11). boto3 is an *optional*
-dependency -- install ``astro-mine-cloud[s3]``; the base package and the sacred
+dependency -- install ``astro-mine-platform[cloud-s3]``; the base package and the sacred
 filesystem tier never import it.
 
 Keys mirror the filesystem layout: ``sha256/<h[:2]>/<h>``.
@@ -31,7 +31,7 @@ def _load_boto3() -> Any:
         import boto3
     except ModuleNotFoundError as exc:  # pragma: no cover - only without the [s3] extra
         raise ModuleNotFoundError(
-            "S3ArtifactStore needs the 's3' extra: pip install 'astro-mine-cloud[s3]'"
+            "S3ArtifactStore needs the 's3' extra: pip install 'astro-mine-platform[cloud-s3]'"
         ) from exc
     return boto3
 

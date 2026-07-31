@@ -31,7 +31,7 @@ from astro_mine.core.messages import ContactPlan
 from astro_mine.core.messages.enums import NodeRole
 from astro_mine.core.units import MOON_BODY_FIXED, Epoch, EpochWindow, ReferenceFrame, TimeScale
 from astro_mine.core.world import Vector
-from astro_mine.hub.registry import Registry
+from astro_mine.hub.registry import Registry, open_registry
 from astro_mine.hub.supply_chain import generate_keypair
 from astro_mine.link.anchor import (
     ANCHOR_ARTIFACT_NAME,
@@ -239,7 +239,7 @@ def test_anchor_publish_is_content_addressed(tmp_path: Path, anchor_plan: Contac
     published = [
         publish_contact_plan(
             anchor_plan,
-            registry_path=tmp_path / name,
+            registry=open_registry(str(tmp_path / name)),
             name=ANCHOR_ARTIFACT_NAME,
             version=ANCHOR_ARTIFACT_VERSION,
             scenario_id=ANCHOR_SCENARIO_ID,

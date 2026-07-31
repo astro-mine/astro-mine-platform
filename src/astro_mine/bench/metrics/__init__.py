@@ -73,8 +73,13 @@ from astro_mine.bench.metrics._registry import (
     resolve_metric,
     resolve_metrics,
 )
-from astro_mine.bench.metrics._score import AggregateScore, Scorecard, aggregate_scores, score
-from astro_mine.bench.metrics._trace import BeliefSnapshot, EpisodeTrace, ScoringContext
+from astro_mine.bench.metrics._score import (
+    AggregateScore,
+    Scorecard,
+    aggregate_scores,
+    score,
+    scored_metric_values,
+)
 from astro_mine.core.objective import MetricAggregation, MetricDirection
 
 __all__ = [
@@ -82,12 +87,10 @@ __all__ = [
     "REFERENCE_METRIC_MANIFEST_NAME",
     "REGISTRY",
     "AggregateScore",
-    "BeliefSnapshot",
     "CommsRobustness",
     "DiscoveryLatency",
     "DuplicateMetric",
     "EnergyPerKg",
-    "EpisodeTrace",
     "HubRegistry",
     "IncompatibleMetricVersion",
     "InformationGain",
@@ -107,7 +110,6 @@ __all__ = [
     "PsrAreaCharacterized",
     "ResolvedMetricPlugin",
     "Scorecard",
-    "ScoringContext",
     "UnknownMetric",
     "WaterMass",
     "aggregate_scores",
@@ -124,5 +126,6 @@ __all__ = [
     "resolve_metric_plugin",
     "resolve_metrics",
     "score",
+    "scored_metric_values",
     "validate_metric_manifest",
 ]

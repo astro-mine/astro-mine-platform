@@ -43,9 +43,9 @@ from __future__ import annotations
 from dataclasses import fields, replace
 from typing import TYPE_CHECKING, Any, cast
 
-from astro_mine.bench.metrics import EpisodeTrace, ScoringContext
 from astro_mine.core.messages.model import Observation
 from astro_mine.core.sadf.enums import SensorKind
+from astro_mine.core.scoring import EpisodeTrace, ScoringContext
 from astro_mine.core.world import IlluminationState
 from astro_mine.sim.bench._belief import BeliefSource, belief_fields_for
 

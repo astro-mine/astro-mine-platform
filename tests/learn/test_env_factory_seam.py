@@ -105,7 +105,7 @@ def test_an_uninstalled_producer_names_the_package_to_install() -> None:
     a real package is *absent* passes or fails on the state of the machine.
     """
     factory = resolve_env_factory("astro_mine_no_such_producer.reference:make_env")
-    with pytest.raises(ValueError, match="astro-mine-sim"):
+    with pytest.raises(ValueError, match="astro-mine-platform"):
         factory()
 
 

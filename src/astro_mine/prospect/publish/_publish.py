@@ -12,7 +12,6 @@ Backlog: RM-P1-PROSPECT-13 — https://github.com/astro-mine/astro-mine-prospect
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from astro_mine.prospect.priors.recipe import Prior
@@ -24,7 +23,7 @@ from astro_mine.prospect.publish._bundle import (
 from astro_mine.prospect.publish._manifest import build_field_manifest
 
 if TYPE_CHECKING:
-    from astro_mine.hub.registry import PublishedArtifact
+    from astro_mine.hub.registry import PublishedArtifact, RegistryClient
 
 __all__ = ["publish_prior"]
 
@@ -34,7 +33,7 @@ _DEFAULT_RECIPE = "shackleton_water_ice_v1"
 def publish_prior(
     prior: Prior,
     *,
-    registry_path: str | Path,
+    registry: RegistryClient,
     private_key_pem: bytes,
     name: str | None = None,
     version: str | None = None,
@@ -42,7 +41,11 @@ def publish_prior(
     namespace: str = "open",
     zarr: bool = False,
 ) -> PublishedArtifact:
-    """Serialize, manifest, sign, and publish *prior* to the local OCI registry at the given path.
+    """Serialize, manifest, sign, and publish *prior* to the OCI ``registry`` the caller supplies.
+
+    The registry is **injected** rather than opened from a path here: local OCI layout and
+    remote OCI Distribution are two implementations of one protocol, and picking one is the
+    caller's decision (conventions.md §3.3).
 
     Returns the :class:`~astro_mine.hub.registry.PublishedArtifact` (its immutable ``name:version``
     reference and content digest). With a ``private_key_pem`` the artifact is signed and gets its
@@ -59,7 +62,7 @@ def publish_prior(
     ``.npy`` bundle (``LUNAR-TR-004``). It needs the ``zarr`` extra at *publish* time.
     """
     from astro_mine.hub.client import HubClient
-    from astro_mine.hub.registry import Blob, open_registry
+    from astro_mine.hub.registry import Blob
 
     bundle = serialize_bundle(prior)
     manifest = build_field_manifest(prior, bundle_sha256=bundle_digest(bundle))
@@ -72,7 +75,7 @@ def publish_prior(
         )
 
         layers.append(Blob(ZARR_MEDIA_TYPE, serialize_zarr(FieldArchive.parametric(prior))))
-    client = HubClient(open_registry(registry_path))
+    client = HubClient(registry)
     return client.publish(
         name=name or prior.provenance.recipe,
         version=version or prior.provenance.recipe_version,

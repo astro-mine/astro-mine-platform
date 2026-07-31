@@ -17,8 +17,8 @@ import math
 from dataclasses import dataclass
 from typing import Protocol
 
-from astro_mine.bench.metrics._trace import EpisodeTrace
 from astro_mine.core.objective import MetricAggregation, MetricDirection
+from astro_mine.core.scoring import EpisodeTrace
 
 __all__ = ["Metric", "MetricComputationError", "MetricError", "MetricValue"]
 

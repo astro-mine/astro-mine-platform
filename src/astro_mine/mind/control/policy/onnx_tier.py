@@ -26,8 +26,8 @@ from astro_mine.core.policy.onnx import InferenceFn, OnnxPolicy
 from astro_mine.core.policy.protocol import Policy
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.control.reference import _clamp, _target_for, _velocity_action
-from astro_mine.mind.registry.registry import TierPlugin
 
 __all__ = ["content_digest", "onnx_control_plugin", "onnx_controller"]
 

@@ -30,7 +30,7 @@ from astro_mine.core.messages.model import (
 from astro_mine.core.policy.model import DecisionContext
 from astro_mine.core.registry.loader import load_manifest
 from astro_mine.core.registry.model import PluginManifest
-from astro_mine.mind.registry.registry import TierPlugin
+from astro_mine.core.registry.tier import TierPlugin
 from astro_mine.mind.tamp.motion.protocol import MotionPlanner
 from astro_mine.mind.tamp.motion.reference import Obstacle, ReferenceMotionPlanner
 from astro_mine.mind.tamp.task.reference import ReferenceTaskPlanner

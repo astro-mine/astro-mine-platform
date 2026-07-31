@@ -7,10 +7,12 @@ Mind-side host that adds exactly that missing half: a manifest → concrete
 :class:`~astro_mine.core.policy.protocol.Policy` **factory** map, discovered via Python
 entry points (conventions.md §7's in-process plugin mechanism).
 
-A tier plugin declares itself with a :class:`TierPlugin` — its Core manifest (the
-self-declaration Core gates) plus a factory that builds the tier's ``Policy``. Registration
-runs the manifest through the Core gates and requires ``kind == policy`` (all three tiers
-and the Guard shield are ``PluginKind.POLICY``; RFC-0004); instantiation calls the factory
+A tier plugin declares itself with a Core :class:`~astro_mine.core.registry.TierPlugin` — its
+manifest (the self-declaration Core gates) plus a factory that builds the tier's ``Policy``.
+The declaration is Core's because Allocate and Guard both implement it from outside Mind
+(conventions.md §3.3); the gating, discovery and instantiation below are Mind's, and stayed.
+Registration runs the manifest through the Core gates and requires ``kind == policy`` (all three
+tiers and the Guard shield are ``PluginKind.POLICY``; RFC-0004); instantiation calls the factory
 and re-checks the result satisfies the ``Policy`` contract. The out-of-process
 (gRPC + sandbox) transport for untrusted/non-Python plugins (conventions.md §7, §9) is a
 reserved seam — not implemented in v0.1.
@@ -18,8 +20,7 @@ reserved seam — not implemented in v0.1.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from collections.abc import Mapping
 from importlib.metadata import entry_points
 from typing import Any
 
@@ -28,24 +29,20 @@ from astro_mine.core.registry.enums import PluginKind
 from astro_mine.core.registry.loader import RegistryError
 from astro_mine.core.registry.model import PluginManifest
 from astro_mine.core.registry.registry import PluginRegistry, Verifier
+from astro_mine.core.registry.tier import TierFactory, TierPlugin
 
 __all__ = [
     "ENTRY_POINT_GROUP",
     "NotAPolicyPlugin",
     "PluginNotRegistered",
-    "TierFactory",
-    "TierPlugin",
     "TierRegistry",
     "TierRegistryError",
 ]
 
 #: The entry-point group Mind tier/shield plugins register under. Each entry point resolves
-#: to a zero-argument provider callable returning a :class:`TierPlugin`.
+#: to a zero-argument provider callable returning a Core
+#: :class:`~astro_mine.core.registry.TierPlugin`.
 ENTRY_POINT_GROUP = "astro_mine.mind.tier_plugins"
-
-#: Builds a tier's policy from its stack-spec ``params``. Kept parameter-driven (not
-#: zero-arg) so one plugin can be instantiated differently per stack.
-TierFactory = Callable[[Mapping[str, Any]], Policy]
 
 
 class TierRegistryError(Exception):
@@ -59,16 +56,6 @@ class PluginNotRegistered(TierRegistryError):
 class NotAPolicyPlugin(TierRegistryError):
     """Raised when a plugin's manifest is not ``kind == policy`` or its factory returns a
     value that does not satisfy the Core Policy/Planner contract."""
-
-
-@dataclass(frozen=True)
-class TierPlugin:
-    """A tier/shield plugin's self-declaration: the Core ``manifest`` the registry gates,
-    plus the ``factory`` that builds its :class:`Policy`. Returned by each plugin's
-    entry-point provider."""
-
-    manifest: PluginManifest
-    factory: TierFactory
 
 
 class TierRegistry:

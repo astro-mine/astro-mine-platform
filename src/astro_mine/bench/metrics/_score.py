@@ -17,15 +17,19 @@ from __future__ import annotations
 import math
 import statistics
 from collections.abc import Callable, Mapping, Sequence
+from typing import TYPE_CHECKING, cast
 
 from pydantic import BaseModel, ConfigDict
 
 from astro_mine.bench.metrics._metric import Metric
-from astro_mine.bench.metrics._trace import EpisodeTrace
 from astro_mine.bench.scenario._hash import content_hash
 from astro_mine.core.objective import MetricAggregation, MetricDirection
+from astro_mine.core.scoring import EpisodeTrace
 
-__all__ = ["AggregateScore", "Scorecard", "aggregate_scores", "score"]
+if TYPE_CHECKING:
+    from astro_mine.bench.scenario import MetricRef
+
+__all__ = ["AggregateScore", "Scorecard", "aggregate_scores", "score", "scored_metric_values"]
 
 
 def _percentile(values: list[float], q: float) -> float:
@@ -172,3 +176,35 @@ def score(
     return aggregate_scores(
         metrics, per_seed_by_metric, seeds, scenario_id=scenario_id, runner=runner
     )
+
+
+def scored_metric_values(
+    traces_by_seed: Mapping[int, EpisodeTrace],
+    metrics: Sequence[object],
+    *,
+    scenario_id: str | None = None,
+    runner: str,
+) -> dict[str, float | None]:
+    """Bench's :class:`~astro_mine.core.scoring.EpisodeScorer` — resolve, score, return the values.
+
+    The seam a *runner* is handed so it can report scored metrics without owning a metric
+    registry. Resolving a scenario's metric references to implementations is Bench's job; a runner
+    that must return a :class:`~astro_mine.core.scoring.RunOutcome` only needs the numbers. Passing
+    this function to the runner is what replaced the runner importing
+    :func:`resolve_metrics`/:func:`score` for itself — the last of the five module-scope imports
+    that made ``sim -> bench`` a lateral edge (conventions.md §3.2 rule 3).
+
+    ``metrics`` arrives typed as ``Sequence[object]`` because Core's protocol cannot name
+    :class:`~astro_mine.bench.scenario.MetricRef`; it is a scenario's ``spec.metrics``, and it is
+    resolved here where that type is known. A ``None`` value means the metric did not apply to
+    this episode, which the caller must keep distinct from a score of zero.
+    """
+    from astro_mine.bench.metrics._registry import resolve_metrics
+
+    card = score(
+        traces_by_seed,
+        resolve_metrics(cast("Sequence[MetricRef]", metrics)),
+        scenario_id=scenario_id,
+        runner=runner,
+    )
+    return {aggregate.metric: aggregate.value for aggregate in card.metrics}
