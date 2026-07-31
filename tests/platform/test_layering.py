@@ -25,6 +25,7 @@ from tests.platform._layering import (
     Import,
     Survey,
     check_companion_isolation,
+    check_container_is_not_on_the_import_path,
     check_core_isolation,
     check_cycles,
     check_forbidden_distributions,
@@ -88,6 +89,20 @@ def test_no_component_reaches_into_another_privately(tree: Survey) -> None:
 def test_no_component_imports_the_cli_api_or_svcs(tree: Survey) -> None:
     """§3.3. The container lives at the composition roots; a component never sees one."""
     assert check_forbidden_distributions(tree.imports) == []
+
+
+def test_importing_a_component_does_not_load_svcs() -> None:
+    """§3.3 + §8. The allowlist says where a container may be built; this says it stays there.
+
+    Both roots are imported by their own component for non-container reasons — the Cloud harness
+    for `parse_sentinels`, the Studio worker for its I/O constants — so an `import svcs` at either
+    module's scope would satisfy the path allowlist and still put the container on an ordinary
+    backend's import path. That is exactly what happened on the first attempt, and only importing
+    for real caught it.
+    """
+    assert check_container_is_not_on_the_import_path(
+        ["astro_mine.cloud.submission.cluster", "astro_mine.studio.orchestrate"]
+    ) == []
 
 
 def test_only_the_composition_roots_import_svcs(tree: Survey) -> None:

@@ -37,8 +37,7 @@ from __future__ import annotations
 import importlib
 import os
 from pathlib import Path
-
-import svcs
+from typing import Any
 
 from astro_mine.core.objective import ObjectiveDocument, from_wire, to_wire
 
@@ -131,7 +130,7 @@ def run_request(
     return EvaluationOutcome(evaluated=evaluated)
 
 
-def _container() -> svcs.Container:
+def _container() -> Any:
     """The worker's composition root: bind :class:`SiblingClients` to the factory named by env.
 
     One of the four places the platform is assembled into an application (conventions.md §3.3),
@@ -146,6 +145,11 @@ def _container() -> svcs.Container:
 
     Built, used, and dropped — no module-level container (§3.3).
     """
+    # Imported here rather than at module scope, for the same reason as the Cloud harness: this
+    # package is imported for its I/O constants by `orchestrate/cloud.py`, and a composition root
+    # should not put its container on the import path of everything that reads a filename off it.
+    import svcs
+
     registry = svcs.Registry()
     registry.register_factory(SiblingClients, load_clients)
     return svcs.Container(registry)

@@ -29,6 +29,7 @@ __all__ = [
     "Import",
     "Survey",
     "check_companion_isolation",
+    "check_container_is_not_on_the_import_path",
     "check_core_isolation",
     "check_cycles",
     "check_forbidden_distributions",
@@ -67,7 +68,16 @@ FORBIDDEN_DISTRIBUTIONS = ("astro_mine.cli", "astro_mine.api", "svcs")
 #: The allowlist is a literal path list rather than a pattern, and that is the point: adding a
 #: composition root should require editing this line and defending it in review. A root is not a
 #: component that happens to wire things — it is an *application entrypoint*, reached by ``python
-#: -m`` or a container ``ENTRYPOINT`` and never imported by anything else in the tree.
+#: -m`` or a container ``ENTRYPOINT``.
+#:
+#: It is *not* true that nothing else imports these files, which is why the exemption is not the
+#: whole rule. ``cloud/submission/cluster.py`` imports the harness for ``parse_sentinels`` — the
+#: host-side collector reads the sentinels the in-pod entrypoint prints — and
+#: ``orchestrate/cloud.py`` imports the Studio worker for its I/O constants. So each root imports
+#: ``svcs`` *inside* its container function rather than at module scope, and
+#: :func:`check_container_is_not_on_the_import_path` asserts the consequence: importing a component
+#: must not load ``svcs``. Without that, one
+#: allowlisted file would have quietly put the container on the import path of an ordinary backend.
 #:
 #: The CLI/API half of the rule has no exemption at all. A composition root may hold a container;
 #: nothing here may import the distributions that depend on this one.
@@ -433,6 +443,40 @@ def check_forbidden_distributions(
                 f"{forbidden!r} (§3.3)"
             )
     return violations
+
+
+def check_container_is_not_on_the_import_path(components_to_import: Sequence[str]) -> list[str]:
+    """§3.3 + §8 — importing a component must not load ``svcs``.
+
+    The file-level allowlist says *where* a container may be constructed; this says the container
+    must not become everyone's problem. A composition root is allowed to be imported by its own
+    component — the Cloud harness is, for its sentinel parser — so an ``import svcs`` at that
+    module's scope would put the container on the import path of an ordinary backend while still
+    passing the allowlist. Importing for real is the only way to catch that, so this check is the
+    one that does.
+    """
+    import importlib
+    import subprocess
+    import sys
+
+    script = (
+        "import sys;"
+        + "".join(f"import {name};" for name in components_to_import)
+        + "print('svcs' in sys.modules)"
+    )
+    del importlib
+    result = subprocess.run(
+        [sys.executable, "-c", script], capture_output=True, text=True, check=False
+    )
+    if result.returncode != 0:
+        return [f"could not import {', '.join(components_to_import)}: {result.stderr.strip()}"]
+    if result.stdout.strip() == "True":
+        return [
+            f"importing {', '.join(components_to_import)} loaded svcs — a composition root is "
+            f"importing it at module scope, so the container is on a component's import path "
+            f"(§3.3, §8)"
+        ]
+    return []
 
 
 def check_surface_isolation(repo_root: Path) -> list[str]:

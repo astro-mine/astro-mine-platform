@@ -39,9 +39,7 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import TYPE_CHECKING
-
-import svcs
+from typing import TYPE_CHECKING, Any
 
 from astro_mine.cloud.artifacts.store import DEFAULT_ROOT_ENV, FilesystemArtifactStore
 from astro_mine.cloud.k8s import ENV_JOBSPEC
@@ -131,7 +129,7 @@ def parse_sentinels(text: str) -> tuple[str, int] | None:
     return address, exit_code
 
 
-def _container() -> svcs.Container:
+def _container() -> Any:
     """The harness's composition root: bind the Core protocols this entrypoint composes.
 
     One of the four places the platform is assembled into an application (conventions.md §3.3),
@@ -144,6 +142,13 @@ def _container() -> svcs.Container:
     The container is built, used, and dropped. There is no module-level registry, because a
     container that outlives its root is a service locator (§3.3).
     """
+    # Imported here, not at module scope. `cluster.py` imports this module for
+    # `parse_sentinels` — the host-side collector reads the sentinels this entrypoint prints — so a
+    # module-scope import would put `svcs` on the import path of the ordinary cluster backend,
+    # costing every caller import time it does not use (§8) and quietly widening the container's
+    # blast radius past the one function that is a composition root.
+    import svcs
+
     registry = svcs.Registry()
     registry.register_factory(ArtifactStore, build_store)
     return svcs.Container(registry)
