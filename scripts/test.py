@@ -25,6 +25,9 @@ COMPONENTS = [
     "core", "spice", "seal", "worlds", "prospect", "link", "fleet", "sim",
     "bench", "cloud", "surrogate", "mind", "learn", "allocate", "guard",
     "hub", "studio",
+    # Not a component: the platform-wide layering suite (conventions.md §11), which asserts
+    # the tier and inversion rules no single component's directory could own.
+    "platform",
 ]
 
 # Verbatim from each source repo's [tool.pytest.ini_options] addopts (beyond "-ra").

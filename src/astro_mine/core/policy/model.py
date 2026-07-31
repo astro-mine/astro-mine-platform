@@ -28,6 +28,7 @@ from astro_mine.core.objective.model import ObjectiveSpec
 from astro_mine.core.policy.enums import TensorDType
 
 __all__ = [
+    "POLICY_PACKAGE_VERSION",
     "DecisionContext",
     "IoSignature",
     "ModelRef",
