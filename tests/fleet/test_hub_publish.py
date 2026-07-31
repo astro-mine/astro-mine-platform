@@ -80,9 +80,14 @@ def test_publish_requires_a_signing_key(tmp_path):
     This used to store the artifact with no attestations, leaving a consumer to pull it with an
     empty requirement set (astro-mine-hub#32)."""
     doc = load_reference("isru_plant")
+    registry = open_registry(str(tmp_path / "reg"))
     with pytest.raises(TypeError, match="sign_key"):
-        publish_asset(doc, open_registry(str(tmp_path / "reg")))  # type: ignore[call-arg]
-    assert not (tmp_path / "reg").exists()
+        publish_asset(doc, registry)  # type: ignore[call-arg]
+    # Nothing was published. Asserting on the *contents* rather than on the directory's absence:
+    # opening the registry is the caller's act now that Fleet takes one injected, so the layout
+    # exists before the refusal. An empty OCI layout is not a stored artifact, and "no artifact"
+    # was always the invariant this test meant (astro-mine-hub#32).
+    assert registry.references() == []
 
 
 def test_resolved_family_publishes_and_republish_is_rejected(tmp_path):
