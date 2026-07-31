@@ -12,7 +12,7 @@ This module closes that. It is deliberately small and does three things:
 **Resolves a path** — an explicit argument (the CLI's ``--metakernel``) wins over
 :data:`METAKERNEL_ENV`, mirroring how ``--registry`` wins over ``$ASTRO_MINE_HUB_REGISTRY``
 throughout Sim. Neither is required: **with nothing configured this is a no-op**, because plenty
-of legitimate runs need no kernels at all (``astro-mine-sim record`` on the shipped reference
+of legitimate runs need no kernels at all (``astro-mine sim record`` on the shipped reference
 scenario is the case that matters — it is the zero-prerequisite path and it must stay that way).
 
 **Furnishes at most once per process.** SPICE's pool is process-global, shared with every other
@@ -46,7 +46,7 @@ __all__ = [
 ]
 
 #: Env fallback for the SPICE metakernel, so ``--metakernel`` need not be repeated — and so
-#: ``astro-mine-bench score --runner sim`` can furnish a pool without Bench ever naming SPICE.
+#: ``astro-mine bench score --runner sim`` can furnish a pool without Bench ever naming SPICE.
 #: Bench discovers the ``sim`` runner through an entry point and passes it a content store; it has
 #: no vocabulary for kernels and must not grow one (conventions.md §1.1), so the runner reads its
 #: own environment, exactly as it already does for ``$ASTRO_MINE_HUB_REGISTRY``.

@@ -204,7 +204,11 @@ def baseline_step(
 
 
 def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI dispatch
-    parser = argparse.ArgumentParser(prog="astro-mine-learn vector benchmark", description=__doc__)
+    # The argv from this module's own docstring. `astro-mine learn` takes flags, not verbs, so
+    # there is no `learn vector benchmark` to name — this tier is run as a module, not typed.
+    parser = argparse.ArgumentParser(
+        prog="python -m astro_mine.learn.envs.vector.benchmark", description=__doc__
+    )
     parser.add_argument("--num-envs", type=int, default=32)
     parser.add_argument("--steps", type=int, default=32)
     parser.add_argument("--seed", type=int, default=0)

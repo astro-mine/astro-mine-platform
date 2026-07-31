@@ -54,7 +54,7 @@ def _example_draft() -> IntentDraft:
     return IntentDraft(
         id=SEED_NAME,
         name="Lunar polar water-ice (example)",
-        author="astro-mine-studio serve",
+        author="astro-mine studio serve",
         region=GeoRegion(
             name="Shackleton rim",
             crs=PlanetaryCRS(body="MOON", body_fixed_frame="MOON_ME", reference_radius_m=1737400.0),

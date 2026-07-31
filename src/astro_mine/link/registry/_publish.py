@@ -64,7 +64,7 @@ def publish_contact_plan(
     The key is **required**: ``hub.md`` §9 tiers artifacts as *open* (self-published, **signed**,
     unreviewed), *curated*, and *verified*, so there is no tier for unsigned content and Hub's
     admission gate refuses it (astro-mine-hub#32). Keyed ECDSA signing is offline and accountless
-    (``astro-mine-hub keygen``), so the local tier is unaffected (CX-LOCAL).
+    (``astro-mine hub keygen``), so the local tier is unaffected (CX-LOCAL).
 
     ``scenario`` is the open descriptor written into the bundle (node ids, epoch window, pinned
     input hashes) — it defaults to the plan's own node/epoch summary. ``input_hashes`` is the

@@ -113,7 +113,7 @@ class HubClient:
 
         ``private_key_pem`` is **required**: ``hub.md`` §9 defines no namespace tier for unsigned
         content, so admitting an unsigned artifact would index something the trust model cannot
-        describe. Keyed ECDSA signing is offline and accountless (``astro-mine-hub keygen`` mints a
+        describe. Keyed ECDSA signing is offline and accountless (``astro-mine hub keygen`` mints a
         key), so the local tier keeps working (CX-LOCAL).
 
         Nothing is indexed unless admission passes — a half-admitted artifact (bytes present,

@@ -284,7 +284,7 @@ def poll_job(
         if now() >= deadline:
             raise SubmitError(
                 f"job {job_id} was still {job.status.value!r} after {timeout_s:.0f}s; it is not "
-                f"lost — poll it later with `astro-mine-bench submit --job {job_id} --wait`"
+                f"lost — poll it later with `astro-mine bench submit --job {job_id} --wait`"
             )
         sleep(interval_s)
 

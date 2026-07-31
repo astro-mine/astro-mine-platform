@@ -1,15 +1,22 @@
-"""The Astro-Mine-Sim command line and container entrypoint (RM-P0-SIM-11, RM-P0-CLOUD-01).
+"""Sim's module entrypoint and container ENTRYPOINT (RM-P0-SIM-11, RM-P0-CLOUD-01).
+
+This module is machine-facing: it is the argv Cloud and the Dockerfile run, and it is deliberately
+not a CLI binary (cli.md §10). The surface a **person** types is ``astro-mine sim <verb>``, in
+``astro-mine-cli``, which carries its own copy of these flags under a parser-parity test. The two
+forms take the same verbs and the same flags, so the commands below are written as the argv this
+module answers to.
 
 Two subcommands, because there are **two scenario schemas** and conflating them is a trap:
 
-- ``astro-mine-sim run <bench-scenario-id>`` runs a **Bench** ``ScenarioSpec`` — a declarative,
-  content-pinned *benchmark task* identified by id (e.g. ``lunar-polar-ice-prospecting-v1``). It
-  resolves the pinned world/fleet/prospect/link content from a local Hub registry and materializes
-  a runnable episode via :func:`~astro_mine.sim.bench.sim_scenario_from_spec`. Needs the ``[bench]``
-  and ``[hub]`` extras and a content store (populate one with ``astro-mine-bench fetch``).
-- ``astro-mine-sim record --scenario-file <path>`` runs a **Sim** ``Scenario`` — a materialized,
-  self-contained *runnable episode* authored as a JSON document. This is the always-available local
-  path: no Bench, no Hub, no content resolution.
+- ``python -m astro_mine.sim run <bench-scenario-id>`` runs a **Bench** ``ScenarioSpec`` — a
+  declarative, content-pinned *benchmark task* identified by id (e.g.
+  ``lunar-polar-ice-prospecting-v1``). It resolves the pinned world/fleet/prospect/link content from
+  a local Hub registry and materializes a runnable episode via
+  :func:`~astro_mine.sim.bench.sim_scenario_from_spec`. Needs the ``[bench]`` and ``[hub]`` extras
+  and a content store (populate one with ``astro-mine bench fetch``).
+- ``python -m astro_mine.sim record --scenario-file <path>`` runs a **Sim** ``Scenario`` — a
+  materialized, self-contained *runnable episode* authored as a JSON document. This is the
+  always-available local path: no Bench, no Hub, no content resolution.
 
 Both write an MCAP recording and print the run's ``Trace.content_hash`` — the determinism key
 (RM-P0-SIM-10) — so a run's reproducibility is checkable from its logs alone.
@@ -38,7 +45,7 @@ from astro_mine.sim.runtime import load_scenario
 from astro_mine.spice import SpiceGeometryError
 
 #: Env fallback for the ``run`` content store, so ``--registry`` need not be repeated. Points at a
-#: local OCI-layout Hub registry (the workspace convention; ``astro-mine-bench fetch`` fills one).
+#: local OCI-layout Hub registry (the workspace convention; ``astro-mine bench fetch`` fills one).
 _REGISTRY_ENV = "ASTRO_MINE_HUB_REGISTRY"
 
 
@@ -70,7 +77,7 @@ def _run(args: argparse.Namespace) -> int:
     # import guard stays green): `find_spec` takes a *string*, it does not import the package.
     if importlib.util.find_spec("astro_mine.bench") is None:
         print(
-            "error: `run` executes a Bench ScenarioSpec and needs astro-mine-bench; "
+            "error: `run` executes a Bench ScenarioSpec and needs the Bench loader; "
             "install it with `pip install 'astro-mine-platform[sim-bench]'`.",
             file=sys.stderr,
         )
@@ -82,7 +89,7 @@ def _run(args: argparse.Namespace) -> int:
             "error: `run` needs a content store for the scenario's pinned "
             "world/fleet/prospect/link.\n"
             f"  pass --registry PATH or set ${_REGISTRY_ENV} to a local OCI-layout Hub registry;\n"
-            "  populate one with `astro-mine-bench fetch <scenario>`.",
+            "  populate one with `astro-mine bench fetch <scenario>`.",
             file=sys.stderr,
         )
         return 2
@@ -107,13 +114,13 @@ def _run(args: argparse.Namespace) -> int:
     except KeyError:
         print(
             f"error: unknown scenario id {args.scenario_id!r}; "
-            "`astro-mine-bench list` shows the catalog.",
+            "`astro-mine bench list` shows the catalog.",
             file=sys.stderr,
         )
         return 2
 
     # A pin can resolve by digest and still rebuild nothing, because content and code ship
-    # separately: `astro-mine-bench fetch` obtains the bundles, but turning a world bundle back
+    # separately: `astro-mine bench fetch` obtains the bundles, but turning a world bundle back
     # into a WorldProvider is astro-mine-worlds' job. Say so rather than recording a blind run
     # and exiting 0 (#67). This is a warning, not a refusal — `record` is the library tier and a
     # partial run is still a legitimate thing to ask for here; the *scoring* path refuses instead.
@@ -155,7 +162,7 @@ def _run(args: argparse.Namespace) -> int:
 def add_run_arguments(parser: argparse.ArgumentParser) -> None:
     """`run` — execute a Bench ScenarioSpec by id on real physics."""
     parser.add_argument(
-        "scenario_id", help="a Bench ScenarioSpec id (from `astro-mine-bench list`)"
+        "scenario_id", help="a Bench ScenarioSpec id (from `astro-mine bench list`)"
     )
     parser.add_argument("--seed", type=int, default=None, help="episode seed (default: 0)")
     parser.add_argument("--out", type=Path, default=Path("run.mcap"), help="MCAP output path")
@@ -206,7 +213,11 @@ def add_record_arguments(parser: argparse.ArgumentParser) -> None:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="astro-mine-sim", description=__doc__.splitlines()[0] if __doc__ else None
+        # The argv the Dockerfile ENTRYPOINT and Cloud actually run, so a usage error prints a
+        # command the reader can retype. `astro-mine sim` is the person-facing form and lives in
+        # astro-mine-cli; this parser is never reached through it.
+        prog="python -m astro_mine.sim",
+        description=__doc__.splitlines()[0] if __doc__ else None,
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
 

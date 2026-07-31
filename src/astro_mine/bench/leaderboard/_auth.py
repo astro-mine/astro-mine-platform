@@ -21,7 +21,7 @@ This module is the authentication half of the fix:
 environment by *reference* (issuer URL, audience, JWKS URL) — never by embedding key material or a
 shared secret in the image or the repo (conventions.md §9: *"No secrets in images or repos"*).
 
-The **local, offline tier is untouched**: ``astro-mine-bench score``, ``run(spec, policy)``, and the
+The **local, offline tier is untouched**: ``astro-mine bench score``, ``run(spec, policy)``, and the
 leaderboard's read paths need no account and no token (CX-LOCAL; bench#29 AC5). Authentication gates
 the hosted *write* surface only.
 

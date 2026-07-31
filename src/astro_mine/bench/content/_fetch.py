@@ -4,7 +4,7 @@ A user who clones Bench can list scenarios and score a fixture, and — until th
 way to obtain the content the anchor pins. :func:`fetch_scenario_content` closes that: it resolves a
 :class:`~astro_mine.bench.scenario.ScenarioSpec`'s pins, mirrors each **by digest** from the
 published registry into a local OCI-layout store, and leaves a store the Sim-backed runner can read
-offline (``score --runner sim``, ``astro-mine-sim run``).
+offline (``score --runner sim``, ``astro-mine sim run``).
 
 **Mirroring, not re-publishing.** Hub exposes no registry-to-registry copy, and re-publishing an
 artifact from *source* re-stamps its manifest and changes its digest — which is how the anchor pins
@@ -68,7 +68,7 @@ __all__ = [
 #: Hub's GHCR auth picks up on its own.
 DEFAULT_CONTENT_SOURCE = "ghcr.io/astro-mine"
 
-#: The local content store, shared with `astro-mine-sim run` and the `sim` Bench runner
+#: The local content store, shared with `astro-mine sim run` and the `sim` Bench runner
 #: (astro-mine-sim `sim/bench/_runner.py`). One convention across both CLIs.
 STORE_ENV = "ASTRO_MINE_HUB_REGISTRY"
 

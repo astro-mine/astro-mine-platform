@@ -25,7 +25,7 @@ an attacker wants.
 **Unsigned content is refused.** ``hub.md`` §9 tiers artifacts as *open* ("self-published, signed
 but unreviewed"), *curated*, and *verified* — there is no tier for unsigned content, so admitting
 it would index something the trust model cannot describe. Signing is available offline with no
-account (keyed ECDSA is Seal's default; ``astro-mine-hub keygen`` mints a key), so this costs the
+account (keyed ECDSA is Seal's default; ``astro-mine hub keygen`` mints a key), so this costs the
 local tier nothing (CX-LOCAL).
 """
 
@@ -82,7 +82,7 @@ def require_signed(registry: RegistryClient, digest: str) -> None:
     if not has_signature(registry, digest):
         raise UnsignedArtifactError(
             f"artifact {digest} is unsigned and cannot be admitted; sign it at publish "
-            f"(`astro-mine-hub keygen` mints a key; keyed ECDSA works offline with no account). "
+            f"(`astro-mine hub keygen` mints a key; keyed ECDSA works offline with no account). "
             f"hub.md §9 defines no namespace tier for unsigned content"
         )
 

@@ -18,7 +18,7 @@ the shipped copy is regenerated from the model rather than edited:
 
 .. code-block:: console
 
-    astro-mine-worlds schema > src/astro_mine/worlds/spec/schema/worldspec.schema.json
+    astro-mine worlds schema > src/astro_mine/worlds/spec/schema/worldspec.schema.json
 
 A test asserts the shipped file equals what the model generates today. That is the whole guard: a
 model change that moves the schema fails there, with the regeneration command in the message, so

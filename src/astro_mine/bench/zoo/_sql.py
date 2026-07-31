@@ -19,7 +19,7 @@ The filesystem scan remains the tier-1 default (:class:`~astro_mine.bench.zoo.Fi
 this catalog is opt-in via ``ASTRO_MINE_BENCH_CATALOG_DSN`` and never required to score a scenario
 offline (CX-LOCAL; bench#33 AC3). :meth:`SqlCatalog.seed_from` is the migration path that populates
 it from the packaged zoo's ``scenario.json`` documents (bench#33 AC4), and is what the
-``astro-mine-bench zoo-sync`` command runs.
+``astro-mine bench zoo-sync`` command runs.
 
 Requires the ``[leaderboard]`` extra (SQLAlchemy; ``psycopg`` for a Postgres URL). Imported lazily,
 so the base package stays ``core + pydantic``.
