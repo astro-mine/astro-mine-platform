@@ -13,9 +13,19 @@ import pytest
 def train_config():
     from astro_mine.surrogate.models import TrainConfig
 
-    # Small by design: the reference bed is tiny and CI trains on CPU (~20 s, full-batch GD).
-    # Enough ensemble members + epochs to give the conformal layer a real, calibrated spread.
-    return TrainConfig(hidden=24, message_passing_steps=2, epochs=200, ensemble_size=2)
+    # Small by design, but the cost is set by the *dataset*, not the bed: the DEM fixture is an
+    # 81-config grid, so one full-batch epoch runs over 153,090 nodes / 735,902 edges. At the
+    # original 200 epochs this single fixture was 346 s of a 516 s suite — two thirds of the job,
+    # and every other surrogate test waiting on it.
+    #
+    # 60 is a *training budget*, not a convergence point: the model is still improving at 200
+    # epochs, and no test here asserts the surrogate is accurate. What they assert is that it is
+    # well-formed and honestly calibrated — and the conformal layer calibrates whatever model it
+    # is given, so coverage barely moves (0.877-0.910 empirical against a 0.8 gate, versus
+    # 0.885-0.910 at 200). Budget-over-max and max-over-2*RMSE keep >=1.5x and >=9x margin, and
+    # an OOD query still inflates uncertainty ~4x. Ensemble size stays at 2: the conformal layer
+    # needs a real epistemic spread, and one member has none.
+    return TrainConfig(hidden=24, message_passing_steps=2, epochs=60, ensemble_size=2)
 
 
 @pytest.fixture(scope="session")

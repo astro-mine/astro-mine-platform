@@ -30,10 +30,16 @@ COMPONENTS = [
     "platform",
 ]
 
-# Verbatim from each source repo's [tool.pytest.ini_options] addopts (beyond "-ra").
+# Verbatim from each source repo's [tool.pytest.ini_options] addopts (beyond "-ra"), plus the
+# deselections a source repo kept in its CI workflow rather than its addopts. Keep this table and
+# the `marks:` column of .github/workflows/ci.yml's matrix in step: they are the same selection
+# expressed twice, and when they drifted the opt-in `container` test ran in CI and failed.
 COMPONENT_ADDOPTS: dict[str, list[str]] = {
     "sim": ["-m", "not gpu and not ray and not docker"],
     "allocate": ["-m", "not scale"],
+    # bench#30's real-container round trip needs a locally built evaluation-runner image; with a
+    # Docker daemon on PATH its skipif does not fire, so it must be deselected, not left to skip.
+    "bench": ["-m", "not cluster and not gpu and not container"],
 }
 
 

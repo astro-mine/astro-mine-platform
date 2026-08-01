@@ -33,7 +33,7 @@ jobs:
           - { comp: link }
           - { comp: fleet }
           - { comp: sim, marks: "not gpu and not ray and not docker" }
-          - { comp: bench, marks: "not cluster and not gpu" }
+          - { comp: bench, marks: "not cluster and not gpu and not container" }
           - { comp: cloud }
           - { comp: surrogate }
           - { comp: mind, marks: "not pddl and not native and not slow and not sim" }
