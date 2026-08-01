@@ -72,12 +72,12 @@ from tests.bench._factories import (
 
 #: Policies published purely to attack the sandbox (below). They are *real* submissions: importable
 #: module:attribute references, exactly what a hostile community submission would be.
-EGRESS_REF = "tests._policies_hostile:NetworkEgressPolicy"
-MEMORY_HOG_REF = "tests._policies_hostile:MemoryHogPolicy"
-CPU_SPINNER_REF = "tests._policies_hostile:CpuSpinnerPolicy"
-SLEEPER_REF = "tests._policies_hostile:SleeperPolicy"
-ENV_SNOOP_REF = "tests._policies_hostile:EnvironmentSnoopPolicy"
-FORK_BOMB_REF = "tests._policies_hostile:ForkBombPolicy"
+EGRESS_REF = "tests.bench._policies_hostile:NetworkEgressPolicy"
+MEMORY_HOG_REF = "tests.bench._policies_hostile:MemoryHogPolicy"
+CPU_SPINNER_REF = "tests.bench._policies_hostile:CpuSpinnerPolicy"
+SLEEPER_REF = "tests.bench._policies_hostile:SleeperPolicy"
+ENV_SNOOP_REF = "tests.bench._policies_hostile:EnvironmentSnoopPolicy"
+FORK_BOMB_REF = "tests.bench._policies_hostile:ForkBombPolicy"
 #: The filesystem-attacking policies (bench#36) — referenced as *top-level* modules so a confined
 #: worker resolves them from ``TESTS_DIR`` alone, without the repo root (which holds ``embargo/``).
 SEED_READER_REF = "_policies_hostile:SeedReaderPolicy"
@@ -119,7 +119,7 @@ def _roll(sandbox: SubprocessSandbox, policy_ref: str, seed: int = 1) -> Sandbox
 @linux_only
 def test_a_submission_runs_in_a_different_process(sandbox: SubprocessSandbox) -> None:
     """The whole point: the submission's pid is not the evaluator's pid."""
-    outcome = _roll(sandbox, "tests._policies_hostile:ReportPidPolicy")
+    outcome = _roll(sandbox, "tests.bench._policies_hostile:ReportPidPolicy")
     assert outcome.scored
     # ReportPidPolicy encodes its own pid into the trace; what matters here is simply that the
     # worker ran and reported back at all — an in-process run could not have produced a document.
