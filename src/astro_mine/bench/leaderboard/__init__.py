@@ -53,11 +53,13 @@ from astro_mine.bench.leaderboard._authz import (
 )
 from astro_mine.bench.leaderboard._eval import (
     EMBARGO_ROOT,
+    EMBARGO_ROOT_ENV,
     PolicyReferenceError,
     build_submission,
     evaluate,
     load_heldout_seeds,
     rank,
+    resolve_embargo_root,
     resolve_policy,
     validate_policy_ref,
 )
@@ -125,6 +127,7 @@ __all__ = [
     "DEFAULT_QUOTAS",
     "DEFAULT_ROLE_ACTIONS",
     "EMBARGO_ROOT",
+    "EMBARGO_ROOT_ENV",
     "REQUIRED_EVIDENCE",
     "Action",
     "AttestationPolicy",
@@ -193,6 +196,7 @@ __all__ = [
     "rank",
     "reference_policy_loader",
     "resample_from_bundle",
+    "resolve_embargo_root",
     "resolve_policy",
     "resolve_submission",
     "submission_policy_ref",

@@ -25,6 +25,8 @@ import pytest
 
 from astro_mine.bench.baseline import BaselinePolicy
 from astro_mine.bench.leaderboard import (
+    EMBARGO_ROOT,
+    EMBARGO_ROOT_ENV,
     Action,
     AttestationPolicy,
     AuditDecision,
@@ -61,6 +63,7 @@ from astro_mine.bench.leaderboard import (
     rank,
     reference_policy_loader,
     resample_from_bundle,
+    resolve_embargo_root,
     resolve_policy,
     resolve_submission,
     submission_policy_ref,
@@ -888,6 +891,65 @@ def test_load_heldout_seeds_for_the_anchor(heldout: tuple[int, ...]) -> None:
 def test_load_heldout_seeds_missing(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError, match="no held-out seed set"):
         load_heldout_seeds("nope", embargo_root=tmp_path)
+
+
+# --- the deployment override (#15) ---------------------------------------------------------------
+#
+# `EMBARGO_ROOT` is derived from this module's own location, which is right in a checkout and wrong
+# on an installed wheel — there it points inside `site-packages`, while `embargo/` ships with
+# astro-mine-api, the repository the hosted leaderboard runs from. Every submission to a served
+# deployment answered 404 "no held-out seed set", and nothing saw it: the three places that score
+# in-process each rebound the keyword default first, and a served process had no way to.
+
+
+def test_the_embargo_root_comes_from_the_environment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A deployment can point the lookup at the checkout it runs from."""
+    sealed = tmp_path / "moved" / "elsewhere-v1"
+    sealed.mkdir(parents=True)
+    (sealed / "heldout_seeds.json").write_text(json.dumps({"seeds": [11, 22, 33]}))
+
+    monkeypatch.setenv(EMBARGO_ROOT_ENV, str(tmp_path / "moved"))
+    assert resolve_embargo_root() == tmp_path / "moved"
+    assert load_heldout_seeds("elsewhere-v1") == (11, 22, 33)
+
+
+def test_the_embargo_root_is_read_per_call_not_bound_at_import(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """**The property the whole fix rests on.**
+
+    ``load_heldout_seeds`` carried ``EMBARGO_ROOT`` as a *keyword default*, evaluated once when the
+    module was imported. Setting the variable afterwards — which is every deployment, since the
+    environment is read after the process has started — reached nothing, and rebinding the module
+    attribute reached nothing either, because the default already held the old value.
+    """
+    sealed = tmp_path / "late" / "elsewhere-v1"
+    sealed.mkdir(parents=True)
+    (sealed / "heldout_seeds.json").write_text(json.dumps({"seeds": [7]}))
+
+    # Import has already happened — this module imported `load_heldout_seeds` at the top.
+    monkeypatch.setenv(EMBARGO_ROOT_ENV, str(tmp_path / "late"))
+    assert load_heldout_seeds("elsewhere-v1") == (7,)
+
+
+def test_an_explicit_root_still_wins_over_the_environment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The keyword survives, so every existing caller and test keeps working unchanged."""
+    sealed = tmp_path / "explicit" / "elsewhere-v1"
+    sealed.mkdir(parents=True)
+    (sealed / "heldout_seeds.json").write_text(json.dumps({"seeds": [1, 2]}))
+
+    monkeypatch.setenv(EMBARGO_ROOT_ENV, str(tmp_path / "ignored"))
+    assert load_heldout_seeds("elsewhere-v1", embargo_root=tmp_path / "explicit") == (1, 2)
+
+
+def test_unset_keeps_the_repo_relative_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A checkout-based run needs no configuration, exactly as before."""
+    monkeypatch.delenv(EMBARGO_ROOT_ENV, raising=False)
+    assert resolve_embargo_root() == EMBARGO_ROOT
 
 
 def test_evaluate_scores_heldout_and_verifies(
