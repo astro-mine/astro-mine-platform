@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import os
 from collections.abc import Sequence
 from pathlib import Path
 from typing import cast
@@ -44,18 +45,44 @@ from astro_mine.core.policy import Policy
 
 __all__ = [
     "EMBARGO_ROOT",
+    "EMBARGO_ROOT_ENV",
     "PolicyReferenceError",
     "build_submission",
     "evaluate",
     "load_heldout_seeds",
     "rank",
+    "resolve_embargo_root",
     "resolve_policy",
     "validate_policy_ref",
 ]
 
 #: The embargoed held-out seed sets, at the repo root above ``src/`` (excluded from the wheel;
 #: the leaderboard runs from the repo and discloses them at evaluation time — bench.md §9).
+#:
+#: Correct when the leaderboard and the seeds share a checkout, and **wrong for every deployment**,
+#: which is what :data:`EMBARGO_ROOT_ENV` exists to fix.
 EMBARGO_ROOT = Path(__file__).resolve().parents[4] / "embargo"
+
+#: Env var naming the directory the sealed seed sets live in; unset ⇒ :data:`EMBARGO_ROOT`.
+#:
+#: **A hosted leaderboard could not score a single submission without this** (#15). The path above
+#: is derived from this module's own location, so on an installed wheel it points inside
+#: ``site-packages`` and finds nothing — while ``embargo/`` ships with ``astro-mine-api``, the
+#: repository the hosted leaderboard actually runs from. Every submission answered 404 "no held-out
+#: seed set", and nothing caught it because the three places that score in-process each rebound the
+#: keyword default first; a *served* process had no way to.
+#:
+#: Read per call rather than bound at import, which is the whole of why an override is possible:
+#: ``load_heldout_seeds`` used to carry :data:`EMBARGO_ROOT` as a keyword default, so rebinding the
+#: module attribute reached nobody and the caller in ``_service`` passes no argument.
+EMBARGO_ROOT_ENV = "ASTRO_MINE_BENCH_EMBARGO_ROOT"
+
+
+def resolve_embargo_root() -> Path:
+    """Where the sealed held-out seed sets live: ``$ASTRO_MINE_BENCH_EMBARGO_ROOT``, else the
+    repo-relative default. Resolved on every call, so a deployment can set it after import."""
+    configured = os.environ.get(EMBARGO_ROOT_ENV)
+    return Path(configured).expanduser() if configured else EMBARGO_ROOT
 
 
 class PolicyReferenceError(ValueError):
@@ -103,13 +130,20 @@ def resolve_policy(policy_ref: str) -> Policy:
     return cast(Policy, candidate)
 
 
-def load_heldout_seeds(scenario_id: str, *, embargo_root: Path = EMBARGO_ROOT) -> tuple[int, ...]:
+def load_heldout_seeds(scenario_id: str, *, embargo_root: Path | None = None) -> tuple[int, ...]:
     """Disclose the embargoed held-out seed set for ``scenario_id`` (bench.md §9).
 
-    Raises :class:`FileNotFoundError` if no sealed set is present (e.g. running from an installed
-    wheel, which excludes ``embargo/`` — the service runs from the repo).
+    ``embargo_root`` defaults to :func:`resolve_embargo_root` — the environment, else the
+    repo-relative path. **Defaulting to ``None`` rather than to the path is the fix rather than a
+    style preference**: a keyword default is evaluated once at import, so the old signature made
+    the location unconfigurable by any deployment that had already imported this module, which is
+    every one of them.
+
+    Raises :class:`FileNotFoundError` if no sealed set is present — running from an installed wheel
+    with no ``$ASTRO_MINE_BENCH_EMBARGO_ROOT`` set is the way to meet that (#15).
     """
-    path = embargo_root / scenario_id / "heldout_seeds.json"
+    root = embargo_root if embargo_root is not None else resolve_embargo_root()
+    path = root / scenario_id / "heldout_seeds.json"
     if not path.is_file():
         raise FileNotFoundError(f"no held-out seed set for {scenario_id!r} at {path}")
     payload = json.loads(path.read_text(encoding="utf-8"))
