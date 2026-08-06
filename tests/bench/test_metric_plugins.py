@@ -21,7 +21,6 @@ from astro_mine.bench.metrics import (
     MetricPluginError,
     discover_metric,
     load_metric,
-    manifest_document,
     metric_manifest,
     reference_metric_manifest,
     reference_registry,
@@ -67,7 +66,11 @@ def _publish(
         name=name,
         version=version,
         kind="plugin",
-        config=manifest_document(manifest).model_dump(mode="json"),
+        # The bare manifest — the stored form (hub.md §2 principle 2). This called the shipped
+        # `manifest_document()` helper, whose docstring said "for publishing" and whose output no
+        # reader in the platform could parse; the helper is gone with the convention
+        # (astro-mine-platform#14).
+        config=manifest.model_dump(mode="json"),
         layers=[Blob(METRIC_MEDIA_TYPE, METRIC_PAYLOAD)],
     )
     return published.digest

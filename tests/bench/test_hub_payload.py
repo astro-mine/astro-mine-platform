@@ -29,7 +29,7 @@ from astro_mine.bench.leaderboard import (
     resolve_submission,
 )
 from astro_mine.core.registry.enums import PluginKind
-from astro_mine.core.registry.model import ManifestDocument, PluginManifest
+from astro_mine.core.registry.model import PluginManifest
 from astro_mine.hub.registry import Blob, IntegrityError, Registry
 from astro_mine.hub.registry._oci import blob_path
 from astro_mine.hub.supply_chain import SupplyChainError, attest, generate_keypair
@@ -71,7 +71,11 @@ def _publish(
         name=name,
         version=version,
         kind=PluginKind.POLICY.value,
-        config=ManifestDocument(manifest_version="0.1", manifest=manifest).model_dump(mode="json"),
+        # The bare manifest, which is what every publisher in this platform stores (hub.md §2
+        # principle 2). This helper wrote a ManifestDocument envelope, and that is why the suite
+        # was green over a path no real artifact could take (astro-mine-platform#14): the fixture
+        # and the intake agreed with each other and with nothing else.
+        config=manifest.model_dump(mode="json"),
         layers=[Blob(ONNX_MEDIA_TYPE, ONNX_BYTES)] if layers is None else layers,
     )
     private_pem, _ = generate_keypair()
