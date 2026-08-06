@@ -74,9 +74,10 @@ astro-mine sim record --scenario-file my_scenario.json --seed 7 --out run.mcap
 # prints the run's Trace.content_hash (the determinism key); re-running the same inputs prints it again
 ```
 
-The MCAP holds the timestamped, schema-tagged state/observation stream — replay it in
-[`astro-mine-view`](https://github.com/astro-mine/astro-mine-view), or score it in
-[Bench](https://github.com/astro-mine/astro-mine-bench).
+The MCAP holds the timestamped, schema-tagged state/observation stream — replay it in the
+application's `/bench` replay view
+([`astro-mine-ui`](https://github.com/astro-mine/astro-mine-ui)), or score it with `astro-mine
+bench`.
 
 Both verbs come from [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli), a separate
 distribution that depends on this one; this package ships no console scripts. There is one address

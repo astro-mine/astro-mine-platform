@@ -29,10 +29,10 @@ src/astro_mine/hub/         # import path: astro_mine.hub
 └── client/       the Hub SDK: resolve / verify / pull / publish / cache
 ```
 
-Neither `api/` nor `ui/` is here. The FastAPI façade and the `@astro-mine/hub-ui` console surface
-are two of the things the consolidation did not migrate (`docs/CONSOLIDATION_PLAN.md` §"Not
-migrated"); they live in the [`astro-mine-hub`](https://github.com/astro-mine/astro-mine-hub) repo
-until `astro-mine-api` stands up. The commands below come from
+Neither `api/` nor `ui/` is here, and neither is coming: the FastAPI façade ships in
+[`astro-mine-api`](https://github.com/astro-mine/astro-mine-api), and the web front end is the
+`/registry` pages of the one application in
+[`astro-mine-ui`](https://github.com/astro-mine/astro-mine-ui). The commands below come from
 [`astro-mine-cli`](https://github.com/astro-mine/astro-mine-cli) — this package ships no console
 scripts.
 
