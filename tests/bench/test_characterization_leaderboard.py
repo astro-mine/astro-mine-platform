@@ -86,7 +86,7 @@ from astro_mine.bench.sandbox import SandboxScorer
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.bench.zoo import ANCHOR_SCENARIO_ID, load_scenario
 from astro_mine.core.registry import PluginKind
-from astro_mine.core.registry.model import ManifestDocument, PluginManifest
+from astro_mine.core.registry.model import PluginManifest
 from astro_mine.hub.registry import Blob, Registry
 from astro_mine.hub.supply_chain import attest, generate_keypair
 from tests.bench._factories import (
@@ -193,12 +193,12 @@ def _publish(
         outputs=["ActionBatch"],
         attributes={} if entrypoint is None else {"entrypoint": entrypoint},
     )
-    document = ManifestDocument(manifest_version="0.1", manifest=manifest)
     published = registry.publish(
         name=name,
         version=version,
         kind=PluginKind.POLICY.value if kind is PluginKind.POLICY else "world",
-        config=document.model_dump(mode="json"),
+        # The bare manifest — the stored form (hub.md §2 principle 2, astro-mine-platform#14).
+        config=manifest.model_dump(mode="json"),
         layers=[Blob("application/vnd.astro-mine.policy.onnx.v1", b"onnx-model-bytes")],
     )
     if attested:

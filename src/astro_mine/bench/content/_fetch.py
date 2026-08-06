@@ -148,11 +148,23 @@ def _identity(config_bytes: bytes) -> tuple[str, str]:
     Taken from the artifact's own verified config blob so it works identically against a local and a
     remote source — a remote registry does not expose the local layout's index annotations.
 
-    **Two config shapes ship.** The published anchor artifacts carry a *bare* ``PluginManifest``
-    (``name`` at the top level), which is what ``HubClient.pull`` assumes when it validates the
-    config straight into ``PluginManifest``. Other producers wrap it in a ``ManifestDocument``
-    (``{"manifest_version": …, "manifest": {…}}``). A mirror reads whatever a publisher wrote, so
-    both are accepted rather than asserting one and failing on real content.
+    **The config blob is a bare** ``PluginManifest`` — ``name`` at the top level (hub.md §2
+    principle 2). This function nevertheless also accepts a ``ManifestDocument`` envelope
+    (``{"manifest_version": …, "manifest": {…}}``), and the reason is specific to *mirroring*
+    rather than a hedge about which convention is right.
+
+    It used to be a hedge. This docstring recorded "two config shapes ship" as though the platform
+    had two conventions, which is how astro-mine-platform#14 stayed invisible: the disagreement had
+    been *found* here and absorbed instead of fixed, so nothing failed until Bench's intake met a
+    real artifact. It has one convention now, and the intake gates enforce it
+    (:func:`~astro_mine.core.registry.load_plugin_manifest`).
+
+    The leniency stays here because a mirror is not a reader. It copies bytes it does not
+    interpret, and it needs from the config only the ``(name, version)`` to re-publish under —
+    never the manifest's meaning. Refusing to mirror a remote or legacy artifact over the shape of
+    a field it is merely transcribing would break ``astro-mine bench fetch`` against content this
+    platform did not publish, and would buy nothing: whatever is wrong with such an artifact is
+    caught when something actually tries to *use* it.
     """
     try:
         document = json.loads(config_bytes)

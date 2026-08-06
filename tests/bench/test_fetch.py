@@ -34,7 +34,7 @@ from astro_mine.bench.content import (
 from astro_mine.bench.content._fetch import STORE_ENV
 from astro_mine.bench.scenario import ContentPins, ContentRef, ScenarioSpec
 from astro_mine.core.registry.enums import PluginKind
-from astro_mine.core.registry.model import ManifestDocument, PluginManifest
+from astro_mine.core.registry.model import PluginManifest
 from astro_mine.hub.client import HubClient
 from astro_mine.hub.registry import ArtifactNotFound, Blob, Registry
 from astro_mine.hub.registry._oci import blob_path
@@ -73,7 +73,8 @@ def _publish_asset(
         name=name,
         version=version,
         kind=artifact_kind,
-        config=ManifestDocument(manifest_version="0.1", manifest=manifest).model_dump(mode="json"),
+        # The bare manifest — the stored form (hub.md §2 principle 2, astro-mine-platform#14).
+        config=manifest.model_dump(mode="json"),
         layers=[Blob(WORLD_MEDIA_TYPE, payload)],
     )
     key = private_pem if private_pem is not None else generate_keypair()[0]
@@ -169,7 +170,9 @@ def test_kind_is_recovered_from_the_artifact_type_not_the_core_kind(
     )
     rover = _publish_asset(source, name="astro-mine.fleet.rover", artifact_kind="asset")
     config = json.loads(source.read_config(digest))
-    assert config["manifest"]["kind"] == "world_provider"  # Core vocabulary
+    # The config blob is the bare manifest, so the Core kind is at the top level — there is no
+    # "manifest" key to reach through (hub.md §2 principle 2, astro-mine-platform#14).
+    assert config["kind"] == "world_provider"  # Core vocabulary
     assert source.read_manifest(digest)["artifactType"].endswith("world.v1")  # Hub vocabulary
 
     pins = fetch_scenario_content(

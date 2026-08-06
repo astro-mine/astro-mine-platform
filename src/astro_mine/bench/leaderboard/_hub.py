@@ -44,7 +44,7 @@ from astro_mine.bench.leaderboard._eval import PolicyReferenceError, resolve_pol
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.core.compat import check_compatible
 from astro_mine.core.policy import Policy
-from astro_mine.core.registry import PluginKind, load_manifest
+from astro_mine.core.registry import PluginKind, load_plugin_manifest
 from astro_mine.core.registry.model import PluginManifest
 
 __all__ = [
@@ -134,7 +134,15 @@ def resolve_submission(registry: HubRegistry, reference: str) -> ResolvedSubmiss
     except Exception as exc:
         raise HubResolutionError(f"integrity verification failed for {reference!r}: {exc}") from exc
     try:
-        manifest = load_manifest(registry.read_config(manifest_digest)).manifest
+        # The stored config blob is the **bare manifest**, not a manifest document — hub.md §2
+        # principle 2, and what every publisher in this platform writes. This read used
+        # `load_manifest(...).manifest`, which expects the authored envelope, so the community
+        # submission path could not accept a single artifact the platform publishes: it answered
+        # 404 content_not_found with a schema error naming every real field as unexpected
+        # (astro-mine-platform#14). `load_plugin_manifest` reads the stored form and keeps the
+        # checks the envelope loader was giving us — the gated-capability-tag gate above all,
+        # which is not optional on the one path where a third party's manifest arrives.
+        manifest = load_plugin_manifest(registry.read_config(manifest_digest))
     except Exception as exc:
         raise HubResolutionError(f"invalid plugin manifest for {reference!r}: {exc}") from exc
     return ResolvedSubmission(reference, manifest_digest, manifest, layer_digests)

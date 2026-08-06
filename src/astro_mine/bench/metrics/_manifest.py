@@ -26,11 +26,10 @@ from collections.abc import Mapping, Sequence
 from astro_mine.bench.metrics._metric import Metric
 from astro_mine.bench.metrics._reference import REFERENCE_METRICS
 from astro_mine.core.registry.enums import PluginKind
-from astro_mine.core.registry.model import ManifestDocument, PluginManifest
+from astro_mine.core.registry.model import PluginManifest
 
 __all__ = [
     "REFERENCE_METRIC_MANIFEST_NAME",
-    "manifest_document",
     "metric_manifest",
     "reference_metric_manifest",
 ]
@@ -105,8 +104,3 @@ def reference_metric_manifest(
             "units": {metric.name: metric.unit for metric in metrics},
         },
     )
-
-
-def manifest_document(manifest: PluginManifest) -> ManifestDocument:
-    """Wrap a :class:`PluginManifest` in a versioned :class:`ManifestDocument` for publishing."""
-    return ManifestDocument(manifest_version="0.1", manifest=manifest)
