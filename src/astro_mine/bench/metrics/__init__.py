@@ -29,7 +29,6 @@ from __future__ import annotations
 from astro_mine.bench._hub_payload import PayloadRetrievalError, pull_verified_layer
 from astro_mine.bench.metrics._manifest import (
     REFERENCE_METRIC_MANIFEST_NAME,
-    manifest_document,
     metric_manifest,
     reference_metric_manifest,
 )
@@ -115,7 +114,6 @@ __all__ = [
     "aggregate_scores",
     "discover_metric",
     "load_metric",
-    "manifest_document",
     "metric_manifest",
     "open_registry",
     "pull_verified_layer",

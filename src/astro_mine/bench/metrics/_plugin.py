@@ -34,7 +34,7 @@ from astro_mine.bench.metrics._metric import Metric, MetricError
 from astro_mine.bench.metrics._registry import MetricRegistry
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.core.compat import check_compatible
-from astro_mine.core.registry import PluginKind, load_manifest
+from astro_mine.core.registry import PluginKind, load_plugin_manifest
 from astro_mine.core.registry.model import PluginManifest
 
 __all__ = [
@@ -122,7 +122,10 @@ def resolve_metric_plugin(registry: HubRegistry, reference: str) -> ResolvedMetr
     except Exception as exc:
         raise MetricPluginError(f"integrity verification failed for {reference!r}: {exc}") from exc
     try:
-        manifest = load_manifest(registry.read_config(manifest_digest)).manifest
+        # The bare manifest, not a document — see the note on the same read in
+        # `bench/leaderboard/_hub.py` (astro-mine-platform#14). A Hub-published metric plugin was
+        # unreadable for exactly the reason a Hub-published policy was.
+        manifest = load_plugin_manifest(registry.read_config(manifest_digest))
     except Exception as exc:
         raise MetricPluginError(f"invalid plugin manifest for {reference!r}: {exc}") from exc
     return ResolvedMetricPlugin(reference, manifest_digest, manifest, layer_digests)
