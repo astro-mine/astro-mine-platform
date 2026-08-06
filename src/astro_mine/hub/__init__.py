@@ -9,9 +9,9 @@ SBOM), and gates downloads by license and export-control policy. It is a *consum
 the Core manifest schema, never its owner, and never executes the artifacts it serves.
 
 All of that ships: the FastAPI registry service, the client SDK (``resolve``/``verify``/
-``pull``/``publish``/``cache``), the ``astro-mine-hub`` CLI, and the React UI — which is also a
-console surface (``@astro-mine/hub-ui``). The tier-1 client works fully offline against a local
-OCI-layout directory, with no server, no account, and no Docker. See
+``pull``/``publish``/``cache``), the ``astro-mine hub`` CLI, and the web front end — the
+``/registry`` pages of the one application, in ``astro-mine-ui``. The tier-1 client works fully
+offline against a local OCI-layout directory, with no server, no account, and no Docker. See
 ``docs/architecture/hub.md``.
 """
 

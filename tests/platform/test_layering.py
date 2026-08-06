@@ -31,7 +31,6 @@ from tests.platform._layering import (
     check_forbidden_distributions,
     check_private_imports,
     check_recorded_edges,
-    check_surface_isolation,
     components,
     lateral_edges,
     report,
@@ -120,12 +119,6 @@ def test_only_the_composition_roots_import_svcs(tree: Survey) -> None:
         )
     for root in COMPOSITION_ROOTS:
         assert (REPO_ROOT / root).exists(), f"declared composition root {root} no longer exists"
-
-
-def test_no_surface_imports_another_surface() -> None:
-    """§11 + §13. Vacuous here — no ``@astro-mine/<component>-ui`` package ships from this
-    distribution — and live for the first one that does."""
-    assert check_surface_isolation(REPO_ROOT) == []
 
 
 def test_every_runtime_lateral_edge_is_recorded(tree: Survey) -> None:

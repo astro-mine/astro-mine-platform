@@ -35,7 +35,6 @@ __all__ = [
     "check_forbidden_distributions",
     "check_private_imports",
     "check_recorded_edges",
-    "check_surface_isolation",
     "components",
     "lateral_edges",
     "report",
@@ -477,35 +476,6 @@ def check_container_is_not_on_the_import_path(components_to_import: Sequence[str
             f"(§3.3, §8)"
         ]
     return []
-
-
-def check_surface_isolation(repo_root: Path) -> list[str]:
-    """§11 — a front-end surface package MUST NOT import another surface.
-
-    A *surface* is an ``@astro-mine/<component>-ui`` package (§13). None ship from this
-    distribution today — they live in ``astro-mine-console`` and the per-component UI repos — so
-    this check finds nothing to inspect and says so by returning nothing. It is written against the
-    layout rather than skipped, so the first surface added here is checked on arrival rather than
-    on the day someone remembers the rule.
-    """
-    violations: list[str] = []
-    for manifest in sorted(repo_root.glob("**/package.json")):
-        if "node_modules" in manifest.parts:
-            continue
-        text = manifest.read_text(encoding="utf-8")
-        if '"@astro-mine/' not in text or "-ui" not in text:
-            continue
-        package_dir = manifest.parent
-        for source in sorted(package_dir.rglob("*.ts*")):
-            if "node_modules" in source.parts:
-                continue
-            for line in source.read_text(encoding="utf-8").splitlines():
-                if "@astro-mine/" in line and "-ui" in line and "import" in line:
-                    violations.append(
-                        f"{source.relative_to(repo_root)}: surface imports another surface "
-                        f"— {line.strip()}"
-                    )
-    return violations
 
 
 def check_recorded_edges(
