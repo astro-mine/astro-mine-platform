@@ -20,8 +20,9 @@ Public API:
 - the document — :class:`PluginManifest`, :class:`ManifestDocument`, :class:`Provenance`,
   :class:`Signature`, and the vocabularies :class:`PluginKind` / :class:`SignatureScheme`
   (and reused :class:`CapabilityTag`);
-- load + validate — :func:`load_manifest` / :func:`validate_manifest` /
-  :func:`load_schema`;
+- load + validate — :func:`load_manifest` for the authored *document*,
+  :func:`load_plugin_manifest` for the bare manifest a publisher stores as a config blob, plus
+  :func:`validate_manifest` / :func:`load_schema`;
 - the registry — :class:`PluginRegistry` and its gates'
   :class:`RegistryError` / :class:`ManifestValidationError` / :class:`IncompatibleManifest`
   / :class:`UnsignedManifest`;
@@ -46,6 +47,7 @@ from astro_mine.core.registry.loader import (
     ManifestValidationError,
     RegistryError,
     load_manifest,
+    load_plugin_manifest,
     load_schema,
     validate_manifest,
 )
@@ -86,6 +88,7 @@ __all__ = [
     "Verifier",
     "enums",
     "load_manifest",
+    "load_plugin_manifest",
     "load_schema",
     "loader",
     "model",

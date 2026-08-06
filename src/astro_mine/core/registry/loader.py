@@ -1,5 +1,12 @@
 """Plugin manifest loading, validation, and the dual-use (export-control) gate.
 
+Two entry points, because a manifest has two forms and conflating them is how a publisher and a
+reader end up disagreeing about what is stored (astro-mine-platform#14). ``load_manifest`` reads
+the authored **document** — the YAML/JSON file carrying ``manifest_version``.
+``load_plugin_manifest`` reads the **bare manifest**, which is what a publisher stores as an OCI
+config blob. Both run the same pipeline and the same checks; they differ only in whether the
+envelope is expected.
+
 Pipeline (``load_manifest``), mirroring SADF/ObjectiveSpec:
 
 1. parse YAML/JSON (YAML is a JSON superset, so one parser handles both);
@@ -30,13 +37,14 @@ from jsonschema import Draft202012Validator
 from pydantic import ValidationError
 
 from astro_mine.core.compat import parse_version
-from astro_mine.core.registry.model import ManifestDocument
+from astro_mine.core.registry.model import MANIFEST_VERSION, ManifestDocument, PluginManifest
 from astro_mine.core.sadf.enums import GATED_CAPABILITY_TAGS
 
 __all__ = [
     "ManifestValidationError",
     "RegistryError",
     "load_manifest",
+    "load_plugin_manifest",
     "load_schema",
     "validate_manifest",
 ]
@@ -106,7 +114,10 @@ def _check_semantics(doc: ManifestDocument) -> None:
 
 
 def load_manifest(source: str | bytes) -> ManifestDocument:
-    """Parse, validate, and return a typed plugin-manifest document.
+    """Parse, validate, and return a typed plugin-manifest **document**.
+
+    For the authored file — the YAML/JSON a publisher writes, carrying ``manifest_version``.
+    For the *stored* form, which is a bare manifest, use :func:`load_plugin_manifest`.
 
     Raises :class:`ManifestValidationError` on any structural or semantic failure.
     """
@@ -118,6 +129,57 @@ def load_manifest(source: str | bytes) -> ManifestDocument:
         raise ManifestValidationError(f"plugin manifest failed model validation: {exc}") from exc
     _check_semantics(doc)
     return doc
+
+
+def load_plugin_manifest(source: str | bytes) -> PluginManifest:
+    """Parse, validate, and return a **bare** plugin manifest — the stored config-blob form.
+
+    **The document envelope and the config blob are different things, and this is the one for
+    the wire.** ``ManifestDocument`` versions a *file*: ``manifest_version`` pins the schema minor
+    of something a human authored, and :func:`load_manifest` is what reads it. What a publisher
+    *stores* is the manifest itself — ``hub.md`` §2 principle 2, "Hub indexes artifacts by the Core
+    plugin manifest" — because the OCI ``artifactType``
+    (``application/vnd.astro-mine.<kind>.v1``) already carries the version discriminator on that
+    side, and two of them would be one too many.
+
+    Until now Core offered no way to read that form *with its checks*, so every reader of a config
+    blob reached for ``PluginManifest.model_validate_json`` and got Pydantic alone — no schema
+    validation, and **no gated-capability-tag gate**. That is tolerable for a first-party artifact
+    a deployment published itself, and it is not tolerable on
+    [Bench](https://github.com/astro-mine/docs/blob/main/architecture/bench.md)'s community-
+    submission intake, which is precisely where a third party's manifest arrives. This is the
+    missing primitive, not a convenience wrapper.
+
+    Validation goes through the document schema by wrapping — the same move
+    :meth:`~astro_mine.core.registry.registry.PluginRegistry.register` already makes for a bare
+    manifest. That keeps JSON Schema and Pydantic a single structural contract, which is this
+    module's stated invariant; a second schema for the unwrapped shape would be two contracts to
+    keep in step, and they would not stay in step.
+
+    Raises :class:`ManifestValidationError` on any structural or semantic failure — and names the
+    envelope case explicitly, because being handed the wrong one of these two shapes is the whole
+    of astro-mine-platform#14 and Pydantic's own report for it is misleading: a document fails as
+    five missing required fields (``name``, ``version``, ``kind``, …), which reads like a corrupt
+    manifest rather than a well-formed one at the wrong level.
+    """
+    data = _parse(source)
+    if not isinstance(data, dict):
+        raise ManifestValidationError("plugin manifest must be a YAML/JSON mapping")
+    if "manifest_version" in data and "manifest" in data:
+        raise ManifestValidationError(
+            "expected a bare plugin manifest and got a manifest *document* (it carries "
+            "'manifest_version' and 'manifest'). A stored config blob is the manifest itself "
+            "(hub.md §2 principle 2); use load_manifest() for an authored document, or pass "
+            "the document's .manifest here."
+        )
+    try:
+        manifest = PluginManifest.model_validate(data)
+    except ValidationError as exc:
+        raise ManifestValidationError(f"plugin manifest failed model validation: {exc}") from exc
+    doc = ManifestDocument(manifest_version=MANIFEST_VERSION, manifest=manifest)
+    _check_structural(doc.model_dump(by_alias=True, mode="json"))
+    _check_semantics(doc)
+    return doc.manifest
 
 
 def validate_manifest(document: Any) -> None:
