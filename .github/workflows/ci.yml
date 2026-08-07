@@ -59,6 +59,39 @@ jobs:
           ${{ matrix.marks && format('-m "{0}"', matrix.marks) || '' }}
           --cov=astro_mine --cov-report=term
 
+  # Hub's Postgres/pgvector catalog, against a real server. `astro-mine-hub` ran this as a
+  # dedicated `integration` job with a pgvector service, and the consolidation dropped it: the
+  # `hub` matrix entry above runs `-m "not integration"`, so `tests/hub/integration/` stopped
+  # running anywhere and its tests reported as skips rather than failures. `SqlCatalog` is the
+  # hosted Hub's search path, and its pgvector similarity behaviour is exactly what a unit test
+  # against the in-memory backend cannot check — which is why the lane existed in the first place.
+  #
+  # The services come from `docker-compose.yml` rather than `services:` containers, deliberately:
+  # that file is what the docs tell a developer to run, and a service block here would be a second
+  # definition free to drift from it. It also lets `opa` mount the Rego bundle out of the checkout,
+  # which a `services:` container cannot do — those start before the workspace exists.
+  hub-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Start the services the suite needs
+        run: docker compose up -d --wait db registry opa
+      - name: Sync environment
+        run: uv sync --group dev
+      - name: Run the Hub integration suite
+        env:
+          HUB_POSTGRES_URL: postgresql+psycopg://hub:hub@localhost:5432/hub
+          HUB_OCI_REGISTRY: localhost:5000
+          HUB_OPA_URL: http://localhost:8181
+        run: uv run python -m pytest tests/hub/integration -m integration -ra
+      - name: Stop the services
+        if: always()
+        run: docker compose down -v
+
   # The opt-in lanes the source repos ran as dedicated jobs (sim-e2e, cluster,
   # scale) stay opt-in: trigger manually when the environment provides the
   # required services/hardware.

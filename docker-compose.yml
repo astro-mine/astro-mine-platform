@@ -1,0 +1,170 @@
+# The service dependencies this repository's opt-in integration tests exercise.
+#
+# Every suite here runs against a *real* server rather than a fake, and each is skipped unless its
+# environment variable points at one. That is the whole purpose of this file: without it the skips
+# have no remedy, and a skip whose remedy does not exist is coverage that quietly stopped existing.
+#
+#   docker compose up -d                    # everything below except the `workload` profile
+#   docker compose up -d minio nats         # or just what a given suite needs
+#
+# | Suite                                 | Bring up   | Point it at                                  |
+# |---------------------------------------|------------|----------------------------------------------|
+# | `tests/hub/integration/test_postgres` | `db`       | `HUB_POSTGRES_URL=postgresql+psycopg://hub:hub@localhost:5432/hub` |
+# | `tests/hub/integration/test_oci_…`    | `registry` | `HUB_OCI_REGISTRY=localhost:5000`            |
+# | `tests/hub/integration/test_opa_…`    | `opa`      | `HUB_OPA_URL=http://localhost:8181`          |
+# | `tests/bench/test_zoo_catalog`        | `db`       | `ASTRO_MINE_BENCH_TEST_DSN=postgresql+psycopg://hub:hub@localhost:5432/hub` |
+# | `tests/cloud/test_s3_integration`     | `minio`    | `MINIO_ENDPOINT=http://localhost:9000`       |
+# | `tests/cloud/test_runs_nats`          | `nats`     | `NATS_URL=nats://localhost:4222`             |
+# | `tests/cloud/test_mlflow_integration` | `mlflow`   | `MLFLOW_TRACKING_URI=http://localhost:5000`  |
+#
+# **This is test scaffolding, not a deployment.** The hosted tier is `astro-mine-api`, which ships
+# its own image, chart and compose (api.md §6); it is deliberately not reused here, because the
+# platform's own tests must be runnable without that repository checked out.
+#
+# **What CI runs, and what stays opt-in.** Only the Hub lane (`db`, `registry`, `opa`) runs on every
+# push — see the `hub-integration` job. It earns that because `SqlCatalog` is the hosted Hub's
+# search path and its pgvector similarity behaviour has no in-memory equivalent to check it
+# against: a unit test cannot tell a correct HNSW query from a wrong one. The Cloud suites
+# (`minio`, `nats`, `mlflow`, `redis`) stay opt-in on purpose: each covers a *client adapter* whose
+# logic CI already reaches without a server — `moto[s3]` for the object store, `fakeredis` for the
+# status store, MLflow's local file store for tracking, and the publisher protocol plus
+# `NullPublisher` for eventing. So a per-push lane would spend minutes of runner time re-proving
+# that a third-party server still speaks its own protocol. They exist for the case that actually
+# bites — a client-library upgrade — and are the thing to run by hand before taking one. NATS is
+# the weakest of the four (there is no fake server, only the publisher seam), so it is the one to
+# reach for first when `nats-py` moves.
+#
+# **The local tier needs none of it** (CX-LOCAL, conventions.md §7.2 tier 1): Hub's tier-1 client
+# against an OCI-layout directory, Bench's local scoring, Cloud's filesystem artifact store and
+# in-process job status, and Sim's whole loop all run with no service, no account and no Docker.
+# These servers only exercise the *other* implementation of a seam the library already abstracts.
+services:
+  db:
+    # pgvector, not plain postgres: Hub's catalog creates a `vector(dim)` column and an HNSW index
+    # (hub.md §5, §11), and Bench's scenario-zoo catalog indexes spec/version/lineage the same way
+    # (bench.md §5). The plain `postgres` image has no `vector` extension, so the index cannot be
+    # created on it. One database serves both suites — they use separate tables, not separate
+    # servers, and a second instance would only slow the stack down.
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: hub
+      POSTGRES_PASSWORD: hub
+      POSTGRES_DB: hub
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hub -d hub"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  registry:
+    # OCI Distribution Spec registry — hub.md §11 recommends **Zot** as "the lean OCI-native
+    # self-host (built-in cosign/Referrers/sync)" (RM-P1-HUB-01). `astro_mine.hub`'s RemoteRegistry
+    # speaks the Distribution Spec to it directly, and oras/skopeo/cosign interoperate unchanged —
+    # "standards in, standards out" (hub.md §2 principle 6).
+    image: ghcr.io/project-zot/zot-linux-amd64:v2.1.2
+    ports: ["5000:5000"]
+    volumes: ["zotdata:/var/lib/registry"]
+    healthcheck:
+      test: ["CMD", "/zot", "--help"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  opa:
+    # The download-gating policy engine (RM-P1-HUB-05; hub.md §9, §11). OPA serves the versioned
+    # Rego bundle from the source tree — the same bundle that ships in the wheel and that the
+    # pure-Python evaluator reads (`astro_mine.hub.policy._policy.BUNDLE_DIR`), so this exercises
+    # the sidecar path against the *identical* policy rather than a copy of it. With `HUB_OPA_URL`
+    # unset, Hub keeps the pure-Python evaluator, which is the offline tier-1 default.
+    image: openpolicyagent/opa:1.9.0
+    command: ["run", "--server", "--addr=0.0.0.0:8181", "/policy"]
+    ports: ["8181:8181"]
+    volumes: ["./src/astro_mine/hub/policy/rego:/policy:ro"]
+
+  minio:
+    # S3-compatible object storage for `tests/cloud/test_s3_integration` (RM-P0-CLOUD-03).
+    # Accountless and local; the default FilesystemArtifactStore needs none of it.
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports: ["9000:9000", "9001:9001"]
+    volumes: ["minio-data:/data"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  nats:
+    # NATS + JetStream for the lifecycle-eventing suite (RM-P1-CLOUD-06). The local tier stays
+    # broker-free on the NullPublisher default; this exercises the real NatsEventPublisher ->
+    # durable stream -> JetStreamConsumer path against a live server.
+    image: nats:2.10
+    command: ["--jetstream"]
+    ports: ["4222:4222", "8222:8222"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8222/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mlflow:
+    # MLflow tracking server for the experiment-tracking suite (RM-P1-CLOUD-05). A database-backed
+    # server plus its artifact root — the cluster-tier shape (cloud.md §5, §7). CI covers
+    # MlflowTrackingClient hermetically against MLflow's local file store; this is the real server.
+    image: ghcr.io/mlflow/mlflow:v2.22.0
+    command: >
+      mlflow server
+      --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --serve-artifacts --artifacts-destination /mlflow/artifacts
+    ports: ["5000:5000"]
+    volumes: ["mlflow-data:/mlflow"]
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    # The ephemeral job-status index (RM-P1-CLOUD-06). The store logic is covered in CI with
+    # fakeredis; this exists to exercise `RedisJobStatusStore.from_url` against a real server.
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  workload:
+    # An example of the compose tier for `submit()` (RM-P0-CLOUD-02): a packaged, digest-pinned
+    # workload with the run directory bound in and the ASTRO_MINE_* I/O contract — the same shape
+    # DockerBackend builds. Profile-gated so it never runs by default; swap the placeholder
+    # image@digest for a real workload image (RM-P0-CLOUD-01), then:
+    #   ASTRO_MINE_RUN_DIR=$PWD/.astro-mine/run \
+    #     docker compose --profile workload run --rm workload
+    profiles: [workload]
+    image: ghcr.io/astro-mine/astro-mine-sim@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    network_mode: none
+    environment:
+      ASTRO_MINE_INPUTS: /inputs
+      ASTRO_MINE_OUTPUTS: /outputs
+      ASTRO_MINE_SEED: "42"
+    volumes:
+      - ${ASTRO_MINE_RUN_DIR:-./.astro-mine/run}/inputs:/inputs:ro
+      - ${ASTRO_MINE_RUN_DIR:-./.astro-mine/run}/outputs:/outputs
+
+volumes:
+  pgdata:
+  zotdata:
+  minio-data:
+  mlflow-data:

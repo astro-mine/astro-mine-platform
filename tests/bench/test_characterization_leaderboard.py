@@ -555,7 +555,12 @@ def test_policy_engine_from_env() -> None:
 
 
 def test_role_and_action_vocabularies_are_stable() -> None:
-    """The Rego in policy/bench.rego hard-codes these strings; a rename must break loudly here."""
+    """astro-mine-api's deploy/policy/bench.rego hard-codes these strings; a rename breaks here.
+
+    The Rego moved with the tier that deploys it (RM-DIST-03); these vocabularies did not, because
+    they are library types. This is the pin that keeps the two spellings in step across the repo
+    boundary -- rename a Role or an Action here and this fails before the policy silently stops
+    matching."""
     assert {str(role) for role in Role} == {"submitter", "maintainer", "admin"}
     assert {str(action) for action in Action} == {
         "submission:create",

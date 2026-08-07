@@ -9,8 +9,10 @@ the two implementations are interchangeable:
 - a :class:`Decision` is the OPA **result document** — ``{"allow": bool, "reason": str}``;
 - :class:`RbacPolicyEngine` evaluates that document in-process (the default, and what the local and
   single-node deployments run), while :class:`OpaPolicyEngine` POSTs the *same* document to a real
-  OPA sidecar and reads the *same* result back. ``policy/bench.rego`` is the Rego source of the
-  built-in rules, so the sidecar and the in-process engine decide alike.
+  OPA sidecar and reads the *same* result back. The Rego source of the built-in rules is
+  ``deploy/policy/bench.rego`` in ``astro-mine-api``, where the sidecar that evaluates it is
+  deployed (api.md §6); the two decide alike by construction, and
+  :func:`test_role_and_action_vocabularies_are_stable` pins the strings both spell.
 
 Three rule families, per bench.md §9:
 
@@ -168,7 +170,8 @@ class PolicyEngine(Protocol):
 
 
 class RbacPolicyEngine:
-    """The built-in policy engine — RBAC + quotas + embargo (see ``policy/bench.rego``).
+    """The built-in policy engine — RBAC + quotas + embargo (the Rego twin of these rules ships
+    with the REST tier, at ``deploy/policy/bench.rego`` in ``astro-mine-api``).
 
     Evaluates the same input document an OPA sidecar would, with the same rules, so a deployment can
     move to :class:`OpaPolicyEngine` without a behavioural change. ``embargoed_scenarios`` are the
