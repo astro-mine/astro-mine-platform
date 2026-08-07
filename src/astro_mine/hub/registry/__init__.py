@@ -24,6 +24,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from astro_mine.hub.registry._auth import Credentials, credentials_for
+from astro_mine.hub.registry._names import (
+    ARTIFACT_NAME_PATTERN,
+    InvalidArtifactName,
+    is_valid_artifact_name,
+    validate_artifact_name,
+)
 from astro_mine.hub.registry._oci import (
     ARTIFACT_KINDS,
     MEDIA_CORE_MANIFEST,
@@ -44,6 +50,7 @@ from astro_mine.hub.registry._store import (
 
 __all__ = [
     "ARTIFACT_KINDS",
+    "ARTIFACT_NAME_PATTERN",
     "MEDIA_CORE_MANIFEST",
     "ArtifactExistsError",
     "ArtifactNotFound",
@@ -51,6 +58,7 @@ __all__ = [
     "Credentials",
     "Descriptor",
     "IntegrityError",
+    "InvalidArtifactName",
     "PublishedArtifact",
     "Registry",
     "RegistryClient",
@@ -60,7 +68,9 @@ __all__ = [
     "artifact_media_type",
     "credentials_for",
     "is_remote",
+    "is_valid_artifact_name",
     "open_registry",
+    "validate_artifact_name",
 ]
 
 
