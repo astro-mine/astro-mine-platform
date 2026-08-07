@@ -66,11 +66,14 @@ services:
     image: ghcr.io/project-zot/zot-linux-amd64:v2.1.2
     ports: ["5000:5000"]
     volumes: ["zotdata:/var/lib/registry"]
-    healthcheck:
-      test: ["CMD", "/zot", "--help"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
+    # No healthcheck, deliberately. This service carried `test: ["CMD", "/zot", "--help"]` in the
+    # compose file it came from, which never worked: the image is distroless, so there is no shell
+    # to run a probe in and no curl/wget to probe with, and the binary is not at that path anyway.
+    # Nothing noticed, because nothing ever waited on it — `docker compose up -d` returns as soon as
+    # the container starts. The first `--wait` reported it unhealthy and hung until the timeout.
+    #
+    # Readiness is checked from outside instead, where a HTTP client exists: poll `/v2/`, which the
+    # Distribution Spec requires every registry to answer. The CI job does exactly that.
 
   opa:
     # The download-gating policy engine (RM-P1-HUB-05; hub.md §9, §11). OPA serves the versioned

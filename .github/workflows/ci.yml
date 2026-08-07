@@ -79,7 +79,19 @@ jobs:
         with:
           enable-cache: true
       - name: Start the services the suite needs
-        run: docker compose up -d --wait db registry opa
+        # `--wait` for the two that can report their own health; the registry is distroless and has
+        # no probe to run inside it, so it is polled from here over the endpoint the Distribution
+        # Spec guarantees. Without the poll the suite races a registry that is still binding.
+        run: |
+          docker compose up -d --wait db opa
+          docker compose up -d registry
+          for _ in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:5000/v2/; then
+              echo "registry ready"; exit 0
+            fi
+            sleep 2
+          done
+          echo "registry did not answer /v2/ within 120s"; docker compose logs registry; exit 1
       - name: Sync environment
         run: uv sync --group dev
       - name: Run the Hub integration suite
