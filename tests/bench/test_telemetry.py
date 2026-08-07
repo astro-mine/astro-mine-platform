@@ -18,7 +18,6 @@ not merely importable.
 
 from __future__ import annotations
 
-import json
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -284,33 +283,13 @@ def test_the_pipeline_actually_records_its_metrics(
 
 # =================================================================================================
 # AC3 — the dashboard definition
+#
+# Asserted in astro-mine-api, not here. The dashboard and the scrape config moved to the tier that
+# deploys them (RM-DIST-03), and the two tests that read them went with the files rather than being
+# deleted: `tests/bench/test_telemetry.py` there still checks that the dashboard's PromQL names the
+# series `PipelineMetrics` below actually exposes, and that the scrape config targets the service.
+# The assertion is the point, and it only works where the file is.
 # =================================================================================================
-
-
-def test_the_grafana_dashboard_covers_the_named_signals() -> None:
-    """AC3: queue depth, mismatch rate, and eval latency — as PromQL that matches real series."""
-    dashboard = json.loads(
-        (REPO / "deploy" / "grafana" / "bench-submission-pipeline.json").read_text(encoding="utf-8")
-    )
-    titles = [panel["title"] for panel in dashboard["panels"]]
-    assert any("Queue depth" in title for title in titles)
-    assert any("mismatch rate" in title.lower() for title in titles)
-    assert any("latency" in title.lower() for title in titles)
-
-    promql = " ".join(
-        target["expr"] for panel in dashboard["panels"] for target in panel["targets"]
-    )
-    # The PromQL must reference the series the app actually exposes — a dashboard querying a
-    # metric that does not exist is a dashboard that renders empty panels forever.
-    assert "astro_mine_bench_queue_depth" in promql
-    assert 'astro_mine_bench_reexecutions_total{verdict="mismatch"}' in promql
-    assert "astro_mine_bench_evaluation_duration_seconds_bucket" in promql
-
-
-def test_prometheus_scrape_config_targets_the_leaderboard() -> None:
-    config = (REPO / "deploy" / "prometheus.yml").read_text(encoding="utf-8")
-    assert "/metrics" in config
-    assert "leaderboard:8000" in config
 
 
 # =================================================================================================

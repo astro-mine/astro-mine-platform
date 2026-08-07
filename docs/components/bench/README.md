@@ -20,9 +20,10 @@ afternoon*, offline, with no account. Reproducibility is the product.
 ```
 src/astro_mine/bench/       # import path: astro_mine.bench  (local scoring: astro_mine.bench.run)
   scenario/ zoo/ metrics/ harness/ baseline/ leaderboard/ submit/ eval/ recording/ report/ sandbox/
-policy/bench.rego           # the leaderboard authorization policy (OPA; same rules in-process)
-deploy/                     # Prometheus scrape config + the Grafana submission-pipeline dashboard
 tests/bench/                # mirrors the package layout
+
+# The leaderboard's Rego policy, Prometheus scrape config and Grafana dashboard ship with the
+# REST tier that deploys them: `deploy/` in astro-mine-api (RM-DIST-03).
 TRUST_BOUNDARY.md           # what the submission sandbox protects — and what it does not
 ```
 
@@ -126,14 +127,16 @@ reusing [Seal](https://github.com/astro-mine/astro-mine-seal)'s primitives via t
 verification failure fails closed.
 
 Authorization is an OPA-shaped policy layer (RBAC + per-role submission quotas + embargo control):
-`policy/bench.rego` is the Rego an OPA sidecar evaluates, and the in-process `RbacPolicyEngine`
+`deploy/policy/bench.rego` in astro-mine-api is the Rego an OPA sidecar evaluates, and the
+in-process `RbacPolicyEngine`
 enforces the same rules when no sidecar is configured. Every authN/authZ decision, verification
 outcome, and sandbox rejection lands in a queryable audit trail (`GET /audit`).
 
 **Observability** (`--profile observability`): OpenTelemetry spans cover `submit → evaluate → score
 → rank` with the trace context propagated across the queue hop, and `GET /metrics` exposes the
 Prometheus series — **queue depth**, the **re-execution mismatch rate** (bench.md §10's key
-integrity signal), and **evaluation latency**. `deploy/grafana/` has the starter dashboard.
+integrity signal), and **evaluation latency**. astro-mine-api's `deploy/grafana/` has the starter
+dashboard.
 
 **Scenario catalog:** the packaged zoo is scanned from the filesystem by default (offline, no
 database). Setting `ASTRO_MINE_BENCH_CATALOG_DSN` switches discovery to the **Postgres + pgvector**

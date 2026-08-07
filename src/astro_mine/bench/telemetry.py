@@ -11,7 +11,8 @@ bench.md §10 asks for two things and this module is both:
   **re-execution mismatch rate (a key integrity signal)**, and per-scenario cost."*
   :class:`PipelineMetrics` exposes exactly those as Prometheus series, and
   :func:`metrics_exposition` renders them for the app's ``/metrics`` endpoint. The Grafana starter
-  that reads them lives in ``deploy/grafana/``.
+  that reads them ships with the REST tier that serves that endpoint — ``deploy/grafana/`` in
+  ``astro-mine-api``, where a test asserts its PromQL names the series below.
 
 **The base package stays ``core + pydantic``.** Neither ``opentelemetry`` nor ``prometheus_client``
 is imported at module scope: both are probed once and fall back to no-op shims, so
