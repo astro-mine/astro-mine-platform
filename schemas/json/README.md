@@ -57,7 +57,7 @@ bundle do not need either** — see below.
 These JSON Schemas — together with the Cap'n Proto and `.proto` sources — are assembled
 into a versioned, **content-addressed bundle** by `scripts/build_schema_bundle.py` and
 published as an OCI artifact to private GHCR
-(`ghcr.io/astro-mine/astro-mine-core/schemas:<version>`) by the `publish-schemas` workflow,
+(`ghcr.io/astro-mine/astro-mine-platform/schemas:<version>`) by the `publish-schemas` workflow,
 **pullable by digest**. The bundle's `schema_digest` (a sha256 over the schema sources) is
 the identity a Bench run pins to reproduce a scenario byte-for-byte (`docs/VERSIONING.md`
 §4–5; CX-REPRO).

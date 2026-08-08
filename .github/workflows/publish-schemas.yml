@@ -1,6 +1,6 @@
 # Publish the content-addressed Core schema bundle to private GHCR (RM-P0-CORE-08).
 #
-# Rehomed from `astro-mine-core` before that repository was archived (RM-DIST-05). The consolidation
+# Rehomed from `astro-mine-core` before that repository was deleted (RM-DIST-05). The consolidation
 # moved the bundle *builder* (`scripts/build_schema_bundle.py`) and the schema sources into this
 # wheel and left the workflow that publishes them behind -- so the capability survived and the
 # automation did not. Archiving makes a repository's Actions unrunnable, which would have retired
@@ -9,7 +9,7 @@
 #
 # On every `vX.Y.Z` tag (and on demand via workflow_dispatch for an existing tag), this
 # assembles the canonical schema set + freshly generated per-language clients into a
-# bundle and pushes it as an OCI artifact to ghcr.io/<org>/astro-mine-core/schemas,
+# bundle and pushes it as an OCI artifact to ghcr.io/<org>/astro-mine-platform/schemas,
 # pullable by digest. The bundle's `schema_digest` (sha256 over the schema sources) is
 # the content-addressed identity a Bench run pins (docs/VERSIONING.md §5; core.md §7).
 #
@@ -40,12 +40,16 @@ jobs:
       run:
         shell: bash -el {0}
     env:
-      # NOT `${{ github.repository }}/schemas`: that would publish to
-      # `ghcr.io/astro-mine/astro-mine-platform/schemas` and orphan every consumer of the existing
-      # package. Registry names are immutable and this one has published versions, so the target
-      # stays where it was published even though the repository that published it is gone
-      # (conventions.md §13, "Artifact-name migration").
-      IMAGE: ghcr.io/astro-mine/astro-mine-core/schemas
+      # This was `ghcr.io/astro-mine/astro-mine-core/schemas` when the workflow was rehomed, on the
+      # reasoning that registry names are immutable and re-targeting would orphan the consumers of
+      # the already-published package. That reasoning assumed `astro-mine-core` would survive as an
+      # archived repository. It was deleted (RM-DIST-05), and a GHCR package scoped under a repo
+      # path goes with the repo -- so there is no longer a published package to orphan, and the old
+      # path resolves to nothing.
+      #
+      # `${{ github.repository }}/schemas` rather than a literal, so the target follows the
+      # repository that publishes it instead of naming one that can be deleted out from under it.
+      IMAGE: ghcr.io/${{ github.repository }}/schemas
     steps:
       - name: Resolve tag & version
         id: ref
@@ -97,7 +101,10 @@ jobs:
           VERSION="${{ steps.ref.outputs.version }}"
           DIGEST="$(cat dist/schema-bundle/SCHEMA_DIGEST)"
           # Deterministic tarball of the staged bundle (sorted, zeroed metadata).
-          TARBALL="astro-mine-core-schemas-${VERSION}.tar.gz"  # the published artifact's name
+          # Named for the repository that publishes it. It carried `astro-mine-core-` while the
+          # target did; both moved together, because a layer filename that names a deleted
+          # repository is the same stale reference as the target was.
+          TARBALL="astro-mine-platform-schemas-${VERSION}.tar.gz"
           tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
               -czf "$TARBALL" -C dist/schema-bundle .
           oras push "$IMAGE:$VERSION" \
