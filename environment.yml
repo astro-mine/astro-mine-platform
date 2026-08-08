@@ -1,0 +1,26 @@
+# conda-forge toolchain for multi-language codegen + native-client builds (RM-P0-CORE-07).
+#
+# Pins libprotobuf/protobuf to the same v35 line as the buf remote plugins
+# (protocolbuffers/*:v35.1) so the generated Python and C++ share a runtime ABI, and
+# bundles the rust/cmake/node toolchains needed to *compile* the generated clients and
+# the Rust fast-path validator. Used by the CI `codegen` job and by contributors locally:
+#
+#   micromamba create -f environment.yml      # or: conda env create -f environment.yml
+#   micromamba activate amc-codegen
+#   ./scripts/core/gen_proto.sh --langs        # generate Python + C++/Rust/TS clients
+#
+# The Python *package* deps (pydantic, pycapnp, datamodel-code-generator, …) live in
+# pyproject.toml and are managed with uv — this env is only the native codegen toolchain.
+name: amc-codegen
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - libprotobuf=7.35.1   # matches buf plugin protocolbuffers/cpp:v35.1 / the Python runtime
+  - protobuf=7.35.1
+  - rust                 # cargo: builds codegen/rust and validator/rust
+  - cmake                # builds codegen/cpp
+  - cxx-compiler         # C++ toolchain for the protobuf C++ runtime
+  - pkg-config
+  - nodejs               # `npx @bufbuild/buf` (codegen) and the codegen/ts tsc build
+  - pip

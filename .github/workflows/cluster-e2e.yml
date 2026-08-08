@@ -1,0 +1,155 @@
+name: cluster-e2e
+
+# Rehomed from `astro-mine-cloud` before that repository was archived (RM-DIST-05). The kind
+# scripts, the Helm chart and the profiles it drives all came across with the consolidation
+# (`platform/kind/`, `platform/helm/`); this workflow did not, so the lane existed nowhere.
+#
+# The opt-in ephemeral-cluster integration job (cloud.md §10). It is deliberately NOT part of the
+# default CI: it builds a workload image, stands up a three-node kind cluster, does a real
+# `helm dependency build && helm install` of the umbrella chart, and then kills pods and nodes. It
+# takes tens of minutes and needs a Docker daemon. `ci.yml` stays fast and hermetic.
+#
+# It runs:
+#   - on demand                          (workflow_dispatch)
+#   - on a PR labelled `cluster-e2e`     (so a change to the cluster path can be gated on it)
+#   - nightly                            (so the harness cannot quietly rot between uses)
+on:
+  workflow_dispatch:
+    inputs:
+      admission:
+        description: "Install Kyverno and run the supply-chain admission tests"
+        type: boolean
+        default: true
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  schedule:
+    - cron: "0 3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cluster-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cluster:
+    # A PR runs this only when it asks for it by label; dispatch and the nightly always run.
+    if: >-
+      github.event_name != 'pull_request' ||
+      contains(github.event.pull_request.labels.*.name, 'cluster-e2e')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    env:
+      # Everything the admission tests need is installed below, so default them on. A
+      # workflow_dispatch can turn them off to shave ~10 minutes.
+      ADMISSION: ${{ github.event_name == 'workflow_dispatch' && inputs.admission == false && '0' || '1' }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # hatch-vcs derives the package version from `git describe`, and that version
+          # (RunContext.code_version) is *inside* the content address the determinism gate
+          # compares. A shallow clone with no tags would produce a different one -- and then the
+          # gate would fail for a reason that has nothing to do with the run.
+          fetch-depth: 0
+
+      # The platform wheel bundles Guard's Rust core (maturin), so the toolchain is required.
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --group dev --extra cloud-s3 --extra cloud-cluster
+
+      - name: Install kind
+        uses: helm/kind-action@v1
+        with:
+          install_only: true
+          # kind < v0.27 cannot bring up a control plane on Docker 28+ (the runner ships 28.x):
+          # kubeadm init hangs in `wait-control-plane` and the cluster is torn down. The node image
+          # is pinned by digest in platform/kind/cluster.yaml and must stay compatible with this.
+          version: v0.32.0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.15.4
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: v2.4.1
+
+      - name: Install OPA
+        # --fail, --retry: without -f, curl writes an HTTP error page to the target, chmod +x makes
+        # it "executable", and the job dies later somewhere confusing. And this is a third-party
+        # download on the critical path of a 40-minute job -- a blip here (which is what took the
+        # previous run down, five clean runs after it was written) should cost seconds, not a rerun.
+        run: |
+          curl -fsSL --retry 5 --retry-all-errors --retry-delay 2 -o /usr/local/bin/opa \
+            https://openpolicyagent.org/downloads/v1.0.0/opa_linux_amd64_static
+          chmod +x /usr/local/bin/opa
+          opa version
+
+      - name: Show the toolchain
+        run: |
+          docker version --format '{{.Server.Version}}'
+          kind version && kubectl version --client && helm version --short
+
+      # kind + a local registry + MinIO + `helm dependency build && helm install` + the workload
+      # image (pinned to this checkout's version, so the content addresses can match).
+      - name: Bring the cluster up
+        run: ./platform/kind/up.sh
+
+      - name: Export the harness environment
+        # harness.env is written to be `source`d by a human, so it carries comments -- and
+        # $GITHUB_ENV rejects them outright ("Invalid format '# Written by ...'"). Feed it only the
+        # KEY=VALUE lines and leave the file itself readable.
+        run: grep -vE '^[[:space:]]*(#|$)' platform/kind/harness.env >> "$GITHUB_ENV"
+
+      # No coverage gate here: this job proves the *cluster* path, and the coverage gate is
+      # ci.yml's job (where the hermetic suite covers everything but the subprocess shims).
+      - name: Test (cluster)
+        run: uv run pytest tests/cloud -m cluster -v --durations=20
+
+      - name: Diagnostics
+        # always(), not failure(): a cancelled run (the concurrency group cancels the previous one
+        # on every push) otherwise takes the whole cluster's state with it, and the next round is
+        # spent re-earning evidence we already had.
+        if: always()
+        env:
+          KUBECONFIG: platform/kind/kubeconfig
+        run: |
+          kubectl get nodes -o wide || true
+          kubectl get pods -A -o wide || true
+          kubectl get jobs,rayjobs,clusterqueues,localqueues,workloads -A || true
+          kubectl get clusterpolicies -A || true
+          kubectl describe pods -n astro-mine-runs || true
+          for pod in $(kubectl get pods -n astro-mine-runs -o name); do
+            echo "===== $pod"; kubectl logs -n astro-mine-runs "$pod" --tail=100 || true
+          done
+
+          # The args Kyverno's admission controller is ACTUALLY running with. It rejected a
+          # correctly-signed image for reaching HTTPS at a plain-HTTP registry, which should be
+          # impossible with --allowInsecureRegistry=true -- so either the flag is not there (the
+          # chart's values path is a red herring) or it is there and does not cover the cosign
+          # signature fetch. Printing it is the difference between knowing and guessing, and each
+          # guess costs a forty-minute run.
+          echo "===== kyverno admission-controller args"
+          kubectl -n astro-mine-system get deploy kyverno-admission-controller \
+            -o jsonpath='{range .spec.template.spec.containers[*]}{.name}{"\n"}{.args}{"\n"}{end}' || true
+          echo
+          echo "===== kyverno admission-controller logs"
+          kubectl -n astro-mine-system logs deploy/kyverno-admission-controller --tail=60 || true
+
+          kubectl get events -A --sort-by=.lastTimestamp | tail -80 || true
+
+      - name: Tear the cluster down
+        if: always()
+        run: ./platform/kind/down.sh

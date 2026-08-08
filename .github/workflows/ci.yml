@@ -104,9 +104,13 @@ jobs:
         if: always()
         run: docker compose down -v
 
-  # The opt-in lanes the source repos ran as dedicated jobs (sim-e2e, cluster,
-  # scale) stay opt-in: trigger manually when the environment provides the
-  # required services/hardware.
+  # The opt-in lanes the source repos ran as dedicated jobs stay opt-in, because each needs an
+  # environment this job does not have. Only `sim-e2e` was ever actually carried over, though:
+  # `cluster` and `scale` were named here as if they had been, while their workflows stayed behind
+  # in `astro-mine-cloud` and `astro-mine-allocate`. They now live beside this file as
+  # `cluster-e2e.yml` (nightly + on a `cluster-e2e` label) and `scale-bench.yml` (weekly), rehomed
+  # before those repositories were archived (RM-DIST-05) — so "trigger manually" now names
+  # something that exists.
   sim-e2e:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest

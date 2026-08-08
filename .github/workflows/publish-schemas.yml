@@ -1,0 +1,135 @@
+# Publish the content-addressed Core schema bundle to private GHCR (RM-P0-CORE-08).
+#
+# Rehomed from `astro-mine-core` before that repository was archived (RM-DIST-05). The consolidation
+# moved the bundle *builder* (`scripts/build_schema_bundle.py`) and the schema sources into this
+# wheel and left the workflow that publishes them behind -- so the capability survived and the
+# automation did not. Archiving makes a repository's Actions unrunnable, which would have retired
+# this publisher with nothing replacing it, and the bundle's `schema_digest` is the content-addressed
+# identity a Bench run pins (VERSIONING.md §5; core.md §7).
+#
+# On every `vX.Y.Z` tag (and on demand via workflow_dispatch for an existing tag), this
+# assembles the canonical schema set + freshly generated per-language clients into a
+# bundle and pushes it as an OCI artifact to ghcr.io/<org>/astro-mine-core/schemas,
+# pullable by digest. The bundle's `schema_digest` (sha256 over the schema sources) is
+# the content-addressed identity a Bench run pins (docs/VERSIONING.md §5; core.md §7).
+#
+# Auth: the workflow's own GITHUB_TOKEN (packages: write) — no PAT. Downstream *read*
+# of this private package uses CORE_REPO_TOKEN (see CONTRIBUTING.md).
+name: Publish schema bundle
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to (re)publish, e.g. v0.1.0. Defaults to the current ref."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    # Never run from forks — the GHCR target and token are org-scoped.
+    if: github.repository_owner == 'astro-mine'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    env:
+      # NOT `${{ github.repository }}/schemas`: that would publish to
+      # `ghcr.io/astro-mine/astro-mine-platform/schemas` and orphan every consumer of the existing
+      # package. Registry names are immutable and this one has published versions, so the target
+      # stays where it was published even though the repository that published it is gone
+      # (conventions.md §13, "Artifact-name migration").
+      IMAGE: ghcr.io/astro-mine/astro-mine-core/schemas
+    steps:
+      - name: Resolve tag & version
+        id: ref
+        shell: bash
+        run: |
+          TAG="${{ inputs.tag }}"
+          [ -n "$TAG" ] || TAG="${{ github.ref_name }}"
+          case "$TAG" in
+            v*) ;;
+            *) echo "::error::expected a vX.Y.Z tag, got '$TAG'"; exit 1 ;;
+          esac
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.tag }}
+          fetch-depth: 0 # tags needed for hatch-vcs / provenance
+
+      - name: Set up codegen toolchain (conda-forge)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: environment.yml
+          cache-environment: true
+
+      # Generate the per-language client sources published alongside the schemas. The
+      # CI `codegen` job already proves they compile; here we ship the generated sources.
+      - name: Generate per-language clients (C++/Rust/TS)
+        run: ./scripts/core/gen_proto.sh --langs
+
+      - name: Build schema bundle
+        run: |
+          python scripts/build_schema_bundle.py \
+            --out dist/schema-bundle \
+            --clients-dir codegen \
+            --version "${{ steps.ref.outputs.version }}" \
+            --commit "${{ github.sha }}"
+
+      - name: Set up oras
+        uses: oras-project/setup-oras@v1
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Push bundle to GHCR (by digest)
+        id: push
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.ref.outputs.version }}"
+          DIGEST="$(cat dist/schema-bundle/SCHEMA_DIGEST)"
+          # Deterministic tarball of the staged bundle (sorted, zeroed metadata).
+          TARBALL="astro-mine-core-schemas-${VERSION}.tar.gz"  # the published artifact's name
+          tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner \
+              -czf "$TARBALL" -C dist/schema-bundle .
+          oras push "$IMAGE:$VERSION" \
+            --artifact-type application/vnd.astro-mine.core.schema-bundle.v1 \
+            --annotation "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --annotation "org.opencontainers.image.revision=${{ github.sha }}" \
+            --annotation "org.opencontainers.image.version=$VERSION" \
+            --annotation "dev.astro-mine.schema-digest=$DIGEST" \
+            "$TARBALL:application/gzip" | tee push.log
+          REG_DIGEST="$(grep -oE 'sha256:[a-f0-9]{64}' push.log | head -1)"
+          [ -n "$REG_DIGEST" ] || { echo "::error::could not parse registry digest"; exit 1; }
+          echo "schema_digest=$DIGEST" >> "$GITHUB_OUTPUT"
+          echo "registry_digest=$REG_DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Verify pull-by-digest
+        run: |
+          set -euo pipefail
+          oras manifest fetch "$IMAGE@${{ steps.push.outputs.registry_digest }}" > /dev/null
+          echo "pull-by-digest OK"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Core schema bundle published"
+            echo ""
+            echo "- **Version:** \`${{ steps.ref.outputs.version }}\`"
+            echo "- **Schema digest (content-addressed):** \`${{ steps.push.outputs.schema_digest }}\`"
+            echo "- **Registry ref:** \`$IMAGE:${{ steps.ref.outputs.version }}\`"
+            echo "- **Registry digest:** \`${{ steps.push.outputs.registry_digest }}\`"
+            echo ""
+            echo "Pull by digest:"
+            echo '```'
+            echo "oras pull $IMAGE@${{ steps.push.outputs.registry_digest }}"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
