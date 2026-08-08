@@ -1,0 +1,61 @@
+# The RM-P1 scale benchmark — tens of robots / hundreds of tasks (allocate.md §8).
+#
+# Rehomed from `astro-mine-allocate` before that repository was archived (RM-DIST-05). The suite and
+# the recorded numbers under `benchmarks/` came across with the consolidation; this workflow did not,
+# so the lane existed nowhere. `ci.yml` says the opt-in lanes the source repos ran as dedicated jobs
+# "stay opt-in: trigger manually" — which was true of `sim-e2e` and not of this one, because there
+# was nothing left to trigger.
+#
+# Deliberately NOT part of the PR gate: it asserts a wall-clock deadline, and a wall-clock assertion
+# on a noisy shared runner is a flake, not a signal (the `scale` marker is deselected by default, and
+# the `allocate` matrix entry in `ci.yml` runs `-m "not scale"`). It runs weekly and on demand
+# instead, and uploads each run's numbers so the trend is tracked over time — "every performance
+# claim is a reproducible Bench number with pinned solver versions" (allocate.md §8).
+name: Scale benchmark
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mondays 04:17 UTC — off the hour, to miss the cron stampede.
+    - cron: "17 4 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scale-bench-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The platform wheel bundles Guard's Rust core and is built by maturin, so a toolchain is
+      # needed even for a job that only runs Python. `astro-mine-allocate` needed no such step —
+      # it depended on Core as a pure-Python git source.
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      # No "Authenticate to private dependencies" step: this repository *is* the platform and has no
+      # private git sources to resolve. `astro-mine-allocate` pinned Core and Mind that way.
+      - name: Sync dependencies
+        run: uv sync --group dev
+
+      - name: Run the scale benchmark
+        run: uv run pytest tests/allocate -m scale -v
+
+      - name: Upload the recorded numbers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scale-bench-${{ github.run_number }}
+          path: benchmarks/
+          if-no-files-found: error
+          retention-days: 90
