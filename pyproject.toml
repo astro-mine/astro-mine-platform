@@ -200,6 +200,11 @@ include = [
   { path = "src/astro_mine/worlds/spec/schema/*.json", format = ["sdist", "wheel"] },
   { path = "src/astro_mine/surrogate/data/dem_excavation_v1.npz", format = ["sdist", "wheel"] },
   { path = "src/astro_mine/hub/policy/rego/*", format = ["sdist", "wheel"] },
+  # The trust root travels with the code, because a gate must be able to decide "whose signature
+  # counts" on a laptop with no network (conventions.md §9, CX-LOCAL). A root that has to be
+  # fetched is a root the offline tier does not have, and `importlib.resources` reads this at
+  # runtime — so an omission here is a silent downgrade to "trust nobody", not a build error.
+  { path = "src/astro_mine/seal/trust_root.json", format = ["sdist", "wheel"] },
 ]
 
 # Dev tooling: the union of every repo's dev dependency-group (loosest-compatible spec
