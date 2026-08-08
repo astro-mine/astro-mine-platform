@@ -35,7 +35,7 @@ is opt-in three times over (an explicit argument, an environment variable, and a
 never a default, and it is what :func:`~astro_mine.prospect.service.server.serve` refuses to assume.
 
 Backlog: prospect.md §9; conventions.md §9; LUNAR-SR-001, LUNAR-SR-005 —
-https://github.com/astro-mine/astro-mine-prospect/issues/32
+astro-mine-prospect#32
 """
 
 from __future__ import annotations

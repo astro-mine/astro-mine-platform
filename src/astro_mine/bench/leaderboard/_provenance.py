@@ -18,7 +18,7 @@ posture (bench.md §9). This module is both:
 The bundle is stored in the object store (:mod:`._objects`) keyed by its own digest, so a dispute
 is auditable from the stored lineage alone.
 
-Backlog: RM-P1-BENCH-10 — https://github.com/astro-mine/astro-mine-bench/issues/18
+Backlog: RM-P1-BENCH-10 — astro-mine-bench#18
 """
 
 from __future__ import annotations

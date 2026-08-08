@@ -20,7 +20,7 @@ The reverse — rebuilding a live provider from the pulled bytes — is
 inside :func:`publish_world_bundle` so the base package stays dependency-light (offline, no hosted
 Hub; the publish path needs the ``[hub]`` extra).
 
-Backlog: RM-P1-WORLDS-15 — https://github.com/astro-mine/astro-mine-worlds/issues/30
+Backlog: RM-P1-WORLDS-15 — astro-mine-worlds#30
 """
 
 from __future__ import annotations

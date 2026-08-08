@@ -25,7 +25,7 @@ Like the GMRF it supports the replayable, content-addressed belief :meth:`update
 ground-truth :meth:`realize` draw, so it is usable as both a ``BeliefField`` and a
 ``GroundTruthField`` variant. Training and all draws are seeded (conventions.md §1.5).
 
-Backlog: RM-P1-PROSPECT-10 — https://github.com/astro-mine/astro-mine-prospect/issues/20
+Backlog: RM-P1-PROSPECT-10 — astro-mine-prospect#20
 """
 
 from __future__ import annotations

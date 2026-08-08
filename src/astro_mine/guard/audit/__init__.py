@@ -4,7 +4,7 @@ Every tick's :class:`SafetyVerdict` — the certified action, whether/why an int
 the invoked spec clause(s), the active layer, and the barrier-margin certificate — carrying the
 spec/model content-hash + Guard-code-version provenance a safety claim needs (guard.md §5, §6). The
 verdict stream is written to **MCAP** for channel-by-channel replay and aggregated to **Parquet**
-so [Bench](https://github.com/astro-mine/astro-mine-bench) scores "violations per scenario" and the
+so Bench scores "violations per scenario" and the
 "performance cost of shielding," and [View] can overlay interventions.
 
 Two hard rules (guard.md §6, §8, §9.1):

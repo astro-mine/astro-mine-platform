@@ -7,7 +7,7 @@ metric set, budgets); :func:`resolve_scenario` materializes it into a content-ad
 Prospecting v1"), with public dev seeds and an embargoed held-out seed set, lands next.
 
 Backlog: RM-P0-BENCH-01 (this), RM-P0-BENCH-02 (anchor scenario)
-https://github.com/astro-mine/astro-mine-bench/issues/1
+astro-mine-bench#1
 """
 
 from __future__ import annotations

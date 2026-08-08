@@ -8,7 +8,7 @@ as params, the produced outputs as **content-addressed artifact refs**, and stam
 :class:`TrackingClient` seam -- :class:`MlflowTrackingClient` (behind the ``[mlflow]`` extra)
 in production, a fake in tests -- so the local tier tracks nothing heavier than it wants.
 
-Backlog: RM-P1-CLOUD-05 -- https://github.com/astro-mine/astro-mine-cloud/issues/16
+Backlog: RM-P1-CLOUD-05 -- astro-mine-cloud#16
 """
 
 from __future__ import annotations

@@ -5,7 +5,7 @@ edition = "2021"
 rust-version = "1.82"
 license = "Apache-2.0"
 description = "Astro-Mine-Guard trusted safety core (TCB): arbiter + CBF-QP shield + STL/MTL monitors + simplex backup (RM-P1-GUARD-02)."
-repository = "https://github.com/astro-mine/astro-mine-guard"
+repository = "https://github.com/astro-mine/astro-mine-platform"
 publish = false
 
 # Two crate types on purpose (guard.md §4): `rlib` so `cargo test` builds and exercises

@@ -6,7 +6,7 @@ pull, before Core loads the plugin** (hub.md §2.3; ``LUNAR-SR-002``), failing c
 bytes, and serves pulls from a content-addressed cache. [Bench](bench.md) resolves submissions by
 digest through this client — the other half of the academic flywheel.
 
-Backlog: RM-P1-HUB-06 — https://github.com/astro-mine/astro-mine-hub/issues/6
+Backlog: RM-P1-HUB-06 — astro-mine-hub#6
 """
 
 from __future__ import annotations

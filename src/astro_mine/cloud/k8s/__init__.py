@@ -12,7 +12,7 @@ This module owns the cross-cutting bits every generator shares: the platform lab
 (so every object is attributable to a tenant / run / component), RFC-1123 name
 sanitisation, and the pure-Python env/metadata builders.
 
-Backlog: RM-P1-CLOUD-01 -- https://github.com/astro-mine/astro-mine-cloud/issues/12
+Backlog: RM-P1-CLOUD-01 -- astro-mine-cloud#12
 """
 
 from __future__ import annotations

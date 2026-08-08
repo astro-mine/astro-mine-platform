@@ -7,7 +7,7 @@ unit-testable decision (the in-process mirror); :func:`cosign_cluster_policy` is
 ``ClusterPolicy`` that enforces the same rule at the actual cluster boundary. An unsigned or
 Core-incompatible image is refused (``cloud.md`` §6, §9; ``conventions.md`` §9).
 
-Backlog: RM-P1-CLOUD-05 -- https://github.com/astro-mine/astro-mine-cloud/issues/16
+Backlog: RM-P1-CLOUD-05 -- astro-mine-cloud#16
 """
 
 from __future__ import annotations

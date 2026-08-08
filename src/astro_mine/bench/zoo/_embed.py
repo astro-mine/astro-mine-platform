@@ -20,7 +20,7 @@ It is a *lexical* embedding, not a semantic one: it will not match "ice" to "vol
 :class:`Embedder` seam is where a deployment swaps in a real text-embedding model, without changing
 the catalog, the schema, or the query — only the vectors.
 
-Backlog: bench#33 — https://github.com/astro-mine/astro-mine-bench/issues/33
+Backlog: bench#33 — astro-mine-bench#33
 """
 
 from __future__ import annotations

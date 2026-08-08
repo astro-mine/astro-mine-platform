@@ -12,7 +12,7 @@ cluster and no client needed to build (or test) one; applying is the cluster bac
 (:mod:`astro_mine.cloud.submission.cluster`). :func:`~.selection.select_engine` routes a
 single JobSpec to ``ray`` or ``k8sjob``; sweeps and workflows always compile to Argo.
 
-Backlog: RM-P1-CLOUD-01/02 -- https://github.com/astro-mine/astro-mine-cloud/issues/12
+Backlog: RM-P1-CLOUD-01/02 -- astro-mine-cloud#12
 """
 
 from __future__ import annotations

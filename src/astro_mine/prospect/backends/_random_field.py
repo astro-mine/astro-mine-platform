@@ -34,7 +34,7 @@ the noise is drawn on a domain extended by the kernel's half-width and convolved
 mode: every output cell then sums distinct samples, the normalizer is exact, and the result is
 stationary right up to the edge — no border artifacts to explain away.
 
-Backlog: RM-P1-PROSPECT-10 — https://github.com/astro-mine/astro-mine-prospect/issues/30
+Backlog: RM-P1-PROSPECT-10 — astro-mine-prospect#30
 """
 
 from __future__ import annotations

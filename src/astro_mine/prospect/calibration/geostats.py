@@ -19,7 +19,7 @@ cross-backend agreement, and both ask whether the inference is geostatistically 
 Both are pure NumPy over a scattered sample, so they hold any backend to account through the Core
 contract alone, without knowing what it is.
 
-Backlog: prospect.md §10 — https://github.com/astro-mine/astro-mine-prospect/issues/33
+Backlog: prospect.md §10 — astro-mine-prospect#33
 """
 
 from __future__ import annotations

@@ -11,7 +11,7 @@ Determinism is the point: no wall-clock, no RNG, no environment lookups, so two 
 resolve the byte-identical scenario (bench.md §2; conventions.md §5). The acceptance criterion —
 *changing any input changes the hash* — follows from the spec hash being folded into the identity.
 
-Backlog: RM-P0-BENCH-01 — https://github.com/astro-mine/astro-mine-bench/issues/1
+Backlog: RM-P0-BENCH-01 — astro-mine-bench#1
 """
 
 from __future__ import annotations

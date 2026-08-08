@@ -8,7 +8,7 @@ and the optional :class:`FieldGrid` spatial domain. The CRS/frame primitives are
 (:mod:`astro_mine.core.units`); units are validated against the Core waist vocabulary, so
 there is no implicit Earth/WGS84 and no typo'd unit (conventions.md §5).
 
-Backlog: RM-P0-PROSPECT-01 — https://github.com/astro-mine/astro-mine-prospect/issues/1
+Backlog: RM-P0-PROSPECT-01 — astro-mine-prospect#1
 """
 
 from __future__ import annotations

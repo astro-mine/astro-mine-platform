@@ -6,7 +6,7 @@ The abstract DTN layer on top of the constellation contact graph: :class:`Contac
 non-delivery, with a multi-fidelity instantaneous↔store-and-forward dial). Link *models*
 store-and-forward and supplies the contact plan; it is not a live DTN agent (link.md §1, §11).
 
-Backlog: RM-P1-LINK-11 -- https://github.com/astro-mine/astro-mine-link/issues/18
+Backlog: RM-P1-LINK-11 -- astro-mine-link#18
 """
 
 from __future__ import annotations

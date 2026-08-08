@@ -7,7 +7,7 @@ it, so a comms-denied benchmark reproduces from pinned inputs (link.md §5; conv
 pointed at the same cache root — is a hit that reproduces the plan byte-for-byte, not a
 lookalike.
 
-Backlog: RM-P0-LINK-05 -- https://github.com/astro-mine/astro-mine-link/issues/5
+Backlog: RM-P0-LINK-05 -- astro-mine-link#5
 """
 
 from __future__ import annotations

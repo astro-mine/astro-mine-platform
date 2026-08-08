@@ -9,7 +9,7 @@ this" ranking — degrading to keyword/faceted when embeddings are unavailable (
 - :class:`EmbeddingProvider` — the swappable semantic backend (hub.md §3 extension points):
   :class:`HashingEmbedding` offline by default, :class:`HttpEmbedding` for a served learned model.
 
-Backlog: RM-P1-HUB-02 — https://github.com/astro-mine/astro-mine-hub/issues/2
+Backlog: RM-P1-HUB-02 — astro-mine-hub#2
 """
 
 from __future__ import annotations

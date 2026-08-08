@@ -31,7 +31,7 @@ to before a byte is returned (hub.md §2.3; conventions.md §9). It is the same 
 uses for the Sim :class:`~astro_mine.bench.baseline.EpisodeRunner` (bench.md §2.2). Bench ships no
 inference runtime.
 
-Backlog: RM-P1-BENCH-10 — https://github.com/astro-mine/astro-mine-bench/issues/18
+Backlog: RM-P1-BENCH-10 — astro-mine-bench#18
 """
 
 from __future__ import annotations

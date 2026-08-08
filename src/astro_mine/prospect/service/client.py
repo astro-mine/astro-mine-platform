@@ -6,7 +6,7 @@ log (or applying a streamed increment), the client checks its own :attr:`BeliefF
 against the server's; a mismatch means the client and server diverged and raises
 :class:`PosteriorConsistencyError` rather than serving a silently-wrong posterior (prospect.md §5).
 
-Backlog: RM-P1-PROSPECT-11 — https://github.com/astro-mine/astro-mine-prospect/issues/21
+Backlog: RM-P1-PROSPECT-11 — astro-mine-prospect#21
 """
 
 from __future__ import annotations

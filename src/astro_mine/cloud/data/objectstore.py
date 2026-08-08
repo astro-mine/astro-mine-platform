@@ -6,7 +6,7 @@ backend (MinIO on-prem, native S3/GCS/Azure in cloud) through one boto3 client -
 portable, ``[s3]`` extra. :class:`FilesystemObjectStore` is the dependency-free local store
 (range reads via ``seek``), so the data layer works on a workstation with no cloud.
 
-Backlog: RM-P1-CLOUD-04 -- https://github.com/astro-mine/astro-mine-cloud/issues/15
+Backlog: RM-P1-CLOUD-04 -- astro-mine-cloud#15
 """
 
 from __future__ import annotations

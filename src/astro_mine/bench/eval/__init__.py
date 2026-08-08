@@ -23,7 +23,7 @@ The dependency-clean surface (planner, seam, collector, orchestration) imports o
 pydantic``; ``astro_mine.cloud`` and ``pyarrow`` ride the ``[cloud]`` extra and are imported lazily,
 and Bench still **never imports Sim**.
 
-Backlog: RM-P1-BENCH-11 — https://github.com/astro-mine/astro-mine-bench/issues/19
+Backlog: RM-P1-BENCH-11 — astro-mine-bench#19
 """
 
 from __future__ import annotations

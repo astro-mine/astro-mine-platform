@@ -12,7 +12,7 @@ The house pattern is Worlds' ``WorldSpec`` (``astro_mine.worlds.spec``): a froze
 ``extra="forbid"`` Pydantic base, content referenced by hash (Worlds' ``SourceRef``), and a
 ``sha256:`` canonical digest.
 
-Backlog: RM-P0-BENCH-01 — https://github.com/astro-mine/astro-mine-bench/issues/1
+Backlog: RM-P0-BENCH-01 — astro-mine-bench#1
 """
 
 from __future__ import annotations

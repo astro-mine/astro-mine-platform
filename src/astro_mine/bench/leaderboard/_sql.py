@@ -16,8 +16,8 @@ Postgres; the trail lives beside them).
 Requires the ``[leaderboard]`` extra (SQLAlchemy; ``psycopg`` for the Postgres URL). Imported
 lazily by :func:`astro_mine.bench.leaderboard.create_app`, so the base package stays dep-clean.
 
-Backlog: RM-P0-BENCH-06 — https://github.com/astro-mine/astro-mine-bench/issues/6;
-bench#29 — https://github.com/astro-mine/astro-mine-bench/issues/29
+Backlog: RM-P0-BENCH-06 — astro-mine-bench#6;
+bench#29 — astro-mine-bench#29
 """
 
 from __future__ import annotations

@@ -33,7 +33,7 @@ tests and the local tier; a deployment injects the Postgres / Redis / S3 / Hub /
 behind the same protocols — the hosted service is a *deployment of this code*, not a second path
 (bench.md §2.6).
 
-Backlog: RM-P1-BENCH-10 — https://github.com/astro-mine/astro-mine-bench/issues/18;
+Backlog: RM-P1-BENCH-10 — astro-mine-bench#18;
 bench#29, bench#30, bench#32
 """
 

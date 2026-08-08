@@ -30,7 +30,7 @@ attack surface — is stated in ``TRUST_BOUNDARY.md``;
 :class:`~astro_mine.bench.sandbox.ContainerSandbox` is the tier that closes those (namespaces +
 gVisor), and is the recommended posture for a public deployment.
 
-Backlog: bench#30, bench#36 — https://github.com/astro-mine/astro-mine-bench/issues/36
+Backlog: bench#30, bench#36 — astro-mine-bench#36
 """
 
 from __future__ import annotations

@@ -14,7 +14,7 @@ ever reads a values array *handed to it* by privileged code — it is never a pa
 field), and :func:`build_likelihood_manifest` asserts exactly that through Prospect's own
 :func:`~astro_mine.prospect.isolation.assert_agent_safe_capabilities` gate before emitting.
 
-Backlog: prospect.md §3 — https://github.com/astro-mine/astro-mine-prospect/issues/31
+Backlog: prospect.md §3 — astro-mine-prospect#31
 """
 
 from __future__ import annotations

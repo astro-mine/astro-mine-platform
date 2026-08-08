@@ -7,7 +7,7 @@ provides **content-addressed checkpoint-to-resume** so a spot eviction mid-run l
 one checkpoint interval and the resumed run reproduces the uninterrupted result (``cloud.md``
 §8, §2 principle 4).
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

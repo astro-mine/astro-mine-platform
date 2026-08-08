@@ -5,7 +5,7 @@ Packages every Phase-0 workload (Sim, Bench) as **digest-pinned** OCI images wit
 :class:`ImageRef` is the digest-pinned reference every run consumes; :class:`BuildSpec` +
 :func:`render_dockerfile` + :func:`build_image` produce one reproducibly.
 
-Backlog: RM-P0-CLOUD-01 -- https://github.com/astro-mine/astro-mine-cloud/issues/1
+Backlog: RM-P0-CLOUD-01 -- astro-mine-cloud#1
 """
 
 from __future__ import annotations

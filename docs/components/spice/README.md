@@ -2,9 +2,9 @@
 
 **The shared SPICE foundation for [Astro-Mine](https://github.com/astro-mine).**
 SPICE-backed frames, epochs, and body/topocentric geometry — the name→geometry
-resolution that [Core](https://github.com/astro-mine/astro-mine-core) defers (it forbids
-heavy dependencies). Every consumer — [Worlds](https://github.com/astro-mine/astro-mine-worlds)
-illumination/PSR, [Link](https://github.com/astro-mine/astro-mine-link) LOS/contact
+resolution that Core defers (it forbids
+heavy dependencies). Every consumer — Worlds
+illumination/PSR, Link LOS/contact
 windows, and later Sim's orbital engine and Transit — shares **one** SPICE implementation
 instead of re-deriving it or depending on Worlds' geospatial stack.
 

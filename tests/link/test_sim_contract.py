@@ -23,7 +23,7 @@ under ``src/`` imports it, Sim does not depend on Link, and the runtime coupling
 (``ContactPlan`` in, ``CommsObservationMask`` out) — no edge→edge side-channel (conventions.md
 §1.1). The test skips where the group is not installed, as the GMAT oracle regression does.
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/25
+Backlog: RM-P0-LINK-04 -- astro-mine-link#25
 """
 
 from __future__ import annotations

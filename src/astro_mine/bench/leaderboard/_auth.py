@@ -27,7 +27,7 @@ the hosted *write* surface only.
 
 Requires the ``[leaderboard]`` extra (``pyjwt[crypto]``); imported lazily by the app.
 
-Backlog: bench#29 — https://github.com/astro-mine/astro-mine-bench/issues/29
+Backlog: bench#29 — astro-mine-bench#29
 """
 
 from __future__ import annotations

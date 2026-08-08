@@ -19,7 +19,7 @@ belief variants share:
 
 Concrete fields and inference backends land in later items (RM-P0-PROSPECT-02/04).
 
-Backlog: RM-P0-PROSPECT-01 — https://github.com/astro-mine/astro-mine-prospect/issues/1
+Backlog: RM-P0-PROSPECT-01 — astro-mine-prospect#1
 """
 
 from __future__ import annotations

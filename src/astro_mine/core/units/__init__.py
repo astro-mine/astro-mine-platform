@@ -21,7 +21,7 @@ Public API:
 - canonical constants — :data:`MOON_BODY_FIXED`, :data:`INERTIAL_J2000`,
   :data:`J2000_EPOCH`, :data:`MOON` / :data:`SUN` / :data:`EARTH`.
 
-Backlog: RM-P0-CORE-06 — https://github.com/astro-mine/astro-mine-core/issues/6
+Backlog: RM-P0-CORE-06 — astro-mine-core#6
 """
 
 from __future__ import annotations

@@ -13,7 +13,7 @@ from the caller, the environment, or the working directory, and never from Bench
 deriving it from ``__file__`` only ever resolved in a source checkout, which broke the
 ``pip install astro-mine-cli`` tier that bench.md §7 requires to always work.
 
-Backlog: RM-P0-BENCH-04 — https://github.com/astro-mine/astro-mine-bench/issues/4
+Backlog: RM-P0-BENCH-04 — astro-mine-bench#4
 """
 
 from __future__ import annotations

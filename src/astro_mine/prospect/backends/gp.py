@@ -14,7 +14,7 @@ span kilometres); hyperparameters are fit by maximizing the sparse exact-margina
 empty observation set degenerates to the GP prior. The ordered observation-log / belief machinery
 is RM-P0-PROSPECT-04; the stochastic-ELBO SVGP variant for very large data is deferred to P1.
 
-Backlog: RM-P0-PROSPECT-02 — https://github.com/astro-mine/astro-mine-prospect/issues/2
+Backlog: RM-P0-PROSPECT-02 — astro-mine-prospect#2
 """
 
 from __future__ import annotations

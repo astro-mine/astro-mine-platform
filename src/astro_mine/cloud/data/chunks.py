@@ -9,7 +9,7 @@ the whole dataset. :class:`ZarrArray` derives the chunk layout from a Zarr ``.za
 COG IFD / Parquet footer supplies the offsets -- that format parse is the producer's, we do
 the streaming).
 
-Backlog: RM-P1-CLOUD-04 -- https://github.com/astro-mine/astro-mine-cloud/issues/15
+Backlog: RM-P1-CLOUD-04 -- astro-mine-cloud#15
 """
 
 from __future__ import annotations

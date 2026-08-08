@@ -15,7 +15,7 @@ Hub artifacts (content-addressed)". Both live here, because they are one contrac
   :class:`~astro_mine.link.products.ConnectivitySampler` from pulled bytes, so Sim/Bench resolve a
   comms model **by content hash** without importing :mod:`astro_mine.link` (conventions.md §1.1).
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/25
+Backlog: RM-P0-LINK-04 -- astro-mine-link#25
 """
 
 from __future__ import annotations

@@ -3,7 +3,7 @@
 **Artifact registry for [Astro-Mine](https://github.com/astro-mine).** An OCI-backed,
 content-addressed, signed and gated store and index for the things the community
 produces — plugins, worlds, SADF assets, policies, and surrogate models — each indexed by
-its [Core](https://github.com/astro-mine/astro-mine-core) plugin manifest. It is the
+its Core plugin manifest. It is the
 supply-chain trust boundary: publish once, and the contribution is discoverable,
 versioned, signed, and reusable across design, training, operations, and benchmarks. Hub
 distributes artifacts; it never executes them.

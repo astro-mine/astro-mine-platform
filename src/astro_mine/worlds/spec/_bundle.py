@@ -9,7 +9,7 @@ canonical spec, the resolved component hashes, and the pinned toolchain — so i
 from the WorldSpec + toolchain** (the components are themselves deterministic, established by
 WORLDS-01..06), and Bench can pin a world by that hash (worlds.md §5; RM-P0-BENCH-01).
 
-Backlog: RM-P0-WORLDS-07 — https://github.com/astro-mine/astro-mine-worlds/issues/7
+Backlog: RM-P0-WORLDS-07 — astro-mine-worlds#7
 """
 
 from __future__ import annotations

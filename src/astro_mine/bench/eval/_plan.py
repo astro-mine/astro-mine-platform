@@ -14,7 +14,7 @@ Cloud-scheduled container, not a package dependency. ``astro_mine.cloud`` is imp
 here (behind the ``[cloud]`` extra) so ``import astro_mine.bench.eval`` stays dependency-clean
 (core + pydantic).
 
-Backlog: RM-P1-BENCH-11 — https://github.com/astro-mine/astro-mine-bench/issues/19
+Backlog: RM-P1-BENCH-11 — astro-mine-bench#19
 """
 
 from __future__ import annotations

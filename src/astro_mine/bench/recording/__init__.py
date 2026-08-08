@@ -8,7 +8,7 @@ library is a *data-format reader*, not a Sim import; it and this subpackage requ
 ``[recording]`` extra, so the base package stays dependency-clean (core + pydantic) — ``mcap`` is
 imported lazily, so ``import astro_mine.bench.recording`` works without the extra until decode time.
 
-Sim's recording format ([astro-mine-sim RM-P0-SIM-09](https://github.com/astro-mine/astro-mine-sim))
+Sim's recording format (astro-mine-sim RM-P0-SIM-09)
 is the contract this reads:
 
 - per-tick canonical frames on the MCAP topic ``/sim/frames`` — JSON objects
@@ -19,7 +19,7 @@ The scorer-owned :class:`~astro_mine.bench.metrics.ScoringContext` (belief/PSR/n
 thresholds, species — prospect.md §9) is **not** in the recording; the caller (the scenario)
 supplies it, defaulting to an empty context.
 
-Backlog: RM-P0-BENCH-07 — https://github.com/astro-mine/astro-mine-bench/issues/13
+Backlog: RM-P0-BENCH-07 — astro-mine-bench#13
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 
 **Artifact-integrity companion for [Astro-Mine](https://github.com/astro-mine).**
 The single home for the platform's **signing, verification, SLSA provenance, and SBOM** —
-a thin [Core](https://github.com/astro-mine/astro-mine-core) companion built on Core's
+a thin Core companion built on Core's
 already-frozen `registry.Signature` / `Verifier` surface and the `astro_mine.core.hashing`
 content-hash primitive. Every producer (Fleet, Hub, Guard, and the growing publisher
 frontier) signs a **seal** on its artifacts, and the intactness of that seal is what

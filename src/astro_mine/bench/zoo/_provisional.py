@@ -18,7 +18,7 @@ is Hub-published (Phase 1); the anchor scenario's ``PROVENANCE.md`` records the 
 flagship scenarios (the lunar anchor and the Phase-3 NEO sample-return) pin content this way before
 Hub exists, so the helper is scenario-agnostic.
 
-Backlog: RM-P0-BENCH-02 — https://github.com/astro-mine/astro-mine-bench/issues/2
+Backlog: RM-P0-BENCH-02 — astro-mine-bench#2
 """
 
 from __future__ import annotations

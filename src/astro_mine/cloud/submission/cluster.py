@@ -23,7 +23,7 @@ It proves the call site and the manifest with no cluster at all -- but note what
 it re-runs *locally*, so comparing it against a local run compares local to local. The genuine
 local<->cluster equivalence assertion lives in the opt-in ``cluster``-marked tests.
 
-Backlog: RM-P1-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/21
+Backlog: RM-P1-CLOUD-02 -- astro-mine-cloud#21
 """
 
 from __future__ import annotations

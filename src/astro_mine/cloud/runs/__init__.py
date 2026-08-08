@@ -9,7 +9,7 @@ as reproducible as a laptop run and a re-run reproduces from the recorded envelo
 (``cloud.md`` §4, §6). Both heavy backends (MLflow, NATS) sit behind injectable clients so the
 local tier needs neither.
 
-Backlog: RM-P1-CLOUD-05 -- https://github.com/astro-mine/astro-mine-cloud/issues/16
+Backlog: RM-P1-CLOUD-05 -- astro-mine-cloud#16
 """
 
 from __future__ import annotations

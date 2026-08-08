@@ -5,7 +5,7 @@ per-GPU **MIG** profile catalogue (e.g. an A100 -> 7x10 GB slices), validates a 
 slice against a card, and compiles the NVIDIA GPU Operator config for MIG, **time-slicing**,
 and the **DCGM** exporter that feeds GPU-utilisation dashboards (``cloud.md`` §10).
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

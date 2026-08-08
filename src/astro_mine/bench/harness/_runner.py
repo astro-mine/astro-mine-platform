@@ -6,7 +6,7 @@ Scenario`` bridge and Hub-published content land (Phase 1). Until then :func:`re
 pure, seeded function of the scenario hash — drives the determinism oracle over the anchor's own
 metric set, so the reproducibility machinery is real and gated before a physics engine is wired.
 
-Backlog: RM-P0-BENCH-04 — https://github.com/astro-mine/astro-mine-bench/issues/4
+Backlog: RM-P0-BENCH-04 — astro-mine-bench#4
 """
 
 from __future__ import annotations

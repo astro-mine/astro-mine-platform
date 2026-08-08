@@ -7,7 +7,7 @@ backend consumes the *same* JobSpec -- that is what makes ``submit()`` backend-a
 ``budget``) default empty so the Phase-1 backend populates them without a schema bump,
 mirroring :class:`~astro_mine.cloud.artifacts.runcontext.RunContext`.
 
-Backlog: RM-P0-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/2
+Backlog: RM-P0-CLOUD-02 -- astro-mine-cloud#2
 """
 
 from __future__ import annotations

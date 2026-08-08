@@ -15,7 +15,7 @@ agent-facing Environment API. Two complementary layers enforce that here, mirror
 
 A leak is an error, never a warning. :class:`IsolationError` is the security-class signal.
 
-Backlog: RM-P0-PROSPECT-05 — https://github.com/astro-mine/astro-mine-prospect/issues/5
+Backlog: RM-P0-PROSPECT-05 — astro-mine-prospect#5
 """
 
 from __future__ import annotations

@@ -8,7 +8,7 @@ world (prospect.md §5 "layered on a world, never freestanding"). The named nume
 recipe blends (LCROSS water fraction, LEND background WEH, the Diviner cold-trap threshold) are
 constants too, so the derivation is transparent and auditable.
 
-Backlog: RM-P0-PROSPECT-03 — https://github.com/astro-mine/astro-mine-prospect/issues/3
+Backlog: RM-P0-PROSPECT-03 — astro-mine-prospect#3
 """
 
 from __future__ import annotations

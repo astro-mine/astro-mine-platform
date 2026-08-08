@@ -11,7 +11,7 @@ dense the posterior mean tracks the data and the variance shrinks below the prio
 reverts to the prior. It is the *simple, fast reference* path — a principled GMRF/SPDE field is
 deferred to P1, and the ordered observation-log / belief machinery is RM-P0-PROSPECT-04.
 
-Backlog: RM-P0-PROSPECT-02 — https://github.com/astro-mine/astro-mine-prospect/issues/2
+Backlog: RM-P0-PROSPECT-02 — astro-mine-prospect#2
 """
 
 from __future__ import annotations

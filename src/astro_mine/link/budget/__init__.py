@@ -6,7 +6,7 @@ and a slant range into a :class:`LinkBudget` (C/N0, achievable rate, Eb/N0 margi
 :data:`CCSDS_MODCODS` is the default, swappable :class:`ModCodTable`. Geometry is ground truth;
 RF is a layer on top (link.md §2.1). Degrades loudly on missing/inconsistent radio inputs.
 
-Backlog: RM-P0-LINK-03 -- https://github.com/astro-mine/astro-mine-link/issues/3
+Backlog: RM-P0-LINK-03 -- astro-mine-link#3
 """
 
 from __future__ import annotations

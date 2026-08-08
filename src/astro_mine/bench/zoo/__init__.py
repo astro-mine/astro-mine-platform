@@ -12,8 +12,8 @@ and :class:`SqlCatalog` (the **PostgreSQL + pgvector** catalog bench.md §5 spec
 and lineage index, plus similarity search). :func:`default_catalog` picks between them from the
 environment, so the offline ``clone → run → score`` path is untouched by the hosted one.
 
-Backlog: RM-P0-BENCH-02 — https://github.com/astro-mine/astro-mine-bench/issues/2;
-bench#33 — https://github.com/astro-mine/astro-mine-bench/issues/33
+Backlog: RM-P0-BENCH-02 — astro-mine-bench#2;
+bench#33 — astro-mine-bench#33
 """
 
 from __future__ import annotations

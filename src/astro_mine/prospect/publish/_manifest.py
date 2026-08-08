@@ -10,7 +10,7 @@ species/unit). It declares **no capability tags** — the published belief prior
 gated ``GROUND_TRUTH_ACCESS`` tag never appears because the sealed field is never published
 (``RM-P0-PROSPECT-05``).
 
-Backlog: RM-P1-PROSPECT-13 — https://github.com/astro-mine/astro-mine-prospect/issues/23
+Backlog: RM-P1-PROSPECT-13 — astro-mine-prospect#23
 """
 
 from __future__ import annotations

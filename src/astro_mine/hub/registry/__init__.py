@@ -16,7 +16,7 @@ one contract:
   (:mod:`astro_mine.hub.supply_chain`, the client, the CLI) is written against it.
 - :func:`open_registry` — the one-line "path or registry URL" factory the CLI ``--registry`` uses.
 
-Backlog: RM-P1-HUB-01 — https://github.com/astro-mine/astro-mine-hub/issues/1
+Backlog: RM-P1-HUB-01 — astro-mine-hub#1
 """
 
 from __future__ import annotations

@@ -44,7 +44,7 @@ is git-pinned in pyproject.toml)". Both directions are asserted below, so the ru
 tested rather than assumed.
 
 **Deliberately not a blanket source scan.** Backlog URLs
-(``https://github.com/astro-mine/astro-mine-worlds/issues/7``) point at repositories that still
+(``astro-mine-worlds#7``) point at repositories that still
 exist, and wire constants (``BUNDLE_SCHEMA = "astro-mine-worlds/world/v0.1"``) are values whose
 whole purpose is not to change. Both are correct as they stand, and a grep for the bare name would
 fail on both.
@@ -140,21 +140,17 @@ _PROG_BINARY = re.compile(
 #: that rule later cannot start demanding an edit to content that must not change.
 _FROZEN_BY_HASH_OR_HISTORY = frozenset({"pins.json", "scenario.json", "PROVENANCE.md"})
 
-#: The one **directory** excluded, for the same reason as the files above: it is history.
+#: No directory is excluded any more, and the reason the last one was is worth keeping.
 #:
-#: ``examples/downstream-consumer/`` demonstrates the pre-consolidation distribution pattern — a
-#: tag-pinned ``[tool.uv.sources]`` Git source for ``astro-mine-core``, resolved with ``uv sync
-#: --locked``. Consolidation retired that pattern wholesale (``docs/CONSOLIDATION_PLAN.md`` §4), and
-#: its README now says so at the top; what is left below the banner is the record of how private
-#: incubation actually shipped code.
+#: ``examples/downstream-consumer/`` was exempt because its retired distribution name was a
+#: **working instruction**: the ``astro-mine-core`` repository and its ``v0.1.0`` tag both existed,
+#: so ``uv sync --locked`` resolved. That is the one case this gate cannot judge — it matches a
+#: name, not whether a Git remote answers.
 #:
-#: It is excluded rather than rewritten because the hint is **not dead**: the ``astro-mine-core``
-#: repository and its ``v0.1.0`` tag both exist, so ``uv sync --locked`` still resolves. That makes
-#: it the one place in the tree where a retired *distribution* name is a working instruction, which
-#: is exactly what the install-hint rule cannot tell apart — the rule matches a name, not whether a
-#: Git remote answers. Retargeting it at ``astro-mine-platform`` would need a tag to pin, and this
-#: repository has cut none; pinning a branch is what the example itself argues against.
-_FROZEN_EXAMPLE_DIR = "downstream-consumer"
+#: Deleting the archived repositories made the premise false, and with it the exemption. The
+#: example was removed rather than retargeted: "it still resolves" was its only remaining
+#: justification, and the history it recorded lives in `git log` and in the repository mirrors kept
+#: under `files/archived-repos-backup/`. The gate now covers `examples/` with no holes.
 
 #: How far past an install verb to keep looking. Comfortably clears a wrapped string literal and
 #: its indentation without running into the next statement.
@@ -190,7 +186,6 @@ def _source_files() -> list[Path]:
         for path in sorted(root.rglob("*"))
         if path.is_file()
         and "__pycache__" not in path.parts
-        and _FROZEN_EXAMPLE_DIR not in path.parts
         and path.suffix in {".py", ".yaml", ".yml", ".json", ".md", ".toml", ".cfg", ".txt", ".sh"}
     ]
 
@@ -380,38 +375,6 @@ def test_the_frozen_files_are_real_and_still_carry_retired_names() -> None:
     assert [path for path in frozen if _INVOCATION.search(path.read_text(encoding="utf-8"))]
 
 
-def test_the_frozen_example_directory_is_real_and_still_needs_excluding() -> None:
-    """Same contract as above, for the one directory-level carve-out (platform#10).
-
-    Two claims, because either one failing means the exclusion has stopped earning its keep. The
-    directory must still exist — a carve-out for a deleted path is dead config. And it must still
-    contain the thing it was carved out for: an install hint naming a retired distribution. If a
-    later change retargets that example at ``astro-mine-platform``, this fails and asks for the
-    exclusion to go, rather than leaving a silent hole where the scan does not look.
-    """
-    frozen_dir = REPO_ROOT / "examples" / _FROZEN_EXAMPLE_DIR
-    assert frozen_dir.is_dir(), f"{frozen_dir} is gone; drop the exclusion"
-
-    offending: list[str] = []
-    for path in sorted(frozen_dir.rglob("*")):
-        if not path.is_file() or path.suffix not in {".md", ".toml", ".py"}:
-            continue
-        text = path.read_text(encoding="utf-8")
-        for verb in _INSTALL_VERB.finditer(text):
-            window = text[verb.start() : verb.start() + _HINT_WINDOW]
-            offending.extend(_RETIRED_NAME.findall(window))
-    assert offending, f"{frozen_dir} no longer names a retired distribution; drop the exclusion"
-
-
-def test_the_frozen_example_is_excluded_from_the_scan() -> None:
-    """The exclusion is what it claims to be: nothing under that directory is scanned.
-
-    Asserted directly rather than inferred from the other tests passing, because "the sweep is
-    clean" and "the sweep skipped it" look identical from the outside.
-    """
-    assert not [path for path in _source_files() if _FROZEN_EXAMPLE_DIR in path.parts]
-
-
 @pytest.mark.parametrize(
     "hint",
     [
@@ -432,7 +395,7 @@ def test_the_install_hint_check_fires(hint: str) -> None:
     "benign",
     [
         # A backlog URL: the repository still exists.
-        "Backlog: RM-P0-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/3",
+        "Backlog: RM-P0-CLOUD-03 -- astro-mine-cloud#3",
         # A wire constant: its value must not change.
         'BUNDLE_SCHEMA = "astro-mine-worlds/world/v0.1"',
         # A cross-repo issue reference: the repository still exists.

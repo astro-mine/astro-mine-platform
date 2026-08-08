@@ -7,7 +7,7 @@ answers on-demand ``connectivity(epoch)`` from that plan and emits the per-tick,
 :class:`~astro_mine.core.messages.CommsObservationMask` that gates what a policy can see and
 exchange. Link defines no new message types — it produces the Core ones (conventions.md §1.1).
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/4
+Backlog: RM-P0-LINK-04 -- astro-mine-link#4
 """
 
 from __future__ import annotations

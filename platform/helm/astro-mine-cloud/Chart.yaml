@@ -16,9 +16,9 @@ keywords:
   - ray
   - argo
   - kubernetes
-home: https://github.com/astro-mine/astro-mine-cloud
+home: https://github.com/astro-mine/astro-mine-platform
 sources:
-  - https://github.com/astro-mine/astro-mine-cloud
+  - https://github.com/astro-mine/astro-mine-platform
 # Curated operator stack. Each dependency is gated by a `<name>.enabled` condition so a profile
 # (profiles/kind.yaml, profiles/prod.yaml) turns pieces on/off. Versions are starting pins --
 # `helm dependency build` resolves them from the upstream repos before install.

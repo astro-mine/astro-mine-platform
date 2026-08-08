@@ -15,7 +15,7 @@ the three Phase-0 gates behind one import:
 :func:`validate_against_oracle` is the shared comparator (worst error vs budget) returning an
 :class:`OracleReport`.
 
-Backlog: RM-P0-SIM-10 -- https://github.com/astro-mine/astro-mine-sim/issues/10
+Backlog: RM-P0-SIM-10 -- astro-mine-sim#10
 """
 
 from __future__ import annotations

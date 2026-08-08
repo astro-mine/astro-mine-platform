@@ -34,7 +34,7 @@ granted paths — there a confined worker cannot start and the submission is **r
 unconfined (fail-closed; ``TRUST_BOUNDARY.md`` §5). Where the deployment needs the process-table and
 kernel-surface boundaries too, run the :class:`~astro_mine.bench.sandbox.ContainerSandbox` tier.
 
-Backlog: bench#36 — https://github.com/astro-mine/astro-mine-bench/issues/36
+Backlog: bench#36 — astro-mine-bench#36
 """
 
 from __future__ import annotations

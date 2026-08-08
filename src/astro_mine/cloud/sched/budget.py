@@ -7,7 +7,7 @@ should is treated as a defect, not a fact of life (``cloud.md`` §2 principle 5)
 it feeds both
 the cap and the per-tenant cost dashboards (``cloud.md`` §10).
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

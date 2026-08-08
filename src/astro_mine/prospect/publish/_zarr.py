@@ -28,7 +28,7 @@ field and one that pulls a tar-encoded field call identical code.
 needs only Core + numpy, so the offline local tier (``LUNAR-TR-004``) never pulls it; this module
 imports it lazily and says so plainly if it is absent.
 
-Backlog: prospect.md §5, §10 — https://github.com/astro-mine/astro-mine-prospect/issues/33
+Backlog: prospect.md §5, §10 — astro-mine-prospect#33
 """
 
 from __future__ import annotations

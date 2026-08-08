@@ -20,7 +20,7 @@ vocabulary (:mod:`astro_mine.fleet.capabilities`).
 Resolution is deterministic (:meth:`Family.resolve`); the same bindings yield the same
 canonical SADF bytes.
 
-Backlog: RM-P1-FLEET-10 -- https://github.com/astro-mine/astro-mine-fleet/issues/21
+Backlog: RM-P1-FLEET-10 -- astro-mine-fleet#21
 """
 
 from __future__ import annotations

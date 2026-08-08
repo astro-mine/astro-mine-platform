@@ -25,7 +25,7 @@ Determinism is the caller's: each model draws from a seeded :class:`random.Rando
 stepping core derives per (agent, sensor), so same-seed runs reproduce byte-for-byte (CX-REPRO). A
 declared-but-unmodelled sensor renders an explicit ``valid=False`` reading rather than a silent gap.
 
-Backlog: RM-P0-SIM-06 -- https://github.com/astro-mine/astro-mine-sim/issues/6
+Backlog: RM-P0-SIM-06 -- astro-mine-sim#6
 """
 
 from __future__ import annotations

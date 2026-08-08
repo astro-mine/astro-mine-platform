@@ -19,7 +19,7 @@ choice is a config detail invisible to consumers (Sim/Bench): every kind returns
 the same uncertainty-first surface. New backends register here, behind the existing extension point,
 with **no Core change** (the exit criterion for RM-P1-PROSPECT-10).
 
-Backlog: RM-P0-PROSPECT-02 / RM-P1-PROSPECT-10 — https://github.com/astro-mine/astro-mine-prospect/issues/20
+Backlog: RM-P0-PROSPECT-02 / RM-P1-PROSPECT-10 — astro-mine-prospect#20
 """
 
 from __future__ import annotations

@@ -8,7 +8,7 @@ DNS). :func:`tenant_manifests` assembles the full bundle plus the tenant's Kueue
 ``LocalQueue``, so standing up a tenant is one call and every object carries the tenant label
 for selection and cost attribution (``cloud.md`` §10).
 
-Backlog: RM-P1-CLOUD-05 -- https://github.com/astro-mine/astro-mine-cloud/issues/16
+Backlog: RM-P1-CLOUD-05 -- astro-mine-cloud#16
 """
 
 from __future__ import annotations

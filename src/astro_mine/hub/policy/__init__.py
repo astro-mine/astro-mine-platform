@@ -13,7 +13,7 @@ Two engines evaluate **one** rule over **one** set of data (``policy/rego/``):
 - :class:`OpaPolicyEngine` — OPA over the versioned **Rego bundle** (binary or sidecar), so
   governance rules evolve as a bundle release rather than a code change (hub.md §3, §11).
 
-Backlog: RM-P1-HUB-05 — https://github.com/astro-mine/astro-mine-hub/issues/5
+Backlog: RM-P1-HUB-05 — astro-mine-hub#5
 """
 
 from __future__ import annotations

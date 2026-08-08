@@ -17,7 +17,7 @@ hex digest (no key layout is mandated by the docs; this is the chosen convention
 Writes are atomic and idempotent: storing identical bytes twice is a no-op that yields
 the same address, and concurrent writers of identical bytes all succeed.
 
-Backlog: RM-P0-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/3
+Backlog: RM-P0-CLOUD-03 -- astro-mine-cloud#3
 """
 
 from __future__ import annotations

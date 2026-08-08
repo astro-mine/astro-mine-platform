@@ -28,7 +28,7 @@ image or the repo (conventions.md §9).
 The local/offline tier does not use Hub intake at all, so none of this touches the account-free
 ``run(spec, policy)`` path (CX-LOCAL).
 
-Backlog: bench#29 — https://github.com/astro-mine/astro-mine-bench/issues/29
+Backlog: bench#29 — astro-mine-bench#29
 """
 
 from __future__ import annotations

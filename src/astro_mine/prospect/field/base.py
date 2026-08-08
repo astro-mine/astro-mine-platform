@@ -9,7 +9,7 @@ subclass's distributional accessors — so there is, by construction, no point-e
 through a Prospect field (prospect.md §2.1). Concrete fields and inference backends land later
 (RM-P0-PROSPECT-02/04); this item delivers only the shared contract surface.
 
-Backlog: RM-P0-PROSPECT-01 — https://github.com/astro-mine/astro-mine-prospect/issues/1
+Backlog: RM-P0-PROSPECT-01 — astro-mine-prospect#1
 """
 
 from __future__ import annotations

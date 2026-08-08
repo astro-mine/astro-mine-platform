@@ -6,7 +6,7 @@ RM-P0-WORLDS-01..06 into a :class:`WorldBundle`: the layer COGs, a STAC catalog,
 terrain export, and a ``world.json`` manifest whose ``world_hash`` is reproducible from the spec +
 pinned toolchain, so Bench can pin a world by hash and View can render it (worlds.md §5, §12).
 
-Backlog: RM-P0-WORLDS-07 — https://github.com/astro-mine/astro-mine-worlds/issues/7
+Backlog: RM-P0-WORLDS-07 — astro-mine-worlds#7
 """
 
 from __future__ import annotations

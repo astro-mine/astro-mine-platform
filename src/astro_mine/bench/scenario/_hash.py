@@ -6,7 +6,7 @@ formatting or field order (worlds.md §5; ``astro_mine.worlds.spec`` uses the id
 formulation). Bench applies it twice — once for a ``ScenarioSpec``'s own ``spec_hash`` and
 once for the resolved scenario identity — so the formula lives here.
 
-Backlog: RM-P0-BENCH-01 — https://github.com/astro-mine/astro-mine-bench/issues/1
+Backlog: RM-P0-BENCH-01 — astro-mine-bench#1
 """
 
 from __future__ import annotations

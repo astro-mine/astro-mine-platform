@@ -5,7 +5,7 @@ occlusion consumed through the Core :class:`~astro_mine.core.world.WorldProvider
 Geometry is ground truth; RF is a layer on top. Degrades loudly on missing
 kernels/providers/frames -- never defaults to "connected".
 
-Backlog: RM-P0-LINK-01 -- https://github.com/astro-mine/astro-mine-link/issues/1
+Backlog: RM-P0-LINK-01 -- astro-mine-link#1
 """
 
 from __future__ import annotations

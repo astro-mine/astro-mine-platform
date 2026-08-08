@@ -18,7 +18,7 @@ scoring path and the leaderboard are demonstrable offline with no Sim, no cloud,
 Sim runner; different policies may score identically under this fixture where they would
 differ under Sim.
 
-Backlog: RM-P0-BENCH-05 — https://github.com/astro-mine/astro-mine-bench/issues/5
+Backlog: RM-P0-BENCH-05 — astro-mine-bench#5
 """
 
 from __future__ import annotations

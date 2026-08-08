@@ -14,7 +14,7 @@ the constitutive law itself is Sim's — **no physics here** (separation of conc
 uncertainty, inflated where the DEM is void. Nominal values are illustrative baselines with
 uncertainty (conventions.md §1.6); validation belongs to Sim (RM-P0-SIM-10).
 
-Backlog: RM-P0-WORLDS-05 — https://github.com/astro-mine/astro-mine-worlds/issues/5
+Backlog: RM-P0-WORLDS-05 — astro-mine-worlds#5
 """
 
 from __future__ import annotations

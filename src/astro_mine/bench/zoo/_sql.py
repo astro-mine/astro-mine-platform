@@ -24,7 +24,7 @@ it from the packaged zoo's ``scenario.json`` documents (bench#33 AC4), and is wh
 Requires the ``[leaderboard]`` extra (SQLAlchemy; ``psycopg`` for a Postgres URL). Imported lazily,
 so the base package stays ``core + pydantic``.
 
-Backlog: bench#33 — https://github.com/astro-mine/astro-mine-bench/issues/33
+Backlog: bench#33 — astro-mine-bench#33
 """
 
 from __future__ import annotations

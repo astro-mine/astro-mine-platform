@@ -7,7 +7,7 @@ fails on non-reproducibility — Bench's determinism gate is the platform-wide r
 (bench.md §10; conventions.md §11). :func:`replay` re-executes a stored Result from its provenance
 (sampled re-execution, bench.md §9).
 
-Backlog: RM-P0-BENCH-04 — https://github.com/astro-mine/astro-mine-bench/issues/4
+Backlog: RM-P0-BENCH-04 — astro-mine-bench#4
 """
 
 from __future__ import annotations

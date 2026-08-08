@@ -27,7 +27,7 @@ land in the *same value units as ROI* and Allocate trades them directly.
   :func:`~astro_mine.prospect.infogain.mutual_information_map`). This is the "where to sample next"
   map when what you care about is production, not entropy.
 
-Backlog: RM-P1-PROSPECT-11 — https://github.com/astro-mine/astro-mine-prospect/issues/21
+Backlog: RM-P1-PROSPECT-11 — astro-mine-prospect#21
 """
 
 from __future__ import annotations

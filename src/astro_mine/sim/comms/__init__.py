@@ -13,7 +13,7 @@ tier. The :class:`ConnectivitySource` seam is *structurally identical* to Link's
 ``ConnectivitySampler`` (RM-P0-LINK-04), so a run that has Link installed can inject Link's own
 (index-optimized) sampler with no import and no Sim change.
 
-Backlog: RM-P0-SIM-08 -- https://github.com/astro-mine/astro-mine-sim/issues/8
+Backlog: RM-P0-SIM-08 -- astro-mine-sim#8
 """
 
 from __future__ import annotations

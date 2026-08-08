@@ -30,7 +30,7 @@ actually does: list everything, pull the one clicked.
 This module imports **only Core + the Hub client** (Hub lazily, like
 :mod:`astro_mine.fleet.packaging.hub`) — never Mind/Allocate/Studio (``fleet.md`` §2.2, §6).
 
-Backlog: RM-P1-FLEET-11 -- https://github.com/astro-mine/astro-mine-fleet/issues/22
+Backlog: RM-P1-FLEET-11 -- astro-mine-fleet#22
 """
 
 from __future__ import annotations

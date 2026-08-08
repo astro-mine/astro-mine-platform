@@ -5,7 +5,7 @@ The typed request/response surface of the minimal leaderboard: a :class:`Submiss
 (the held-out scorecard + integrity verdict), and the ranked :class:`LeaderboardEntry` rows.
 Pydantic v2 models (conventions.md §3); Bench owns them — they are not a Core schema.
 
-Backlog: RM-P0-BENCH-06 — https://github.com/astro-mine/astro-mine-bench/issues/6
+Backlog: RM-P0-BENCH-06 — astro-mine-bench#6
 """
 
 from __future__ import annotations

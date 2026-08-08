@@ -61,7 +61,7 @@ LABEL org.opencontainers.image.base.digest="sha256:423ed6ab25b1921a477529254bfee
       org.opencontainers.image.base.name="docker.io/library/python" \
       org.opencontainers.image.description="Astro-Mine-Sim — multi-physics engine and scenario runtime." \
       org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.source="https://github.com/astro-mine/astro-mine-sim" \
+      org.opencontainers.image.source="https://github.com/astro-mine/astro-mine-platform" \
       org.opencontainers.image.title="astro-mine-sim" \
       org.opencontainers.image.version="0.1.0"
 

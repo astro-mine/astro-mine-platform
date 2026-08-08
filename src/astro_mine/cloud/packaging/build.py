@@ -12,7 +12,7 @@ pure and unit-tested by injecting a builder, mirroring how
 default :class:`DockerBuildxBuilder` shells out to ``docker buildx`` and so runs only in
 a Docker-present environment -- never in the dependency-free local tier.
 
-Backlog: RM-P0-CLOUD-01 -- https://github.com/astro-mine/astro-mine-cloud/issues/1
+Backlog: RM-P0-CLOUD-01 -- astro-mine-cloud#1
 """
 
 from __future__ import annotations

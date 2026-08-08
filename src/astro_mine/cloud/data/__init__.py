@@ -12,7 +12,7 @@ bulk-copy a multi-terabyte dataset to every node (``cloud.md`` §2 principle 7, 
   repeated reads across a sweep are served locally;
 - :mod:`.locality` pre-warms a shared cache and emits **co-schedule / zone** affinity hints.
 
-Backlog: RM-P1-CLOUD-04 -- https://github.com/astro-mine/astro-mine-cloud/issues/15
+Backlog: RM-P1-CLOUD-04 -- astro-mine-cloud#15
 """
 
 from __future__ import annotations

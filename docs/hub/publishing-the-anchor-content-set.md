@@ -7,7 +7,7 @@ by-component** procedure for publishing them to the org registry so anyone can f
 It is deliberately **not** a CI workflow. The world bundle is large and is not committed (it is
 rebuilt from a multi-GB DEM by a documented local step), and the signing key must never live in a
 repo or a CI secret — so publishing is a step a maintainer runs by hand with the org key. See
-[hub#30](https://github.com/astro-mine/astro-mine-hub/issues/30) for the decision.
+[hub#30](astro-mine-hub#30) for the decision.
 
 ## Prerequisites (two are not code)
 
@@ -25,7 +25,7 @@ repo or a CI secret — so publishing is a step a maintainer runs by hand with t
 4. **The built artifacts** — the world's prebuilt bundle (`files/data/shackleton-*/bundle`) and the
    inputs the lighter producers rebuild from. The **authoritative per-artifact build recipes** live
    in
-   [`astro-mine-bench/.../zoo/lunar_polar_ice_prospecting_v1/PROVENANCE.md`](https://github.com/astro-mine/astro-mine-bench/blob/main/src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/PROVENANCE.md)
+   [`src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/PROVENANCE.md`](../../src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/PROVENANCE.md)
    and `pins.json`. This runbook only adds the remote target, the org key, and verification.
 
 ## The registry target

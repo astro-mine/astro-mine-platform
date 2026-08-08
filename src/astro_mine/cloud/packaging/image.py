@@ -11,7 +11,7 @@ Boundary enforcement lives in :meth:`ImageRef.parse`: a ``repository:tag`` strin
 no ``@sha256:<hex>`` is rejected outright -- an unpinned image can never enter a
 :class:`~astro_mine.cloud.submission.jobspec.JobSpec`.
 
-Backlog: RM-P0-CLOUD-01 -- https://github.com/astro-mine/astro-mine-cloud/issues/1
+Backlog: RM-P0-CLOUD-01 -- astro-mine-cloud#1
 """
 
 from __future__ import annotations

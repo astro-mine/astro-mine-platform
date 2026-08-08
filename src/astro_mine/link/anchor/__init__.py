@@ -20,7 +20,7 @@ The resulting :class:`~astro_mine.core.messages.ContactPlan` is content-addresse
 (:func:`~astro_mine.link.cache.plan_digest`) and published to Hub as a ``comms_model`` artifact via
 :mod:`astro_mine.link.registry` — the digest a Bench ``ScenarioSpec`` pins.
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/25
+Backlog: RM-P0-LINK-04 -- astro-mine-link#25
 """
 
 from __future__ import annotations

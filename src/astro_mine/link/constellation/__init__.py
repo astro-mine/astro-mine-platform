@@ -9,7 +9,7 @@ surface → relay → … → Earth (:func:`reachable_route`, :func:`reachabilit
 (:class:`GroundStationCatalog`, :func:`default_ground_catalog`). Store-and-forward delivery is
 the separate :mod:`~astro_mine.link.network` layer (RM-P1-LINK-11).
 
-Backlog: RM-P1-LINK-10 -- https://github.com/astro-mine/astro-mine-link/issues/17
+Backlog: RM-P1-LINK-10 -- astro-mine-link#17
 """
 
 from __future__ import annotations

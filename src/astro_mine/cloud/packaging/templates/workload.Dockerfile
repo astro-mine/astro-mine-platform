@@ -16,7 +16,7 @@ ENV SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH}
 LABEL org.opencontainers.image.base.digest="sha256:cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe" \
       org.opencontainers.image.base.name="docker.io/library/python" \
       org.opencontainers.image.revision="cafecafecafecafecafecafecafecafecafecafe" \
-      org.opencontainers.image.source="https://github.com/astro-mine/astro-mine-sim" \
+      org.opencontainers.image.source="https://github.com/astro-mine/astro-mine-platform" \
       org.opencontainers.image.title="ghcr.io/astro-mine/astro-mine-sim" \
       org.opencontainers.image.version="0.1.0"
 

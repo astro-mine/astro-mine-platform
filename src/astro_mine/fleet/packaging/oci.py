@@ -17,7 +17,7 @@ attaches as an OCI **referrer** (a manifest whose ``subject`` is the asset manif
 matching Hub's Referrers-API model so a P1 cosign/SLSA/SBOM handler hangs attestations on
 the same hook.
 
-Backlog: RM-P0-FLEET-06 -- https://github.com/astro-mine/astro-mine-fleet/issues/6
+Backlog: RM-P0-FLEET-06 -- astro-mine-fleet#6
 """
 
 from __future__ import annotations

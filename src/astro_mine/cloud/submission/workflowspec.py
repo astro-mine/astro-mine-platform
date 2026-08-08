@@ -7,7 +7,7 @@ The graph is validated at construction -- unique names, resolvable dependencies,
 and exposes a deterministic topological order. It compiles to an Argo ``Workflow`` in
 :mod:`astro_mine.cloud.engines.argo`.
 
-Backlog: RM-P1-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/13
+Backlog: RM-P1-CLOUD-02 -- astro-mine-cloud#13
 """
 
 from __future__ import annotations

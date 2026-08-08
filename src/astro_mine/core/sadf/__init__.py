@@ -19,7 +19,7 @@ Public API:
 - :func:`to_proto` / :func:`from_proto` — message-level conversion;
 - :func:`load_schema` — the canonical JSON Schema as a dict.
 
-Backlog: RM-P0-CORE-01 — https://github.com/astro-mine/astro-mine-core/issues/1
+Backlog: RM-P0-CORE-01 — astro-mine-core#1
 """
 
 from __future__ import annotations

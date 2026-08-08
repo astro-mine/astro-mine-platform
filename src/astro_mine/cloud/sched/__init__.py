@@ -9,7 +9,7 @@ Two rails keep a shared cluster fair and safe (``cloud.md`` §3, §9):
   exceeds spend -- a combined cost and denial-of-service control (``cloud.md`` §5 principle,
   §9 "cost as a safety rail").
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

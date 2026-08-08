@@ -2,7 +2,7 @@
 
 **Learned surrogate models for [Astro-Mine](https://github.com/astro-mine).**
 GNN emulators for the most expensive physics in
-[Sim](https://github.com/astro-mine/astro-mine-sim) — above all granular media and
+Sim — above all granular media and
 excavation contact — served as low-cost, Core-described plugins behind the physics-step
 contract. Every surrogate ships a calibrated error bound: **the error is the product**,
 not a footnote.
@@ -168,7 +168,7 @@ inflation all live *inside* the graph, so ONNX Runtime emits the next state **an
 calibrated uncertainty, `in_domain` flag, and signed margin with no post-processing — the
 served tier needs no torch at all. The bundle is content-addressed (a deterministic archive:
 sorted entries, zeroed timestamps, no compression), signed, and published as an OCI artifact
-to [Hub](https://github.com/astro-mine/astro-mine-hub):
+to Hub:
 
 ```python
 from astro_mine.surrogate.serve import (

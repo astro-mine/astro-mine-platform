@@ -32,7 +32,7 @@ The host-side collector (:class:`~astro_mine.cloud.submission.cluster.KubectlClu
 never re-derives the result: it reads the two sentinel lines this module prints on stdout and
 loads the RunContext back out of the shared store by its content address.
 
-Backlog: RM-P1-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/21
+Backlog: RM-P1-CLOUD-02 -- astro-mine-cloud#21
 """
 
 from __future__ import annotations

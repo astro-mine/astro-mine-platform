@@ -36,7 +36,7 @@ previous single scalar-``noise_sigma`` Gaussian point measurement **exactly**: t
 unchanged and per-instrument behavior is opt-in.
 
 Backlog: prospect.md §3, §6; LUNAR-FR-002; scenario §6 —
-https://github.com/astro-mine/astro-mine-prospect/issues/31
+astro-mine-prospect#31
 """
 
 from __future__ import annotations

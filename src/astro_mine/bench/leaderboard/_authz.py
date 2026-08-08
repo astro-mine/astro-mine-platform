@@ -28,7 +28,7 @@ Everything **defaults to deny**: an unknown action, an unknown role, an engine e
 sidecar, or an OPA response that does not explicitly say ``allow: true`` all produce a denial
 (conventions.md §9 — auditable policy, fail-closed).
 
-Backlog: bench#29 — https://github.com/astro-mine/astro-mine-bench/issues/29
+Backlog: bench#29 — astro-mine-bench#29
 """
 
 from __future__ import annotations

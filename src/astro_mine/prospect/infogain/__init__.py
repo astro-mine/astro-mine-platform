@@ -22,7 +22,7 @@ Cost: the mutual-information map is O(grid-cells²); fine for the anchor PSR til
 tiling deferred to P1 (prospect.md §8). The per-cell-independent Gaussian treatment is the Phase-0
 reference definition; a full-covariance GP/GMRF EIG is P1 (prospect.md §11).
 
-Backlog: RM-P0-PROSPECT-06 — https://github.com/astro-mine/astro-mine-prospect/issues/6
+Backlog: RM-P0-PROSPECT-06 — astro-mine-prospect#6
 """
 
 from __future__ import annotations
