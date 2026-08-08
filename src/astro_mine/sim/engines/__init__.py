@@ -17,7 +17,7 @@ today and the always-works local tier; the concrete anchor-scenario engines —
 (RM-P0-SIM-03) and are bundled by :func:`~astro_mine.sim.engines.builtins.default_engine_registry`.
 
 Backlog: RM-P0-SIM-02, RM-P0-SIM-03
-https://github.com/astro-mine/astro-mine-sim/issues/2
+astro-mine-sim#2
 """
 
 from __future__ import annotations

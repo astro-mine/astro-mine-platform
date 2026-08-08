@@ -8,7 +8,7 @@ OCI/Hub-aligned ``sha256:<hex>`` digest string (``hub.md`` §2.1). This is a
 that ships, exactly as Sim documents. Cloud writes content-addressed bytes; it does
 not own the registry/index (that is Hub's, ``cloud.md`` §5).
 
-Backlog: RM-P0-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/3
+Backlog: RM-P0-CLOUD-03 -- astro-mine-cloud#3
 """
 
 from __future__ import annotations

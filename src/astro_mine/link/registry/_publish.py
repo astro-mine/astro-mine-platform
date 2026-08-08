@@ -11,7 +11,7 @@ library path — computing windows, budgets, plans, masks — stays offline and 
 resolving a plan through :func:`~astro_mine.link.registry.from_bundle` never needs the Hub client
 either.
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/25
+Backlog: RM-P0-LINK-04 -- astro-mine-link#25
 """
 
 from __future__ import annotations

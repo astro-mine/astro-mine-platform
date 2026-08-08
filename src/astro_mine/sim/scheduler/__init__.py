@@ -24,7 +24,7 @@ as its "error-budget outcomes". The Phase-0 engines are single-tier, so a select
 *recorded and pinnable* but does not yet swap the engine binding — that binding grows as
 engines gain fidelity ladders (Phase 1); the policy/mechanism is in place here.
 
-Backlog: RM-P0-SIM-05 -- https://github.com/astro-mine/astro-mine-sim/issues/5
+Backlog: RM-P0-SIM-05 -- astro-mine-sim#5
 """
 
 from __future__ import annotations

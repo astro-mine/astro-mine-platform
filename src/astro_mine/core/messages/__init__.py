@@ -14,7 +14,7 @@ The typed messages every plane exchanges, co-designed with the Environment API
 
 The shared **ObjectiveSpec** contract lives in :mod:`astro_mine.core.objective`.
 
-Backlog: RM-P0-CORE-04 — https://github.com/astro-mine/astro-mine-core/issues/4
+Backlog: RM-P0-CORE-04 — astro-mine-core#4
 """
 
 from __future__ import annotations

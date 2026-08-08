@@ -12,7 +12,7 @@ waist (conventions.md §1.1; bench.md §2.2): :func:`reference_episode_runner` i
 default fixture, and a real [Sim](sim.md)-backed runner lives in ``astro-mine-sim`` (the Sim repo),
 injected through the seam — Bench ships no Sim code.
 
-Backlog: RM-P0-BENCH-05 -- https://github.com/astro-mine/astro-mine-bench/issues/5
+Backlog: RM-P0-BENCH-05 -- astro-mine-bench#5
 """
 
 from __future__ import annotations

@@ -13,7 +13,7 @@ the ground truth, and a boolean/rate snapshot is derived from them, never the ot
 around. Reachability is symmetric — an ``a<->b`` line of sight is one link regardless of the
 order it was stored in.
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/4
+Backlog: RM-P0-LINK-04 -- astro-mine-link#4
 """
 
 from __future__ import annotations

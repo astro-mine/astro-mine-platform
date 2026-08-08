@@ -32,7 +32,7 @@ honest `INFEASIBLE` carrying an irreducible infeasible set naming *why*.
 
 Allocate is **not** the safety authority: every plan is re-checkable by a party that does not trust
 the solver (`verify_feasible`) — which is exactly what
-[Guard](https://github.com/astro-mine/astro-mine-guard) does at execution.
+Guard does at execution.
 
 ## Layout
 
@@ -133,7 +133,7 @@ scheduled `scale-bench` workflow uploads them so the trend is tracked over time.
 ## The `[allocate-mind]` extra — binding into an autonomy stack
 
 Per RFC-0006's sibling-binding convention, Allocate ships the binding that lets
-[Mind](https://github.com/astro-mine/astro-mine-mind) delegate assignment to the **real** CP-SAT
+Mind delegate assignment to the **real** CP-SAT
 planner — with **no `mind → allocate` dependency in either base package**:
 
 ```bash

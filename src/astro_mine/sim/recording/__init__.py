@@ -17,7 +17,7 @@ the envelope (seed, input hashes, engine versions, fidelity/error-budget outcome
 hash; the environment fingerprint (interpreter, package version) is recorded alongside but kept
 *outside* the hash, so the determinism key stays portable across machines.
 
-Backlog: RM-P0-SIM-09 -- https://github.com/astro-mine/astro-mine-sim/issues/9
+Backlog: RM-P0-SIM-09 -- astro-mine-sim#9
 """
 
 from __future__ import annotations

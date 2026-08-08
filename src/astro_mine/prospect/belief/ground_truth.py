@@ -47,7 +47,7 @@ escapes; and the result is the same sealed, marker-carrying type that
 :func:`~astro_mine.prospect.isolation.assert_isolated` refuses to find on an agent-facing view.
 
 Backlog: RM-P0-PROSPECT-04, RM-P1-PROSPECT-10 —
-https://github.com/astro-mine/astro-mine-prospect/issues/4
+astro-mine-prospect#4
 """
 
 from __future__ import annotations

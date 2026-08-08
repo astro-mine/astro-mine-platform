@@ -6,7 +6,7 @@ provenance envelope, so a future scaled run reproduces a laptop run. The default
 (CX-LOCAL); :class:`~astro_mine.cloud.artifacts.s3.S3ArtifactStore` (the optional
 ``s3`` extra) runs the same content-addressed I/O against MinIO or any S3 backend.
 
-Backlog: RM-P0-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/3
+Backlog: RM-P0-CLOUD-03 -- astro-mine-cloud#3
 """
 
 from __future__ import annotations

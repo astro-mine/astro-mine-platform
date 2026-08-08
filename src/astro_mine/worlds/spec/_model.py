@@ -8,7 +8,7 @@ is the load-bearing artifact for content-addressing, so the spec hash is indepen
 formatting. A ``WorldSpec`` plus its resolved component hashes is what the bundle hashes into a
 content-addressed world ID (worlds.md §5; :mod:`~astro_mine.worlds.spec._bundle`).
 
-Backlog: RM-P0-WORLDS-07 — https://github.com/astro-mine/astro-mine-worlds/issues/7
+Backlog: RM-P0-WORLDS-07 — astro-mine-worlds#7
 """
 
 from __future__ import annotations

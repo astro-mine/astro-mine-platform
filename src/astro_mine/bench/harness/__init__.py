@@ -7,7 +7,7 @@ is the gate that raises on drift; :func:`replay` is sampled re-execution from a 
 :class:`Result`. The harness is runner-agnostic — inject a :class:`Runner` (Sim, once wired); the
 pure :func:`reference_runner` drives the oracle today.
 
-Backlog: RM-P0-BENCH-04 — https://github.com/astro-mine/astro-mine-bench/issues/4
+Backlog: RM-P0-BENCH-04 — astro-mine-bench#4
 """
 
 from __future__ import annotations

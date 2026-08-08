@@ -62,7 +62,7 @@ Python binding is distributed** — the project publishes none, and no candidate
 PyPI. Binding it would mean vendoring a CMake + pybind11 build of a C++ library into this wheel,
 which is disproportionate for Phase 1 and would break the tier-1 "local install must always work"
 rule (`conventions.md §7`) for no behavioral gain over the XML the native engine already speaks.
-See [#13](https://github.com/astro-mine/astro-mine-mind/issues/13) for the full rationale.
+See astro-mine-mind#13 for the full rationale.
 
 ## The stack spec — the whole idea, in one file
 

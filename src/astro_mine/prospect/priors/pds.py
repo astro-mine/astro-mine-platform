@@ -16,7 +16,7 @@ same registry, resolved by :func:`~astro_mine.prospect.priors.load_prior`. Its
 hashes** (``DatasetCitation.source_hash``), so the fit reproduces from cited public inputs and a
 Bench scenario can pin it.
 
-Backlog: RM-P1-PROSPECT-12 — https://github.com/astro-mine/astro-mine-prospect/issues/11
+Backlog: RM-P1-PROSPECT-12 — astro-mine-prospect#11
 """
 
 from __future__ import annotations

@@ -14,7 +14,7 @@ ready to lint (:func:`astro_mine.fleet.lint.lint_asset`), package
 (:func:`astro_mine.fleet.packaging.package_asset`), and -- once RM-P0-FLEET-07 lands -- spawn
 in Sim.
 
-Backlog: RM-P0-FLEET-04 -- https://github.com/astro-mine/astro-mine-fleet/issues/4
+Backlog: RM-P0-FLEET-04 -- astro-mine-fleet#4
 """
 
 from __future__ import annotations

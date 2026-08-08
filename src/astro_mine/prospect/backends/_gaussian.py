@@ -7,7 +7,7 @@ requires (prospect.md §2.1; conventions.md §1.5). Centralizing it keeps the tw
 uncertainty reporting identical and honest — a backend swap never changes the *shape* of the
 uncertainty, only the inference behind it.
 
-Backlog: RM-P0-PROSPECT-02 — https://github.com/astro-mine/astro-mine-prospect/issues/2
+Backlog: RM-P0-PROSPECT-02 — astro-mine-prospect#2
 """
 
 from __future__ import annotations

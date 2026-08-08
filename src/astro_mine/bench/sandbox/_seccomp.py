@@ -26,7 +26,7 @@ is closed here rather than merely denied.
 against. Where the deployment needs those too, run the
 :class:`~astro_mine.bench.sandbox.ContainerSandbox` tier.
 
-Backlog: bench#30 — https://github.com/astro-mine/astro-mine-bench/issues/30
+Backlog: bench#30 — astro-mine-bench#30
 """
 
 from __future__ import annotations

@@ -10,7 +10,7 @@ extension.
 - :class:`Catalog` / :class:`InMemoryCatalog` — the store contract + dependency-clean default;
   :class:`~astro_mine.hub.index._sql.SqlCatalog` (``[service]`` extra) is the durable backend.
 
-Backlog: RM-P1-HUB-02 — https://github.com/astro-mine/astro-mine-hub/issues/2
+Backlog: RM-P1-HUB-02 — astro-mine-hub#2
 """
 
 from __future__ import annotations

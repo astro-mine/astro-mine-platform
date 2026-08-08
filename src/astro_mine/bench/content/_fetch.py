@@ -35,7 +35,7 @@ a **path**. Resolving that path into a live bundle store is Sim's job, through i
 ``open_bundle_store``. The Hub client is imported lazily behind the ``[fetch]`` extra so the base
 package keeps importing on ``core + pydantic`` alone.
 
-Backlog: bench#56 — https://github.com/astro-mine/astro-mine-bench/issues/56
+Backlog: bench#56 — astro-mine-bench#56
 """
 
 from __future__ import annotations

@@ -20,7 +20,7 @@ is imported at module scope: both are probed once and fall back to no-op shims, 
 instrumented code needs no ``if telemetry_enabled:`` guards. The real SDKs arrive with the
 ``[observability]`` extra, which a hosted deployment installs.
 
-Backlog: bench#32 — https://github.com/astro-mine/astro-mine-bench/issues/32
+Backlog: bench#32 — astro-mine-bench#32
 """
 
 from __future__ import annotations

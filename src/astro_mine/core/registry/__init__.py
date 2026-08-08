@@ -31,7 +31,7 @@ Public API:
   both implement it (conventions.md §3.3); the host that gates and instantiates is Mind's
   :class:`~astro_mine.mind.registry.TierRegistry`.
 
-Backlog: RM-P0-CORE-05 — https://github.com/astro-mine/astro-mine-core/issues/5
+Backlog: RM-P0-CORE-05 — astro-mine-core#5
 """
 
 from __future__ import annotations

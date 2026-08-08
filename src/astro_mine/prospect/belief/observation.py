@@ -12,7 +12,7 @@ perception for one step); :meth:`FieldObservation.from_sensor_reading` adapts a 
 RM-P0-PROSPECT-04's acceptance criterion. File order is log order: the log is replayed exactly as
 read, so a posterior is reproducible from its observation log (prospect.md §5).
 
-Backlog: RM-P0-PROSPECT-04 — https://github.com/astro-mine/astro-mine-prospect/issues/4
+Backlog: RM-P0-PROSPECT-04 — astro-mine-prospect#4
 """
 
 from __future__ import annotations

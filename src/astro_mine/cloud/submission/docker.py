@@ -10,7 +10,7 @@ The argv construction (:func:`build_docker_argv`) is pure and unit-tested; only 
 default runner shells out to Docker, so it runs solely in the opt-in ``docker``-marked
 tests. Inject a *runner* to test or to retarget the container engine.
 
-Backlog: RM-P0-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/2
+Backlog: RM-P0-CLOUD-02 -- astro-mine-cloud#2
 """
 
 from __future__ import annotations

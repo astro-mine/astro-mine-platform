@@ -71,7 +71,7 @@ tests/studio/               # mirrors the package layout
 
 Neither `api/` nor `ui/` is here — the FastAPI routes and the React front end are the two halves
 the consolidation did not migrate. They live in the
-[`astro-mine-studio`](https://github.com/astro-mine/astro-mine-studio) repo until `astro-mine-api`
+`astro-mine-studio` repo until `astro-mine-api`
 stands up.
 
 ## Publishing to Hub

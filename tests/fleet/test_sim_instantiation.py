@@ -19,7 +19,7 @@ this is the minimal realization a CI smoke test needs -- engine-served-regime ga
 one-agent scenario per asset. Sim's engine factories *silently skip* agents whose dynamics
 they don't own, so unrealizability is an explicit pre-check here, never a caught engine error.
 
-Backlog: RM-P0-FLEET-07 -- https://github.com/astro-mine/astro-mine-fleet/issues/7
+Backlog: RM-P0-FLEET-07 -- astro-mine-fleet#7
 """
 
 from __future__ import annotations

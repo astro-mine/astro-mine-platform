@@ -7,7 +7,7 @@ deterministic :class:`~astro_mine.cloud.submission.jobspec.JobSpec` yield equal 
 and an equal ``run_context.content_address()`` -- that equivalence is the CLOUD-02
 contract.
 
-Backlog: RM-P0-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/2
+Backlog: RM-P0-CLOUD-02 -- astro-mine-cloud#2
 """
 
 from __future__ import annotations

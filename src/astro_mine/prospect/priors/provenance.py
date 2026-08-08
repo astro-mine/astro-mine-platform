@@ -6,7 +6,7 @@ never an uncited research artifact. :class:`DatasetCitation` is one cited public
 :class:`Provenance` is the record a fitted prior carries — the recipe, its citations, the
 derivation, and the numeric knobs — content-addressed for reproducibility (conventions.md §5).
 
-Backlog: RM-P0-PROSPECT-03 — https://github.com/astro-mine/astro-mine-prospect/issues/3
+Backlog: RM-P0-PROSPECT-03 — astro-mine-prospect#3
 """
 
 from __future__ import annotations

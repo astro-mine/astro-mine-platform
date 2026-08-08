@@ -20,7 +20,7 @@ consequences worth stating plainly, because both are easy to get wrong:
   (conventions.md §1.5; hub.md §2.1). Provenance still records the plan's own digest and the
   kernel/terrain/config input hashes — the identity that actually determines the plan.
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/25
+Backlog: RM-P0-LINK-04 -- astro-mine-link#25
 """
 
 from __future__ import annotations

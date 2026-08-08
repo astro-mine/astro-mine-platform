@@ -31,7 +31,7 @@ semantics of RM-P0-PROSPECT-04). :meth:`realize` draws a sealed full-field reali
 posterior (the ground-truth-variant use). Fitting is deterministic under a fixed seed
 (conventions.md §1.5).
 
-Backlog: RM-P1-PROSPECT-10 — https://github.com/astro-mine/astro-mine-prospect/issues/20
+Backlog: RM-P1-PROSPECT-10 — astro-mine-prospect#20
 """
 
 from __future__ import annotations

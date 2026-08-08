@@ -10,7 +10,7 @@ narrow waist (conventions.md §1.1). The assembled plan is checked against Core'
 consumer-driven contract (:func:`~astro_mine.core.messages.validate_contact_plan`) so a
 malformed product fails loudly at the boundary.
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/4
+Backlog: RM-P0-LINK-04 -- astro-mine-link#4
 """
 
 from __future__ import annotations

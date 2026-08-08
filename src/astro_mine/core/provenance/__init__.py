@@ -22,7 +22,7 @@ Public API:
   :func:`load_schema`, with :class:`RunProvenanceError` /
   :class:`RunProvenanceValidationError`.
 
-Backlog: issue #18 — https://github.com/astro-mine/astro-mine-core/issues/18
+Backlog: issue #18 — astro-mine-core#18
 """
 
 from __future__ import annotations

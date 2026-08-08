@@ -21,7 +21,7 @@ Public API:
 - errors — :class:`MetricError` / :class:`MetricComputationError` / :class:`UnknownMetric` /
   :class:`IncompatibleMetricVersion`.
 
-Backlog: RM-P0-BENCH-03 — https://github.com/astro-mine/astro-mine-bench/issues/3
+Backlog: RM-P0-BENCH-03 — astro-mine-bench#3
 """
 
 from __future__ import annotations

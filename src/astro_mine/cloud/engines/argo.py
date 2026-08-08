@@ -8,7 +8,7 @@ expanded JobSpec (``cloud.md`` §3, §2 principle 4). ``SweepSpec.max_parallel``
 workflow ``parallelism`` cap so a huge fan-out degrades gracefully instead of stampeding the
 scheduler (§8).
 
-Backlog: RM-P1-CLOUD-01/02 -- https://github.com/astro-mine/astro-mine-cloud/issues/12
+Backlog: RM-P1-CLOUD-01/02 -- astro-mine-cloud#12
 """
 
 from __future__ import annotations

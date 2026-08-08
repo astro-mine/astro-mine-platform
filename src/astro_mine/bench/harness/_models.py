@@ -7,7 +7,7 @@ per-seed + aggregate scores. :attr:`Result.result_hash` digests only the determi
 :class:`EnvironmentStamp` (interpreter, platform) is recorded for audit but excluded, so the same
 inputs reproduce the identical hash on any machine (mirrors Sim's provenance split, SIM-09).
 
-Backlog: RM-P0-BENCH-04 — https://github.com/astro-mine/astro-mine-bench/issues/4
+Backlog: RM-P0-BENCH-04 — astro-mine-bench#4
 """
 
 from __future__ import annotations

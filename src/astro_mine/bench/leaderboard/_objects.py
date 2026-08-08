@@ -15,7 +15,7 @@ is keyed by the ``sha256:`` digest of its bytes and every get **re-verifies** th
 (fail-closed on a content-address mismatch), so a corrupted or swapped object can never be served
 as authentic — the storage-layer half of the leaderboard's integrity posture (bench.md §9).
 
-Backlog: RM-P1-BENCH-10 — https://github.com/astro-mine/astro-mine-bench/issues/18
+Backlog: RM-P1-BENCH-10 — astro-mine-bench#18
 """
 
 from __future__ import annotations

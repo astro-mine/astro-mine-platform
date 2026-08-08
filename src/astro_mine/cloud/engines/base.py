@@ -8,7 +8,7 @@ a Kubernetes manifest ``dict`` for one workload shape. Engines register under a 
 resources / content-addressed I/O into the pod-level pieces every engine reuses, so a job
 runs the *same* container whichever engine schedules it.
 
-Backlog: RM-P1-CLOUD-01/02 -- https://github.com/astro-mine/astro-mine-cloud/issues/12
+Backlog: RM-P1-CLOUD-01/02 -- astro-mine-cloud#12
 """
 
 from __future__ import annotations

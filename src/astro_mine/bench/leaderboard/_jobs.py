@@ -16,7 +16,7 @@ The lifecycle **transport** (NATS/JetStream) is deployment plumbing; the states,
 their coordination state live here so the *same* lifecycle runs in-process for the local tier and
 the tests. A real deployment swaps the backends behind these protocols, not the transitions.
 
-Backlog: RM-P1-BENCH-10 — https://github.com/astro-mine/astro-mine-bench/issues/18
+Backlog: RM-P1-BENCH-10 — astro-mine-bench#18
 """
 
 from __future__ import annotations

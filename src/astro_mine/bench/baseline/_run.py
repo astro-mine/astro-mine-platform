@@ -15,7 +15,7 @@ The runner is injected (conventions.md §1.1; bench.md §2.2): the dependency-cl
 [Sim](sim.md)-backed runner lives in ``astro-mine-sim`` (the Sim repo) and slots in through the
 seam — Bench ships no Sim code and never imports Sim.
 
-Backlog: RM-P0-BENCH-05 — https://github.com/astro-mine/astro-mine-bench/issues/5
+Backlog: RM-P0-BENCH-05 — astro-mine-bench#5
 """
 
 from __future__ import annotations

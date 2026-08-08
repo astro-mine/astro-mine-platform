@@ -8,7 +8,7 @@ within an explicit budget (:func:`cross_check_pass_times`, :func:`assert_within_
 live GMAT run driving that check lives in the test suite. :func:`plan_digest` /
 :func:`hash_file` / :func:`canonical_digest` are the content-address primitives.
 
-Backlog: RM-P0-LINK-05 -- https://github.com/astro-mine/astro-mine-link/issues/5
+Backlog: RM-P0-LINK-05 -- astro-mine-link#5
 """
 
 from __future__ import annotations

@@ -27,7 +27,7 @@ content supplies its own baseline through the optional
 :class:`~astro_mine.bench.baseline.DefaultPolicyProvider` seam instead; Sim's is a
 capability-aware mode policy built from each asset's own SADF.
 
-Backlog: RM-P0-BENCH-05 — https://github.com/astro-mine/astro-mine-bench/issues/5
+Backlog: RM-P0-BENCH-05 — astro-mine-bench#5
 """
 
 from __future__ import annotations

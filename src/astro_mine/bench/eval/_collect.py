@@ -19,7 +19,7 @@ runners is refused outright, because those seeds are not one result (bench#64). 
 (the ``[cloud]`` extra) and the ``mcap`` reader (behind :mod:`~astro_mine.bench.recording`, the
 ``[recording]`` extra) are imported lazily; Bench never imports Sim.
 
-Backlog: RM-P1-BENCH-11 — https://github.com/astro-mine/astro-mine-bench/issues/19
+Backlog: RM-P1-BENCH-11 — astro-mine-bench#19
 """
 
 from __future__ import annotations

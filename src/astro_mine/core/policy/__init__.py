@@ -28,7 +28,7 @@ Public API:
   optional :class:`ReportingShield` protocol. Guard produces the report and Mind's executive reads
   it, so by §3.3 the contract is Core's rather than either component's.
 
-Backlog: RM-P0-CORE-03 — https://github.com/astro-mine/astro-mine-core/issues/3
+Backlog: RM-P0-CORE-03 — astro-mine-core#3
 """
 
 from __future__ import annotations

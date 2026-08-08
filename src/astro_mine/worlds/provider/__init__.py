@@ -20,7 +20,7 @@ none, the provider falls back to a coarse radiative-equilibrium first-cut. The p
 illumination-driven model that feeds this hook is RM-P1-WORLDS-13 (#16); the standalone
 per-terrain-class curves are RM-P0-WORLDS-04.
 
-Backlog: RM-P0-WORLDS-06 — https://github.com/astro-mine/astro-mine-worlds/issues/6
+Backlog: RM-P0-WORLDS-06 — astro-mine-worlds#6
 """
 
 from __future__ import annotations

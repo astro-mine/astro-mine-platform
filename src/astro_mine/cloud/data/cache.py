@@ -8,7 +8,7 @@ scratch; repeated reads are served locally. It records hit/miss counts so a test
 cache serves repeats without touching remote -- the locality guarantee (``cloud.md`` §2
 principle 7, §5).
 
-Backlog: RM-P1-CLOUD-04 -- https://github.com/astro-mine/astro-mine-cloud/issues/15
+Backlog: RM-P1-CLOUD-04 -- astro-mine-cloud#15
 """
 
 from __future__ import annotations

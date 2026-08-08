@@ -6,7 +6,7 @@ on-demand), scales idle GPU pools **to zero** via empty-node consolidation, and 
 **on-demand only** for the irreplaceable RL learner; :func:`cluster_autoscaler_nodegroup` is
 the portable cluster-autoscaler equivalent for non-AWS substrates (``cloud.md`` §11).
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

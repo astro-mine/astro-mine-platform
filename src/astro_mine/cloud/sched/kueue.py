@@ -7,7 +7,7 @@ pure back-pressure model -- it admits a tenant's request only while the tenant i
 and otherwise makes the work *wait*, so a flood from one tenant queues instead of starving the
 others (``cloud.md`` §2 principle 9, §8 "degrade, don't collapse").
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

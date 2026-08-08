@@ -15,7 +15,7 @@ the wall-clock it burned.
 Everything here is ``core + pydantic`` only, so the worker side (which runs *inside* the sandbox)
 stays dependency-clean.
 
-Backlog: bench#30 — https://github.com/astro-mine/astro-mine-bench/issues/30
+Backlog: bench#30 — astro-mine-bench#30
 """
 
 from __future__ import annotations

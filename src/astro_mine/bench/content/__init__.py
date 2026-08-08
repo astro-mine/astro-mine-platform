@@ -10,7 +10,7 @@ Bench populates the store and reports a **path**; reading it back into a live bu
 to the engine that consumes it (Sim's ``open_bundle_store``). Bench never imports Sim
 (conventions.md §1.1; bench.md §2.2). Needs the ``[fetch]`` extra for the Hub client.
 
-Backlog: bench#56 — https://github.com/astro-mine/astro-mine-bench/issues/56
+Backlog: bench#56 — astro-mine-bench#56
 """
 
 from __future__ import annotations

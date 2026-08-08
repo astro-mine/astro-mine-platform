@@ -93,7 +93,7 @@ you:
 |---|---|---|
 | **What** | A *materialized, runnable episode* — concrete agents, `dt_s`, horizon, fidelity | A *declarative benchmark task* — pins world/fleet/prospect/link content **by hash**, plus seeds, metrics, budgets |
 | **Identified by** | a **file path** (a JSON document) | an **id** (e.g. `lunar-polar-ice-prospecting-v1`, from `astro-mine bench list`) |
-| **Owned by** | this repo (`astro_mine.sim.runtime`) | [Bench](https://github.com/astro-mine/astro-mine-bench) (`astro_mine.bench.scenario`) |
+| **Owned by** | this repo (`astro_mine.sim.runtime`) | Bench (`astro_mine.bench.scenario`) |
 | **CLI** | `astro-mine sim record --scenario-file …` | `astro-mine sim run <id>` |
 | **Needs** | nothing beyond the base install | the `[sim-bench]` + `[sim-hub]` extras and fetched content |
 
@@ -195,11 +195,11 @@ scorecard: sha256:5d31193541cd3f43a6bf409358a7662e0db12e05eb647e9522b176f82bb8bf
 ```
 
 All seven metrics score. `water_mass` is non-zero because since
-[#64](https://github.com/astro-mine/astro-mine-sim/issues/64) extraction consumes regolith that was
+astro-mine-sim#64 extraction consumes regolith that was
 dug, carried and delivered — an ISRU plant is no longer excluded from extraction modes, so the
 stored mass is earned by the value chain rather than conjured from a mode string. `information_gain`
-and `psr_area_characterized` score because [#72](https://github.com/astro-mine/astro-mine-sim/pull/72)
-conditions a real belief ([#66](https://github.com/astro-mine/astro-mine-sim/issues/66)).
+and `psr_area_characterized` score because astro-mine-sim#72
+conditions a real belief (astro-mine-sim#66).
 
 The numbers are the conformance floor, not a target: `energy_per_kg` is enormous and
 `nights_survived` is `0`. That is what a leaderboard is for.
@@ -211,7 +211,7 @@ express one — this is the one remaining caveat in this section.
 ## Container entrypoint
 
 The workload image (`docker/Dockerfile`) runs `python -m astro_mine.sim`; a
-[Cloud](https://github.com/astro-mine/astro-mine-cloud) job appends `--scenario … --seed … --out …`.
+Cloud job appends `--scenario … --seed … --out …`.
 That flat form routes to `record` (a laptop run and a cluster run are the same run, cloud.md §4) —
 `--scenario` is a deprecated alias for `record`'s `--scenario-file`.
 
@@ -223,9 +223,9 @@ works. A scenario that selects a tier without its extra fails with a clear messa
 | Extra | Unlocks |
 |---|---|
 | `sim-hub` | Resolve content-pinned bundles from a Hub registry (the `run` path) |
-| `sim-bench` | The Sim-backed [Bench](https://github.com/astro-mine/astro-mine-bench) runner — real-physics scoring + the determinism gate (`astro_mine.sim.bench`) |
+| `sim-bench` | The Sim-backed Bench runner — real-physics scoring + the determinism gate (`astro_mine.sim.bench`) |
 | `sim-dem` | High-fidelity DEM granular-excavation engine (numpy soft-sphere) |
-| `sim-surrogate` | The learned [Surrogate](https://github.com/astro-mine/astro-mine-surrogate) fidelity tier (ONNX Runtime) |
+| `sim-surrogate` | The learned Surrogate fidelity tier (ONNX Runtime) |
 | `sim-brax` / `sim-ray` | Brax/MJX GPU-vectorized contact/training tier, and Ray fan-out |
 | `sim-mujoco` | The MuJoCo articulated wheel-soil mobility/contact tier |
 | `sim-orekit` | The Orekit higher-fidelity orbital propagator (bundled JVM) |

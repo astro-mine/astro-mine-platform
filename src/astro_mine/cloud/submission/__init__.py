@@ -18,7 +18,7 @@ result = submit(job)                 # local subprocess; or submit(job, backend=
 assert result.ok
 ```
 
-Backlog: RM-P0-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/2
+Backlog: RM-P0-CLOUD-02 -- astro-mine-cloud#2
 """
 
 from __future__ import annotations

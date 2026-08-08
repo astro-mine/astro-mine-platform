@@ -22,8 +22,8 @@ re-materialized by the exporters without an axis flip.
 fidelity tier onto one, so a coarse ``massmodel`` run never pays for the finest mesh
 (fleet.md §8 "Fleet declares the tiers, Sim chooses them").
 
-Backlog: RM-P0-FLEET-02 -- https://github.com/astro-mine/astro-mine-fleet/issues/2
-Fixes: https://github.com/astro-mine/astro-mine-fleet/issues/28, /issues/31
+Backlog: RM-P0-FLEET-02 -- astro-mine-fleet#2
+Fixes: astro-mine-fleet#28, /issues/31
 """
 
 from __future__ import annotations

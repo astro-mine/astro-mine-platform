@@ -20,7 +20,7 @@ reports (rule id / path / message), and :data:`LOSS_CONTRACT` states, per direct
 survives and what does not. ``fleet export --json`` prints them; nothing is dropped in silence.
 
 Backlog: RM-P0-FLEET-01, RM-P0-FLEET-02 --
-https://github.com/astro-mine/astro-mine-fleet/issues/31
+astro-mine-fleet#31
 """
 
 from __future__ import annotations

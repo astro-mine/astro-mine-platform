@@ -21,7 +21,7 @@ loopback.
 (fields + belief + infogain) never needs it.
 
 Backlog: RM-P1-PROSPECT-11; prospect.md §9 —
-https://github.com/astro-mine/astro-mine-prospect/issues/21
+astro-mine-prospect#21
 """
 
 from __future__ import annotations

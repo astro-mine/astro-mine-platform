@@ -8,7 +8,7 @@ Earth-side :func:`dsn_contact_windows` (a :class:`GroundStation` elevation mask 
 construction; intervals are the first-class product (link.md §2.3). Degrades loudly — provider
 errors propagate, never a silent "no contact".
 
-Backlog: RM-P0-LINK-02 -- https://github.com/astro-mine/astro-mine-link/issues/2
+Backlog: RM-P0-LINK-02 -- astro-mine-link#2
 """
 
 from __future__ import annotations

@@ -9,7 +9,7 @@ vocabulary the SADF asset declares. The signature is attached to the OCI artifac
 separately (see :mod:`astro_mine.core.registry` and :mod:`astro_mine.fleet.packaging.oci`),
 so the manifest embedded as the OCI config stays byte-stable.
 
-Backlog: RM-P0-FLEET-06 -- https://github.com/astro-mine/astro-mine-fleet/issues/6
+Backlog: RM-P0-FLEET-06 -- astro-mine-fleet#6
 """
 
 from __future__ import annotations

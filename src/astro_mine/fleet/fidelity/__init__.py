@@ -12,7 +12,7 @@ The ``surrogate`` tier — a *learned* substitute for expensive physics, owned b
 scope): :func:`validate_profiles` rejects it rather than accept a profile whose tracked
 error-bounds contract cannot yet be honored.
 
-Backlog: RM-P0-FLEET-05 -- https://github.com/astro-mine/astro-mine-fleet/issues/5
+Backlog: RM-P0-FLEET-05 -- astro-mine-fleet#5
 """
 
 from __future__ import annotations

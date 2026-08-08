@@ -32,7 +32,7 @@ validation/                 # committed published references + error budgets (wo
 ```
 
 SPICE frames/epochs/geometry are **not** in this package: they come from the shared
-[`astro-mine-spice`](https://github.com/astro-mine/astro-mine-spice) companion
+`astro-mine-spice` companion
 (`import astro_mine.spice`), which [RFC-0002](https://github.com/astro-mine/docs/blob/main/rfc/0002-shared-spice-foundation.md)
 factored out so Worlds/Link/Sim/Transit share one SPICE implementation.
 
@@ -114,7 +114,7 @@ with kernel_pool("data/spice/metakernel.tm"):
 The horizon map is computed in **world (grid) azimuth**; the topocentric SPICE Sun azimuth
 is converted via the south-polar-stereographic grid convergence, so the model requires that
 CRS and **fails loudly** on any other (the rigorous per-cell topocentric horizon is
-[RM-P1-WORLDS-12](https://github.com/astro-mine/astro-mine-worlds/issues/11)). PSR
+[RM-P1-WORLDS-12](astro-mine-worlds#11)). PSR
 *permanence* is explicit on the result (`PsrEpochSemantics`: diurnal / seasonal / mission).
 Illumination/PSR is regression-tested in CI against analytic terrain with explicit error
 budgets; the real-LOLA validation against published references runs outside CI via

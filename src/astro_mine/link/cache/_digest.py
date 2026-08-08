@@ -9,7 +9,7 @@ byte-stable ``contact_plan_to_wire``). Kernel/DEM files are hashed by **content*
 (:func:`hash_file`), so a wrong or truncated kernel silently changing visibility changes the
 key — a correctness-and-trust guard, not just a cache miss (link.md §9).
 
-Backlog: RM-P0-LINK-05 -- https://github.com/astro-mine/astro-mine-link/issues/5
+Backlog: RM-P0-LINK-05 -- astro-mine-link#5
 """
 
 from __future__ import annotations

@@ -8,7 +8,7 @@ transform/shape + the PROJ string) rather than GeoJSON lon/lat, which is degener
 geometry is therefore ``null`` (valid STAC core for a non-WGS84 raster). Richer STAC
 (the projection extension, a Collection, stac-validator conformance in CI) is a follow-up.
 
-Backlog: RM-P0-WORLDS-07 — https://github.com/astro-mine/astro-mine-worlds/issues/7
+Backlog: RM-P0-WORLDS-07 — astro-mine-worlds#7
 """
 
 from __future__ import annotations

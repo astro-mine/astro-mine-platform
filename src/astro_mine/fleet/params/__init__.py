@@ -15,7 +15,7 @@ criterion for this issue). Fleet only *applies* Core's SADF/capability vocabular
 the resolved document is validated through Core's loader, so a family can never drift
 from the schema.
 
-Backlog: RM-P1-FLEET-10 -- https://github.com/astro-mine/astro-mine-fleet/issues/21
+Backlog: RM-P1-FLEET-10 -- astro-mine-fleet#21
 """
 
 from __future__ import annotations

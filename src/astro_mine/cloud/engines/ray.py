@@ -8,7 +8,7 @@ head and worker containers run ``ray start`` from the *same* digest-pinned image
 distributed run is the same container with a bigger executor. :class:`RayJobHandle` is the
 value object returned to the caller.
 
-Backlog: RM-P1-CLOUD-01/02 -- https://github.com/astro-mine/astro-mine-cloud/issues/12
+Backlog: RM-P1-CLOUD-01/02 -- astro-mine-cloud#12
 """
 
 from __future__ import annotations

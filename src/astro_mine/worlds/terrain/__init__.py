@@ -16,7 +16,7 @@ RM-P0-WORLDS-06.
 The pipeline runs on **any** GDAL-readable DEM with a CRS; the real Shackleton LOLA DEM
 is fetched via ``scripts/fetch_shackleton_dem.py`` (documented, run outside CI).
 
-Backlog: RM-P0-WORLDS-01 — https://github.com/astro-mine/astro-mine-worlds/issues/1
+Backlog: RM-P0-WORLDS-01 — astro-mine-worlds#1
 """
 
 from __future__ import annotations

@@ -12,7 +12,7 @@ fit (no raster ingest — see ``recipe.py`` and ``RECIPE.md``). The real PDS ras
 no consumer change: it fits from real Diviner/LEND/M³ + LOLA-PSR rasters (materialized as a
 content-addressed conditioning bundle), while the parametric default stays the offline default.
 
-Backlog: RM-P0-PROSPECT-03 — https://github.com/astro-mine/astro-mine-prospect/issues/3
+Backlog: RM-P0-PROSPECT-03 — astro-mine-prospect#3
 """
 
 from __future__ import annotations

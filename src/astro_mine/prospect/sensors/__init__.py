@@ -21,7 +21,7 @@ The anchor scenario's set (scenario §6) — ``neutron_spectrometer``, ``nir_ref
 with **no change** to the conditioner, the field service, or Core.
 
 Backlog: prospect.md §3, §6; LUNAR-FR-002 —
-https://github.com/astro-mine/astro-mine-prospect/issues/31
+astro-mine-prospect#31
 """
 
 from __future__ import annotations

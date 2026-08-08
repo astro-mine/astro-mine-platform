@@ -18,7 +18,7 @@ import a submission into its own process (bench.md §9), so the string crosses i
 worker and only a scorecard comes back. :func:`resolve_policy` still exists — it is what the worker
 calls, *inside* the sandbox.
 
-Backlog: RM-P0-BENCH-06 — https://github.com/astro-mine/astro-mine-bench/issues/6
+Backlog: RM-P0-BENCH-06 — astro-mine-bench#6
 """
 
 from __future__ import annotations

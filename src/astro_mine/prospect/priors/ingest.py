@@ -20,7 +20,7 @@ conditioning layers (RM-P1-WORLDS-14), applied here to the prior's own CRS/grid 
 co-register cell-for-cell with the belief field. Sources may equally be Worlds' pre-ingested
 conditioning COGs — the read path is identical.
 
-Backlog: RM-P1-PROSPECT-12 — https://github.com/astro-mine/astro-mine-prospect/issues/11
+Backlog: RM-P1-PROSPECT-12 — astro-mine-prospect#11
 """
 
 from __future__ import annotations

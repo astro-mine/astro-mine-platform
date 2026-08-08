@@ -21,7 +21,7 @@ prior to the dataset prior. A GP/GMRF-backed belief is deferred to P1 (prospect.
 here so the shipped #2 grid backend is untouched; the equivalence is pinned by a test (constant
 prior == ``GridField.build``).
 
-Backlog: RM-P0-PROSPECT-04 — https://github.com/astro-mine/astro-mine-prospect/issues/4
+Backlog: RM-P0-PROSPECT-04 — astro-mine-prospect#4
 """
 
 from __future__ import annotations

@@ -26,7 +26,7 @@ does **not** read PDS rasters. Instead it encodes the **published characterizati
 datasets below as a transparent parametric fit, and is flagged as such (honest uncertainty,
 prospect.md §9). Real PDS raster ingest is delivered by the **Phase-1** recipe
 `shackleton_water_ice_pds_v1` — **RM-P1-PROSPECT-12**
-([#11](https://github.com/astro-mine/astro-mine-prospect/issues/11); see the section below) — which
+(astro-mine-prospect#11; see the section below) — which
 registers behind the same `load_prior` registry with no consumer change; this parametric recipe
 stays the **offline default**.
 
@@ -71,7 +71,7 @@ field = prior.as_field()                            # a Core ResourceField (Grid
 
 # Phase-1 — the real PDS raster-ingest recipe (`shackleton_water_ice_pds_v1`)
 
-> Backlog: **RM-P1-PROSPECT-12** ([#11](https://github.com/astro-mine/astro-mine-prospect/issues/11))
+> Backlog: **RM-P1-PROSPECT-12** (astro-mine-prospect#11)
 > · Architecture: `docs/architecture/prospect.md` §2.4, §3, §4, §6, §12 · depends on
 > **RM-P1-WORLDS-14** (conditioning layers) + Hub.
 

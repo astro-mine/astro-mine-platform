@@ -15,7 +15,7 @@ bundle, and the :class:`LeaderboardService` orchestration) imports only ``core +
 :class:`~astro_mine.hub.registry.Registry` (:func:`open_registry`), the FastAPI app, and the
 SQLAlchemy store need the ``[leaderboard]`` extra and are imported lazily.
 
-Backlog: RM-P1-BENCH-10 -- https://github.com/astro-mine/astro-mine-bench/issues/18
+Backlog: RM-P1-BENCH-10 -- astro-mine-bench#18
 """
 
 from __future__ import annotations

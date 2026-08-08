@@ -21,7 +21,7 @@ backend, behind the ``[leaderboard]`` extra).
 Events are **append-only by construction** — frozen models, and neither backend exposes an update or
 a delete. An audit trail an operator can quietly rewrite is not one.
 
-Backlog: bench#29 — https://github.com/astro-mine/astro-mine-bench/issues/29
+Backlog: bench#29 — astro-mine-bench#29
 """
 
 from __future__ import annotations

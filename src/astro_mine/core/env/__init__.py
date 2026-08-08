@@ -24,7 +24,7 @@ Public API:
   :func:`as_pettingzoo_reset` / :func:`as_pettingzoo_step`;
 - conformance — :func:`check_environment` and :class:`EnvironmentContractError`.
 
-Backlog: RM-P0-CORE-02 — https://github.com/astro-mine/astro-mine-core/issues/2
+Backlog: RM-P0-CORE-02 — astro-mine-core#2
 """
 
 from __future__ import annotations

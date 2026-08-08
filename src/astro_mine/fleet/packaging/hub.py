@@ -21,7 +21,7 @@ Two boundaries this module enforces:
 ``astro-mine-hub`` is imported **lazily** (inside each function) so ``import astro_mine.fleet``
 stays light — the Hub registry/supply-chain stack loads only when a publish/pull path runs.
 
-Backlog: RM-P1-FLEET-10 -- https://github.com/astro-mine/astro-mine-fleet/issues/21
+Backlog: RM-P1-FLEET-10 -- astro-mine-fleet#21
 """
 
 from __future__ import annotations

@@ -7,7 +7,7 @@ through the ``astro-mine-hub`` client — the tier-1 offline path, no hosted Hub
 imported lazily here so loading a bundle via
 :func:`~astro_mine.prospect.publish._bundle.from_bundle` never needs it.
 
-Backlog: RM-P1-PROSPECT-13 — https://github.com/astro-mine/astro-mine-prospect/issues/23
+Backlog: RM-P1-PROSPECT-13 — astro-mine-prospect#23
 """
 
 from __future__ import annotations

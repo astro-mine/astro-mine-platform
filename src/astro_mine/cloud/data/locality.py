@@ -7,7 +7,7 @@ egress (``cloud.md`` §5, §8). :func:`prewarm` fills a
 :func:`co_schedule_affinity` and :func:`zone_affinity` emit the K8s affinity that steers pods
 to warm nodes / the store's zone.
 
-Backlog: RM-P1-CLOUD-04 -- https://github.com/astro-mine/astro-mine-cloud/issues/15
+Backlog: RM-P1-CLOUD-04 -- astro-mine-cloud#15
 """
 
 from __future__ import annotations

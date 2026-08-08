@@ -21,7 +21,7 @@ orchestrator raises.
 Keyless Sigstore (Fulcio/Rekor/OIDC) is deferred; the ``sigstore_cosign`` scheme is kept so the
 upgrade is additive.
 
-Backlog: RM-P1-HUB-03 — https://github.com/astro-mine/astro-mine-hub/issues/3
+Backlog: RM-P1-HUB-03 — astro-mine-hub#3
 """
 
 from __future__ import annotations

@@ -123,7 +123,7 @@ hard CPU/memory/time caps — because a submission is untrusted code (bench.md �
 [TRUST_BOUNDARY.md](../../../TRUST_BOUNDARY.md) before exposing a leaderboard to the public internet: it
 states exactly what each sandbox tier does and does not protect against. Hub-digest submissions are
 additionally verified for a **cosign signature, SLSA provenance, and an SBOM** before they execute,
-reusing [Seal](https://github.com/astro-mine/astro-mine-seal)'s primitives via the Hub client —
+reusing Seal's primitives via the Hub client —
 verification failure fails closed.
 
 Authorization is an OPA-shaped policy layer (RBAC + per-role submission quotas + embargo control):

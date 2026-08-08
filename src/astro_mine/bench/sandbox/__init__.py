@@ -39,7 +39,7 @@ Dependency-clean (``core + pydantic``): the seccomp filter is built by hand and 
 ``ctypes``, so no sandboxing library enters the base package, and the local scoring tier is
 untouched.
 
-Backlog: bench#30 — https://github.com/astro-mine/astro-mine-bench/issues/30
+Backlog: bench#30 — astro-mine-bench#30
 """
 
 from __future__ import annotations

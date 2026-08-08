@@ -6,7 +6,7 @@ SQLAlchemy-backed :class:`~astro_mine.bench.leaderboard._sql.SqlStore` (SQLite f
 PostgreSQL for the ``docker compose`` deployment) is the durable backend, behind the
 ``[leaderboard]`` extra.
 
-Backlog: RM-P0-BENCH-06 — https://github.com/astro-mine/astro-mine-bench/issues/6
+Backlog: RM-P0-BENCH-06 — astro-mine-bench#6
 """
 
 from __future__ import annotations

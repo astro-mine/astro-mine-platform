@@ -14,7 +14,7 @@ there is no "best-effort" middle: a backend that cannot enforce the restrictive 
 :class:`~astro_mine.bench.sandbox.SandboxUnavailable` rather than running the code anyway
 (fail-closed; conventions.md §9).
 
-Backlog: bench#30, bench#36 — https://github.com/astro-mine/astro-mine-bench/issues/36
+Backlog: bench#30, bench#36 — astro-mine-bench#36
 """
 
 from __future__ import annotations

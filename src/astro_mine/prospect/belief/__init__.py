@@ -15,7 +15,7 @@ from an ordered observation log into a replayable prior -> posterior chain.
   that drives belief updates.
 
 Backlog: RM-P0-PROSPECT-04, RM-P1-PROSPECT-10 —
-https://github.com/astro-mine/astro-mine-prospect/issues/4
+astro-mine-prospect#4
 """
 
 from __future__ import annotations

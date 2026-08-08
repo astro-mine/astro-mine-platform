@@ -12,7 +12,7 @@ the Sim manifest, not a superset -- it references a run by content hash and neve
 carries physics fields (engine tiers, error budgets); Cloud has no physics
 (``cloud.md`` §1).
 
-Backlog: RM-P0-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/3
+Backlog: RM-P0-CLOUD-03 -- astro-mine-cloud#3
 """
 
 from __future__ import annotations

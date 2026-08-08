@@ -19,7 +19,7 @@ never scored on the seeds that happened to finish.
 tier (``run(spec, policy)``) and the determinism gate. It is never the leaderboard's default, and
 wiring it into a hosted service re-opens the very hole bench#30 closed.
 
-Backlog: bench#30 — https://github.com/astro-mine/astro-mine-bench/issues/30
+Backlog: bench#30 — astro-mine-bench#30
 """
 
 from __future__ import annotations

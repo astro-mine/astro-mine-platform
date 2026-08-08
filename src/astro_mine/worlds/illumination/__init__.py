@@ -19,7 +19,7 @@ season; the physically meaningful timescale for true permanence), or ``MISSION``
 caller's mission window). The MVP samples whatever window it is given and labels it; it does
 not assert permanence beyond that window.
 
-Backlog: RM-P0-WORLDS-03 — https://github.com/astro-mine/astro-mine-worlds/issues/3
+Backlog: RM-P0-WORLDS-03 — astro-mine-worlds#3
 """
 
 from __future__ import annotations

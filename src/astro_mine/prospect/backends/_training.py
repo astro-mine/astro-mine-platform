@@ -7,7 +7,7 @@ loudly on a length mismatch or a half-specified pair. It is deliberately *not* t
 replayable observation log of a belief field — that, and the sealed ground-truth split, are
 RM-P0-PROSPECT-04. Here an observation set is just the data a single-shot posterior conditions on.
 
-Backlog: RM-P0-PROSPECT-02 — https://github.com/astro-mine/astro-mine-prospect/issues/2
+Backlog: RM-P0-PROSPECT-02 — astro-mine-prospect#2
 """
 
 from __future__ import annotations

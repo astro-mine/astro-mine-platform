@@ -33,8 +33,8 @@ that resolves (imports) the untrusted ``--policy-ref``.
 ``pyarrow`` (the ``[cloud]`` extra) and ``mcap`` (the ``[recording]`` extra) are imported **lazily**
 at write time, so importing this module stays dependency-clean (core + pydantic).
 
-Backlog: RM-P1-BENCH-11 — https://github.com/astro-mine/astro-mine-bench/issues/19;
-bench#30 — https://github.com/astro-mine/astro-mine-bench/issues/30
+Backlog: RM-P1-BENCH-11 — astro-mine-bench#19;
+bench#30 — astro-mine-bench#30
 """
 
 from __future__ import annotations

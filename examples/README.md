@@ -11,9 +11,6 @@ directories directly):
 - `policy/` — policy/planner examples (core)
 - `plugins/` — plugin-registry examples (core)
 - `run-provenance/` — run-provenance examples (core)
-- `downstream-consumer/` — a standalone consumer package exercising Core as a
-  dependency (core). **Superseded:** it demonstrates the pre-consolidation tag-pinned Git-source
-  pattern; see its README.
 
 Every component that defines an authored format also ships its reference
 example as **package data** under `src/astro_mine/<comp>/reference/`

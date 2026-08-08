@@ -26,7 +26,12 @@ def _reference_spec() -> BuildSpec:
         entrypoint=["python", "-m", "astro_mine.sim"],
         source_date_epoch=0,
         revision="cafe" * 10,
-        labels={"org.opencontainers.image.source": "https://github.com/astro-mine/astro-mine-sim"},
+        # An OCI `image.source` is defined as a *URL*, so this is one of the few places the
+        # link sweep must not shorten to a bare name -- and it points at the repository that
+        # ships the code now, not the archived one it was extracted from.
+        labels={
+            "org.opencontainers.image.source": "https://github.com/astro-mine/astro-mine-platform"
+        },
     )
 
 

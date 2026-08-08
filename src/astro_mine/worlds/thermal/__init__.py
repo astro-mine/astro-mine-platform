@@ -21,7 +21,7 @@ by the lumped environmental flux (Diviner-class PSR floors ~30-50 K); the post-s
 floor of sunlit terrain settles near ~90-110 K, sustained by substrate conduction. These are
 order-level first-cut bounds, not validated against on-world data (none in CI; charter §8).
 
-Backlog: RM-P0-WORLDS-04 - https://github.com/astro-mine/astro-mine-worlds/issues/4
+Backlog: RM-P0-WORLDS-04 - astro-mine-worlds#4
 """
 
 from __future__ import annotations

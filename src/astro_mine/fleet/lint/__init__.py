@@ -19,7 +19,7 @@ object a resolved template (or an imported description) produces — so it is th
 template parameters too. Sub-assembly contents are linted when the referenced asset is
 itself linted (no ref resolution here).
 
-Backlog: RM-P0-FLEET-03 -- https://github.com/astro-mine/astro-mine-fleet/issues/3
+Backlog: RM-P0-FLEET-03 -- astro-mine-fleet#3
 """
 
 from __future__ import annotations

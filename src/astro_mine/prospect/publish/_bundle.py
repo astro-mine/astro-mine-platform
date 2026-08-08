@@ -19,7 +19,7 @@ this to rebuild a live :class:`~astro_mine.prospect.backends.grid.GridField` fro
 **without re-running the recipe** and **without importing** :mod:`astro_mine.prospect` by name — so
 Sim/Bench never take a Prospect import to open a field (prospect.md §3; conventions.md §1.1).
 
-Backlog: RM-P1-PROSPECT-13 — https://github.com/astro-mine/astro-mine-prospect/issues/23
+Backlog: RM-P1-PROSPECT-13 — astro-mine-prospect#23
 """
 
 from __future__ import annotations

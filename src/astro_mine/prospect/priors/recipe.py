@@ -16,7 +16,7 @@ parametric** prior — a LEND background WEH blended to the LCROSS Cabeus water 
 cold-trap proxy over LOLA polar geometry (see ``RECIPE.md``). It ingests no rasters; the offline
 local tier (``LUNAR-TR-004``) runs without network or account.
 
-Backlog: RM-P0-PROSPECT-03 — https://github.com/astro-mine/astro-mine-prospect/issues/3
+Backlog: RM-P0-PROSPECT-03 — astro-mine-prospect#3
 """
 
 from __future__ import annotations

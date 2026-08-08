@@ -28,7 +28,7 @@ surface-thermal fields (RM-P0-WORLDS-03/04; its P0 ``temperature_k`` is a coarse
 that sharpens to the diurnal column at P1). The model is deterministic (no RNG); higher-fidelity
 thermal is Phase 1.
 
-Backlog: RM-P0-SIM-07 -- https://github.com/astro-mine/astro-mine-sim/issues/7
+Backlog: RM-P0-SIM-07 -- astro-mine-sim#7
 """
 
 from __future__ import annotations

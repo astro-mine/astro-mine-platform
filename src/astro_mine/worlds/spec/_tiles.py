@@ -19,7 +19,7 @@ sub-cell planimetric offset and, worse, no way at all to recover the patch's mea
 the mesh subtracts from every vertex.
 
 Backlog: RM-P0-WORLDS-07, RM-P1-WORLDS-16 —
-https://github.com/astro-mine/astro-mine-worlds/issues/33
+astro-mine-worlds#33
 """
 
 from __future__ import annotations

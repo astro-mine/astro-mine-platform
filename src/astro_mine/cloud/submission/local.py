@@ -6,7 +6,7 @@ account. It is the default backend and the reason the local tier "MUST always wo
 (``cloud.md`` §1, §2 principle 2). The workload reads inputs from ``$ASTRO_MINE_INPUTS``
 and writes outputs to ``$ASTRO_MINE_OUTPUTS``.
 
-Backlog: RM-P0-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/2
+Backlog: RM-P0-CLOUD-02 -- astro-mine-cloud#2
 """
 
 from __future__ import annotations

@@ -32,7 +32,7 @@ privileged, non-agent holder named in ``ground_truth.py`` (prospect.md §9). The
 agent-safe (it carries no ground-truth handle); the held-out truth values it returns are a
 privileged artifact and must never be exposed to a policy.
 
-Backlog: RM-P0-PROSPECT-07 — https://github.com/astro-mine/astro-mine-prospect/issues/7
+Backlog: RM-P0-PROSPECT-07 — astro-mine-prospect#7
 """
 
 from __future__ import annotations

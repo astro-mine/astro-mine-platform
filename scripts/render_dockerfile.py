@@ -69,7 +69,9 @@ def build_spec(*, version: str = "0.1.0", revision: str | None = None) -> BuildS
         revision=revision,
         title="astro-mine-sim",
         labels={
-            "org.opencontainers.image.source": "https://github.com/astro-mine/astro-mine-sim",
+            # A URL, per the OCI spec -- and the repository that ships the code, not the
+            # archived one this image was named after.
+            "org.opencontainers.image.source": "https://github.com/astro-mine/astro-mine-platform",
             "org.opencontainers.image.description": (
                 "Astro-Mine-Sim — multi-physics engine and scenario runtime."
             ),

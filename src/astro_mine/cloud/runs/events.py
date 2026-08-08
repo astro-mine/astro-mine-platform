@@ -7,7 +7,7 @@ results without polling (``cloud.md`` §4, §6). The transport is the injectable
 :class:`CollectingPublisher` (tests) keep the local tier transport-free; a real
 NATS-JetStream publisher (``[nats]`` extra) is the production sink.
 
-Backlog: RM-P1-CLOUD-05 -- https://github.com/astro-mine/astro-mine-cloud/issues/16
+Backlog: RM-P1-CLOUD-05 -- astro-mine-cloud#16
 """
 
 from __future__ import annotations

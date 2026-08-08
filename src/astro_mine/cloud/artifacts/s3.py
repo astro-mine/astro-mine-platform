@@ -9,7 +9,7 @@ filesystem tier never import it.
 
 Keys mirror the filesystem layout: ``sha256/<h[:2]>/<h>``.
 
-Backlog: RM-P0-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/3
+Backlog: RM-P0-CLOUD-03 -- astro-mine-cloud#3
 """
 
 from __future__ import annotations

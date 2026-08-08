@@ -12,7 +12,7 @@ central security concern (``cloud.md`` §9):
 - :mod:`.opa` is the RBAC/OPA authorization decision (submission / namespace access), mirrored
   by the shipped Rego policy.
 
-Backlog: RM-P1-CLOUD-05 -- https://github.com/astro-mine/astro-mine-cloud/issues/16
+Backlog: RM-P1-CLOUD-05 -- astro-mine-cloud#16
 """
 
 from __future__ import annotations

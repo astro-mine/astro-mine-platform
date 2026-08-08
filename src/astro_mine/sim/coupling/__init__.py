@@ -34,7 +34,7 @@ extension
 every sub-engine shares one body-fixed/inertial regime and the coupler is the same-body
 co-simulation mechanism.
 
-Backlog: RM-P0-SIM-04 -- https://github.com/astro-mine/astro-mine-sim/issues/4
+Backlog: RM-P0-SIM-04 -- astro-mine-sim#4
 """
 
 from __future__ import annotations

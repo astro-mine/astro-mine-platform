@@ -16,7 +16,7 @@ RFC**, never a Fleet-private extension); :func:`assert_open_commons` is the publ
 export-control gate Fleet applies before pushing to [Hub](https://github.com/astro-mine/docs)
 (defense in depth — Core's loader already rejects gated tags, ``fleet.md`` §9).
 
-Backlog: RM-P1-FLEET-10 -- https://github.com/astro-mine/astro-mine-fleet/issues/21
+Backlog: RM-P1-FLEET-10 -- astro-mine-fleet#21
 """
 
 from __future__ import annotations

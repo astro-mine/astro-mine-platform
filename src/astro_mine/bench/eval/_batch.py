@@ -14,7 +14,7 @@ over NATS/JetStream and a consumer triggers ingestion; in CI/local ``submit()`` 
 NATS consumer is deployment-only plumbing (bench.md §6). ``astro_mine.cloud`` is imported lazily
 (the ``[cloud]`` extra); Bench never imports Sim.
 
-Backlog: RM-P1-BENCH-11 — https://github.com/astro-mine/astro-mine-bench/issues/19
+Backlog: RM-P1-BENCH-11 — astro-mine-bench#19
 """
 
 from __future__ import annotations

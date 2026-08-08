@@ -16,7 +16,7 @@ staying in-process models nothing enforces:
   budget for a disruption, which is the failure it exists to absorb.
 - **``tenant``** puts the Job under Kueue; see :func:`~astro_mine.cloud.engines.base.queue_labels`.
 
-Backlog: RM-P1-CLOUD-01/02/03 -- https://github.com/astro-mine/astro-mine-cloud/issues/12
+Backlog: RM-P1-CLOUD-01/02/03 -- astro-mine-cloud#12
 """
 
 from __future__ import annotations

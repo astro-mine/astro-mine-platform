@@ -11,7 +11,7 @@ The comparator is pure data: the *live* GMAT run that produces the reference liv
 suite (``tests/test_oracle_gmat.py``, driven by ``gmat-run`` against a provisioned GMAT), and
 uses this same budget check — mirroring the Sim orbital regression (RM-P0-SIM-10).
 
-Backlog: RM-P0-LINK-05 -- https://github.com/astro-mine/astro-mine-link/issues/5
+Backlog: RM-P0-LINK-05 -- astro-mine-link#5
 """
 
 from __future__ import annotations

@@ -28,7 +28,7 @@ seam, so the module stays import-light and free of a private Hub schema (bench.m
 concrete :class:`~astro_mine.hub.client.HubClient` is imported lazily, behind the ``[leaderboard]``
 extra, so the base package imports without the Hub client.
 
-Backlog: bench#44 — https://github.com/astro-mine/astro-mine-bench/issues/44
+Backlog: bench#44 — astro-mine-bench#44
 """
 
 from __future__ import annotations

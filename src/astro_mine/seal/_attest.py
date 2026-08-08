@@ -17,7 +17,7 @@ wiring. Documents are content-addressed with the platform canonical form
 attaches the signature, provenance, and SBOM. It is **registry-agnostic** — it drives the
 :class:`AttestationStore` port below (``str``/``bytes`` only), never a concrete registry type, so
 Seal keeps its Core-only dependency and stays out of the registry/publish plane (seal.md §1, §2.1).
-[Hub](https://github.com/astro-mine/astro-mine-hub) adapts its OCI ``Registry`` to the port and
+Hub adapts its OCI ``Registry`` to the port and
 imports this function rather than reimplementing the orchestration; Bench, Fleet, and any other
 producer bind whatever store they have.
 

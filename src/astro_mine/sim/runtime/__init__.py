@@ -6,7 +6,7 @@ The scenario loader (:class:`Scenario` / :func:`load_scenario`), a SPICE-time
 :func:`run_episode` / :class:`Trace`, the canonical reproducibility artifact two same-seed
 runs reproduce byte-for-byte.
 
-Backlog: RM-P0-SIM-01 -- https://github.com/astro-mine/astro-mine-sim/issues/1
+Backlog: RM-P0-SIM-01 -- astro-mine-sim#1
 """
 
 from __future__ import annotations

@@ -6,7 +6,7 @@ can require ("verified-publisher + valid provenance"). Yank and deprecation are 
 governance actions** (hub.md §5, §9): each mutates the entry's facet, persists it through the
 catalog (so it holds on either backend), and writes an :class:`~astro_mine.hub.policy.AuditRecord`.
 
-Backlog: RM-P1-HUB-05 — https://github.com/astro-mine/astro-mine-hub/issues/5
+Backlog: RM-P1-HUB-05 — astro-mine-hub#5
 """
 
 from __future__ import annotations

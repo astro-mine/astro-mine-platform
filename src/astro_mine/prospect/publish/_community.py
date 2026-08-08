@@ -16,7 +16,7 @@ Two content-addressed community-contribution paths on top of the anchor publish 
 :func:`discover_priors` lists the community field/recipe artifacts a local registry holds — the
 "discover" half of publish/discover.
 
-Backlog: RM-P1-PROSPECT-11 — https://github.com/astro-mine/astro-mine-prospect/issues/21
+Backlog: RM-P1-PROSPECT-11 — astro-mine-prospect#21
 """
 
 from __future__ import annotations

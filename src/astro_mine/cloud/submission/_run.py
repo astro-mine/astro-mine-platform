@@ -7,7 +7,7 @@ outputs back into the store by content address, and record a
 per backend, so the same deterministic job yields identical output addresses and an
 identical run-context address regardless of backend -- the CLOUD-02 equivalence contract.
 
-Backlog: RM-P0-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/2
+Backlog: RM-P0-CLOUD-02 -- astro-mine-cloud#2
 """
 
 from __future__ import annotations

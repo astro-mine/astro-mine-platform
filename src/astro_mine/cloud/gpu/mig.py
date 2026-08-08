@@ -6,7 +6,7 @@ catalogue, maps a profile to its ``nvidia.com/mig-<profile>`` extended resource,
 requested slice against a card, and compiles the NVIDIA GPU Operator's time-slicing ConfigMap
 and Helm values (MIG strategy + DCGM exporter for GPU telemetry, ``cloud.md`` §10).
 
-Backlog: RM-P1-CLOUD-03 -- https://github.com/astro-mine/astro-mine-cloud/issues/14
+Backlog: RM-P1-CLOUD-03 -- astro-mine-cloud#14
 """
 
 from __future__ import annotations

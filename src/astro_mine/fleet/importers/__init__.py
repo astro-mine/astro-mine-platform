@@ -13,7 +13,7 @@ prefixed with ``uri_prefix`` so they resolve relative to wherever the document i
 The mirror direction — SADF → URDF/SDF/USD — lives in :mod:`astro_mine.fleet.exporters`, whose
 ``LOSS_CONTRACT`` documents what each direction preserves (fleet.md §11).
 
-Backlog: RM-P0-FLEET-02 -- https://github.com/astro-mine/astro-mine-fleet/issues/2
+Backlog: RM-P0-FLEET-02 -- astro-mine-fleet#2
 """
 
 from __future__ import annotations

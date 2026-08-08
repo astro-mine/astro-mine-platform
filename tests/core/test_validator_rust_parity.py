@@ -110,11 +110,7 @@ def test_every_rooted_document_family_is_registered(name: str) -> None:
 def test_every_example_document_is_in_the_rust_parity_corpus() -> None:
     # The examples are the shared parity fixture: whatever the Python loaders accept here, the Rust
     # validator must accept in `cargo test`. An example added on one side only is drift.
-    on_disk = {
-        p.relative_to(ROOT).as_posix()
-        for p in EXAMPLES.glob("*/*.yaml")
-        if p.parent.name != "downstream-consumer"
-    }
+    on_disk = {p.relative_to(ROOT).as_posix() for p in EXAMPLES.glob("*/*.yaml")}
     assert on_disk, "the example corpus is missing"
     assert on_disk <= _includes(LIB_RS), (
         "an example document is not in the Rust parity corpus: "

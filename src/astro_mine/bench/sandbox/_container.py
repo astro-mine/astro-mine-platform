@@ -24,7 +24,7 @@ evaluation runner image is signed and pinned"*), the same image the Cloud rollou
 Execution is injected (``execute``) so the argv this backend builds — which *is* the security
 posture — is unit-tested exactly as it will be issued, without a container runtime present.
 
-Backlog: bench#30 — https://github.com/astro-mine/astro-mine-bench/issues/30
+Backlog: bench#30 — astro-mine-bench#30
 """
 
 from __future__ import annotations

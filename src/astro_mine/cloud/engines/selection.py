@@ -5,7 +5,7 @@ tightly-coupled/stateful :class:`~astro_mine.cloud.submission.jobspec.JobSpec`
 (``distributed=True``) routes to **Ray**; a trivial one-shot routes to a plain **K8s Job**.
 Sweeps and workflows always compile to **Argo** (fan-out / DAG) and so are not routed here.
 
-Backlog: RM-P1-CLOUD-02 -- https://github.com/astro-mine/astro-mine-cloud/issues/13
+Backlog: RM-P1-CLOUD-02 -- astro-mine-cloud#13
 """
 
 from __future__ import annotations

@@ -23,7 +23,7 @@ consumer resolves the plan through Hub + the Core manifest and rebuilds a live
 :mod:`astro_mine.link` by name, exactly as Sim rebuilds a Worlds ``WorldProvider`` or a Prospect
 ``ResourceField`` (conventions.md §1.1; hub.md §3).
 
-Backlog: RM-P0-LINK-04 -- https://github.com/astro-mine/astro-mine-link/issues/25
+Backlog: RM-P0-LINK-04 -- astro-mine-link#25
 """
 
 from __future__ import annotations
