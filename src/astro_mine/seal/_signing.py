@@ -19,6 +19,7 @@ match the digest, an untrusted signer, or a bad signature all raise :class:`Sign
 from __future__ import annotations
 
 import base64
+from datetime import datetime
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
@@ -31,6 +32,7 @@ from astro_mine.core.registry import (
     SignatureScheme,
     Verifier,
 )
+from astro_mine.seal._trust import TrustRoot, same_key
 
 __all__ = [
     "SignatureError",
@@ -83,14 +85,12 @@ def _load_public(public_pem: bytes) -> ec.EllipticCurvePublicKey:
 
 
 def _keys_equal(a_pem: bytes, b_pem: bytes) -> bool:
-    """Compare two public keys by canonical DER (PEM whitespace-insensitive)."""
-    a = _load_public(a_pem).public_bytes(
-        serialization.Encoding.DER, serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-    b = _load_public(b_pem).public_bytes(
-        serialization.Encoding.DER, serialization.PublicFormat.SubjectPublicKeyInfo
-    )
-    return a == b
+    """Compare two public keys by canonical DER (PEM whitespace-insensitive).
+
+    Delegates to :func:`astro_mine.seal.same_key`, which the trust root uses too -- one definition
+    of key identity, for the reason conventions.md §9 gives for one signer implementation.
+    """
+    return same_key(a_pem, b_pem)
 
 
 def sign_digest(digest: str, private_pem: bytes) -> Signature:
@@ -116,14 +116,33 @@ def sign_digest(digest: str, private_pem: bytes) -> Signature:
 
 
 def verify_signature(
-    signature: Signature, digest: str, *, trusted_public_key_pem: bytes | None = None
+    signature: Signature,
+    digest: str,
+    *,
+    trusted_public_key_pem: bytes | None = None,
+    trust_root: TrustRoot | None = None,
+    kind: str | None = None,
+    at: datetime | None = None,
 ) -> None:
     """Verify ``signature`` covers ``digest`` — raise :class:`SignatureError` on any failure.
 
     Checks, in order (fail closed): the scheme is cosign; the envelope is complete; the signed
-    ``payload`` equals the artifact ``digest`` (the signature is *for this artifact*); if
-    ``trusted_public_key_pem`` is given, the signer key equals it (pinned trust); and the ECDSA
-    signature verifies. Returns ``None`` only when every check passes.
+    ``payload`` equals the artifact ``digest`` (the signature is *for this artifact*); the signer is
+    one this caller trusts; and the ECDSA signature verifies. Returns ``None`` only when every check
+    passes.
+
+    **Who counts as trusted** is a :class:`~astro_mine.seal.TrustRoot` — a *set* of signers with
+    validity windows, so a rotation is an overlap rather than a flag day (conventions.md §9).
+    ``trusted_public_key_pem`` remains as the one-key case and is exactly equivalent to a root of
+    one; passing both is a contradiction and refused rather than silently resolved.
+
+    With neither, a signature must still be present, intact and bound to ``digest`` — but *any* key
+    satisfies it, which proves integrity and self-consistency, **not** that a trusted party signed.
+    A gate that decides trust (a Hub pull, a Bench submission, a Guard load) MUST pass a root.
+
+    ``kind`` selects among per-kind-scoped keys; ``at`` fixes the moment validity is judged,
+    which is
+    what makes a rotation testable rather than something you wait for.
     """
     if signature.scheme != SignatureScheme.SIGSTORE_COSIGN:
         raise SignatureError(f"not a cosign signature (scheme={signature.scheme})")
@@ -132,9 +151,23 @@ def verify_signature(
     if signature.payload != digest:
         raise SignatureError("signature payload does not match the artifact digest")
 
+    if trust_root is not None and trusted_public_key_pem is not None:
+        raise SignatureError(
+            "pass either trust_root or trusted_public_key_pem, not both — two answers to "
+            "'whose signature counts' is not a configuration, it is a bug"
+        )
+
     signer_pem = signature.certificate.encode()
-    if trusted_public_key_pem is not None and not _keys_equal(trusted_public_key_pem, signer_pem):
-        raise SignatureError("signing key is not the trusted key")
+    if trusted_public_key_pem is not None:
+        # Load it first, and keep the historical wording. A key the operator configured but that
+        # will not parse is a *malformed key*, not an untrusted signer -- reporting it as the latter
+        # sends the reader looking for an attacker instead of at their own configuration. The trust
+        # root cannot make this distinction on its own, because a set has no single "the" key.
+        _load_public(trusted_public_key_pem)
+        if not _keys_equal(trusted_public_key_pem, signer_pem):
+            raise SignatureError("signing key is not the trusted key")
+    elif trust_root is not None and not trust_root.accepts(signer_pem, kind=kind, at=at):
+        raise SignatureError(trust_root.why_rejected(signer_pem, kind=kind, at=at))
 
     public_key = _load_public(signer_pem)
     try:

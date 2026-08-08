@@ -30,6 +30,7 @@ from astro_mine.seal import (
     AttestationSet,
     AttestationStore,
     SupplyChainError,
+    TrustRoot,
 )
 from astro_mine.seal import attest as _seal_attest
 from astro_mine.seal import verify as _seal_verify
@@ -127,13 +128,16 @@ def verify(
     subject: str,
     *,
     trusted_public_key_pem: bytes | None = None,
+    trust_root: TrustRoot | None = None,
+    kind: str | None = None,
     require: Sequence[str] = DEFAULT_REQUIRED,
 ) -> None:
     """Re-verify ``subject``'s integrity and required attestations — raise on any failure.
 
     The same check at admission and at pull (hub.md §2.3, §9), enforced by Seal: the artifact's own
     bytes hash to their addresses; *every* attached cosign signature is intact and verifies over
-    ``subject`` (pinned to ``trusted_public_key_pem`` when given); SLSA provenance is present,
+    ``subject`` (accepted by ``trust_root``, or ``trusted_public_key_pem`` for the one-key
+    case, when given); SLSA provenance is present,
     intact, and well-shaped; an SBOM is present, intact, and CycloneDX.
 
     A ``require`` token Seal does not know is **refused**, not ignored — a typo can never quietly
@@ -145,5 +149,7 @@ def verify(
         store,
         subject,
         trusted_public_key_pem=trusted_public_key_pem,
+        trust_root=trust_root,
+        kind=kind,
         require=require,
     )

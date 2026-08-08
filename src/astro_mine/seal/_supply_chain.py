@@ -35,6 +35,7 @@ from astro_mine.seal._attest import (
     AttestationStore,
 )
 from astro_mine.seal._signing import verify_signature
+from astro_mine.seal._trust import TrustRoot
 
 __all__ = [
     "DEFAULT_REQUIRED",
@@ -113,7 +114,11 @@ def _document(store: AttestationStore, digest: str, label: str) -> Mapping[str, 
 
 
 def _check_signatures(
-    store: AttestationStore, subject: str, trusted_public_key_pem: bytes | None
+    store: AttestationStore,
+    subject: str,
+    trusted_public_key_pem: bytes | None,
+    trust_root: TrustRoot | None = None,
+    kind: str | None = None,
 ) -> None:
     """*Every* attached signature must be intact and verify over ``subject`` — else refuse.
 
@@ -127,7 +132,13 @@ def _check_signatures(
         payload = _payload(store, digest, "signature")
         try:
             signature = Signature.model_validate_json(payload)
-            verify_signature(signature, subject, trusted_public_key_pem=trusted_public_key_pem)
+            verify_signature(
+                signature,
+                subject,
+                trusted_public_key_pem=trusted_public_key_pem,
+                trust_root=trust_root,
+                kind=kind,
+            )
         except Exception as exc:  # SignatureError, a malformed envelope, an untrusted key, ...
             raise SupplyChainError(f"signature verification failed: {exc}") from exc
 
@@ -157,6 +168,8 @@ def verify(
     subject: str,
     *,
     trusted_public_key_pem: bytes | None = None,
+    trust_root: TrustRoot | None = None,
+    kind: str | None = None,
     require: Sequence[str] = DEFAULT_REQUIRED,
 ) -> None:
     """Re-verify ``subject``'s integrity and required attestations — **raise on any failure**.
@@ -169,10 +182,14 @@ def verify(
     ``require`` is the required-evidence policy — :data:`DEFAULT_REQUIRED` by default. A token it
     does not know is **refused**, not ignored, so a typo can never quietly disable a check.
 
-    ``trusted_public_key_pem`` pins the signer. Omit it and a signature must still be present,
-    intact, and bound to ``subject`` — but *any* key satisfies it, which proves integrity and
-    self-consistency, **not** that a trusted party signed. A gate that decides trust (a Hub pull, a
-    Bench submission, a Guard load) MUST pass the key.
+    ``trust_root`` decides *whose* signature counts — a :class:`~astro_mine.seal.TrustRoot` is a
+    **set** of signers with validity windows, so a rotation is an overlap rather than a flag day
+    (conventions.md §9). ``trusted_public_key_pem`` is the one-key case: a root of one.
+    ``kind`` selects among per-kind-scoped keys.
+
+    Omit both and a signature must still be present, intact, and bound to ``subject`` — but *any*
+    key satisfies it, which proves integrity and self-consistency, **not** that a trusted party
+    signed. A gate that decides trust (a Hub pull, a Bench submission, a Guard load) MUST pass one.
 
     Returns ``None`` only when every required check passes; otherwise raises
     :class:`SupplyChainError` — the single outcome for a tampered artifact, a tampered or missing
@@ -188,7 +205,7 @@ def verify(
         raise SupplyChainError(f"artifact integrity check failed: {exc}") from exc
 
     if "signature" in require:
-        _check_signatures(store, subject, trusted_public_key_pem)
+        _check_signatures(store, subject, trusted_public_key_pem, trust_root, kind)
     if "slsa" in require:
         _check_documents(
             store,
