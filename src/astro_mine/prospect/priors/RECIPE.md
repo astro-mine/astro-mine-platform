@@ -135,3 +135,14 @@ prior = load_prior("shackleton_water_ice_pds_v1")   # fits from the materialized
 
 Like the world hash, the ingested-prior digest is **toolchain-reproducible** (pinned GDAL/PROJ/
 numpy); consumers reproduce it by **pull-by-digest** from Hub, not by re-ingesting the rasters.
+
+> **There is currently one copy of this artifact.** `shackleton_water_ice_pds_v1:1.0.0`
+> (bundle `sha256:d44dd824…`) exists in the workspace store and nowhere else — `ghcr.io/astro-mine`
+> holds the nine anchor packages and this is not one of them. So "pull-by-digest from Hub" is advice
+> a reader outside this workspace cannot yet follow, and the re-ingest path above needs the raw
+> Diviner/M3/LEND products, which no repository carries.
+>
+> This is the same exposure that made the 2026-08-08 prune of `excavation-gns:0.2.0`–`0.5.0`
+> unrecoverable. It is recorded in `registry-inventory.json` and tracked by
+> [astro-mine-platform#41](https://github.com/astro-mine/astro-mine-platform/issues/41), which
+> mirrors this artifact to `ghcr.io/astro-mine`. Until that lands, do not prune it.

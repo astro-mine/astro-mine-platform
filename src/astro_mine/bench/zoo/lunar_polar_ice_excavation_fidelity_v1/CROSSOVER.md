@@ -78,8 +78,12 @@ publishing a curve.
 > Do **not** try to reconstruct it with `publish_surrogate.py --version 0.4.0`. That flag is a
 > label, not a checkout. The tier's error budget is calibrated from whatever the code says today,
 > and that budget is precisely what separates `0.4.0` from `0.6.0` (see the next note) — so the
-> command would publish *today's* model under the measured tier's name, into a slot whose emptiness
-> means the script's own republish guard cannot object to it.
+> command would publish *today's* model under the measured tier's name.
+>
+> That is now **refused** rather than only discouraged. `registry-inventory.json` records this
+> digest outside the registry, so the emptiness of the slot no longer silences the guard: the
+> publish fails unless the operator states `--expect-digest` *and* the rebuild reproduces it, which
+> it will not (astro-mine-platform#42).
 >
 > **To re-measure the curve, run against `0.6.0`**, which is what `measure_fidelity_crossover.py`
 > now defaults to. The next note is the argument for why that is sound rather than a compromise:

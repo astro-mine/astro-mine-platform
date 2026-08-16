@@ -95,6 +95,62 @@ The generic Hub client is *not* hardwired to this key — it takes the trust anc
 `anchor-signing.pub` is org/deployment config that lives here (and travels with the anchor scenario's
 provenance), not a constant baked into the library.
 
+## Mirroring the two artifacts that are not part of the nine
+
+The nine above are on `ghcr.io/astro-mine`. Two other pieces of real, pinned content are **not**, and
+the workspace store is their only copy (`registry-inventory.json`, `astro-mine-platform#41`):
+
+| Reference | Manifest digest | Pinned by |
+|---|---|---|
+| `excavation-gns:0.6.0` | `sha256:b3c5846b…` | the fidelity-crossover zoo entry |
+| `shackleton_water_ice_pds_v1:1.0.0` | `sha256:182595d5…` | `prospect/priors/RECIPE.md` |
+
+**Copy the bytes; do not re-publish from source.** Re-publishing re-stamps the manifest and changes
+the digest — which is how the anchor pins drifted on the last re-pin, and is why
+`astro_mine.bench.content` mirrors rather than rebuilds. Both artifacts are pinned *by digest*, so a
+mirror that changes the digest would not be a mirror. `oras cp` is a byte-exact copy and preserves
+it; the OCI manifest does not contain the repository name, so the digest survives even under a
+different name.
+
+Both carry three attestations each (signature, SLSA provenance, CycloneDX SBOM) attached through OCI
+Referrers. `--recursive` is **not optional** — a mirror without them fails the fail-closed verify at
+pull, which is the same as not having mirrored it.
+
+```bash
+# oras is not installed by default on this workstation
+curl -sLO https://github.com/oras-project/oras/releases/download/v1.2.3/oras_1.2.3_linux_amd64.tar.gz
+mkdir -p ~/.local/bin && tar -xzf oras_1.2.3_linux_amd64.tar.gz -C ~/.local/bin oras
+
+export STORE=/mnt/d/MyProjects/AstroMine/files/hub-registry
+echo "$GITHUB_TOKEN" | oras login ghcr.io --username "$USER" --password-stdin
+
+# The surrogate tier. `excavation-gns` already conforms to conventions.md §13, so the name carries over.
+oras cp --recursive --from-oci-layout "$STORE:excavation-gns:0.6.0" \
+        ghcr.io/astro-mine/excavation-gns:0.6.0
+
+# The PDS-conditioned resource field. Published under its **conforming** name (§13: no underscores,
+# no version in the name), so the artifact-name sweep does not have to move it a second time.
+oras cp --recursive --from-oci-layout "$STORE:shackleton_water_ice_pds_v1:1.0.0" \
+        ghcr.io/astro-mine/shackleton-water-ice-pds:1.0.0
+```
+
+Then confirm each resolves from the remote and still verifies, and that the digest did not move:
+
+```bash
+oras manifest fetch --descriptor ghcr.io/astro-mine/excavation-gns:0.6.0
+# expect sha256:b3c5846b5df7d241ea9df1ddf97729c138576c06709577a609aea37cfc923f18
+oras manifest fetch --descriptor ghcr.io/astro-mine/shackleton-water-ice-pds:1.0.0
+# expect sha256:182595d53cb60a0ff78b79cb0ade5e75e166007f9be24145d223e9adbbdece9b
+
+astro-mine hub verify --registry ghcr.io/astro-mine excavation-gns:0.6.0 \
+    --trusted-key anchor-signing.pub
+```
+
+Finally, record the mirror: add `"ghcr"` to each entry's `mirrored_to` in `registry-inventory.json`
+and remove it from `SINGLE_COPY` in `tests/hub/test_registry_inventory.py`. That test pins the set
+exactly, so it fails until both moves are made together — which is what stops the mirror being
+claimed before it happened.
+
 ## Before the public flip
 
 During private incubation the org's GHCR packages are **private**: a pull still needs a token, so
