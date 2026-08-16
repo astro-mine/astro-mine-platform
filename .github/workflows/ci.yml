@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   pull_request:
+  # The `sim-e2e` job below gates on `github.event_name == 'workflow_dispatch'`, and this trigger
+  # was missing -- so the condition was never true, the job skipped on every run since the
+  # consolidation, and the `-m sim` suites in tests/guard and tests/mind ran nowhere at all.
+  # A job that can only be triggered manually still needs the manual trigger to exist.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -133,6 +138,12 @@ jobs:
   # `cluster-e2e.yml` (nightly + on a `cluster-e2e` label) and `scale-bench.yml` (weekly), rehomed
   # before those repositories were archived (RM-DIST-05) — so "trigger manually" now names
   # something that exists.
+  #
+  # `sim-e2e` was the one lane carried over, and it was carried over into a state where it could
+  # not execute: the `if` below tests for a `workflow_dispatch` event that the `on:` block did not
+  # declare, so the condition was never true and the job reported as a skip on every run. Skips
+  # read as coverage. The trigger is declared now; the ten tests it selects are the real-Sim
+  # integration suites in tests/mind and tests/guard.
   sim-e2e:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
