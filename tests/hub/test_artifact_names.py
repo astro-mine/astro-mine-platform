@@ -17,12 +17,21 @@ makes it work in both directions:
 
 * a **new** non-conforming name fails :func:`test_no_new_non_conforming_names`, so new artifacts are
   born conformant, which is the property §13 actually cares about;
-* the **existing nine** are recorded rather than broken, so the published set keeps resolving;
+* the **existing ten** are recorded rather than broken, so the published set keeps resolving;
 * when the flip-time sweep runs, entries leave this set as they are migrated, and the day it empties
   the rule can move to ``HubClient.publish`` and this module becomes a gate.
 
 A list that could only grow would rot into a permanent exemption. Pinning it exactly means the
 migration cannot quietly stall, and a tenth legacy name cannot be added without saying so here.
+
+**Ten, not nine — and the tenth was invisible to this module until now.** The set said nine because
+discovery only looked at two places: zoo pins and shipped Fleet asset ids.
+``shackleton_water_ice_pds_v1`` is published, non-conforming, and in neither — it is a *prior
+recipe* name, referenced from ``RECIPE.md`` and registered through
+:func:`astro_mine.prospect.priors.register_recipe`, so nothing here could see it and the "exhaustive
+and exact" claim above was false. :func:`_prospect_recipe_names` is the third source, and it closes
+that hole: a prior recipe is a publishable artifact name exactly the way a SADF ``identity.id`` is.
+Found while building the registry inventory in astro-mine-platform#41.
 """
 
 from __future__ import annotations
@@ -39,14 +48,16 @@ from astro_mine.hub.registry import (
     is_valid_artifact_name,
     validate_artifact_name,
 )
+from astro_mine.prospect.priors import list_recipes
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
 
 #: Every published artifact name that predates §13, and the name it becomes at the flip.
 #:
-#: Nine, which is exactly the count the issue that opened this named (astro-mine-platform#23). The
-#: tenth pinned artifact, ``excavation-gns``, already conformed and is deliberately absent — it is
-#: the proof that the rule describes something achievable rather than an aspiration.
+#: Ten. The issue that opened this counted nine (astro-mine-platform#23), against a discovery that
+#: could not see prior recipes; ``shackleton_water_ice_pds_v1`` is the tenth. ``excavation-gns`` is
+#: pinned and deliberately absent — it already conformed, and is the proof that the rule describes
+#: something achievable rather than an aspiration.
 LEGACY_NAMES = {
     "astro-mine.fleet.excavator": "excavator",
     "astro-mine.fleet.hauler": "hauler",
@@ -56,6 +67,7 @@ LEGACY_NAMES = {
     "astro-mine.fleet.relay-orbiter": "relay-orbiter",
     "astro-mine.link.lunar-polar-relay-dsn": "lunar-polar-relay-dsn",
     "shackleton-de-gerlache-v1": "shackleton-de-gerlache",
+    "shackleton_water_ice_pds_v1": "shackleton-water-ice-pds",
     "shackleton_water_ice_v1": "shackleton-water-ice",
 }
 
@@ -66,6 +78,18 @@ def _pinned_names() -> set[str]:
     for pins in (REPO / "src" / "astro_mine" / "bench" / "zoo").rglob("pins.json"):
         names |= set(json.loads(pins.read_text(encoding="utf-8")))
     return names
+
+
+def _prospect_recipe_names() -> set[str]:
+    """Every registered prior recipe — each one a registry name when the field is published.
+
+    The third discovery source, and the one whose absence let ``shackleton_water_ice_pds_v1`` stay
+    invisible. A prior is published under its recipe name (``prospect publish --name …``,
+    ``priors/RECIPE.md``), so the registry is authoritative here in the way ``pins.json`` is for the
+    zoo and the SADF library is for Fleet. Reading the registry rather than a hand-kept list is what
+    makes a *new* prior fail :func:`test_no_new_non_conforming_names` on the day it is added.
+    """
+    return set(list_recipes())
 
 
 def _shipped_asset_ids() -> set[str]:
@@ -162,7 +186,7 @@ def test_no_new_non_conforming_names() -> None:
     This is what makes the rule enforceable before the migration can run. Adding a new artifact with
     a dotted, snaked or version-suffixed name fails here, naming the file and the fix.
     """
-    observed = _pinned_names() | _shipped_asset_ids()
+    observed = _pinned_names() | _shipped_asset_ids() | _prospect_recipe_names()
     assert observed, "found no names to check — the discovery above has broken, not the content"
 
     offenders = {n for n in observed if not is_valid_artifact_name(n) and n not in LEGACY_NAMES}
@@ -180,7 +204,7 @@ def test_the_legacy_set_is_exact_and_still_present() -> None:
     acquired an exemption. When the flip-time sweep runs, entries come out of `LEGACY_NAMES` in the
     same change that renames them, and this test is what forces the two to move together.
     """
-    observed = _pinned_names() | _shipped_asset_ids()
+    observed = _pinned_names() | _shipped_asset_ids() | _prospect_recipe_names()
     stale = set(LEGACY_NAMES) - observed
     assert stale == set(), (
         f"recorded as legacy but no longer used anywhere: {sorted(stale)}. If these were migrated, "
