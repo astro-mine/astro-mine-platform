@@ -1,0 +1,202 @@
+{
+  "$schema_note": "The committed record of what this tree has published, and where else it exists. See registry-inventory.md for what each field means and why this file is not derived from a registry.",
+  "generated_against": "files/hub-registry (the workspace tier-1 store, conventions: CLAUDE.md 'Local files')",
+  "mirrors": {
+    "ghcr": "ghcr.io/astro-mine"
+  },
+  "artifacts": {
+    "astro-mine.fleet.excavator:0.2.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:d576d7844625b25baec6496a45ad0a18a4da945c2cb0a5ebfa5c957d62fd5d35",
+      "bundle_digest": "sha256:292cbd18dac85dba46086e18365b752706e6776dcee2cca4cf414bdf0c779091",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json"
+      ]
+    },
+    "astro-mine.fleet.hauler:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:5e0c5b6d075d81c06507f283f390b74afd92953ec106d67656e00c31f7c63aab",
+      "bundle_digest": "sha256:f63e6e771ebb45de58e6f3d3a225a495232aa3527dd92448b0faccc201b9e216",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json"]
+    },
+    "astro-mine.fleet.isru-plant:0.2.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:3b13364714c41693c4523c0bed6303a77d3d6348a3b8a549561d2addb57fa7eb",
+      "bundle_digest": "sha256:394ff6a0f518164ca4c04ef4c74ad0a2bfc66a8d24e4adbc866f1a324367a7ca",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json"]
+    },
+    "astro-mine.fleet.lander:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:f0270170c2cac90953392b5cd70d79a2d7abf3799454d29f46fa6a4cea4bdc90",
+      "bundle_digest": "sha256:ed048316f78323c17cec5dbc323712b938ac34a899b0263e6bb4f63101adf286",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json"]
+    },
+    "astro-mine.fleet.prospecting-rover:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:74db543ff304a2fe4cef9c421873a3375243019acd0314f0ef9aae6e6fb04629",
+      "bundle_digest": "sha256:9b82aa8911513faf0b7881e89c21c7d7a89224799f0a64f65fb8bd774639b662",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json"
+      ]
+    },
+    "astro-mine.fleet.relay-orbiter:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:47d74f0e851826718a5064d101983ea187d40d9d8ac51488c023755c29141480",
+      "bundle_digest": "sha256:1260f76fe21ea308ae30a4a5b8124883586e506a168ee84fa9f9728999c2c2a5",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json"]
+    },
+    "astro-mine.link.lunar-polar-relay-dsn:0.3.0": {
+      "disposition": "published",
+      "producer": "link",
+      "manifest_digest": "sha256:0a0eb64e4a0a25fe9f767209f1e8baca4fb4df4c4b1313c0b5f78a5bbf27f9ed",
+      "bundle_digest": "sha256:97a2a80517b517bbfb85fd3c4a5eed96520925fc7a19b0e0acd1e6e20062429d",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json"]
+    },
+    "shackleton-de-gerlache-v1:0.4.0": {
+      "disposition": "published",
+      "producer": "worlds",
+      "manifest_digest": "sha256:fd14f5f6e618a9c01c36028e642e6efdbee449a5e96bac832047654913a4fd2c",
+      "bundle_digest": "sha256:dcc3b0f8ee2f14198863c80c9ad3fb613d3ab6a34e29b6b524fa44a1078d6ac8",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ]
+    },
+    "shackleton_water_ice_v1:1.0.0": {
+      "disposition": "published",
+      "producer": "prospect",
+      "manifest_digest": "sha256:1019c47f1d3258413ce8b5a0090d0ff2dacfc984dec269f2d86c86fb81aa81ca",
+      "bundle_digest": "sha256:d91e6abf83a82c0660ad77c8fad9689d9ac5f9a50525f8ccca02388a1d843f4e",
+      "mirrored_to": ["ghcr"],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ]
+    },
+
+    "excavation-gns:0.6.0": {
+      "disposition": "published",
+      "producer": "surrogate",
+      "manifest_digest": "sha256:b3c5846b5df7d241ea9df1ddf97729c138576c06709577a609aea37cfc923f18",
+      "bundle_digest": "sha256:bd1cd3936e2ad3458aecbdee57b7a49d1653cb544cd142fd319bc30d28f36469",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/RESULTS.md",
+        "scripts/bench/measure_fidelity_crossover.py"
+      ],
+      "note": "UNMIRRORED and pinned. The zoo's fidelity-crossover entry resolves this tier by digest and the workspace store is its only copy. astro-mine-platform#41 tracks mirroring it to ghcr.io/astro-mine."
+    },
+    "shackleton_water_ice_pds_v1:1.0.0": {
+      "disposition": "published",
+      "producer": "prospect",
+      "manifest_digest": "sha256:182595d53cb60a0ff78b79cb0ade5e75e166007f9be24145d223e9adbbdece9b",
+      "bundle_digest": "sha256:d44dd8244e0bc1a4d9ebe2e0dc371e5ed1dbf84f0e570c04d1924d8cd8c98789",
+      "mirrored_to": [],
+      "pinned_by": ["src/astro_mine/prospect/priors/RECIPE.md"],
+      "note": "UNMIRRORED and pinned. RECIPE.md tells a reader to reproduce this prior by pull-by-digest from Hub rather than by re-ingesting the PDS rasters, and the workspace store is its only copy. Rebuilding it needs the raw Diviner/M3/LEND products, which are not in any repository. astro-mine-platform#41 tracks mirroring it."
+    },
+
+    "excavation-gns:0.2.0": {
+      "disposition": "lost",
+      "producer": "surrogate",
+      "manifest_digest": null,
+      "bundle_digest": null,
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Pruned from the workspace store on 2026-08-08, tags and blobs. No digest was recorded anywhere before the prune, so there is nothing left to verify a rebuild against. Republishing this name:version is refused outright."
+    },
+    "excavation-gns:0.3.0": {
+      "disposition": "lost",
+      "producer": "surrogate",
+      "manifest_digest": null,
+      "bundle_digest": null,
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Pruned 2026-08-08. No recorded digest; see excavation-gns:0.2.0."
+    },
+    "excavation-gns:0.4.0": {
+      "disposition": "lost",
+      "producer": "surrogate",
+      "manifest_digest": null,
+      "bundle_digest": "sha256:39b4ae65f026e9b4897a9ccab8d638f7595f0286bc3b0cef4e24d31740068dc5",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/CROSSOVER.md",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/crossover.json"
+      ],
+      "note": "The tier the published cost curve was measured against. Pruned 2026-08-08 and unrecoverable: --version is a label rather than a checkout, so a rebuild would produce a different bundle under the same name. The digest survives here and in crossover.json, which is what lets the guard refuse that rebuild instead of minting a counterfeit of it."
+    },
+    "excavation-gns:0.5.0": {
+      "disposition": "lost",
+      "producer": "surrogate",
+      "manifest_digest": null,
+      "bundle_digest": null,
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Pruned 2026-08-08. No recorded digest; see excavation-gns:0.2.0."
+    },
+
+    "example-lunar-ice:0.1.0": {
+      "disposition": "ephemeral",
+      "producer": "studio",
+      "manifest_digest": "sha256:ad3a25118fa49c1999664fc11e3ff1ef2461c648465f1ebf544eddb99e6fe025",
+      "bundle_digest": "sha256:c90c5fbd052b605980a6ee284ba5f5eaf551fa1f0125efc04a37518d5e715852",
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Studio's seeded demo campaign (studio/seed.py SEED_NAME). Regenerated by re-running the seeder; nothing resolves it by digest."
+    },
+    "imported.mini_rover:0.1.0": {
+      "disposition": "ephemeral",
+      "producer": "fleet",
+      "manifest_digest": "sha256:084974ec76fec1b20749e2929add224a893e7394ff2084bf03fa11c556232304",
+      "bundle_digest": "sha256:68a64b078f3c20d0ce2c42b3880560a053db6856dd6367a93e792a26f6fb5c19",
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "URDF-import smoke fixture. Nothing in the tree references it."
+    },
+    "mappo-rover:0.1.0": {
+      "disposition": "ephemeral",
+      "producer": "learn",
+      "manifest_digest": "sha256:5dd6a213a08f86ddf95a78978f259d887de157b531ead82ba37fb41992e3de04",
+      "bundle_digest": null,
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Hand-made policy fixture; carries no provenance block at all, which is itself the tell. Nothing in the tree references it."
+    },
+    "my-solver:0.1.0": {
+      "disposition": "ephemeral",
+      "producer": "allocate",
+      "manifest_digest": "sha256:820972de1c018f12b7c962f0608b9d1a8d80d8e37d340fc90cd7f8bfb20947ce",
+      "bundle_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Documentation example for a third-party solver backend. Its bundle digest is a literal placeholder, so it could not be a real artifact even by accident."
+    },
+    "wave19-probe:1.0.0": {
+      "disposition": "ephemeral",
+      "producer": "hub",
+      "manifest_digest": "sha256:9ab3c8c71d75800b9786366862e21bd3970311e0d3c0fafdd8c9c954b906af04",
+      "bundle_digest": "sha256:e6c1fcc96d3074f54358f3ff6f0f52913a1506c3e981de4760176c7c92b7f71b",
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Wave-19 publish-path probe. Nothing in the tree references it."
+    }
+  }
+}
