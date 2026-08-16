@@ -35,7 +35,7 @@ its own words. The claim half is `measure_surrogate_speedup.py`'s job.
     python scripts/measure_fidelity_crossover.py \
         --registry /path/to/hub-registry \
         --metakernel /path/to/metakernel.tm \
-        --surrogate excavation-gns:0.4.0
+        --surrogate excavation-gns:0.6.0
 """
 
 from __future__ import annotations
@@ -300,7 +300,14 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--registry", required=True, type=Path)
     parser.add_argument("--metakernel", required=True, type=Path)
-    parser.add_argument("--surrogate", default="excavation-gns:0.4.0")
+    # `0.6.0`, not the `0.4.0` the published curve was measured against: the earlier tiers were
+    # pruned from the workspace registry -- tags and blobs both -- so a default naming one resolves
+    # nowhere. Those bytes are unrecoverable, and cannot be rebuilt either: `--version` on
+    # publish_surrogate.py is a label, not a checkout. Re-measuring against 0.6.0 is sound rather
+    # than a compromise, because cost follows the served graph's structure and the two revisions
+    # share it. CROSSOVER.md carries the full argument and keeps the 0.4.0 digest as the record of
+    # what the published numbers were actually measured against.
+    parser.add_argument("--surrogate", default="excavation-gns:0.6.0")
     parser.add_argument("--pub", type=Path, help="trusted public-key PEM (fail-closed load)")
     parser.add_argument("--particles", type=int, nargs="+", default=list(DEFAULT_PARTICLES))
     parser.add_argument("--reps", type=int, default=5, help="timed steps per bed size (median)")

@@ -67,6 +67,24 @@ publishing a curve.
 - **Tier** — `excavation-gns:0.4.0`, bundle `sha256:39b4ae65f026e9b4897a9ccab8d638f7595f0286bc3b0cef4e24d31740068dc5`
 - **Host** — python `3.12.3`, `Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39`
 
+> **The measured tier is gone, and cannot be rebuilt.** `excavation-gns:0.2.0`–`0.5.0` were pruned
+> from the workspace registry on 2026-08-08, keeping only `0.6.0` — tags and blobs both, so
+> `sha256:39b4ae65…` now resolves nowhere. `excavation-gns` was never published to
+> `ghcr.io/astro-mine` either; that registry holds the nine anchor packages and this was not one of
+> them. There is no second copy. The digest above stays exactly as written: it is the identity of
+> what these numbers were measured against, and relabelling it would make the record wrong as well
+> as unreproducible.
+>
+> Do **not** try to reconstruct it with `publish_surrogate.py --version 0.4.0`. That flag is a
+> label, not a checkout. The tier's error budget is calibrated from whatever the code says today,
+> and that budget is precisely what separates `0.4.0` from `0.6.0` (see the next note) — so the
+> command would publish *today's* model under the measured tier's name, into a slot whose emptiness
+> means the script's own republish guard cannot object to it.
+>
+> **To re-measure the curve, run against `0.6.0`**, which is what `measure_fidelity_crossover.py`
+> now defaults to. The next note is the argument for why that is sound rather than a compromise:
+> cost is a property of the served graph's structure, and the two revisions share it.
+
 > **On the tier version.** The *claim* half (`RESULTS.md`) is measured against `0.6.0`; this cost
 > curve is pinned at `0.4.0`, the artifact it was actually measured against. The difference between
 > those revisions is the declared **error budget** and its **horizon** (astro-mine-surrogate#21/#23/#27) —
