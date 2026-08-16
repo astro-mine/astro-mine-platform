@@ -5,6 +5,27 @@ The anchor Bench scenario (**"Lunar Polar Water-Ice Prospecting v1"**), traceabl
 This file records *how every pinned value was produced*, so the scenario is reproducible and each
 provisional digest can be replaced by a real published one without guesswork.
 
+## Spec 0.9.0 — the held-out seeds are rotated and leave the repository
+
+`0.9.0` carries a new `seeds.heldout_commit`. The seeds it commits to are **not** in this repository:
+they moved to the private [`astro-mine/embargo`](https://github.com/astro-mine/embargo), reached
+through `$ASTRO_MINE_BENCH_EMBARGO_ROOT` (astro-mine-platform#37).
+
+The old set was committed here in plaintext, deliberately, for CI verifiability, on the standing
+assumption that this repository was private. The public flip retires that assumption for **every
+commit**, not just `HEAD` — so rotating in place would have republished the same seeds one commit
+later. Rotation was necessary and moving the store was what made it sufficient.
+
+The retired set was also `900001`–`900012`: sequential, and guessable from the public set's
+`1001`–`1005` without reading the file at all. Its replacement is drawn from `secrets`.
+
+**Results scored against `0.8.0` remain valid for `0.8.0`.** They are not comparable to `0.9.0`
+results and were never meant to be — a new commitment is a new scenario version precisely so the two
+cannot be silently pooled.
+
+`0.9.0` also re-pins every content reference to its conforming artifact name (`conventions.md` §13),
+recorded below.
+
 ## Spec 0.8.0 — the plant declares the tank it fills
 
 `0.8.0` re-pins **one** content reference: `astro-mine.fleet.isru-plant` to `0.2.0`

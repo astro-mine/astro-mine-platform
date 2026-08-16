@@ -3,8 +3,19 @@
 Asserts the anchor "Lunar Polar Water-Ice Prospecting v1" loads, resolves end-to-end and
 deterministically, pins the expected content/seeds/metrics, that every content pin is a real Hub
 digest distinct from the provisional derivation of its ``pins.json`` descriptor (no silent drift),
-and that the held-out seeds are embargoed outside the packaged tree yet bound by the spec's
+and that the held-out seeds are absent from this tree entirely while remaining bound by the spec's
 ``heldout_commit``.
+
+**The seeds moved out of this repository** (astro-mine-platform#37). They were committed here in
+plaintext on the standing assumption that the repository was private, and the public flip retires
+that assumption for every commit rather than just ``HEAD`` — so rotating in place would have
+republished the problem one commit later. They now live in the private ``astro-mine/embargo``,
+reached through ``$ASTRO_MINE_BENCH_EMBARGO_ROOT``.
+
+That splits one assertion into two of different character, which is the honest shape rather than a
+concession: **absence** is unconditional and needs no secret, while the **commitment** can only be
+checked where the store is reachable. The second is guarded so that an unreachable store is loud and
+a *wrong* store still fails.
 """
 
 from __future__ import annotations
@@ -16,6 +27,7 @@ from pathlib import Path
 
 import pytest
 
+from astro_mine.bench.leaderboard import resolve_embargo_root
 from astro_mine.bench.scenario import ScenarioSpec
 from astro_mine.bench.scenario._hash import content_hash
 from astro_mine.bench.zoo import (
@@ -30,7 +42,15 @@ from astro_mine.bench.zoo._provisional import provisional_pin_hash
 from astro_mine.core import SCHEMA_DIGEST
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-_HELDOUT = _REPO_ROOT / "embargo" / ANCHOR_SCENARIO_ID / "heldout_seeds.json"
+#: The sealed set is no longer in this repository at all (astro-mine-platform#37) — it lives in the
+#: private ``astro-mine/embargo``, reached through ``$ASTRO_MINE_BENCH_EMBARGO_ROOT``. Resolving it
+#: through the library's own :func:`resolve_embargo_root` rather than rebuilding the path here means
+#: this test exercises the seam an evaluator uses, not a parallel one that could drift from it.
+_HELDOUT = resolve_embargo_root() / ANCHOR_SCENARIO_ID / "heldout_seeds.json"
+
+#: Set when the store is reachable. Unset is *not* a pass — see
+#: :func:`test_heldout_commitment_binds_the_sealed_seeds` for why that distinction is enforced.
+_STORE_AVAILABLE = _HELDOUT.is_file()
 
 _PINS: dict[str, dict[str, str]] = json.loads(
     files("astro_mine.bench.zoo")
@@ -155,17 +175,72 @@ def test_public_seeds_and_heldout_commitment(anchor: ScenarioSpec) -> None:
     assert anchor.seeds.heldout_commit is not None
 
 
-def test_heldout_seeds_are_embargoed_outside_the_package() -> None:
-    assert _HELDOUT.is_file()
-    rel = _HELDOUT.relative_to(_REPO_ROOT)
-    assert rel.parts[0] == "embargo"  # sealed outside the wheel (ships only src/astro_mine)
-    assert "src" not in rel.parts
+def test_no_heldout_seeds_anywhere_in_the_working_tree() -> None:
+    """**Always runs.** The property the public flip actually needs, and it is unconditional.
+
+    This replaces an assertion that the sealed set *was* present at ``embargo/<id>/`` and merely
+    outside ``src/``. That was the right check while the repository was private and the seeds were
+    committed on purpose; it is the wrong one now, because the flip publishes every commit rather
+    than ``HEAD``, so "outside the wheel" stopped being far enough away.
+
+    Absence is also the half that can be checked without the secret, which is what makes it
+    unconditional where the commitment test below cannot be.
+    """
+    stragglers = sorted(
+        path.relative_to(_REPO_ROOT).as_posix()
+        for path in _REPO_ROOT.rglob("heldout_seeds.json")
+        if ".git" not in path.parts
+    )
+    assert stragglers == [], (
+        f"held-out seed sets found in the working tree: {stragglers}. These must live only in the "
+        f"private astro-mine/embargo store, reached via $ASTRO_MINE_BENCH_EMBARGO_ROOT "
+        f"(astro-mine-platform#37)."
+    )
 
 
+@pytest.mark.skipif(
+    not _STORE_AVAILABLE,
+    reason=(
+        "the held-out seed store is not reachable: set $ASTRO_MINE_BENCH_EMBARGO_ROOT to a "
+        "checkout of the private astro-mine/embargo repository. THIS IS NOT A PASS — the "
+        "anchor's commitment went unverified on this run (astro-mine-platform#37)."
+    ),
+)
 def test_heldout_commitment_binds_the_sealed_seeds(anchor: ScenarioSpec) -> None:
+    """Verifies the commitment when the store is reachable, and is honest when it is not.
+
+    The seeds left the tree, so this check cannot be unconditional the way it was — and #37 names
+    the failure mode to avoid: *a test that silently skips*. Two things keep that from happening.
+    The skip reason says in as many words that nothing was verified, rather than reading as a
+    benign environmental skip. And a store that is *present but wrong* fails rather than skips —
+    the guard below is `is_file()` at collection time, so a malformed or stale set gets here and
+    trips the assertion.
+    """
     payload = json.loads(_HELDOUT.read_text(encoding="utf-8"))
-    assert content_hash(payload) == anchor.seeds.heldout_commit
+    assert content_hash(payload) == anchor.seeds.heldout_commit, (
+        "the sealed set does not match the spec's heldout_commit — the store is stale, or the "
+        "scenario was re-versioned without re-sealing"
+    )
     assert not (set(payload["seeds"]) & set(anchor.seeds.public))  # disjoint from public seeds
+
+
+def test_the_rotated_commitment_is_not_the_retired_one() -> None:
+    """The rotation is asserted, not just performed.
+
+    The set retired on 2026-08-16 stays readable in this repository's history forever once it is
+    public, so the one thing that must never regress is the anchor pointing back at it. Pinning the
+    dead commitment by value is the only check that survives the seeds themselves being gone.
+    """
+    retired = "sha256:fee93327b5943041865348cc47b4b9db5bde955a9cd8c307ebeba18569ab5640"
+    spec = json.loads(
+        files("astro_mine.bench.zoo")
+        .joinpath(ANCHOR_SCENARIO_ID.replace("-", "_"), "scenario.json")
+        .read_text(encoding="utf-8")
+    )
+    assert spec["seeds"]["heldout_commit"] != retired, (
+        "the anchor still commits to the seed set retired in astro-mine-platform#37, which is "
+        "published in this repository's git history"
+    )
 
 
 def test_resolve_anchor_is_deterministic() -> None:

@@ -1,7 +1,7 @@
 {
   "scenario_id": "lunar-polar-ice-prospecting-v1",
   "name": "Lunar Polar Water-Ice Prospecting v1",
-  "spec_version": "0.8.0",
+  "spec_version": "0.9.0",
   "description": "The Phase-0 anchor benchmark (scenarios/1-lunar-polar-ice-prospecting.md §13): a heterogeneous swarm prospects the permanently shadowed regions of the Shackleton-de Gerlache ridge for water ice, then excavates, hauls, extracts, purifies, and stores it, surviving the lunar night under power and comms-window constraints. Content is pinned by hash for byte-for-byte reproducibility; every content_hash is a REAL Hub artifact digest published by RM-P1-WORLDS-15 (world) / RM-P1-FLEET-10 (fleet) / RM-P1-PROSPECT-13 (prospect), and Sim resolves them into a runnable Scenario (RM-P1-SIM-01). The world is the LOLA LDEM_875S_5M bundle (SPICE DE440 illumination + PSR) built by astro-mine-worlds scripts/build_shackleton_anchor.py - see PROVENANCE.md. This scenario does not exercise the operational_targeting dual-use gate (scenario §14). Version 0.6.0 pins two things the spec previously could not express (astro-mine-bench#63, astro-mine-sim#66): placement, so the swarm's siting is a property of the task rather than a jitter derived from the content digest that moved on every re-pin and contradicted the pinned contact plan; and the belief/discovery scoring parameters, whose runner-side defaults were unsatisfiable (characterized_variance_threshold 0.0) or trip at tick 0 (discovery_threshold 0.0). The four surface sites carry the latitudes and longitudes astro-mine-link's anchor computed its contact plan against, so comms geometry and physics now agree on where the swarm is. Version 0.7.0 drops the elevations 0.6.0 had copied from that same source: measured against this scenario's own pinned world, Link's figures are off the DEM by -4436 m (prospecting-rover), -3276 m (excavator), +1617 m (hauler) and +301 m (isru-plant), which would have started two of the four assets kilometres *beneath* the terrain - buried, and occluded for line-of-sight by the ground they are inside. Link's elevations are descriptive of its own geometry and were never sampled from this world bundle. Omitting elevation_m instead makes each site snap to the pinned DEM, which is strictly more reproducible: the terrain is pinned by hash, so a site cannot drift from the world the run actually uses. cell_area_m2 62500.0 is the pinned prior's own 250 m grid pitch squared; characterized_variance_threshold 0.00021025 is the PSR prior sigma (0.029, LCROSS Cabeus) halved, i.e. a cell counts as characterized once its posterior uncertainty is half the prior's - the scenario document leaves this as 'reduced >= X%' (§3), so this is where X is chosen; discovery_threshold 0.01 is twice the LEND polar background WEH (0.005), well below the 0.056 LCROSS peak.",
   "core_interface": {
     "env": "0.1.0",
@@ -73,7 +73,7 @@
       1004,
       1005
     ],
-    "heldout_commit": "sha256:fee93327b5943041865348cc47b4b9db5bde955a9cd8c307ebeba18569ab5640"
+    "heldout_commit": "sha256:57542a20e70985f9db916a4ff6fbeb73f5be75093894844a15366714f75e68fc"
   },
   "episode": {
     "horizon_steps": 43200,

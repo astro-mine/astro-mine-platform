@@ -1,48 +1,61 @@
-# `embargo/` — sealed held-out benchmark seeds (do **not** ship, do **not** disclose)
+# `embargo/` — the seeds are not here any more
 
-This directory holds the **embargoed held-out seed sets** for zoo scenarios — the anti-gaming
-reserve (`docs/architecture/bench.md §9`). One subdirectory per scenario id, each containing a sealed
-`heldout_seeds.json` of the form:
+The **embargoed held-out seed sets** for the Bench scenario zoo — the anti-gaming reserve
+(`docs/architecture/bench.md` §9) — used to live in this directory, committed in plaintext.
 
-```json
-{ "salt": "<hex>", "seeds": [ <ints> ] }
-```
+**They now live in the private repository [`astro-mine/embargo`](https://github.com/astro-mine/embargo).**
+This directory holds only this file, so that a reader who lands here from a path, a script or a
+stack trace is told where to go rather than finding nothing.
 
-## Why it lives outside `src/`
+## Why they left
 
-The wheel is built by **maturin** (`pyproject.toml [build-system]`), and `[tool.maturin]` sets
-`python-source = "src"` — so the packaged tree is rooted at `src/`, and a directory at the
-repository root is not a candidate for it. The one escape hatch is `[tool.maturin] include`, which
-force-includes non-`.py` package data; every entry there is under `src/astro_mine`, and `embargo`
-is not among them. Nothing here reaches a `pip install` or a published zoo OCI artifact.
+They were committed here deliberately, for CI verifiability, on the standing assumption that
+`astro-mine-platform` was private. The public flip retires that assumption — and it retires it for
+**every commit in the history**, not just `HEAD`.
 
-Do not take that on trust — build the wheel and look:
+That is the part the old version of this file did not say. It instructed a reader to *rotate every
+held-out set here* before the flip, which is necessary and not sufficient: rotating and committing
+new sets into a soon-to-be-public tree republishes the same problem one commit later. The seeds had
+to stop living in a public git tree at all.
 
-```bash
-uv build --wheel --out-dir dist          # needs the Rust toolchain; Guard's core is compiled
-python -m zipfile -l dist/astro_mine_platform-*.whl | grep -c embargo    # -> 0
-```
+The mechanism needed no new code. `astro_mine.bench.leaderboard.resolve_embargo_root` already read
+**`$ASTRO_MINE_BENCH_EMBARGO_ROOT`** and fell back to this directory only when unset
+(astro-mine-platform#15, wired through the API seeder in astro-mine-api#19). What was missing was the
+decision and the move, not the seam.
 
-The wheel's top-level entries are exactly `astro_mine/` and `astro_mine_platform-*.dist-info/`.
-
-The public `ScenarioSpec` in the zoo carries only a **commitment** —
-`seeds.heldout_commit`, a `sha256:` over the sealed `{salt, seeds}` payload — which binds the held-out
-seeds into the scenario's content hash **without disclosing them**. Evaluation discloses the seeds
-only at scoring time (`bench.md §5, §9`).
-
-## Verify a commitment
+## Using the store
 
 ```bash
-python scripts/bench/seal_heldout_seeds.py <scenario-id>
-python scripts/bench/seal_heldout_seeds.py <scenario-id> --verify sha256:<hex>
+git clone https://github.com/astro-mine/embargo.git
+export ASTRO_MINE_BENCH_EMBARGO_ROOT="$PWD/embargo"
 ```
 
-`tests/bench/test_zoo_anchor.py` also asserts the anchor's sealed payload matches its published
-`heldout_commit`.
+Then `load_heldout_seeds` and `scripts/bench/seal_heldout_seeds.py` both resolve through it. Without
+the variable set, both fall back here and fail with a path that leads to this file.
 
-## SECURITY — rotate before the repo flips public
+## The old sets are dead
 
-These seeds are committed to the **private** incubation repo for CI verifiability only. Phase-0 has no
-encrypted, eval-time-only disclosure yet (a CX-SEC follow-up). **Before the repo is made public,
-rotate every held-out set here** and re-publish the affected scenarios as new versions (a new
-`heldout_commit` ⇒ a new scenario version; old leaderboards remain valid for their pinned spec).
+Rotated on 2026-08-16, before the flip. The retired values remain in this repository's git history
+and that is accepted — rotating first is precisely what makes publishing the history safe. They were
+also *sequential* (`900001`–`900012`, beside a public set of `1001`–`1005`), so anything scored
+against them was weaker than it looked even while the repository was private.
+
+## What CI verifies now
+
+`tests/bench/test_zoo_anchor.py` splits the old single assertion in two:
+
+- **absence** — that no `heldout_seeds.json` exists anywhere in the working tree. Unconditional,
+  needs no secret, and is a strictly stronger property than the "outside `src/`" check it replaces.
+- **the commitment** — that the sealed payload still hashes to the anchor's `heldout_commit`. This
+  needs the store, so it runs only where `$ASTRO_MINE_BENCH_EMBARGO_ROOT` resolves to one. A store
+  that is present but *stale* fails; an unreachable store skips with a reason that says in as many
+  words that nothing was verified.
+
+Give CI a read credential for `astro-mine/embargo` — the same shape as `CORE_REPO_TOKEN`, which the
+org already uses for private cross-repo reads — and the commitment check runs there too.
+
+## Still outstanding
+
+The encrypted, eval-time-only disclosure tier (`bench.md` §9) — seeds sealed so that even a reader
+of the store cannot see them outside a scoring run. It remains a CX-SEC follow-up. Moving the store
+out of a soon-to-be-public tree was the part that could not wait for it.
