@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   pull_request:
+  # The `sim-e2e` job below gates on `github.event_name == 'workflow_dispatch'`, and this trigger
+  # was missing -- so the condition was never true, the job skipped on every run since the
+  # consolidation, and the `-m sim` suites in tests/guard and tests/mind ran nowhere at all.
+  # A job that can only be triggered manually still needs the manual trigger to exist.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,6 +22,28 @@ jobs:
       # Lint only — the migrated sources are copied verbatim from repos that
       # were not uniformly ruff-format-normalized; reformatting is churn.
       - run: uv run --group dev ruff check src tests scripts
+
+  # conventions.md §2 requires Python to be checked with mypy/pyright, and nothing checked it:
+  # `mypy` sat in the `dev` group with no configuration and no step to run it. The gate is a
+  # per-component ratchet — see the long note over `[tool.mypy]` in pyproject.toml for the enrolled
+  # set, the four components that are not, and why the exclusions are shaped the way they are.
+  #
+  # Unlike `lint`, this needs the package built and its dependencies present: mypy resolves imports
+  # against the real environment, including Guard's PyO3 extension, so this job carries the Rust
+  # toolchain and a full `uv sync` rather than `uv run --group dev` alone. Scope is `src/astro_mine`
+  # — `tests` and `scripts` are linted but not yet type-checked.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Sync environment
+        run: uv sync --group dev
+      - name: Type-check (mypy)
+        run: uv run mypy src/astro_mine
 
   test:
     runs-on: ubuntu-latest
@@ -111,6 +138,12 @@ jobs:
   # `cluster-e2e.yml` (nightly + on a `cluster-e2e` label) and `scale-bench.yml` (weekly), rehomed
   # before those repositories were archived (RM-DIST-05) — so "trigger manually" now names
   # something that exists.
+  #
+  # `sim-e2e` was the one lane carried over, and it was carried over into a state where it could
+  # not execute: the `if` below tests for a `workflow_dispatch` event that the `on:` block did not
+  # declare, so the condition was never true and the job reported as a skip on every run. Skips
+  # read as coverage. The trigger is declared now; the ten tests it selects are the real-Sim
+  # integration suites in tests/mind and tests/guard.
   sim-e2e:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
