@@ -72,6 +72,7 @@ See README.md and docs/CONSOLIDATION_PLAN.md §2. The unusual bits:
 - Root dirs like `embargo/`, `validation/`, `platform/`, `schemas/proto` are
   **load-bearing paths** — src code and committed digests resolve them
   root-relatively. Do not move them.
-- `dist/schema-bundle/` is a *committed* artifact (core's schema digest), not a
-  build output; `.gitignore` carves it out.
+- `dist/` is ignored in full. The schema bundle is a *build output* —
+  `scripts/build_schema_bundle.py` writes it there and `publish-schemas` rebuilds
+  it from source on every publish; nothing reads a checked-in copy.
 - `tests/` is a package: `tests/<comp>/` mirrors each source repo's suite.

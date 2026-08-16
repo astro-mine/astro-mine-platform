@@ -5,8 +5,6 @@ __pycache__/
 .eggs/
 build/
 dist/*
-# core's committed schema bundle (digest-compared by tests) is NOT a build output
-!dist/schema-bundle/
 .venv/
 .python-version.local
 .pytest_cache/
