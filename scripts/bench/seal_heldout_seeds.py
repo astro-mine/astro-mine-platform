@@ -24,7 +24,9 @@ import json
 import sys
 from pathlib import Path
 
-EMBARGO_ROOT = Path(__file__).resolve().parents[1] / "embargo"
+# `parents[2]`, not `parents[1]`: this script sits at `scripts/bench/`, so the repo root — where
+# `embargo/` lives, deliberately outside `src/` so the wheel cannot ship it — is two levels up.
+EMBARGO_ROOT = Path(__file__).resolve().parents[2] / "embargo"
 
 
 def content_hash(payload: object) -> str:
