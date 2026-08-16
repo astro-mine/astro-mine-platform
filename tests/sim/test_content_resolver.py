@@ -46,7 +46,7 @@ def _asset_document() -> SadfDocument:
     fleet-sourced fields flow through :func:`agent_spec_from_asset`."""
     asset = Asset(
         identity=Identity(
-            id="astro-mine.fleet.test-rover", name="Test Rover", version="0.1.0", kind="rover"
+            id="test-rover", name="Test Rover", version="0.1.0", kind="rover"
         ),
         root_frame="body",
         power=PowerBudget(floor_w=5.0),
@@ -114,7 +114,7 @@ def published(tmp_path: pathlib.Path) -> dict[str, Any]:
     fleet_digest = _publish(
         client,
         private_pem,
-        name="astro-mine.fleet.test-rover",
+        name="test-rover",
         artifact_kind="asset",
         manifest_kind=PluginKind.ASSET,
         core_interface="sadf",
@@ -157,7 +157,7 @@ def published(tmp_path: pathlib.Path) -> dict[str, Any]:
 def _content(published: dict[str, Any]) -> ScenarioContent:
     return ScenarioContent(
         world=ContentPin(id="test-world", reference=published["world_digest"]),
-        fleet=(ContentPin(id="astro-mine.fleet.test-rover", reference=published["fleet_digest"]),),
+        fleet=(ContentPin(id="test-rover", reference=published["fleet_digest"]),),
         prospect=(ContentPin(id="test-field", reference=published["field_digest"]),),
     )
 
@@ -167,8 +167,8 @@ def test_resolves_fleet_asset_and_providers(published: dict[str, Any]) -> None:
     resolved = resolver.resolve(_content(published))
 
     # Fleet asset materialized from the SADF JSON layer, pinned by its digest.
-    asset = resolved.assets["astro-mine.fleet.test-rover"]
-    assert asset.asset.identity.id == "astro-mine.fleet.test-rover"
+    asset = resolved.assets["test-rover"]
+    assert asset.asset.identity.id == "test-rover"
     assert asset.content_hash == published["fleet_digest"]
 
     # World + resource providers reconstructed via the injected factories, fed the pulled layers.
@@ -178,7 +178,7 @@ def test_resolves_fleet_asset_and_providers(published: dict[str, Any]) -> None:
     assert resolved.resource_field.layers[_FIELD_TAR] == b"field-bundle-tar-bytes"
 
     # Every pin rides in the content-hash map.
-    assert resolved.content_hashes["astro-mine.fleet.test-rover"] == published["fleet_digest"]
+    assert resolved.content_hashes["test-rover"] == published["fleet_digest"]
     assert resolved.content_hashes["test-world"] == published["world_digest"]
     assert resolved.content_hashes["test-field"] == published["field_digest"]
 
@@ -197,7 +197,7 @@ def test_agent_spec_sources_fleet_fields(published: dict[str, Any]) -> None:
     resolver = ContentResolver(published["store"], provider_factories=published["factories"])
     resolved = resolver.resolve(_content(published))
     spec = agent_spec_from_asset(
-        resolved.assets["astro-mine.fleet.test-rover"],
+        resolved.assets["test-rover"],
         agent_id="rover",
         initial_position_m=(1.0, 2.0, 3.0),
         battery_soc_j=1000.0,
@@ -218,12 +218,12 @@ def test_resolution_is_deterministic(published: dict[str, Any]) -> None:
 def test_run_provenance_carries_content_hashes(published: dict[str, Any]) -> None:
     resolver = ContentResolver(published["store"], provider_factories=published["factories"])
     resolved = resolver.resolve(_content(published))
-    spec = agent_spec_from_asset(resolved.assets["astro-mine.fleet.test-rover"], agent_id="rover")
+    spec = agent_spec_from_asset(resolved.assets["test-rover"], agent_id="rover")
     scenario = Scenario(name="content-pinned", agents=(spec,), horizon_steps=2)
 
     trace = run_episode(scenario, content_hashes=resolved.content_hashes)
     hashes = trace.provenance["source_content_hashes"]
-    assert hashes["astro-mine.fleet.test-rover"] == published["fleet_digest"]
+    assert hashes["test-rover"] == published["fleet_digest"]
     assert hashes["test-world"] == published["world_digest"]
     # The open-loop run without content hashes is byte-identical to before this feature.
     baseline = run_episode(scenario)
@@ -294,7 +294,7 @@ def test_resolver_fails_closed_over_a_tampered_store(published: dict[str, Any]) 
 def test_link_pin_rides_in_content_hashes(published: dict[str, Any]) -> None:
     resolver = ContentResolver(published["store"], provider_factories=published["factories"])
     content = ScenarioContent(
-        fleet=(ContentPin(id="astro-mine.fleet.test-rover", reference=published["fleet_digest"]),),
+        fleet=(ContentPin(id="test-rover", reference=published["fleet_digest"]),),
         link=ContentPin(id="test-link", reference=published["field_digest"]),
     )
     resolved = resolver.resolve(content)
@@ -349,7 +349,7 @@ def test_open_bundle_store_round_trip(tmp_path: pathlib.Path) -> None:
     digest = _publish(
         client,
         private_pem,
-        name="astro-mine.fleet.test-rover",
+        name="test-rover",
         artifact_kind="asset",
         manifest_kind=PluginKind.ASSET,
         core_interface="sadf",
@@ -358,10 +358,10 @@ def test_open_bundle_store_round_trip(tmp_path: pathlib.Path) -> None:
     store = open_bundle_store(reg_path, trusted_public_key_pem=public_pem)
     resolver = ContentResolver(store, provider_factories={})
     resolved = resolver.resolve(
-        ScenarioContent(fleet=(ContentPin(id="astro-mine.fleet.test-rover", reference=digest),))
+        ScenarioContent(fleet=(ContentPin(id="test-rover", reference=digest),))
     )
-    assert resolved.assets["astro-mine.fleet.test-rover"].asset.identity.id == (
-        "astro-mine.fleet.test-rover"
+    assert resolved.assets["test-rover"].asset.identity.id == (
+        "test-rover"
     )
 
 
@@ -480,7 +480,7 @@ def test_fleet_only_content_never_reports_unresolved(published: dict[str, Any]) 
     and it runs on a machine with no producers installed — it must not trip the diagnostic.
     """
     fleet_only = ScenarioContent(
-        fleet=(ContentPin(id="astro-mine.fleet.test-rover", reference=published["fleet_digest"]),)
+        fleet=(ContentPin(id="test-rover", reference=published["fleet_digest"]),)
     )
     resolved = ContentResolver(published["store"], provider_factories={}).resolve(fleet_only)
     assert resolved.unresolved == ()

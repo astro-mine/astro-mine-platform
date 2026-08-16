@@ -59,14 +59,14 @@ _PINS: dict[str, dict[str, str]] = json.loads(
 )
 
 EXPECTED_FLEET_IDS = (
-    "astro-mine.fleet.relay-orbiter",
-    "astro-mine.fleet.lander",
-    "astro-mine.fleet.prospecting-rover",
-    "astro-mine.fleet.excavator",
-    "astro-mine.fleet.hauler",
-    "astro-mine.fleet.isru-plant",
+    "relay-orbiter",
+    "lander",
+    "prospecting-rover",
+    "excavator",
+    "hauler",
+    "isru-plant",
 )
-EXPECTED_LINK_ID = "astro-mine.link.lunar-polar-relay-dsn"
+EXPECTED_LINK_ID = "lunar-polar-relay-dsn"
 EXPECTED_METRICS = (
     "water_mass",
     "energy_per_kg",
@@ -119,9 +119,9 @@ def test_anchor_pins_the_core_schema_digest(anchor: ScenarioSpec) -> None:
 
 
 def test_content_pins(anchor: ScenarioSpec) -> None:
-    assert anchor.content.world.id == "shackleton-de-gerlache-v1"
+    assert anchor.content.world.id == "shackleton-de-gerlache"
     assert tuple(f.id for f in anchor.content.fleet) == EXPECTED_FLEET_IDS
-    assert tuple(p.id for p in anchor.content.prospect) == ("shackleton_water_ice_v1",)
+    assert tuple(p.id for p in anchor.content.prospect) == ("shackleton-water-ice",)
     assert anchor.content.link is not None
     assert anchor.content.link.id == EXPECTED_LINK_ID
     assert len(anchor.content_refs()) == 9  # world + 6 fleet + 1 prospect + 1 link
@@ -132,8 +132,8 @@ def test_content_pins(anchor: ScenarioSpec) -> None:
 # (RM-P1-SIM-01). Every pin is a real Hub artifact digest, distinct from the provisional-pin
 # derivation of its descriptor.
 _REAL_PIN_IDS = frozenset(EXPECTED_FLEET_IDS) | {
-    "shackleton_water_ice_v1",
-    "shackleton-de-gerlache-v1",
+    "shackleton-water-ice",
+    "shackleton-de-gerlache",
     EXPECTED_LINK_ID,
 }
 

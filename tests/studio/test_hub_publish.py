@@ -39,7 +39,7 @@ from astro_mine.studio.orchestrate import (
     evaluate_candidate,
 )
 
-ROVER_REF = "astro-mine.fleet.prospecting-rover:0.1.0"
+ROVER_REF = "prospecting-rover:0.1.0"
 ROVER_TAGS = [CapabilityTag.MOBILITY_WHEELED, CapabilityTag.PROSPECTING_NEUTRON]
 
 
@@ -54,7 +54,7 @@ def registry(tmp_path: Path, keys: tuple[bytes, bytes]) -> Registry:
     private_pem, _ = keys
     reg = Registry(tmp_path / "registry")
     asset = PluginManifest(
-        name="astro-mine.fleet.prospecting-rover",
+        name="prospecting-rover",
         version="0.1.0",
         kind=PluginKind.ASSET,
         capability_tags=ROVER_TAGS,

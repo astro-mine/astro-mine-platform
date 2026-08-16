@@ -5,7 +5,7 @@
 sadf_version: "0.1"
 asset:
   identity:
-    id: astro-mine.fleet.relay-orbiter
+    id: relay-orbiter
     name: Relay Orbiter
     version: 0.1.0
     kind: orbiter

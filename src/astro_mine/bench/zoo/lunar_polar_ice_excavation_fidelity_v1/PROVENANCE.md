@@ -23,6 +23,29 @@ The **surrogate-fidelity** task, traceable to `docs/architecture/surrogate.md §
 >   actually held to*, produced by `measure_surrogate_speedup.py`, which refuses to publish a
 >   number when the bound does not hold.
 
+## Spec 0.5.0 — every content pin re-published under its conforming name
+
+`0.5.0` moves every `content.*` reference onto the artifact names `conventions.md` §13 requires:
+bare kebab-case, no component prefix, no version in the name.
+
+**Nothing about the task changed.** The world, the fleet and the field are the same content; what
+moved is what they are *called*. A run of `0.4.0` and a run of `0.5.0` resolve byte-identical
+inputs.
+
+Registry names are immutable, so this was a **re-publish, not a rename** — each artifact carries a
+new digest, and every name this scenario pinned before is still published and still resolvable. That
+is what keeps results scored against `0.4.0` valid for `0.4.0`; they are not comparable to `0.5.0`
+and were never meant to be, which is why the pin change is a new spec version rather than an edit
+(`bench.md` §5, §8).
+
+§13 requires the migration to run as **one sweep**, so it is two scripts rather than a runbook:
+`scripts/hub/migrate_artifact_names.py` re-publishes and records the digests, and
+`scripts/hub/repin_zoo_to_conforming_names.py` applies them here.
+
+`excavation-gns` is untouched. It already conformed before the rule existed, which is why it was
+deliberately absent from the legacy set — the proof that §13 describes something achievable rather
+than an aspiration. It is also not a content pin (see below).
+
 ## Why this task exists
 
 A surrogate physics tier is only worth having if it is **faster than the solver it replaces, at a

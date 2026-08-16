@@ -168,7 +168,7 @@ class SitePlacement(_Model):
     """Where one pinned fleet asset stands, in the world's body-fixed frame.
 
     ``asset`` is the :class:`ContentRef` ``id`` of a pinned fleet asset (e.g.
-    ``astro-mine.fleet.excavator``), so placement is keyed by the same vocabulary the content
+    ``excavator``), so placement is keyed by the same vocabulary the content
     pins and the [Link](link.md) contact plan's nodes use — one robot, one name, everywhere.
 
     Coordinates are **planetocentric** and describe the asset's *body origin on the terrain*,

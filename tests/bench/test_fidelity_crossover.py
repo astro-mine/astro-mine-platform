@@ -46,8 +46,25 @@ def test_the_curve_is_anchored_to_the_scenarios_own_pinned_content(curve: dict) 
 
     spec = load_scenario("lunar-polar-ice-excavation-fidelity-v1")
     assert curve["scenario_id"] == spec.scenario_id
-    # The sweep is off the scenario's real spec + surrogate, not a hand-authored bed.
-    assert curve["spec_hash"] == spec.spec_hash
+
+    # The sweep is off a real spec of this scenario, not a hand-authored bed — which is the property
+    # worth checking. It is *not* the current spec, and must not be made to be.
+    #
+    # The curve was measured against spec 0.4.0. The §13 migration (astro-mine-platform#34)
+    # re-published every pin under a conforming name, and a name is part of the spec hash, so the
+    # scenario moved to 0.5.0 while the measurement stayed where it was taken. Rewriting
+    # `crossover.json` to the new hash would assert a measurement that never happened — and the
+    # record is doubly unrepeatable, because it also pins `excavation-gns:0.4.0`, the tier the
+    # 2026-08-08 prune destroyed (astro-mine-platform#41).
+    #
+    # So the anchor is pinned by value, as history. What the rename did *not* change is the task:
+    # the bytes behind every pin are identical, only their names moved.
+    measured_against = "sha256:213ed92189d2054cc5a1cfd9a7e7b100fd87d3c744596bacd398b3dfaf43e3e7"
+    assert curve["spec_hash"] == measured_against
+    assert spec.spec_hash != measured_against, (
+        "the scenario's spec hash matches the curve's again — if the scenario was reverted, this "
+        "pin is stale; if the curve was re-measured, update it here and say so in CROSSOVER.md"
+    )
     # The lowest bed is the scenario's own, so the curve has an anchor point on the real task.
     ns = [p["n_particles"] for p in curve["points"]]
     assert ns == sorted(ns) and len(set(ns)) == len(ns)

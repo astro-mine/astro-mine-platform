@@ -33,13 +33,31 @@ _DISPOSITIONS = {"published", "lost", "ephemeral"}
 #: Artifacts that are real, pinned by something in the tree, and exist in exactly one place.
 #:
 #: This is the open half of astro-mine-platform#41. Both are absent from `ghcr.io/astro-mine`, which
-#: holds exactly the nine anchor packages, so the workspace store is their only copy — the same
-#: condition that made the 2026-08-08 prune unrecoverable. Pinned exactly rather than as a floor: a
-#: *new* single-copy pinned artifact is a regression and fails here, and when these two are mirrored
-#: they come out of this set in the same change that adds their `mirrored_to` entry.
+#: holds exactly the nine *legacy-named* anchor packages, so anything else pinned by the tree has
+#: the workspace store as its only copy — the same condition that made the 2026-08-08 prune
+#: unrecoverable. Pinned exactly rather than as a floor: a new single-copy pinned artifact is a
+#: regression and fails here, and each entry leaves this set in the change that mirrors it.
 SINGLE_COPY = {
     "excavation-gns:0.6.0",
-    "shackleton_water_ice_pds_v1:1.0.0",
+    # The §13 migration (astro-mine-platform#34) re-published nine artifacts under conforming names,
+    # and a re-publish mints new digests. The *old* names stay mirrored on ghcr.io, so nothing that
+    # was resolvable stopped being resolvable — but the zoo now pins the new digests, and those
+    # exist in exactly one place: the workspace store.
+    #
+    # This is the same single-point-of-failure #41 exists to prevent, re-created by the act of
+    # fixing a different problem, and it is recorded here rather than waved through because a fresh
+    # clone currently cannot resolve the anchor content at all. It closes when the mirror runs
+    # (docs/hub/publishing-the-anchor-content-set.md); each entry leaves this set in the same change
+    # that adds its `mirrored_to`.
+    "excavator:0.2.0",
+    "hauler:0.1.0",
+    "isru-plant:0.2.0",
+    "lander:0.1.0",
+    "lunar-polar-relay-dsn:0.3.0",
+    "prospecting-rover:0.1.0",
+    "relay-orbiter:0.1.0",
+    "shackleton-de-gerlache:0.4.0",
+    "shackleton-water-ice:1.0.0",
 }
 
 

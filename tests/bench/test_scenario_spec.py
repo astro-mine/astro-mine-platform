@@ -182,7 +182,7 @@ def test_any_input_change_changes_spec_hash() -> None:
                 world=ContentRef(id="shackleton-v1", content_hash=sha256_of("f")),
                 fleet=(
                     ContentRef(
-                        id="astro-mine.fleet.prospecting-rover", content_hash=sha256_of("b")
+                        id="prospecting-rover", content_hash=sha256_of("b")
                     ),
                 ),
                 prospect=(ContentRef(id="ice-prior-v1", content_hash=sha256_of("c")),),
@@ -217,7 +217,7 @@ def test_setting_a_block_to_its_own_default_is_not_a_new_task() -> None:
 
 def test_exercising_an_optional_block_does_change_the_content_address() -> None:
     # The other half: a scenario that actually pins placement is a different task.
-    placed = make_scenario_spec(placement=_placement("astro-mine.fleet.prospecting-rover"))
+    placed = make_scenario_spec(placement=_placement("prospecting-rover"))
     assert placed.spec_hash != make_scenario_spec().spec_hash
 
 
@@ -234,11 +234,11 @@ def test_placement_must_reference_an_asset_the_scenario_pins() -> None:
     # A site naming an unpinned asset is inert rather than wrong at runtime — the runner simply
     # never matches it and silently falls back to its own layout. Caught here instead.
     with pytest.raises(ValidationError, match="does not pin"):
-        make_scenario_spec(placement=_placement("astro-mine.fleet.excavator"))
+        make_scenario_spec(placement=_placement("excavator"))
 
 
 def test_placement_rejects_a_repeated_asset() -> None:
-    rover = "astro-mine.fleet.prospecting-rover"
+    rover = "prospecting-rover"
     with pytest.raises(ValidationError, match="unique per asset"):
         PlacementSpec(
             sites=(
@@ -251,10 +251,10 @@ def test_placement_rejects_a_repeated_asset() -> None:
 def test_longitude_folds_into_one_revolution() -> None:
     # -45 and 315 are the same meridian, so they must be the same task.
     west = make_scenario_spec(
-        placement=_placement("astro-mine.fleet.prospecting-rover", lon_deg=-45.0)
+        placement=_placement("prospecting-rover", lon_deg=-45.0)
     )
     east = make_scenario_spec(
-        placement=_placement("astro-mine.fleet.prospecting-rover", lon_deg=315.0)
+        placement=_placement("prospecting-rover", lon_deg=315.0)
     )
     assert west.placement is not None and west.placement.sites[0].lon_deg == 315.0
     assert west.spec_hash == east.spec_hash

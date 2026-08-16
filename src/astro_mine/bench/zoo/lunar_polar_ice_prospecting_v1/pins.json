@@ -1,55 +1,55 @@
 {
-  "shackleton-de-gerlache-v1": {
+  "shackleton-de-gerlache": {
     "producer": "worlds",
-    "content_id": "shackleton-de-gerlache-v1",
+    "content_id": "shackleton-de-gerlache",
     "content_version": "0.4.0",
     "recipe": "astro-mine-worlds scripts/build_shackleton_anchor.py --convert --raw-dem LDEM_875S_5M.lbl --metakernel <DE440.tm> --version 0.4.0 --resolution-m 120 --n-azimuth 120 --max-radius-m 30000 --horizon-frame grid --abcorr NONE --psr-start 2025-01-01T00:00:00 --psr-days 365 --psr-step-hours 12 --psr-semantics seasonal, then `worlds publish`. Those flags are exactly the harness validation/shackleton_psr.reference.json grades against, so the bundle carries the numbers that were validated. 0.4.0 is the first anchor world to ship illumination/horizon.zarr (astro-mine-worlds#46); prior bundles made every consumer re-derive the skyline on every load."
   },
-  "astro-mine.fleet.relay-orbiter": {
+  "relay-orbiter": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.relay-orbiter",
+    "content_id": "relay-orbiter",
     "content_version": "0.1.0",
     "recipe": "fleet package library/orbital/relay-orbiter.sadf.yaml"
   },
-  "astro-mine.fleet.lander": {
+  "lander": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.lander",
+    "content_id": "lander",
     "content_version": "0.1.0",
     "recipe": "fleet package library/orbital/lander.sadf.yaml"
   },
-  "astro-mine.fleet.prospecting-rover": {
+  "prospecting-rover": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.prospecting-rover",
+    "content_id": "prospecting-rover",
     "content_version": "0.1.0",
     "recipe": "fleet package library/surface/prospecting-rover.sadf.yaml"
   },
-  "astro-mine.fleet.excavator": {
+  "excavator": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.excavator",
+    "content_id": "excavator",
     "content_version": "0.2.0",
     "recipe": "fleet publish library/manipulation/excavator.sadf.yaml --registry <reg> --sign --key <key>  # 0.2.0 adds the `tool` contact element (astro-mine-fleet#38); 0.1.0 remains published and immutable"
   },
-  "astro-mine.fleet.hauler": {
+  "hauler": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.hauler",
+    "content_id": "hauler",
     "content_version": "0.1.0",
     "recipe": "fleet package library/logistics/hauler.sadf.yaml"
   },
-  "astro-mine.fleet.isru-plant": {
+  "isru-plant": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.isru-plant",
-    "content_version": "0.1.0",
+    "content_id": "isru-plant",
+    "content_version": "0.2.0",
     "recipe": "fleet package library/isru/isru-plant.sadf.yaml"
   },
-  "shackleton_water_ice_v1": {
+  "shackleton-water-ice": {
     "producer": "prospect",
-    "content_id": "shackleton_water_ice_v1",
+    "content_id": "shackleton-water-ice",
     "content_version": "1.0.0",
-    "recipe": "prospect publish --registry <reg> --name shackleton_water_ice_v1 --private-key <key>  # 1.0.0 squares the GMRF SPDE operator so alpha=2 yields a valid Matern nu=1 field (astro-mine-prospect#39); 0.1.0 remains published and immutable"
+    "recipe": "prospect publish --registry <reg> --name shackleton-water-ice --private-key <key>  # 1.0.0 squares the GMRF SPDE operator so alpha=2 yields a valid Matern nu=1 field (astro-mine-prospect#39); 0.1.0 remains published and immutable"
   },
-  "astro-mine.link.lunar-polar-relay-dsn": {
+  "lunar-polar-relay-dsn": {
     "producer": "link",
-    "content_id": "astro-mine.link.lunar-polar-relay-dsn",
+    "content_id": "lunar-polar-relay-dsn",
     "content_version": "0.3.0",
     "recipe": "astro-mine-link scripts/build_anchor_contact_plan.py --metakernel <DE440.tm> --relay-spk <relay_orbiter.bsp> --world-registry <reg> --world-ref shackleton-de-gerlache-v1:0.4.0 --key <key>. Run from the Worlds venv (`uv run --with ../astro-mine-link`): the build needs Link AND the Worlds world_provider entry point, and no single venv has both. 0.3.0 extends the plan's epoch window from 24 h to the full 30-day mission the episode runs (astro-mine-link#34), so comms_robustness scores over the whole episode; nodes carry their Fleet SADF identity.id (0.2.0, astro-mine-link#30) and the plan is rebuilt against the 0.4.0 world, so its provenance.source_content_hashes.terrain equals this scenario's world pin."
   }

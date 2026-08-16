@@ -198,7 +198,7 @@ def _excavator_document() -> SadfDocument:
     ``test_bench_speedup.py``)."""
     asset = Asset(
         identity=Identity(
-            id="astro-mine.fleet.excavator", name="Excavator", version="0.1.0", kind="excavator"
+            id="excavator", name="Excavator", version="0.1.0", kind="excavator"
         ),
         root_frame="body",
         bodies=[_body(480.0)],
@@ -256,7 +256,7 @@ def _rover_asset() -> SadfDocument:
     """A prospecting rover: wheels (so it drives), a neutron spectrometer (so it discovers)."""
     asset = Asset(
         identity=Identity(
-            id="astro-mine.fleet.prospecting-rover", name="Scout", version="0.1.0", kind="rover"
+            id="prospecting-rover", name="Scout", version="0.1.0", kind="rover"
         ),
         root_frame="body",
         bodies=[_body(210.0)],
@@ -288,7 +288,7 @@ def _plant_asset() -> SadfDocument:
     """An ISRU plant: a payload with a declared throughput, and a storage gauge that reports it."""
     asset = Asset(
         identity=Identity(
-            id="astro-mine.fleet.isru-plant", name="Plant", version="0.1.0", kind="isru"
+            id="isru-plant", name="Plant", version="0.1.0", kind="isru"
         ),
         root_frame="body",
         bodies=[_body(800.0)],
@@ -313,7 +313,7 @@ def _relay_asset() -> SadfDocument:
     """A relay orbiter: it declares the PROXIMITY_ORBIT regime, so it propagates orbitally."""
     asset = Asset(
         identity=Identity(
-            id="astro-mine.fleet.relay-orbiter", name="Relay", version="0.1.0", kind="orbiter"
+            id="relay-orbiter", name="Relay", version="0.1.0", kind="orbiter"
         ),
         root_frame="body",
         bodies=[_body(600.0)],
@@ -378,19 +378,19 @@ def publish_content(tmp_path: Path) -> dict[str, Any]:
             core_interface="sadf",
             layers=[Blob(_SADF_JSON, document.model_dump_json().encode("utf-8"))],
         )
-    digests["shackleton-de-gerlache-v1"] = _publish(
+    digests["shackleton-de-gerlache"] = _publish(
         client,
         private_key,
-        name="shackleton-de-gerlache-v1",
+        name="shackleton-de-gerlache",
         artifact_kind="world",
         manifest_kind=PluginKind.WORLD_PROVIDER,
         core_interface="world_provider",
         layers=[Blob(_WORLD_TAR, b"world-bundle-tar-bytes")],
     )
-    digests["shackleton_water_ice_v1"] = _publish(
+    digests["shackleton-water-ice"] = _publish(
         client,
         private_key,
-        name="shackleton_water_ice_v1",
+        name="shackleton-water-ice",
         artifact_kind="plugin",
         manifest_kind=PluginKind.RESOURCE_FIELD_BACKEND,
         core_interface="resource_field",
@@ -403,7 +403,7 @@ def publish_content(tmp_path: Path) -> dict[str, Any]:
     link_digest = _publish(
         client,
         private_key,
-        name="astro-mine.link.lunar-polar-relay-dsn",
+        name="lunar-polar-relay-dsn",
         artifact_kind="plugin",
         manifest_kind=PluginKind.COMMS_MODEL,
         core_interface="messages",
@@ -449,23 +449,23 @@ def _spec(content: dict[str, Any]) -> ScenarioSpec:
         core_interface={"env": "0.1.0", "messages": "0.1.0"},
         content=ContentPins(
             world=ContentRef(
-                id="shackleton-de-gerlache-v1", content_hash=d["shackleton-de-gerlache-v1"]
+                id="shackleton-de-gerlache", content_hash=d["shackleton-de-gerlache"]
             ),
             fleet=(
                 ContentRef(
-                    id="astro-mine.fleet.relay-orbiter",
-                    content_hash=d["astro-mine.fleet.relay-orbiter"],
+                    id="relay-orbiter",
+                    content_hash=d["relay-orbiter"],
                 ),
                 ContentRef(
-                    id="astro-mine.fleet.prospecting-rover",
-                    content_hash=d["astro-mine.fleet.prospecting-rover"],
+                    id="prospecting-rover",
+                    content_hash=d["prospecting-rover"],
                 ),
                 ContentRef(
-                    id="astro-mine.fleet.isru-plant", content_hash=d["astro-mine.fleet.isru-plant"]
+                    id="isru-plant", content_hash=d["isru-plant"]
                 ),
             ),
             prospect=(
-                ContentRef(id="shackleton_water_ice_v1", content_hash=d["shackleton_water_ice_v1"]),
+                ContentRef(id="shackleton-water-ice", content_hash=d["shackleton-water-ice"]),
             ),
         ),
         seeds=SeedSet(public=(1001, 1002)),
@@ -532,9 +532,9 @@ def test_each_assets_engine_is_inferred_from_its_own_sadf(
     # Routing an engine is *configuration* — and the configuration is the pinned asset itself.
     run_ = _runner(content, tmp_path).resolve(resolve_scenario(_spec(content)), seed=1001)
     kinds = {a.agent_id: a.dynamics.kind for a in run_.scenario.agents}
-    assert kinds["astro-mine.fleet.relay-orbiter"] == "orbital"  # declares PROXIMITY_ORBIT
-    assert kinds["astro-mine.fleet.prospecting-rover"] == "mobility"  # declares wheels
-    assert kinds["astro-mine.fleet.isru-plant"] == "kinematic"  # neither: it sits still
+    assert kinds["relay-orbiter"] == "orbital"  # declares PROXIMITY_ORBIT
+    assert kinds["prospecting-rover"] == "mobility"  # declares wheels
+    assert kinds["isru-plant"] == "kinematic"  # neither: it sits still
 
 
 def test_the_dynamics_parameters_come_from_the_resolved_content(
@@ -876,9 +876,9 @@ def test_resolved_scenario_is_the_bench_type_we_expect(content: dict[str, Any]) 
 #: The agents the fixture's fleet pins resolve to — the ids a ContactPlan must name to mask them
 #: (``Simulator._comms_agents`` intersects the plan's nodes with the scenario's agents).
 _FLEET = (
-    "astro-mine.fleet.relay-orbiter",
-    "astro-mine.fleet.prospecting-rover",
-    "astro-mine.fleet.isru-plant",
+    "relay-orbiter",
+    "prospecting-rover",
+    "isru-plant",
 )
 #: The spec runs 20 ticks x 60 s from the J2000 TDB origin; open a ground window over the first
 #: half so the episode straddles the terminator — some ticks have Earth contact, some do not.
@@ -977,7 +977,7 @@ def _spec_with_link(content: dict[str, Any]) -> ScenarioSpec:
             "content": pins.model_copy(
                 update={
                     "link": ContentRef(
-                        id="astro-mine.link.lunar-polar-relay-dsn",
+                        id="lunar-polar-relay-dsn",
                         content_hash=content["link_digest"],
                     )
                 }
@@ -1003,7 +1003,7 @@ def test_the_pinned_comms_model_masks_the_scored_run_with_nothing_injected(
     """The point of #53: a scenario that *pins* a link bundle scores comms_robustness on its own.
 
     Before this, only an explicitly injected ConnectivitySource (#52) could mask a run — the pinned
-    plan named ``prospecting-rover`` while Sim's agents were ``astro-mine.fleet.prospecting-rover``,
+    plan named ``prospecting-rover`` while Sim's agents were ``prospecting-rover``,
     so the two id sets never intersected and the mask silently applied to nobody."""
     card = run(_spec_with_link(content), BaselinePolicy(), runner=_runner(content, tmp_path))
 
@@ -1039,8 +1039,12 @@ def test_a_contact_plan_that_names_no_agent_fails_loudly(
     These are exactly the node ids the *published* anchor plan carried before Link was fixed."""
     wrong_vocabulary = ContactPlan(
         nodes=[
-            ContactNode(id="prospecting-rover", role=NodeRole.SPACE),  # not the SADF identity.id
-            ContactNode(id="isru-plant", role=NodeRole.SPACE),
+            # The *retired* names. This case used to read `prospecting-rover` as the wrong
+            # vocabulary, because the SADF ids were `astro-mine.fleet.<id>` -- the §13 migration
+            # (astro-mine-platform#34) made those bare names correct, so the negative case had to
+            # move with it or it would have silently stopped testing anything.
+            ContactNode(id="astro-mine.fleet.prospecting-rover", role=NodeRole.SPACE),
+            ContactNode(id="astro-mine.fleet.isru-plant", role=NodeRole.SPACE),
         ],
         intervals=[],
     )
@@ -1531,7 +1535,7 @@ def test_a_pinned_site_places_the_asset_there_not_on_the_ring(
     content: dict[str, Any], tmp_path: Path
 ) -> None:
     # The point of the change: siting is the scenario's, not a function of the content digest.
-    rover = "astro-mine.fleet.prospecting-rover"
+    rover = "prospecting-rover"
     spec = _placed(
         _spec(content),
         SitePlacement(asset=rover, lat_deg=-89.9, lon_deg=0.0, elevation_m=-3800.0),
@@ -1548,8 +1552,8 @@ def test_an_unplaced_asset_still_falls_back_to_the_deterministic_ring(
     content: dict[str, Any], tmp_path: Path
 ) -> None:
     # A scenario places only what it cares about; everything else keeps the prior behaviour.
-    rover = "astro-mine.fleet.prospecting-rover"
-    plant = "astro-mine.fleet.isru-plant"
+    rover = "prospecting-rover"
+    plant = "isru-plant"
     spec = _placed(
         _spec(content),
         SitePlacement(asset=rover, lat_deg=-89.9, lon_deg=0.0, elevation_m=-3800.0),
@@ -1565,7 +1569,7 @@ def test_an_omitted_elevation_is_taken_from_the_pinned_terrain(
 ) -> None:
     # The DEM is pinned by hash, so sampling it is as reproducible as restating the number — and
     # cannot drift from the world the run actually uses.
-    rover = "astro-mine.fleet.prospecting-rover"
+    rover = "prospecting-rover"
     lat, lon = -89.9, 0.0
     spec = _placed(_spec(content), SitePlacement(asset=rover, lat_deg=lat, lon_deg=lon))
     run_ = _resolve_run(spec, content)
@@ -1594,7 +1598,7 @@ def test_a_surface_site_pinned_for_an_orbiter_is_refused(
     # claiming it was placed — the same silent-contradiction class this whole change removes.
     spec = _placed(
         _spec(content),
-        SitePlacement(asset="astro-mine.fleet.relay-orbiter", lat_deg=-89.9, lon_deg=0.0),
+        SitePlacement(asset="relay-orbiter", lat_deg=-89.9, lon_deg=0.0),
     )
     with pytest.raises(ValueError, match="cannot place an orbiter"):
         _resolve_run(spec, content)
@@ -1607,7 +1611,7 @@ def test_pinned_placement_survives_a_re_pin(content: dict[str, Any], tmp_path: P
     surface asset — and `water_mass`, `discovery_latency` and the illumination-dependent metrics
     moved with it, for reasons having nothing to do with the policy. A pinned site must not care.
     """
-    rover = "astro-mine.fleet.prospecting-rover"
+    rover = "prospecting-rover"
     site = SitePlacement(asset=rover, lat_deg=-89.9, lon_deg=0.0, elevation_m=-3800.0)
     before = _placed(_spec(content), site)
     # Simulate a re-pin: a different task identity, same siting.
@@ -1787,7 +1791,7 @@ def test_only_prospecting_readings_condition_the_belief(
     allowed = prospecting_sensors(run_.scenario)
     assert allowed, "the fixture pins no prospecting sensor"
     # The plant's tank gauge is not a prospecting sensor, so it must never appear in the log.
-    assert "astro-mine.fleet.isru-plant" not in allowed
+    assert "isru-plant" not in allowed
     every_allowed_name = {name for names in allowed.values() for name in names}
     handed = {reading.sensor for reading, _position, _t in stub.seen}
     assert handed <= every_allowed_name, f"a non-prospecting reading was conditioned on: {handed}"

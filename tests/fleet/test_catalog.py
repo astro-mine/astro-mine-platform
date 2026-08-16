@@ -44,7 +44,7 @@ def _novel_geometry_asset() -> SadfDocument:
     the no-code-change discovery path.
     """
     cp = load_reference("relay_orbiter").model_copy(deep=True)
-    cp.asset.identity.id = "example.hopper-mk1"
+    cp.asset.identity.id = "hopper-mk1"
     cp.asset.identity.name = "Hopper Mk1"
     cp.asset.identity.kind = "hopper"
     cp.asset.geometry.append(
@@ -77,7 +77,7 @@ def _publish_geometry_asset(registry, base_dir) -> str:
     (base_dir / "geometry" / "hopper.glb").write_bytes(b"GLB-BYTES-123")
     (base_dir / "geometry" / "hopper.usda").write_bytes(b"USDA-BYTES-123")
     cp = load_reference("relay_orbiter").model_copy(deep=True)
-    cp.asset.identity.id = "example.hopper-mk1"
+    cp.asset.identity.id = "hopper-mk1"
     cp.asset.identity.name = "Hopper Mk1"
     cp.asset.identity.kind = "hopper"
     for fmt, uri in (
@@ -90,7 +90,7 @@ def _publish_geometry_asset(registry, base_dir) -> str:
     private_pem, _ = generate_keypair()
     publish_asset(load_sadf(canonical_json(cp)), open_registry(str(registry)),
         sign_key=private_pem, base_dir=base_dir)
-    return "example.hopper-mk1:0.1.0"
+    return "hopper-mk1:0.1.0"
 
 
 def _publish_wheeled_policy(registry) -> None:
@@ -141,10 +141,10 @@ def test_the_menu_is_assets_only_even_when_another_kind_declares_robot_tags(tmp_
     assert {e.kind for e in catalog_from_registry(Registry(reg)).all()} == {"asset", "policy"}
 
     menu = list_menu(open_registry(str(reg)))
-    assert [m.reference for m in menu] == ["astro-mine.fleet.prospecting-rover:0.1.0"]
+    assert [m.reference for m in menu] == ["prospecting-rover:0.1.0"]
     # ...and the tag it shares with the rover does not pull it back in.
     wheeled = list_menu(open_registry(str(reg)), requires=["mobility.wheeled"])
-    assert [m.reference for m in wheeled] == ["astro-mine.fleet.prospecting-rover:0.1.0"]
+    assert [m.reference for m in wheeled] == ["prospecting-rover:0.1.0"]
 
 
 def test_menu_lists_published_assets_with_vehicle_kind_and_tags(tmp_path):
@@ -195,7 +195,7 @@ def test_new_hub_published_type_appears_with_preview_and_no_fleet_change(tmp_pat
     private_pem, _ = generate_keypair()
     publish_asset(_novel_geometry_asset(), open_registry(str(reg)), sign_key=private_pem)
 
-    entry = {m.reference: m for m in list_menu(open_registry(str(reg)))}["example.hopper-mk1:0.1.0"]
+    entry = {m.reference: m for m in list_menu(open_registry(str(reg)))}["hopper-mk1:0.1.0"]
     assert entry.kind == "hopper"  # a kind Fleet's code has never enumerated
     assert entry.name == "Hopper Mk1"
 
@@ -209,7 +209,7 @@ def test_new_hub_published_type_appears_with_preview_and_no_fleet_change(tmp_pat
 def test_preview_of_a_mass_model_asset_is_empty(tmp_path):
     reg = tmp_path / "reg"
     _publish_roster(reg, ["relay_orbiter"])  # reference assets ship no geometry
-    assert asset_preview(open_registry(str(reg)), "astro-mine.fleet.relay-orbiter:0.1.0") == []
+    assert asset_preview(open_registry(str(reg)), "relay-orbiter:0.1.0") == []
 
 
 def test_empty_registry_yields_an_empty_menu(tmp_path):
@@ -226,8 +226,8 @@ def test_materialize_preview_writes_a_servable_document_and_geometry(tmp_path):
 
     # The returned path is the SADF-JSON documentUrl target, at the served-dir root.
     assert document.parent == out
-    assert document.name == "example.hopper-mk1.sadf.json"
-    assert load_sadf(document.read_bytes()).asset.identity.id == "example.hopper-mk1"
+    assert document.name == "hopper-mk1.sadf.json"
+    assert load_sadf(document.read_bytes()).asset.identity.id == "hopper-mk1"
     # Geometry blobs are laid out at each ref's relative uri, byte-identical to what was published,
     # so the View widget resolves new URL(ref.uri, documentUrl) to the right bytes.
     assert (out / "geometry" / "hopper.glb").read_bytes() == b"GLB-BYTES-123"
@@ -240,7 +240,7 @@ def test_materialize_preview_of_mass_model_writes_only_the_document(tmp_path):
 
     out = tmp_path / "served"
     document = materialize_preview(open_registry(str(reg)),
-        "astro-mine.fleet.relay-orbiter:0.1.0", out)
+        "relay-orbiter:0.1.0", out)
     assert document.is_file()
     assert list(out.rglob("*.glb")) == []  # no geometry blobs to serve
 
@@ -251,7 +251,7 @@ def test_materialize_preview_rejects_a_path_traversal_uri(tmp_path):
     src.mkdir()
     (tmp_path / "escape.glb").write_bytes(b"PWNED")  # sits at src/../escape.glb
     cp = load_reference("relay_orbiter").model_copy(deep=True)
-    cp.asset.identity.id = "example.evil"
+    cp.asset.identity.id = "evil"
     cp.asset.geometry.append(
         GeometryRef(
             role=GeometryRole.VISUAL,
@@ -266,4 +266,4 @@ def test_materialize_preview_rejects_a_path_traversal_uri(tmp_path):
 
     # Core does not reject a "../" geometry uri, so materialize_preview must fail closed itself.
     with pytest.raises(HubError, match="escapes the output directory"):
-        materialize_preview(open_registry(str(reg)), "example.evil:0.1.0", tmp_path / "served")
+        materialize_preview(open_registry(str(reg)), "evil:0.1.0", tmp_path / "served")

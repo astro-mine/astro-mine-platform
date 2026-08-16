@@ -38,7 +38,11 @@ FIDELITY_ID = "lunar-polar-ice-excavation-fidelity-v1"
 
 #: The excavator revision this task pins — 0.2.0, the first to declare a `tool` contact element
 #: (astro-mine-fleet#37). Pinned by digest so a re-pin to a different asset fails loudly here.
-EXCAVATOR_020 = "sha256:d576d7844625b25baec6496a45ad0a18a4da945c2cb0a5ebfa5c957d62fd5d35"
+#: The excavator at 0.2.0. Re-published as `excavator` in the §13 migration
+#: (astro-mine-platform#34) -- a SADF `identity.id` *is* the registry name, so renaming it
+#: changed the asset bytes and therefore the digest. Same revision, same `tool` contact
+#: element; the pre-migration digest was `sha256:d576d784...`.
+EXCAVATOR_020 = "sha256:5af3d461b7cd65c48a320d404ff0db3add8a6f4907684d4ecda1aa6a86a6bf6b"
 
 
 def _seed_row(
@@ -241,7 +245,7 @@ def test_the_fidelity_scenario_is_the_task_it_claims_to_be() -> None:
     assert spec.episode.max_sim_seconds is not None
     assert spec.episode.max_sim_seconds / spec.episode.horizon_steps == pytest.approx(0.05)
 
-    excavators = [ref for ref in spec.content.fleet if ref.id == "astro-mine.fleet.excavator"]
+    excavators = [ref for ref in spec.content.fleet if ref.id == "excavator"]
     assert [ref.content_hash for ref in excavators] == [EXCAVATOR_020]
     # The comparison is about excavation physics: a fleet carrying agents the surrogate has nothing
     # to do with would only dilute the ratio toward 1.0.

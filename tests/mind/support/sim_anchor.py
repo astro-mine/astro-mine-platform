@@ -400,19 +400,19 @@ def anchor_content(registry_dir: Path, *, n_agents: int) -> dict[str, Any]:
             core_interface="sadf",
             layers=[Blob(_SADF_JSON, document.model_dump_json().encode("utf-8"))],
         )
-    digests["shackleton-de-gerlache-v1"] = _publish(
+    digests["shackleton-de-gerlache"] = _publish(
         client,
         private_key,
-        name="shackleton-de-gerlache-v1",
+        name="shackleton-de-gerlache",
         artifact_kind="world",
         manifest_kind=PluginKind.WORLD_PROVIDER,
         core_interface="world_provider",
         layers=[Blob(_WORLD_TAR, b"world-bundle-tar-bytes")],
     )
-    digests["shackleton_water_ice_v1"] = _publish(
+    digests["shackleton-water-ice"] = _publish(
         client,
         private_key,
-        name="shackleton_water_ice_v1",
+        name="shackleton-water-ice",
         artifact_kind="plugin",
         manifest_kind=PluginKind.RESOURCE_FIELD_BACKEND,
         core_interface="resource_field",
@@ -443,8 +443,8 @@ def anchor_spec(
         core_interface={"env": "0.1.0", "messages": "0.1.0"},
         content=ContentPins(
             world=ContentRef(
-                id="shackleton-de-gerlache-v1",
-                content_hash=digests["shackleton-de-gerlache-v1"],
+                id="shackleton-de-gerlache",
+                content_hash=digests["shackleton-de-gerlache"],
             ),
             fleet=tuple(
                 ContentRef(id=agent_id, content_hash=digests[agent_id])
@@ -452,8 +452,8 @@ def anchor_spec(
             ),
             prospect=(
                 ContentRef(
-                    id="shackleton_water_ice_v1",
-                    content_hash=digests["shackleton_water_ice_v1"],
+                    id="shackleton-water-ice",
+                    content_hash=digests["shackleton-water-ice"],
                 ),
             ),
         ),

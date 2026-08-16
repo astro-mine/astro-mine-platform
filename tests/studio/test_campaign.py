@@ -124,9 +124,9 @@ def test_campaign_records_the_world_it_was_inspected_against(
         chosen,
         name="c",
         phases=_PHASES,
-        world_ref="shackleton-de-gerlache-v1:0.4.0",
+        world_ref="shackleton-de-gerlache:0.4.0",
     )
-    assert with_world.world_ref == "shackleton-de-gerlache-v1:0.4.0"
+    assert with_world.world_ref == "shackleton-de-gerlache:0.4.0"
 
     without = author_campaign(objective_doc, chosen, name="c", phases=_PHASES)
     assert without.world_ref is None

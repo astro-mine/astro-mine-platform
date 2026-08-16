@@ -1,31 +1,31 @@
 {
-  "shackleton-de-gerlache-v1": {
+  "shackleton-de-gerlache": {
     "producer": "worlds",
-    "content_id": "shackleton-de-gerlache-v1",
+    "content_id": "shackleton-de-gerlache",
     "content_version": "0.4.0",
     "recipe": "astro-mine-worlds scripts/build_shackleton_anchor.py --convert --raw-dem LDEM_875S_5M.lbl --metakernel <DE440.tm> --version 0.4.0 --resolution-m 120 --n-azimuth 120 --max-radius-m 30000 --horizon-frame grid --abcorr NONE --psr-start 2025-01-01T00:00:00 --psr-days 365 --psr-step-hours 12 --psr-semantics seasonal, then `worlds publish`. 0.4.0 is the first anchor world to ship illumination/horizon.zarr (astro-mine-worlds#46)."
   },
-  "astro-mine.fleet.relay-orbiter": {
+  "relay-orbiter": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.relay-orbiter",
+    "content_id": "relay-orbiter",
     "content_version": "0.1.0",
     "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md)"
   },
-  "astro-mine.fleet.lander": {
+  "lander": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.lander",
+    "content_id": "lander",
     "content_version": "0.1.0",
     "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md)"
   },
-  "astro-mine.fleet.prospecting-rover": {
+  "prospecting-rover": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.prospecting-rover",
+    "content_id": "prospecting-rover",
     "content_version": "0.1.0",
     "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md)"
   },
-  "shackleton_water_ice_v1": {
+  "shackleton-water-ice": {
     "producer": "prospect",
-    "content_id": "shackleton_water_ice_v1",
+    "content_id": "shackleton-water-ice",
     "content_version": "1.0.0",
     "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md)"
   }

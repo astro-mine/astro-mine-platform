@@ -33,7 +33,7 @@ def test_resolve_collects_all_referenced_content_by_hash() -> None:
     resolved = resolve_scenario(spec)
     assert resolved.content_hashes == {
         "shackleton-v1": sha256_of("a"),
-        "astro-mine.fleet.prospecting-rover": sha256_of("b"),
+        "prospecting-rover": sha256_of("b"),
         "ice-prior-v1": sha256_of("c"),
     }
 

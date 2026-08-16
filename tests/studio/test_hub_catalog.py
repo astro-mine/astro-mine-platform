@@ -33,8 +33,8 @@ from astro_mine.studio.hub.catalog import (
     MEDIA_SADF_JSON,
 )
 
-ORBITER = "astro-mine.fleet.relay-orbiter:0.1.0"
-HOPPER = "astro-mine.fleet.hopper:0.1.0"
+ORBITER = "relay-orbiter:0.1.0"
+HOPPER = "hopper:0.1.0"
 
 
 def _sha(data: bytes) -> str:
@@ -100,7 +100,7 @@ def registry(tmp_path: Path, keys: tuple[bytes, bytes]) -> Registry:
     _publish_asset(
         reg,
         private_pem,
-        asset_id="astro-mine.fleet.relay-orbiter",
+        asset_id="relay-orbiter",
         kind="orbiter",
         name="Relay Orbiter",
         tags=[CapabilityTag("mobility.orbiter"), CapabilityTag("comms.relay")],
@@ -108,7 +108,7 @@ def registry(tmp_path: Path, keys: tuple[bytes, bytes]) -> Registry:
     _publish_asset(
         reg,
         private_pem,
-        asset_id="astro-mine.fleet.hopper",
+        asset_id="hopper",
         kind="hopper",
         name="Hopper Mk1",
         tags=[CapabilityTag("mobility.wheeled")],
@@ -154,7 +154,7 @@ def test_a_new_kind_appears_with_no_studio_edit(
     _publish_asset(
         registry,
         private_pem,
-        asset_id="example.skycrane",
+        asset_id="skycrane",
         kind="skycrane",
         name="Sky Crane",
         tags=[CapabilityTag("mobility.rocket")],
@@ -272,13 +272,13 @@ def test_geometry_that_is_not_a_layer_of_the_artifact_is_refused(
     about attestation, not about a missing file.
     """
     private_pem, public_pem = keys
-    sadf = json.dumps({"asset": {"identity": {"id": "example.ghost"}}}).encode()
+    sadf = json.dumps({"asset": {"identity": {"id": "ghost"}}}).encode()
     stray = b"UNATTESTED-GLB"
     blob_path(registry.path, _sha(stray)).parent.mkdir(parents=True, exist_ok=True)
     blob_path(registry.path, _sha(stray)).write_bytes(stray)
 
     manifest = PluginManifest(
-        name="example.ghost",
+        name="ghost",
         version="0.1.0",
         kind=PluginKind.ASSET,
         attributes={"asset_kind": "rover", "asset_name": "Ghost"},
@@ -288,7 +288,7 @@ def test_geometry_that_is_not_a_layer_of_the_artifact_is_refused(
         ),
     )
     HubClient(registry).publish(
-        name="example.ghost",
+        name="ghost",
         version="0.1.0",
         kind="asset",
         manifest=manifest,
@@ -301,7 +301,7 @@ def test_geometry_that_is_not_a_layer_of_the_artifact_is_refused(
         HubClient(registry, trusted_public_key_pem=public_pem), cache_dir=cache
     )
     with pytest.raises(PreviewError, match="not a layer of the verified artifact"):
-        previewer.preview("example.ghost:0.1.0")
+        previewer.preview("ghost:0.1.0")
     assert not any(cache.rglob("*.glb"))
 
 
@@ -324,7 +324,7 @@ def test_refuses_an_asset_with_no_sadf_layer(
     _publish_asset(
         registry,
         private_pem,
-        asset_id="example.hollow",
+        asset_id="hollow",
         kind="rover",
         name="Hollow",
         tags=[CapabilityTag("mobility.wheeled")],
@@ -335,7 +335,7 @@ def test_refuses_an_asset_with_no_sadf_layer(
         HubClient(registry, trusted_public_key_pem=public_pem), cache_dir=tmp_path / "a"
     )
     with pytest.raises(PreviewError, match=r"carries no .* layer"):
-        previewer.preview("example.hollow:0.1.0")
+        previewer.preview("hollow:0.1.0")
 
 
 def test_a_path_traversal_geometry_uri_is_refused(
@@ -345,7 +345,7 @@ def test_a_path_traversal_geometry_uri_is_refused(
     _publish_asset(
         registry,
         private_pem,
-        asset_id="example.evil",
+        asset_id="evil",
         kind="rover",
         name="Evil",
         tags=[CapabilityTag("mobility.wheeled")],
@@ -356,5 +356,5 @@ def test_a_path_traversal_geometry_uri_is_refused(
         HubClient(registry, trusted_public_key_pem=public_pem), cache_dir=cache
     )
     with pytest.raises(PreviewError, match="escapes its cache"):
-        previewer.preview("example.evil:0.1.0")
+        previewer.preview("evil:0.1.0")
     assert not (cache / "escaped.glb").exists()

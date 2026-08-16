@@ -28,7 +28,7 @@ def test_signed_publish_then_pull_and_verify_by_content_hash(tmp_path):
 
     result = publish_asset(doc, open_registry(str(tmp_path / "reg")), sign_key=private_pem)
     assert result.signed and result.namespace == "open"
-    assert result.reference == "astro-mine.fleet.relay-orbiter:0.1.0"
+    assert result.reference == "relay-orbiter:0.1.0"
     assert result.digest.startswith("sha256:")
 
     # Pull BY CONTENT HASH (the manifest digest); the full supply chain re-verifies before trust.
@@ -101,7 +101,7 @@ def test_resolved_family_publishes_and_republish_is_rejected(tmp_path):
 
     restored = pull_asset(open_registry(str(tmp_path / "reg")), result.digest,
         trusted_public_key_pem=public_pem)
-    assert restored.asset.identity.id == "astro-mine.fleet.surface-rover.m300"
+    assert restored.asset.identity.id == "surface-rover-m300"
 
 
 def test_publish_refuses_a_gated_capability_tag(tmp_path):
@@ -123,7 +123,7 @@ def test_geometry_layer_and_provenance_are_published(tmp_path):
     private_pem, _ = generate_keypair()
     (tmp_path / "mesh.usda").write_bytes(b"#usda 1.0\n")
     asset = model.Asset(
-        identity=model.Identity(id="geo.asset", name="G", version="0.1.0", kind="rover"),
+        identity=model.Identity(id="geo-asset", name="G", version="0.1.0", kind="rover"),
         core_interface_versions={"sadf": "0.1.0"},
         root_frame="base",
         frames=[model.Frame(name="base")],

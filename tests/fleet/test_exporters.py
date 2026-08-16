@@ -263,7 +263,7 @@ def test_sdf_export_is_wellformed_and_reimportable(rover: SadfDocument, tmp_path
     result = exporters.export_sdf(rover, tmp_path / "rover.sdf")
     model = ET.parse(result.path).getroot().find("model")
 
-    assert model.get("name") == "astro-mine.fleet.prospecting-rover"
+    assert model.get("name") == "prospecting-rover"
     assert {link.get("name") for link in model.findall("link")} == {
         "body",
         "sensor_mast",

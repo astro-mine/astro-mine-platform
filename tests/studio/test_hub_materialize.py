@@ -27,7 +27,7 @@ from astro_mine.studio.hub import (
 )
 
 BUNDLE_MEDIA_TYPE = "application/vnd.astro-mine.world.bundle.v1.tar"
-WORLD_REF = "shackleton-de-gerlache-v1:0.2.0"
+WORLD_REF = "shackleton-de-gerlache:0.2.0"
 
 
 def _bundle_tar() -> bytes:
@@ -35,7 +35,7 @@ def _bundle_tar() -> bytes:
     files = {
         "world.json": json.dumps(
             {
-                "world_id": "shackleton-de-gerlache-v1",
+                "world_id": "shackleton-de-gerlache",
                 "tiles": "tiles/tileset.json",
                 "tiles_anchor": {"frame": "MOON_ME", "origin": {"height_m": -984.9}},
             }
@@ -62,12 +62,12 @@ def registry(tmp_path: Path, keys: tuple[bytes, bytes]) -> Registry:
     private_pem, _ = keys
     reg = Registry(tmp_path / "registry")
     manifest = PluginManifest(
-        name="shackleton-de-gerlache-v1",
+        name="shackleton-de-gerlache",
         version="0.2.0",
         kind=PluginKind.WORLD_PROVIDER,
         core_interfaces={"world_provider": "0.1.0"},
         attributes={
-            "world_id": "shackleton-de-gerlache-v1",
+            "world_id": "shackleton-de-gerlache",
             "bundle_media_type": BUNDLE_MEDIA_TYPE,
         },
     )
@@ -101,7 +101,7 @@ def test_materializes_a_verified_bundle_the_viewer_can_fetch(
     world = materializer.materialize(WORLD_REF)
 
     assert world.digest.startswith("sha256:")
-    assert world.world_id == "shackleton-de-gerlache-v1"
+    assert world.world_id == "shackleton-de-gerlache"
     assert world.manifest_path.is_file()
     assert (world.path / "tiles" / "tileset.json").is_file()
     assert (world.path / "tiles" / "terrain.glb").read_bytes() == b"glTF-bytes"

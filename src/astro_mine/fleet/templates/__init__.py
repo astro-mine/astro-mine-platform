@@ -133,7 +133,10 @@ def _identity(
     family: str, variant: str, version: str, kind: str, name: str, desc: str
 ) -> dict[str, Any]:
     return {
-        "id": f"astro-mine.fleet.{family}.{variant}",
+        # Bare kebab-case, no component prefix, no version (conventions.md §13). This used to
+        # mint `astro-mine.fleet.<family>.<variant>`, so every templated asset was born
+        # non-conforming and the gate at publish would have refused it.
+        "id": f"{family}-{variant}",
         "name": name,
         "version": version,
         "kind": kind,

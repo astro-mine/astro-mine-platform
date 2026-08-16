@@ -11,7 +11,7 @@
 sadf_version: "0.1"
 asset:
   identity:
-    id: astro-mine.fleet.excavator
+    id: excavator
     name: Excavator Rover
     version: 0.2.0
     kind: excavator

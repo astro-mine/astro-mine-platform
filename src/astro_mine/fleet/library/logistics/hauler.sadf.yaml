@@ -4,7 +4,7 @@
 sadf_version: "0.1"
 asset:
   identity:
-    id: astro-mine.fleet.hauler
+    id: hauler
     name: Hauler Rover
     version: 0.1.0
     kind: hauler

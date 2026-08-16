@@ -21,6 +21,7 @@ from astro_mine.bench.zoo import (
     resolve_scenario,
     verify_zoo,
 )
+from astro_mine.hub.registry import is_valid_artifact_name
 
 SPRINT_ID = "lunar-polar-ice-prospecting-sprint-v1"
 ENDURANCE_ID = "lunar-polar-ice-endurance-v1"
@@ -110,6 +111,16 @@ ANCHOR_SPEC_HASHES = {
     # no declared gauge, and a template unit the platform does not know. A content change, so a new
     # immutable spec_version rather than an edit of 0.7.0 (bench.md §8).
     "0.8.0": "sha256:e811049a392e06c7b4291a3d4b01d029ef75a8f1bd39979f20e787888751ca71",
+    # 0.9.0 does two things at once, deliberately. It rotates the embargoed held-out seeds out of
+    # this repository (astro-mine-platform#37) and re-pins every content reference onto its
+    # conforming artifact name (#34, conventions.md §13). Both bind into the spec hash -- a new
+    # `seeds.heldout_commit` and nine new content digests -- so run separately they would have
+    # superseded this scenario twice, permanently, in a record leaderboards pin to. Once.
+    #
+    # The re-pin moves *names*, not content: the world, fleet and field bytes are unchanged, and
+    # every name pinned before 0.9.0 is still published and still resolvable, so 0.8.0 results stay
+    # valid for 0.8.0.
+    "0.9.0": "sha256:d8839d0449f7b7330a338784311db62b7bf38d50bcc4664a2265403afb4f734b",
 }
 
 
@@ -223,10 +234,10 @@ def test_the_anchor_pins_where_the_swarm_stands() -> None:
     # The four *surface* assets. The relay-orbiter is on orbit and the lander is a delivery
     # vehicle, so neither is sited here — a scenario may place only what it cares about.
     assert placed == {
-        "astro-mine.fleet.prospecting-rover",
-        "astro-mine.fleet.excavator",
-        "astro-mine.fleet.hauler",
-        "astro-mine.fleet.isru-plant",
+        "prospecting-rover",
+        "excavator",
+        "hauler",
+        "isru-plant",
     }
     # Every site is a real polar site on the pinned world, not a placeholder at the origin.
     for site in spec.placement.sites:
@@ -275,43 +286,45 @@ def test_the_anchor_pins_the_belief_and_discovery_scoring_parameters() -> None:
     assert lat_min == -90.0 and lat_max < -89.5
 
 
-def test_the_anchor_re_pins_only_the_plant_at_0_8_0() -> None:
-    # 0.6.0 and 0.7.0 were *spec* changes that moved no content. 0.8.0 moves exactly one pin — the
-    # ISRU plant, to the revision that declares its water gauge (astro-mine-fleet#40) — and nothing
-    # else. A re-pin that quietly dragged the world or the contact plan with it would change what
-    # the task runs against for reasons nobody reviewed.
+def test_the_anchor_re_pins_every_name_at_0_9_0() -> None:
+    """0.9.0 moves *every* content reference onto its conforming name, and moves nothing else.
+
+    This replaces a characterization of 0.8.0 ("re-pins only the plant"). That property was true and
+    is now history — it is recorded in PROVENANCE.md, beside the digest it was true of, which is
+    where a statement about a superseded version belongs. Asserting it against the live spec would
+    have meant asserting the anchor never moves again.
+
+    What 0.9.0 has to be checked for is the opposite shape: a sweep that touched all nine pins at
+    once, where the risk is not "did one drift" but "did the sweep quietly change the task while it
+    was renaming things". So this pins the identities, and the immutability test above pins the
+    resulting spec hash.
+    """
     spec = load_scenario(ANCHOR_SCENARIO_ID)
-    assert spec.spec_version == "0.8.0"
-    plant = next(r for r in spec.content.fleet if r.id == "astro-mine.fleet.isru-plant")
-    assert plant.content_hash == (
-        "sha256:3b13364714c41693c4523c0bed6303a77d3d6348a3b8a549561d2addb57fa7eb"
+    assert spec.spec_version == "0.9.0"
+
+    assert spec.content.world.id == "shackleton-de-gerlache"
+    assert tuple(r.id for r in spec.content.fleet) == (
+        "relay-orbiter",
+        "lander",
+        "prospecting-rover",
+        "excavator",
+        "hauler",
+        "isru-plant",
     )
-    # Every other fleet pin is 0.5.0's, verbatim.
-    others = {r.id: r.content_hash for r in spec.content.fleet if r.id != plant.id}
-    assert others == {
-        "astro-mine.fleet.relay-orbiter": (
-            "sha256:47d74f0e851826718a5064d101983ea187d40d9d8ac51488c023755c29141480"
-        ),
-        "astro-mine.fleet.lander": (
-            "sha256:f0270170c2cac90953392b5cd70d79a2d7abf3799454d29f46fa6a4cea4bdc90"
-        ),
-        "astro-mine.fleet.prospecting-rover": (
-            "sha256:74db543ff304a2fe4cef9c421873a3375243019acd0314f0ef9aae6e6fb04629"
-        ),
-        "astro-mine.fleet.excavator": (
-            "sha256:d576d7844625b25baec6496a45ad0a18a4da945c2cb0a5ebfa5c957d62fd5d35"
-        ),
-        "astro-mine.fleet.hauler": (
-            "sha256:5e0c5b6d075d81c06507f283f390b74afd92953ec106d67656e00c31f7c63aab"
-        ),
-    }
-    assert spec.content.world.content_hash == (
-        "sha256:fd14f5f6e618a9c01c36028e642e6efdbee449a5e96bac832047654913a4fd2c"
-    )
+    assert tuple(r.id for r in spec.content.prospect) == ("shackleton-water-ice",)
     assert spec.content.link is not None
-    assert spec.content.link.content_hash == (
-        "sha256:0a0eb64e4a0a25fe9f767209f1e8baca4fb4df4c4b1313c0b5f78a5bbf27f9ed"
-    )
+    assert spec.content.link.id == "lunar-polar-relay-dsn"
+
+    # Every one of them conforms — the property the sweep existed to establish.
+    for ref in spec.content_refs():
+        assert is_valid_artifact_name(ref.id), ref.id
+
+    # Placement keys the same vocabulary the content pins, and it is a live reference that the
+    # sweep had to carry with it. `_spec.py` refuses to load a spec where the two disagree, so a
+    # miss here is loud rather than silent — but it was missed once, so it is pinned.
+    assert {site.asset for site in spec.placement.sites} <= {r.id for r in spec.content.fleet}
+
+    # The Core schema digest is untouched: this was a rename, not a schema change.
     assert spec.core_schema_digest == (
         "sha256:2ebc6353bda4ecd0ed14b39ef04747b84a8fa79f8a094146f74ee027cbf07980"
     )

@@ -55,8 +55,8 @@ from astro_mine.link.registry import publish_contact_plan
 
 # The contact-graph node ids are the Fleet SADF asset ids (astro-mine-sim#53): a Sim agent and a
 # contact-plan node name the same robot, so Sim's exact-match binding masks the right observations.
-_PSR = "astro-mine.fleet.prospecting-rover"
-_RIDGE = "astro-mine.fleet.isru-plant"
+_PSR = "prospecting-rover"
+_RIDGE = "isru-plant"
 _RELAY_PERIOD_S = 7200.0
 
 # A 2 h slice of the anchor window keeps the scripted-provider sweep quick while still spanning a
@@ -151,7 +151,7 @@ def _grid(n: int, step_s: float) -> list[Epoch]:
 def test_anchor_declares_the_relay_and_the_three_dsn_complexes() -> None:
     stations = anchor_ground_stations()
     assert [s.name for s in stations] == ["DSS-14-Goldstone", "DSS-63-Madrid", "DSS-43-Canberra"]
-    assert ANCHOR_RELAY.name == "astro-mine.fleet.relay-orbiter"
+    assert ANCHOR_RELAY.name == "relay-orbiter"
     assert set(anchor_node_ids()) == {site.name for site in ANCHOR_SURFACE_SITES} | {
         ANCHOR_RELAY.name,
         *(s.name for s in stations),

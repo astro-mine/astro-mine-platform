@@ -5,7 +5,7 @@
 sadf_version: "0.1"
 asset:
   identity:
-    id: astro-mine.fleet.prospecting-rover
+    id: prospecting-rover
     name: Prospecting Rover
     version: 0.1.0
     kind: rover

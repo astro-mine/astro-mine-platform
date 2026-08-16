@@ -66,9 +66,16 @@ _RECIPE_NAME_SUFFIX = "-recipe"
 
 
 def recipe_reference_name(recipe: str) -> str:
-    """The Hub artifact name a prior-recipe publishes under (distinct from its fitted-prior
-    name)."""
-    return f"{recipe}{_RECIPE_NAME_SUFFIX}"
+    """The Hub artifact name a prior-recipe publishes under (distinct from its fitted-prior name).
+
+    Built from the recipe's *published artifact name*, not from its registry key. Appending the
+    suffix straight onto the key carried the key's shape into the registry — so a snake_case key
+    minted a snake_case artifact name, which `conventions.md` §13 forbids and the gate at
+    :meth:`HubClient.publish` now refuses. The same defect `publish_prior` had, in a second place.
+    """
+    from astro_mine.prospect.priors import artifact_name_for
+
+    return f"{artifact_name_for(recipe)}{_RECIPE_NAME_SUFFIX}"
 
 
 #: The kinds :func:`discover_priors` surfaces — a published field and a published recipe.
