@@ -133,7 +133,7 @@ def contact_edge_table(plan: ContactPlan) -> pa.Table:
 def write_contact_edge_table(plan: ContactPlan, path: str | Path) -> Path:
     """Write the contact-graph edge table to ``path`` as Parquet; returns the path."""
     out = Path(path)
-    pq.write_table(contact_edge_table(plan), out)  # type: ignore[no-untyped-call]
+    pq.write_table(contact_edge_table(plan), out)
     return out
 
 

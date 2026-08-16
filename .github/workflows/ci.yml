@@ -18,6 +18,28 @@ jobs:
       # were not uniformly ruff-format-normalized; reformatting is churn.
       - run: uv run --group dev ruff check src tests scripts
 
+  # conventions.md §2 requires Python to be checked with mypy/pyright, and nothing checked it:
+  # `mypy` sat in the `dev` group with no configuration and no step to run it. The gate is a
+  # per-component ratchet — see the long note over `[tool.mypy]` in pyproject.toml for the enrolled
+  # set, the four components that are not, and why the exclusions are shaped the way they are.
+  #
+  # Unlike `lint`, this needs the package built and its dependencies present: mypy resolves imports
+  # against the real environment, including Guard's PyO3 extension, so this job carries the Rust
+  # toolchain and a full `uv sync` rather than `uv run --group dev` alone. Scope is `src/astro_mine`
+  # — `tests` and `scripts` are linted but not yet type-checked.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Sync environment
+        run: uv sync --group dev
+      - name: Type-check (mypy)
+        run: uv run mypy src/astro_mine
+
   test:
     runs-on: ubuntu-latest
     strategy:

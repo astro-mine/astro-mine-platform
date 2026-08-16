@@ -311,6 +311,121 @@ exclude_also = [
   "@(typing\\.)?overload",
 ]
 
+# Type checking (conventions.md §2: Python is "type-hinted, checked with mypy/pyright").
+#
+# `strict = true` over the whole tree, run as a **per-component ratchet** rather than a flag day.
+# One wheel with no package boundaries makes a wrong signature everyone's problem, so the gate
+# matters more here than anywhere -- but 110k lines migrated from seventeen repositories cannot be
+# made strict-clean in one change. The seed is the set that already passes; the components that do
+# not are listed below one block each, with their error count, and the build fails on a regression
+# in any of the rest. Widening the enrolled set is the point; `tests/platform/test_typecheck_ratchet.py`
+# is what stops it from silently narrowing.
+#
+# Scope is `src/astro_mine`. Lint covers `src tests scripts`; this does not, and saying so is
+# better than a gate that looks wider than it is. Widening to tests/ and scripts/ is a later step.
+[tool.mypy]
+python_version = "3.12"
+strict = true
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+# protoc/buf-generated bindings are not hand-maintained code -- the same judgement `[tool.ruff]`
+# extend-exclude and `[tool.coverage.run]` omit already make about this exact glob.
+#
+# `ignore_errors`, deliberately, and NOT `follow_imports = "skip"`: skipping would turn every
+# generated message into `Any` and silently drop type coverage from every component that speaks
+# Core's schemas -- which is most of them. This suppresses errors *inside* the generated files
+# while keeping their types available to callers.
+module = ["astro_mine.*._proto.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# Two dependencies that ship types too incomplete to check against.
+#
+# `mcap` is not merely incomplete: mypy resolves its `__init__.py` under two module names at once
+# and aborts the whole run with "Source file found twice" -- a fatal error, not a finding, so it
+# reports "errors prevented further checking" and type-checks *nothing*. That failure hid five real
+# errors in astro-mine-cli (astro-mine-cli#31) and hides this entire tree if left alone.
+#
+# `pyarrow` ships inline annotations, but `parquet.read_table`/`write_table` are untyped, so every
+# call site fails `disallow_untyped_calls` -- which is what kept Guard and Bench, both otherwise
+# clean, out of the enrolled set below.
+#
+# `follow_imports = skip` rather than `ignore_missing_imports`: both packages are present, and the
+# problem is what they declare about themselves, not a missing stub.
+module = ["mcap.*", "pyarrow.*"]
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+# Third-party packages with neither a stub package nor a `py.typed` marker, listed one by one
+# rather than switched on globally: a blanket `ignore_missing_imports` would also swallow a typo
+# in one of our own module paths.
+#
+# Several of these (ompl, fcl, unified_planning, cupy, nats) are optional extras absent from the
+# `dev` group, so they are unresolvable in CI as well as untyped. Listing them keeps the result
+# identical whether or not an extra happens to be installed.
+module = [
+  "boto3.*",
+  "capnp.*",
+  "cupy.*",
+  "fcl.*",
+  "flatbuffers.*",
+  "gpytorch.*",
+  "grpc.*",
+  "mujoco.*",
+  "nats.*",
+  "ompl.*",
+  "onnxruntime.*",
+  "orekit_jpype.*",
+  "pettingzoo.*",
+  "pxr.*",
+  "rasterio.*",
+  "scipy.*",
+  "spiceypy.*",
+  "unified_planning.*",
+  "yourdfpy.*",
+]
+ignore_missing_imports = true
+
+# --- The ratchet -------------------------------------------------------------------------------
+#
+# Four components are not yet enrolled. Each gets its own block with its error count, because a
+# single merged exemption list hides which one is close to clean and which is not. These are debts
+# with a number attached, not exemptions: shrink the list, never grow it. The counts are from
+# `uv run mypy src/astro_mine` with the overrides above and are expected to drift as the code
+# changes -- they are a sense of scale, not an assertion.
+#
+# Enrolled and clean: core, spice, seal, worlds, prospect, link, cloud, mind, hub, studio,
+# allocate, guard, bench.
+
+[[tool.mypy.overrides]]
+# 29 errors, nearly all in `datagen/store.py` and `serve/export.py`: unparameterized generics
+# (`np.ndarray`, `dict`) on the dataset-shard and ONNX-export paths.
+module = ["astro_mine.surrogate.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# 17 errors. Ray/RLlib is the bulk of it -- `PPOConfig` and friends are untyped, and RLlib's
+# `.remote()` actor handles are invisible to mypy -- plus unparameterized tensors in `models/mlp.py`.
+module = ["astro_mine.learn.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# 7 errors, all downstream of `trimesh`: it ships `py.typed` while leaving `apply_scale`,
+# `TextureVisuals`, `PBRMaterial` and `export` unannotated, so the geometry and exporter paths fail
+# on untyped calls and the `Any` they return. Enrolling this one is mostly a stub question.
+module = ["astro_mine.fleet.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+# 6 errors: generated gRPC servicer/stub calls in `service/`, and Ray/Brax `.remote()` and
+# `.update()` handles in `engines/brax/`. Note this is the component whose `-m sim` suite the
+# `sim-e2e` job could never run.
+module = ["astro_mine.sim.*"]
+ignore_errors = true
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"
