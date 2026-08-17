@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``Algorithm`` / ``Trainer`` plugin contract for MARL baselines (RM-P1-LEARN-03).
 
 Learn keeps a **Learn-internal** algorithm/trainer contract — it adds *nothing* to the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """WorkflowSpec -- an explicit DAG of JobSpecs with fan-in.
 
 A :class:`WorkflowSpec` is a directed acyclic graph of named steps, each a

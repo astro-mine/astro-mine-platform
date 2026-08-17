@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The contact window: a continuous interval of visibility between two nodes.
 
 A :class:`ContactWindow` is the reduced product of the time-varying visibility series —

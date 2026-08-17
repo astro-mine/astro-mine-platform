@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The dispatch seam — hand a planned evaluation to Cloud for execution (RM-P1-BENCH-11).
 
 :class:`BatchDispatcher` is the Core/Cloud-typed seam Bench dispatches through: a

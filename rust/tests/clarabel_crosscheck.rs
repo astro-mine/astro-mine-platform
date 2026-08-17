@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Cross-validate the TCB's bespoke allocation-free CBF filter against **Clarabel** — the
 //! Rust-native QP solver guard.md §11 recommends. For a half-space keep-out the shield QP is
 //! `min ‖u − u₀‖² s.t. a·u ≥ b, |uᵢ| ≤ u_max`; we solve the same program with Clarabel and

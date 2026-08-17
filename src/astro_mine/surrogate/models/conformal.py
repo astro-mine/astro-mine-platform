@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Split-conformal calibration — distribution-free per-channel bounds (RM-P1-SURR-02).
 
 The deep ensemble gives a *heuristic* spread; split conformal turns it into a bound with a

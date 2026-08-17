@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``AllocationIR`` <-> Protobuf wire form (canonical cross-language interchange).
 
 The IR serializes to Protobuf so Sim/Bench and cross-language solver backends can consume

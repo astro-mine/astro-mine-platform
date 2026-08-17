@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """1-D thermophysical solver kernels - pure NumPy, IO-free (RM-P0-WORLDS-04).
 
 The transient heat-diffusion engine behind the per-terrain-class diurnal curves: a vertical

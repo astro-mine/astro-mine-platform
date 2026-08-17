@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GPU-dispatched fine ray-cast illumination (RM-P1-WORLDS-10; worlds.md §7, §8, §11).
 
 worlds.md §7 puts illumination on a **GPU illumination service** (NVIDIA GPU Operator / MIG) and §8

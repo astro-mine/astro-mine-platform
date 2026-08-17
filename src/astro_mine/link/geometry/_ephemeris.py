@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ephemeris provider: a target's body-fixed position at an epoch.
 
 Link borrows ephemerides from SPICE — "frames, epochs, body orientation, and orbits come

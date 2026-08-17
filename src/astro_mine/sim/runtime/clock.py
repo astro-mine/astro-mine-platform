@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic simulation clock (RM-P0-SIM-01).
 
 A monotonic, fixed-base-rate clock expressed in Core's typed time primitives. It tracks

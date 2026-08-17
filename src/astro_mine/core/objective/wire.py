@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ObjectiveSpec <-> Protobuf wire form (the canonical interchange encoding).
 
 Conversion goes through protobuf's ``json_format`` rather than hand-written field

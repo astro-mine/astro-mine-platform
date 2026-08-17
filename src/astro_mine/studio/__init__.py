@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Studio — the design front door (goal-in, design-out).
 
 Phase-1 library slices against the Core narrow waist:

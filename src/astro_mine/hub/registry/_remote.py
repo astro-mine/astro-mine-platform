@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The OCI **Distribution-Spec** transport — pull/publish against any registry (RM-P1-HUB-06).
 
 hub.md §7 requires the client to "resolve/verify/pull against **any** OCI registry (including

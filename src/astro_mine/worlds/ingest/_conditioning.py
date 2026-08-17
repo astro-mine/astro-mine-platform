@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Diviner / LEND / M³ conditioning-layer ingest (RM-P1-WORLDS-14).
 
 Ingests the three PDS conditioning products Prospect conditions real priors on, reprojected

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``eval`` — validation against the oracle, error budgets, and the promotion gate (RM-P1-SURR-03).
 
 Surrogate.md §3's ``eval`` module: the calibrated-coverage + error-budget predicate that gates a

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The RunResult -- the backend-agnostic outcome of a submitted job.
 
 Every backend returns the *same* :class:`RunResult`: a status, an exit code, the

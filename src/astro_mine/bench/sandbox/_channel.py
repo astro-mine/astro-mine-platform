@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The structured result hand-back channel (bench.md §9; bench#30 AC3).
 
 A sandboxed submission hands its result back **as data over a well-defined channel**, never as

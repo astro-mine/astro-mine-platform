@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The executive — ticks a composed hierarchy, enforcing the shielded single output path.
 
 See :mod:`astro_mine.mind.exec.executive` for the :class:`Executive` run loop and

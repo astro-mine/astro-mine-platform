@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Digest-pinned OCI image references.
 
 An :class:`ImageRef` is the packaging discipline's unit of currency: a workload image

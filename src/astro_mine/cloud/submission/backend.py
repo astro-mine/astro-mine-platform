@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Execution backends and the backend registry.
 
 A :class:`Backend` runs a :class:`~astro_mine.cloud.submission.jobspec.JobSpec` against a

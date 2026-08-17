@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Design ↔ decision-variable encoding (studio.md §3 ``designspace/encode``, §11).
 
 A heterogeneous, variable-cardinality swarm is encoded as one integer per asset kind —

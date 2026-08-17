@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A minimal, deterministic STAC 1.0.0 catalog writer (RM-P0-WORLDS-07; worlds.md §5).
 
 Worlds catalogs its layers with **STAC** so the bundle is browsable/discoverable. This writes a

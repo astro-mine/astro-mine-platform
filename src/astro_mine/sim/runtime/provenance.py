@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Run-provenance helpers — input/engine identity + content hashing (RM-P0-SIM-09).
 
 The reproduction-grade provenance an :class:`~astro_mine.sim.runtime.episode.Trace` stamps and the

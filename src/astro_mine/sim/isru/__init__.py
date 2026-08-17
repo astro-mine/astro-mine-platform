@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-asset ISRU extraction/storage — the productivity the anchor scenario is *for* (RM-P1-SIM-02).
 
 A reduced-order in-situ-resource-utilization process model, mirroring the power/thermal state

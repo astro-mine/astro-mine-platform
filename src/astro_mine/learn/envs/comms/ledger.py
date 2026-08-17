@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms-budget accounting (RM-P1-LEARN-02 → RM-P1-LEARN-06).
 
 The ``CommsModel`` degrades the channel; the ledger *counts* the degradation so the

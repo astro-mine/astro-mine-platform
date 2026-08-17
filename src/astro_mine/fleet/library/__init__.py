@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Minimal reference asset library for the anchor scenario (RM-P0-FLEET-04).
 
 The anchor "robot menu" in SADF: a relay orbiter, a lander, a prospecting rover

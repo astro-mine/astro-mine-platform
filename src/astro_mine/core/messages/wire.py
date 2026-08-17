@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Control-plane messages <-> Protobuf wire form (canonical interchange encoding).
 
 The action and contact-plan families serialize to Protobuf (the per-tick observation

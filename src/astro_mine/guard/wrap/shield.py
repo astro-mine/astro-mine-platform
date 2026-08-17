@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``PolicyShield`` — the runtime-assurance wrapper over a Core Policy/Planner (RM-P1-GUARD-03).
 
 The headline abstraction (guard.md §3, §6). ``PolicyShield`` *implements* the

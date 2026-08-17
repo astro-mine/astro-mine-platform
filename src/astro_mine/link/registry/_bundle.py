@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-addressed contact-plan bundle: the wire form of a published comms model.
 
 The payload half of the Link→Hub publish path (link.md §6 — "contact-plan products are shareable

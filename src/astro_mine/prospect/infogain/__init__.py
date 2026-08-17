@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Information-gain maps for active perception (prospect.md §3, §6; RM-P0-PROSPECT-06).
 
 Derivatives of a :class:`~astro_mine.prospect.belief.field.BeliefField` that quantify *where it is

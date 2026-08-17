@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Canonical content-hashing for scenario artifacts (conventions.md §5).
 
 The platform content-addresses every reproducible artifact with a ``sha256`` over a

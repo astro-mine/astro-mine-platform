@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``OnnxBundle`` — the content-addressed served-surrogate artifact (RM-P1-SURR-04).
 
 The one payload a trained surrogate ships to Sim: the **self-contained ONNX graph** (network →

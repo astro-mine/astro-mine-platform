@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic local text embedding for semantic search (RM-P1-HUB-02).
 
 The default search provider's embedding: a **feature-hashing bag-of-tokens** vector — no model, no

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Decentralized neighbor coordination (RM-P1-MIND-06).
 
 The ``coord/`` substrate for acting coherently when the global (mission-tier) view is stale:

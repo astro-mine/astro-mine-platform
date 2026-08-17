@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``astro_mine.guard.models`` — untrusted constraint-source adapters (RM-P1-GUARD-04).
 
 The ``models/`` layer resolves a ``SafetySpec``'s abstract constraint sources against **Core-typed**

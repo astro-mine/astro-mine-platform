@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Multi-fidelity profiles under one stable asset identity (RM-P0-FLEET-05).
 
 An asset declares several **representations** — a cheap ``massmodel``, a ``kinematic``

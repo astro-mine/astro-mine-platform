@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Build a Core plugin manifest for a SADF asset (RM-P0-FLEET-06).
 
 Fleet **consumes** Core's manifest schema -- it does not invent one (``fleet.md`` §1,

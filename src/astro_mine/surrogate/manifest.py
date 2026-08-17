@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``SurrogateManifest`` — the Core plugin manifest a surrogate publishes itself as.
 
 Surrogate **consumes** Core's manifest schema, it does not invent one (surrogate.md §3;

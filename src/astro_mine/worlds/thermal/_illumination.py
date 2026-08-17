@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Illumination-driven per-cell surface thermal (RM-P1-WORLDS-13).
 
 The Phase-1 fidelity upgrade to RM-P0-WORLDS-04: instead of forcing the 1-D thermophysical

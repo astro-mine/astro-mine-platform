@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Behavior-tree node model (RM-P1-MIND-02).
 
 The in-memory AST the executive ticks under the ``behavior_tree`` execution kind — the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The verdict-sink seam — where a ``PolicyShield`` hands off its per-tick SafetyVerdict.
 
 The shield (:mod:`astro_mine.guard.wrap`) writes one

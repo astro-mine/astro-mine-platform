@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The containerized sandbox backend — the recommended posture for a public deployment.
 
 bench.md §9: *"Submitted policies/plugins run out-of-process in sandboxed containers

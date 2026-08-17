@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Cloud fan-out for the design loop (RM-P1-STUDIO-03; studio.md §3, §6, §12; cloud.md §3).
 
 studio.md §6 →Cloud: "large fan-out (hundreds of candidates x many seeds, or

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """IR → backend-encoding compilers (allocate.md §3, ``model/compile/``).
 
 The lowerings that turn the solver-neutral :class:`~astro_mine.allocate.AllocationIR` into a

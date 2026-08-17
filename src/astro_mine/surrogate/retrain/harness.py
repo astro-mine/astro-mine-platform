@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The offline-retrain + gated-promotion harness (RM-P1-SURR-03; surrogate.md §5, §10, §11).
 
 The offline **build** loop's terminal step: retrain on a (possibly resampled) dataset, then admit

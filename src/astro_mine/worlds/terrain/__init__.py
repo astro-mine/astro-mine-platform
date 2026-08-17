@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Terrain ingest — real polar DEM to simulatable terrain (RM-P0-WORLDS-01).
 
 LOLA DEM for the Shackleton-de Gerlache region → Cloud-Optimized GeoTIFF layers via

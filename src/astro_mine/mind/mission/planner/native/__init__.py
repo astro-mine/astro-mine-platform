@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Native mission-planner backends (RM-P1-MIND-03) — the ``[pddl]`` extra.
 
 The real symbolic-planning engine behind Core's

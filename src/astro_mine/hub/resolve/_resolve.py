@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SemVer + Core-interface-range dependency/compat resolution (RM-P1-HUB-04).
 
 Given a constraint set — name, version range, required Core interface versions, and required

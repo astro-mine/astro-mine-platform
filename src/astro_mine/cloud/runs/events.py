@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Lifecycle events -- run completion on NATS/JetStream for Bench/Studio/Hub.
 
 Cloud emits a :class:`CompletionEvent` as a run moves through submitted -> started ->

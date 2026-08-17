@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The episode-runner seam + a dependency-clean reference runner (RM-P0-BENCH-05).
 
 An :class:`EpisodeRunner` maps a resolved scenario + policy + seed to the

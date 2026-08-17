@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic scenario embeddings for pgvector similarity search (bench#33; bench.md §5).
 
 bench.md §5 puts the zoo catalog in PostgreSQL with "**pgvector** for similarity/search". A vector

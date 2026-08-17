@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Learned illumination-field surrogate adapter — a Worlds field-model backend (RM-P1-WORLDS-10).
 
 worlds.md §11's open question — *could a learned surrogate replace ray casting for very large

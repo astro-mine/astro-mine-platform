@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Units frame/CRS/time types <-> Protobuf wire form (RFC-0007, RM-P1-CORE-07).
 
 The SPICE-shaped value types (:class:`ReferenceFrame`, :class:`PlanetaryCRS`,

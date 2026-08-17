@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Adversarial falsification harness — the central validation strategy for the shield (GUARD-05).
 
 Untrusted, stdlib-only tooling that *attacks the trusted core from outside* (guard.md §10; issue

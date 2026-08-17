@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``build_power_constraints`` — Fleet SADF budgets → energy-budget constraints (RM-P1-ALLOC-03).
 
 Emits, per asset, the *feasibility* energy budget: the total energy of the tasks assigned to an

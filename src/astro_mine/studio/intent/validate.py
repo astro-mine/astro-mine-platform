@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Intent validation boundary — fail early and loudly (studio.md §9).
 
 Every produced/captured spec is validated against Core schemas at the boundary before

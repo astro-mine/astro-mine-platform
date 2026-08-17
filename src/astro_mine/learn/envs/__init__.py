@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment wrappers — the Core Environment API presented as RL envs (learn.md §3).
 
 Learn turns a simulatable Core world into trainable RL problems by wrapping the Core

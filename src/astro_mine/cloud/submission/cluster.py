@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The cluster backend -- compile a JobSpec to an engine object, dispatch it, collect the result.
 
 ``ClusterBackend`` closes the local<->cluster loop: the *same* ``submit(job)`` call site runs on a

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed byte storage — the contract, not a backend.
 
 An :class:`ArtifactStore` is three methods over opaque bytes keyed by their own digest: ``put``

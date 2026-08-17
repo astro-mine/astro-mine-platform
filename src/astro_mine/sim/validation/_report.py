@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The oracle-comparison primitive shared by the validation harnesses (RM-P0-SIM-10).
 
 A :class:`OracleReport` is the verdict of comparing a simulated quantity against a reference within

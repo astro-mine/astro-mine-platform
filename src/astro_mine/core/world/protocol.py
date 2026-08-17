@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """World-provider API v0.1 — the contract (worlds.md §5/§6).
 
 The Core-owned Environment-API *world/terrain* query surface Worlds implements and Sim

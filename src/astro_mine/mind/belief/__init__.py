@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Belief-state assembly — the partial-observability-aware input each tier consumes.
 
 The executive refreshes a :class:`~astro_mine.mind.belief.view.BeliefView` from the

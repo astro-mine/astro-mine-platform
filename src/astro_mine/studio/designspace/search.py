@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Pluggable multi-objective search (studio.md §3 ``designspace/search``, §4, §11).
 
 **One internal interface** (:class:`SearchBackend`) with adapters selectable per study —

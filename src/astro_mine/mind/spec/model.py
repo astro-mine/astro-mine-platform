@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Stack spec v0.1 — typed Pydantic models (RM-P1-MIND-01).
 
 The **stack spec** is Mind's authored artifact: a declarative description of an autonomy

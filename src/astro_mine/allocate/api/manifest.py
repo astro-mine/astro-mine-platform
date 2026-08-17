@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``build_allocation_manifest`` — the Core plugin manifest Allocate publishes itself as.
 
 Allocate **consumes** Core's manifest schema, it does not invent one (allocate.md §6;

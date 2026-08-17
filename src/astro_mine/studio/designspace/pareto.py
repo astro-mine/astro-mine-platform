@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Pareto math (studio.md §3 ``designspace/pareto``) — dominance, non-dominated sorting,
 crowding distance, hypervolume, ranking.
 

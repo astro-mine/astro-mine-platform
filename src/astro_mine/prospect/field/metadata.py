@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Prospect field metadata — the species/unit and CRS/grid binding (prospect.md §2/§5).
 
 A Prospect resource field carries, alongside the Core :class:`~astro_mine.core.resource.\

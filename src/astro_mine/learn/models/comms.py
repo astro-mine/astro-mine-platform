@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms-learning message modules over the CommsModel channel (RM-P1-LEARN-03; learn.md §11).
 
 The first-class research-track entry point: because *comms-limited cooperation is the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``SwarmEnv`` — a Core Environment world as a PettingZoo ``ParallelEnv`` (RM-P1-LEARN-01).
 
 Wraps any object satisfying the Core :class:`~astro_mine.core.env.protocol.Environment`

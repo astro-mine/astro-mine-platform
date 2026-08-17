@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Async submission lifecycle: job state + rate limiting (RM-P1-BENCH-10; bench.md §7, §9).
 
 A hosted submission is not a synchronous scoring call — it is a **job** that moves through a

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Learn's binding to the Core narrow waist.
 
 The single place that declares which Core interface versions Learn builds against, plus

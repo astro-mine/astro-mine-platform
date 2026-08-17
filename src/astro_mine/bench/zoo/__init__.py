@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The scenario zoo — the curated benchmark catalog (bench.md §1, §3, §5).
 
 The anchor "Lunar Polar Water-Ice Prospecting v1" scenario lives here. :func:`load_scenario` loads a

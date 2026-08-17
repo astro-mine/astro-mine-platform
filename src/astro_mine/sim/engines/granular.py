@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Granular engine — reduced-order excavation dynamics (RM-P0-SIM-03).
 
 The Phase-0 granular/excavation tier: a deterministic, reduced-order model of an excavator

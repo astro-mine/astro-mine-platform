@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Units / frames / time — typed value primitives (RM-P0-CORE-06).
 
 The shared spatial/temporal types every component resolves against: a

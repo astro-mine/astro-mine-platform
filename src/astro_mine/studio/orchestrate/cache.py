@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed result cache (studio.md §8; STUDIO-03 acceptance).
 
 Identical ``(design, world, seed)`` tuples are never re-evaluated: the cache key is the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ObjectiveSpec contract-test utility (RM-P1-CORE-03).
 
 The consumer-driven check Studio runs at its authoring boundary and Bench runs before

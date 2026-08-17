@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``ServedTier`` — the surrogate-side reference of the admit / fall-back contract (RM-P1-SURR-04).
 
 Surrogate produces a fidelity tier; **Sim decides** when to use it (surrogate.md §1). This is the

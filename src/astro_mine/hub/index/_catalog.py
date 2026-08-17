@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The catalog record + store contract, indexed by the Core plugin manifest (RM-P1-HUB-02).
 
 Hub indexes every artifact **by its Core plugin manifest** — never a Hub-private schema (hub.md §2,

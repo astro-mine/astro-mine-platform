@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The reproducibility harness + determinism gate (RM-P0-BENCH-04; bench.md §10).
 
 :func:`reproduce` runs a scenario ``runs`` times under a pinned seed set + lockfile and reports

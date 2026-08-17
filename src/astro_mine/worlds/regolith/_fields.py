@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Regolith terramechanics parameter fields — pure NumPy kernels (RM-P0-WORLDS-05).
 
 Spatial fields of the five regolith mechanical parameters — bulk density, cohesion,

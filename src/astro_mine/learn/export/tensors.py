@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The exported graph's reserved tensor names — one source of truth (RM-P1-LEARN-05).
 
 A PolicyPackage's ONNX graph declares more than ``obs`` → action heads: a **recurrent** actor

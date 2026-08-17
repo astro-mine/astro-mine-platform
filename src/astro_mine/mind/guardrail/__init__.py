@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The guardrail — Mind's mandatory Guard-shield binding (the only output path).
 
 See :mod:`astro_mine.mind.guardrail.shield`: :func:`shield_egress` is the single mechanism

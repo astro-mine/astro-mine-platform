@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Geometric line-of-sight with terrain occlusion (RM-P0-LINK-01).
 
 Composes SPICE ephemeris geometry (where a relay orbiter / Earth is, via

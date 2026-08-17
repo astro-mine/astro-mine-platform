@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Studio-owned artifacts (studio.md §3 "Key abstractions exposed").
 
 ``DesignCandidate``/``TradeStudy``/``Campaign`` are **not** Core types — Core owns

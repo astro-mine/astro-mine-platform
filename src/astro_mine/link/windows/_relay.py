@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Relay-orbiter contact windows (LINK-02): when a surface asset can see the relay.
 
 Binds LINK-01's terrain-occluded line-of-sight (:func:`~astro_mine.link.geometry.compute_los`)

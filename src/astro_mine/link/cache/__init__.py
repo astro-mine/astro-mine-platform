@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Determinism + content-addressed caching + oracle cross-checks (RM-P0-LINK-05).
 
 Results are cached by a content key over kernels / DEM / node-set / epoch / config

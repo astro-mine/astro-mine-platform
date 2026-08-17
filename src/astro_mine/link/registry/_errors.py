@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Errors raised by the Link plugin-manifest / Hub-publish path."""
 
 from __future__ import annotations

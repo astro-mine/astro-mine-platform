@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The abstract store-and-forward delivery model (RM-P1-LINK-11).
 
 Given the CGR-style :class:`~astro_mine.link.network.ContactGraph` and a message

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sensor models — render observations *of* the resource field, never a point guess (RM-P0-SIM-06;
 richer models + registry RM-P1-SIM-05; ISRU stored-mass gauge RM-P1-SIM-02).
 

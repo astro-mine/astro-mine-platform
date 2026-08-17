@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``unified-planning`` mission backend (RM-P1-MIND-03) — the ``[pddl]`` extra.
 
 The production realization of the PDDL/temporal mission tier that mind.md §4/§11 names: a real

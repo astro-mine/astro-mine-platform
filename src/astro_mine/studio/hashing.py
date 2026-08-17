@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressing primitive — canonical JSON + SHA-256.
 
 The frozen Core ``v0.1.0`` interface Studio pins does **not** ship a content-hash

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Provisional content-pin digests for the scenario zoo (pre-Hub).
 
 During Phase-0 incubation no content producer (Worlds/Fleet/Prospect/Link) publishes a resolvable

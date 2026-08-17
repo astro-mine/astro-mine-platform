@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The untrusted falsification plant: a double-integrator rollout driving a Core policy.
 
 The minimal, **stdlib-only** (no numpy — Guard carries none; no Sim import) closed-loop the

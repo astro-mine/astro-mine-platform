@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The tracked run — config, seeds, provenance, and curves in one record (learn.md §3, §5).
 
 The ``track/`` module of learn.md §3's tree: *"experiment tracking (MLflow default / W&B

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Surrogate's binding to the Core narrow waist (the foundation the RM-P1-SURR-* surface rests on).
 
 The single place that declares which Core interface versions Surrogate is built against,

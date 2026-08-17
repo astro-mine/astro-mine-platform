@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fail-closed load of a served surrogate (RM-P1-SURR-04; surrogate.md §9).
 
 The signed :class:`~astro_mine.core.registry.PluginManifest` is verified **before** the ONNX

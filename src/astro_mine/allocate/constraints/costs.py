@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``CostTable`` — cached per-(task, asset) duration/energy costs for the builders (RM-P1-ALLOC-03).
 
 Allocate does not re-derive physics: "where durations/costs come from physics, they are sourced

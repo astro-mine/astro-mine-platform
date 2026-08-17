@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Geostatistical sanity — variogram recovery and leave-one-out kriging CV (prospect.md §10).
 
 prospect.md §10 names two validation strategies that are neither calibration-coverage nor

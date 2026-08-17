@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Tier-1 training entrypoint + the RayJob entrypoint (RM-P1-LEARN-04; learn.md §2.1, §7).
 
 The one command a `pip install`ed researcher runs to train a baseline on a single

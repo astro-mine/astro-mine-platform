@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Sim-backed Bench runners — real-physics scoring + the determinism gate (RM-P0-SIM-11).
 
 Bench ships two injectable, Core-typed runner seams and a dependency-clean **stand-in** behind each:

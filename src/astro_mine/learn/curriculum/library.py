@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The shipped curricula — *replaceable examples*, not privileged internals (charter §10.2).
 
 Two, one per half of learn.md §11's MVP recommendation:

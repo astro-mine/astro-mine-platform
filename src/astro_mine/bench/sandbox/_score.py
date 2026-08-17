@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The scoring seam the leaderboard evaluates submissions through (bench#30; bench.md §9).
 
 A :class:`PolicyScorer` maps *(scenario, a submitted ``policy_ref``, seeds)* to a

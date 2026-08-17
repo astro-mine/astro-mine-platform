@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Objective decomposition over the solver-neutral IR (RM-P1-ALLOC-06).
 
 *Why this objective value* — the realized objective broken into its per-family contributions,

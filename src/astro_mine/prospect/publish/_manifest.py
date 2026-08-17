@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Build the Core ``resource_field_backend`` plugin manifest for a published prior.
 
 Prospect **consumes** Core's manifest schema, it does not invent one (prospect.md §3; hub.md §3).

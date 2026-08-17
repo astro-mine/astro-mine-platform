@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Registry credentials — the **standard** Docker/OCI mechanisms, never a bespoke scheme.
 
 A remote pull must authenticate the way every other OCI client already does (hub.md §2 principle 6

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The behavior-tree tick engine (RM-P1-MIND-02).
 
 Evaluates a :class:`~astro_mine.mind.bt.model.BehaviorTree` once per executive tick, reactively

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Phase-0 reference metric set (bench.md §3; scenario §13; LUNAR-FR-009).
 
 Seven metrics, each a plugin with SI-consistent units, a direction, and a cross-seed

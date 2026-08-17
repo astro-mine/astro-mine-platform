@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A SQLAlchemy-backed :class:`~astro_mine.hub.index.Catalog` (RM-P1-HUB-02; hub.md §5, §8, §11).
 
 One store, two databases: the same SQLAlchemy Core code runs on **SQLite** (tests + a laptop — the

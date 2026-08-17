@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF -> SDF (RM-P0-FLEET-01/02), the Gazebo interop form.
 
 The inverse of :mod:`astro_mine.fleet.importers.sdf`, and a sibling of the URDF writer: the same

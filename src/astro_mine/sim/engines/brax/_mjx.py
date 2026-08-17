@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The MJX contact kernel — real Brax/MJX wheel-soil contact, GPU-vectorized (RM-P1-SIM-04).
 
 The physics-fidelity upgrade the sibling :mod:`._engine` deferred. That module's kernel is
@@ -64,7 +65,7 @@ __all__ = [
 ]
 
 # Physically meaningful SoC (joules) and positions demand float64; JAX defaults to float32.
-jax.config.update("jax_enable_x64", True)
+jax.config.update("jax_enable_x64", True)  # type: ignore[no-untyped-call]
 
 #: The engine's named RNG sub-stream (folded from the RngStreams root) that seeds the JAX PRNGKey.
 _RNG_STREAM = "mjx_contact"

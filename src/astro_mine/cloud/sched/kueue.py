@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Kueue queueing -- quotas, fair-share, and admission back-pressure.
 
 Compiles the Kueue objects that give a shared cluster fair-share scheduling (``cloud.md`` §4,

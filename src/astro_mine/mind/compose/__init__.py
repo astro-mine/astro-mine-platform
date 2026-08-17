@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The composer — builds and validates a runnable hierarchy graph from a stack spec.
 
 See :func:`astro_mine.mind.compose.composer.compose`: it resolves each tier's and the

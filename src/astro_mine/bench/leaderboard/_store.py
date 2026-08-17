@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Leaderboard persistence — the store contract + an in-memory backend (RM-P0-BENCH-06).
 
 A :class:`LeaderboardStore` persists :class:`~astro_mine.bench.leaderboard._models.Submission`

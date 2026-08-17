@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The promotion gate — coverage/calibration + error budget as first-class objects (RM-P1-SURR-03).
 
 A retrained surrogate enters Sim **only** through the automated validation gate (surrogate.md §10,

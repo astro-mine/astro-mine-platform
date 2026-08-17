@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The docker backend -- the same job in a container (``docker compose`` tier).
 
 ``DockerBackend`` runs the *same* :class:`~astro_mine.cloud.submission.jobspec.JobSpec` in

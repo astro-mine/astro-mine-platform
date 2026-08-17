@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Flattening helpers + the trained policy as a Core ``Policy`` (RM-P1-LEARN-03).
 
 The bridge between the RL tensor world and the Core Policy/Planner contract, kept

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Sim-side engine registry — the plugin seam over Core's registry (RM-P0-SIM-02).
 
 :class:`EngineRegistry` is where a host (the stepping core, RM-P0-SIM-03's engine set,

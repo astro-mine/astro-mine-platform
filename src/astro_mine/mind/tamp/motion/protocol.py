@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The motion-feasibility contract (RM-P1-MIND-03).
 
 The geometric half of TAMP, expressed as the narrow seam every motion backend fills: given a

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Guard's Rust binding of Core's units guards, pinned to Core's shared conformance vectors.
 //!
 //! RFC-0007 (Design §3) ships the frame/CRS/time guard rules as a data file

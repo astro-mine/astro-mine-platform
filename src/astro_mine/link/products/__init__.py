@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Link products: ContactPlan, ConnectivitySampler, CommsObservationMask (RM-P0-LINK-04).
 
 The content-addressed products Link emits and Sim consumes through the Core Environment

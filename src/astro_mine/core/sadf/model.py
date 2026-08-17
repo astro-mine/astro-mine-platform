@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF v0.1 — typed Pydantic models (the in-memory asset representation).
 
 These models are the typed view of a SADF document that components import and build

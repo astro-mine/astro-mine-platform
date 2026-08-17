@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! The arbiter — the decision core of the TCB (guard.md §2, §9.1, §9.2).
 //!
 //! Every tick it combines the *detect* layers (scalar-bound predicates + STL/MTL monitors), the

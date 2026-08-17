@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF loading, validation, and the semantic (dual-use) gate.
 
 Pipeline (``load_sadf``):

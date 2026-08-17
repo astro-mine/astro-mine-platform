@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The gRPC ``EnvironmentService`` — Sim's Core Environment API, served (sim.md §3, §6).
 
 The "service skin" sim.md §3 names in the package layout and §6 names in the integration view: *"as
@@ -152,7 +153,7 @@ def serve(
     from concurrent import futures
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
-    pb_grpc.add_EnvironmentServiceServicer_to_server(
+    pb_grpc.add_EnvironmentServiceServicer_to_server(  # type: ignore[no-untyped-call]
         EnvironmentServicer(environment_factory, scenario=scenario, on_frame=on_frame), server
     )
     port = server.add_insecure_port(address)

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Errors for the Link determinism / caching / oracle layer."""
 
 from __future__ import annotations

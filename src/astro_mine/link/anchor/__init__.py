@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The anchor scenario's comms model: the lunar polar relay + DSN contact plan.
 
 The pinned comms scenario behind the flagship benchmark — *lunar polar water-ice prospecting*

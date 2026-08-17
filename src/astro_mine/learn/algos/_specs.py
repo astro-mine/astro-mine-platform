@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Env-independent :class:`AlgorithmSpec`\\ s for the reference baselines (RM-P1-LEARN-03).
 
 Kept in a **Torch-free** module so the registry can list algorithms, resolve them by

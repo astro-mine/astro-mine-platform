@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The modulation/coding table — CCSDS-aligned required Eb/N0 (LINK-03).
 
 A :class:`ModCod` names a waveform (modulation + code rate) and its **required Eb/N0** — the

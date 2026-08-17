@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Feed-forward policy/value building blocks (RM-P1-LEARN-03; learn.md §3).
 
 The shared MLP trunk plus the two heads the baselines compose over the SwarmEnv's

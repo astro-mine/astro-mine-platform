@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Emit-time validation of ``world.json``'s units objects against Core's schema (RM-P1-WORLDS-17).
 
 ``world.json`` carries a :class:`~astro_mine.core.units.PlanetaryCRS` (its ``crs`` field) and a

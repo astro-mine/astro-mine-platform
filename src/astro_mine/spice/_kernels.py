@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SPICE kernel management — furnish, clear, fail loud (RFC-0002).
 
 SPICE's kernel pool is process-global, so this is a thin, stateful wrapper over

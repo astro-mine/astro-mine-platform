@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Policy/Planner API v0.1 — the decision context (RM-P0-CORE-03).
 
 The non-observation inputs a policy decides against, assembled by the runtime and

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GPField — the GPyTorch sparse/variational GP backend (prospect.md §8, §11).
 
 A sparse Gaussian-process posterior over the resource field, built on GPyTorch's inducing-point

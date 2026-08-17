@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Network-layer (DTN) errors."""
 
 from __future__ import annotations

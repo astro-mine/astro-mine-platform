@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Adversaries: the untrusted attackers the falsification search drives at the shield.
 
 The wrapped policy and the injected disturbances are *adversarial input* — the whole point of

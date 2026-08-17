@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The OPA/Rego policy engine — governance rules that evolve without a code change (RM-P1-HUB-05).
 
 hub.md §3 makes policy bundles an **extension point** ("admission and download policies are

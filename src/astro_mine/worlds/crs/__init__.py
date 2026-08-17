@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Planetary CRS for the lunar south-polar world (RM-P0-WORLDS-01).
 
 Worlds reuses Core's :class:`~astro_mine.core.units.PlanetaryCRS` vocabulary rather than

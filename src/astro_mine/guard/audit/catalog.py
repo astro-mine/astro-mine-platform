@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Core-catalog registration for the SafetyVerdict message (RM-P1-GUARD-06).
 
 "Core-catalogued" means the Guard-**owned** SafetyVerdict schema is registered *through* the

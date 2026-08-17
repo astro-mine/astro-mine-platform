@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Anchor-scenario profile builder — wires the lunar-polar SafetySpec to Fleet/Worlds (GUARD-04).
 
 The authoring-side glue that turns the reviewed anchor ``SafetySpec`` artifact (shipped as package

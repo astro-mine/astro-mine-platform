@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``python -m astro_mine.studio.orchestrate.worker`` — the argv Cloud runs.
 
 Deliberately separate from the package body: :mod:`astro_mine.studio.orchestrate.worker` is

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Shared Kubernetes-manifest helpers -- dep-free dicts, YAML behind ``[cluster]``.
 
 Cloud generates Kubernetes objects (Jobs, Argo Workflows, RayJobs, quotas, network

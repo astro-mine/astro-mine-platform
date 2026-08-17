@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reproducible, digest-pinned image builds.
 
 Renders a reproducible Dockerfile for a Phase-0 workload (Sim, Bench) on a **pinned base

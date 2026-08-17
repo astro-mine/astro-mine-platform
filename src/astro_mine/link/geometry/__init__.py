@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Geometric line-of-sight + terrain occlusion (RM-P0-LINK-01).
 
 LOS via SPICE ephemeris geometry (:mod:`astro_mine.spice`) composed with Worlds terrain

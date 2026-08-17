@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic OCI image-layout writer for asset artifacts (RM-P0-FLEET-06).
 
 Hand-rolled (no ``oras``/``oci`` runtime dependency) so the output is byte-stable and

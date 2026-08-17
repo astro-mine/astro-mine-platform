@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment API ⇄ Gymnasium / PettingZoo mapping (RM-P0-CORE-02).
 
 Pure structural adapters that view a Core :class:`ResetResult`/:class:`StepResult` as

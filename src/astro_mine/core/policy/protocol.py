@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Policy/Planner API v0.1 — the contract (RM-P0-CORE-03).
 
 One uniform "observations + context -> actions/assignments" contract: a policy maps the

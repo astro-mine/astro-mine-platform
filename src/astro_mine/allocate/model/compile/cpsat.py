@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``lower_to_cpsat`` — pure Allocation IR → CP-SAT model lowering (RM-P1-ALLOC-02).
 
 The IR → CP-SAT compiler (allocate.md §3, ``model/compile/``): a **pure function** of the

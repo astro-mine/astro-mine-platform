@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Experiment tracking & provenance capture (learn.md §3 ``track/``; §4, §11).
 
 learn.md §3's module tree lists ``track/`` — *"experiment tracking (MLflow default / W&B

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """cosign-keyed ECDSA signing + verification (RM-P1-SEAL-02).
 
 The one shared signer for the platform: a keyed **ECDSA P-256** detached signature (cosign's

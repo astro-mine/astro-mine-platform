@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment API — how a simulatable world is observed and acted upon (RM-P0-CORE-02).
 
 ``reset()/step(action) -> observation, reward?, info``, generalized for multi-agent

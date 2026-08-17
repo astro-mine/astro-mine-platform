@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Hub — the artifact registry for the commons.
 
 The place a contributor *publishes* a plugin, world, SADF asset bundle, trained policy,

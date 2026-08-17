@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Manifest indexing — the Core-manifest catalog (RM-P1-HUB-02).
 
 Ingest every artifact's Core plugin manifest into a catalog record with Hub-side facets — the

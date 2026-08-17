@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference classical controllers — the baselines that always work (RM-P1-MIND-03).
 
 Two pure, deterministic controllers behind Core's

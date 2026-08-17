@@ -56,7 +56,7 @@ PYPROJECT = REPO_ROOT / "pyproject.toml"
 #: removed from it is the point of the exercise. It must never grow silently, which is what pinning
 #: it here buys. Keep it in step with the ``[[tool.mypy.overrides]]`` blocks in ``pyproject.toml``;
 #: the counts live there, next to the reason each component fails.
-NOT_YET_ENROLLED = frozenset({"surrogate", "learn", "fleet", "sim"})
+NOT_YET_ENROLLED = frozenset({"surrogate", "learn"})
 
 #: A deliberate violation of ``disallow_untyped_defs``, which ``strict = true`` turns on. Chosen
 #: over an obviously-wrong assignment because it is the error a migrated tree actually produces in

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The composition execution strategy (RM-P1-MIND-01).
 
 How the executive turns the hierarchy into an action each tick under the default

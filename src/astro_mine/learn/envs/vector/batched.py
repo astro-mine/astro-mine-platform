@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The batched-world seam + the batched rollout kernel (RM-P1-LEARN-04; learn.md §8).
 
 "Simulation throughput is the dominant cost" (learn.md §8), and strategy 1 is **GPU-vectorized

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Intent capture (RM-P1-STUDIO-01): NL/forms → a Core-validated ``ObjectiveSpec``.
 
 Phase-1 ships the deterministic, always-available forms path (:mod:`.forms`) behind the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Drift: OOD/drift monitoring and hybrid re-validation triggers (RM-P1-SURR-04).
 
 The inline **use** loop's watchdog (surrogate.md §3, §10): a :class:`DriftMonitor` accumulates the

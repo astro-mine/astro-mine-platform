@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Torch-side reproducibility + RL math shared by the baselines (RM-P1-LEARN-03).
 
 Imported only by the Torch-backed trainers (never by the registry/contract path), this

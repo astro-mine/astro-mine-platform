@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Allocate's binding to the Core narrow waist (scaffold; prerequisite for RM-P1-ALLOC-*).
 
 The single place that declares which Core interface versions Allocate is built against,

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``datagen`` — the offline build loop's high-fidelity sampling (RM-P1-SURR-03; surrogate.md §3).
 
 Query the oracle, design the experiments, label, and archive: a declarative

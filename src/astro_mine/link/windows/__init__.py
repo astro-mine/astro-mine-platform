@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Relay-orbiter and ground-station contact windows (RM-P0-LINK-02).
 
 Reduces the time-varying visibility series into contact intervals over an epoch window: a

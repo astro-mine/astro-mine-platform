@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetyVerdict v0.1 — the auditable per-tick output of the Guard arbiter (RM-P1-GUARD-06).
 
 The Core-catalogued, Guard-**owned** record of what the trusted Rust safety core

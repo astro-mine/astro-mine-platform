@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GPU-batched swarm-scale rollout — the ``jax.vmap`` path over N parallel envs (RM-P1-SIM-04).
 
 The throughput half of the Brax/MJX tier: :func:`agent_step` (the single-agent JAX kernel) mapped a

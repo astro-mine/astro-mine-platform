@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``CpSatSolver`` — the CP-SAT search driver behind the ``Solver`` strategy (RM-P1-ALLOC-02).
 
 The primary engine (allocate.md §4/§11): it lowers the solver-neutral

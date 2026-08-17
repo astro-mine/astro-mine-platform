@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """View data + MCAP replay export — Bench's side of the View handoff (RM-P1-BENCH-12; bench.md §6).
 
 bench.md §6: "[View] surfaces leaderboards, scorecards, and replays of evaluation episodes; **Bench

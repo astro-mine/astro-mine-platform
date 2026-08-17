@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-azimuth horizon maps + sun-visibility kernels — pure NumPy (RM-P0-WORLDS-03).
 
 The comms/sun-denied core of the anchor scenario. A *horizon map* gives, for each surface

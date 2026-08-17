@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Runs -- MLflow tracking and lifecycle eventing.
 
 Every job is an MLflow run keyed by its reproducibility pin (``cloud.md`` §5, §6):

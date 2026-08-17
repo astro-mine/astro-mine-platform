@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Bench ``ScenarioSpec`` → Sim ``Scenario`` — the content-pinned bridge (RM-P1-SIM-01).
 
 A Bench :class:`~astro_mine.bench.scenario.ScenarioSpec` declares *what* to run and pins its inputs

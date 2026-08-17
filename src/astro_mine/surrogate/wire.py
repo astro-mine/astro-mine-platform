@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``ErrorReport`` <-> Protobuf wire form (canonical cross-language interchange).
 
 The ErrorReport serializes to Protobuf so Sim's multi-fidelity scheduler can consume it

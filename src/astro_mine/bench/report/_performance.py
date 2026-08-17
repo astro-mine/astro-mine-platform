@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The performance report — a measured speedup, published *beside* the Scorecard, never inside it.
 
 A surrogate physics tier earns its place by being **faster than the solver it replaces, at a stated

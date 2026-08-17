@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``compile_request`` — lower an ``AllocationRequest`` to the solver-neutral IR (RM-P1-ALLOC-01).
 
 The constraint-model compiler (allocate.md §3): it lifts tasks, assets, time windows,

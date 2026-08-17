@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Allocation IR — solver-neutral model, compiler, verifier, and wire form.
 
 The stable internal contract that lets solver backends be true plugins (allocate.md §3, §5):

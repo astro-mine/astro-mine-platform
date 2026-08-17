@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Parametric asset families — the broadened orbital/surface/manipulation/logistics/isru
 templates (RM-P1-FLEET-10).
 

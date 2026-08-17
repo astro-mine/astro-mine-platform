@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Zoo integrity — the immutable, content-addressed invariant (bench.md §5, §8; RM-P1-BENCH-12).
 
 The zoo grows by **adding** immutable, content-addressed ScenarioSpecs, never by mutating existing

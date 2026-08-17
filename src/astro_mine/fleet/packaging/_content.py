@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-addressed asset payload shared by the OCI and Hub publish paths.
 
 Both the pre-Hub local OCI layout (:func:`astro_mine.fleet.packaging.package_oci`) and the

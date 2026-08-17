@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Render a PolicyExport into a Core PolicyPackage (RM-P1-LEARN-05; learn.md §5, §9, §10).
 
 The map from Learn's framework-native :class:`~astro_mine.learn.algos.PolicyExport` intermediate

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The mandatory Guard-shield binding — Mind's single output path (RM-P1-MIND-01).
 
 Principle 7: *Guard-wrapped output is the only output.* This module owns the one egress

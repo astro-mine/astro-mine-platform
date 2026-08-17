@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``astro-mine-hub`` client SDK + CLI (RM-P1-HUB-06).
 
 Resolve, verify, pull, cache, and publish artifacts against **any** OCI registry with **no hosted

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``WorldsFleetSignalResolver`` — the GUARD-04 signal resolver (untrusted marshalling).
 
 The concrete :class:`~astro_mine.guard.wrap.shield.SignalResolver` that turns a compiled model's

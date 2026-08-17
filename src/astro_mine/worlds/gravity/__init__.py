@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Gravity — point-mass + low-order spherical-harmonic field evaluation (worlds.md §3, §11, §12).
 
 worlds.md §3's module map reserves ``gravity/`` for "point-mass + spherical-harmonic gravity field

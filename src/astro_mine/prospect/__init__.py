@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Prospect — probabilistic resource fields with explicit uncertainty.
 
 Water-ice and mineral concentration as geostatistical distributions: the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plan document loading, validation, and semantic checks (RFC-0006).
 
 Pipeline (``load_plan``), mirroring the ObjectiveSpec loader:

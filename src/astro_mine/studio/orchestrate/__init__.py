@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Design-loop orchestration (RM-P1-STUDIO-03).
 
 The ``orchestrate/`` layer turns one ``DesignCandidate`` into a scored evaluation by

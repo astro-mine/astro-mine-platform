@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ray/KubeRay rollout-worker batch for :class:`~astro_mine.learn.train.executor.KubeRayExecutor`
 (RM-P1-LEARN-04; learn.md §2.1, §7 tier 2).
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The canonical Core JSON Schemas, and offline resolution of their cross-file ``$ref``s.
 
 **The contract other packages build against** (RFC-0009). A Core schema is named by its

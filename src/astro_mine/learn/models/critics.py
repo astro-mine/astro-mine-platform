@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Centralized value modules for CTDE (RM-P1-LEARN-03; learn.md §3, §11).
 
 The training-time value functions that consume the global information a decentralized actor

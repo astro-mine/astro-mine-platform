@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publish an exported PolicyPackage to a content-addressed store (RM-P1-LEARN-05; §5).
 
 The ONNX graph + typed sidecar are written to a **content-addressed** store keyed by the

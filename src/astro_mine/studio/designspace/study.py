@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The trade study (studio.md §3 ``TradeStudy``, §8 multi-fidelity).
 
 Drives a multi-objective search over a ``DecisionSpace``, delegating every candidate

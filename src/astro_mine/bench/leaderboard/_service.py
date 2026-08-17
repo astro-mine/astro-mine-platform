@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The hosted leaderboard service — authenticated, authorized, verified, sandboxed, traced.
 
 :class:`LeaderboardService` is the hosted tier's worker. It composes the dependency-clean building

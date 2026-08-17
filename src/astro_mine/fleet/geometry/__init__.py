@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """USD/glTF geometry handling (RM-P0-FLEET-02).
 
 The engine-neutral mesh layer shared by the importers and the exporters: load a source
@@ -31,6 +32,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from functools import partial
 from pathlib import Path
+from typing import cast
 
 import numpy as np
 import trimesh
@@ -99,7 +101,11 @@ def normalize_mesh(
     """
     out = mesh.copy()
     if scale is not None and tuple(scale) != (1.0, 1.0, 1.0):
-        out.apply_scale(np.asarray(scale, dtype=float))
+        # trimesh 4.12.2 ships `py.typed` while leaving this unannotated, so mypy trusts the
+        # package and then refuses the call. Narrow ignores rather than `follow_imports = skip`
+        # on `trimesh.*`, which would make `Trimesh` itself `Any` throughout a component whose
+        # whole domain is meshes (astro-mine-platform#39).
+        out.apply_scale(np.asarray(scale, dtype=float))  # type: ignore[no-untyped-call]
     if transform is not None:
         out.apply_transform(np.asarray(transform, dtype=float))
     return out
@@ -301,7 +307,9 @@ def mass_proxy_mesh(mass_kg: float, inertia: Inertia) -> trimesh.Trimesh:
     rotation = np.eye(4)
     rotation[:3, :3] = axes
     box.apply_transform(rotation)
-    return box
+    # `trimesh.creation.box` is declared to return `Any`, so this function's annotation would
+    # otherwise be a promise nothing checks.
+    return cast("trimesh.Trimesh", box)
 
 
 # --- reading geometry back -------------------------------------------------------
@@ -374,7 +382,14 @@ def write_obj(mesh: trimesh.Trimesh, path: Path) -> None:
     OBJ is text, so the artifact is diffable and byte-reproducible (conventions.md §11).
     """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(mesh.export(file_type="obj", include_texture=False), encoding="utf-8")
+    exported = mesh.export(file_type="obj", include_texture=False)
+    # `Trimesh.export` is declared `dict | bytes | str` because it covers every format trimesh
+    # writes; the OBJ writer returns text. That is a property of the format, not of the
+    # signature, and this call site has always depended on it without saying so. Asserted rather
+    # than cast: a cast would silently write bytes into a text file if trimesh ever changed,
+    # where this fails at the call site naming the reason (astro-mine-platform#39).
+    assert isinstance(exported, str), "the OBJ exporter must return text, not bytes or a dict"
+    path.write_text(exported, encoding="utf-8")
 
 
 def write_geometry(
@@ -476,8 +491,8 @@ def _with_default_material(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
         return mesh
 
     shaded = mesh.copy()
-    shaded.visual = trimesh.visual.TextureVisuals(
-        material=trimesh.visual.material.PBRMaterial(
+    shaded.visual = trimesh.visual.TextureVisuals(  # type: ignore[no-untyped-call]
+        material=trimesh.visual.material.PBRMaterial(  # type: ignore[no-untyped-call]
             name=_DEFAULT_MATERIAL_NAME,
             baseColorFactor=_DEFAULT_BASE_COLOR,
             metallicFactor=0.0,
@@ -502,7 +517,7 @@ def _export_glb(mesh: trimesh.Trimesh, path: Path) -> None:
     """
     scene = trimesh.Scene()
     scene.add_geometry(_with_default_material(mesh), transform=_BODY_TO_GLTF)
-    path.write_bytes(scene.export(file_type="glb", include_normals=True))
+    path.write_bytes(scene.export(file_type="glb", include_normals=True))  # type: ignore[no-untyped-call]
 
 
 def _export_usd(mesh: trimesh.Trimesh, path: Path) -> None:

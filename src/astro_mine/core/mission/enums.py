@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Mission-architecture schema — closed vocabularies (Core-owned, RM-P1-CORE-04 / RFC-0001).
 
 Reserved schema hooks only — **no mechanism** (mission-model.md §3). :class:`Regime` is the

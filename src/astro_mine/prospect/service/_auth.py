@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """AuthN/AuthZ for the distributed field service — TLS + OIDC tokens + capability-gated RBAC.
 
 prospect.md §9 requires **OIDC authentication and RBAC authorization** on the field service, and

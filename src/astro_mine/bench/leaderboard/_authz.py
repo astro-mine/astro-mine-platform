@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """OPA-style policy evaluation: quotas, embargo, and authoring rights (bench#29; bench.md §9).
 
 bench.md §9: *"RBAC via **OPA** for submission quotas, embargo control, and metric/scenario

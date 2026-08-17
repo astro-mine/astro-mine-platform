@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Metric registry + version negotiation.
 
 Resolves the :class:`~astro_mine.bench.scenario.MetricRef` names a ScenarioSpec pins to the

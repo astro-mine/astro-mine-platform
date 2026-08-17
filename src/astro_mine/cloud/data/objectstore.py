@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Range-readable object stores -- one S3 client, plus a dep-free local store.
 
 The data plane needs **byte-range reads** so a worker fetches a single chunk instead of a

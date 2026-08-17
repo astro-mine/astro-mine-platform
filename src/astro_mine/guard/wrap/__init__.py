@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """PolicyShield — implements the Core Policy/Planner API and wraps any policy (RM-P1-GUARD-03).
 
 The transparent runtime-assurance wrapper (guard.md §3, §6): :class:`PolicyShield` *is* a

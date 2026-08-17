@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """MARL algorithm plugins + the Learn-internal registry (RM-P1-LEARN-03; learn.md §3, §11).
 
 The reference baselines — **IPPO** (independent, the control), **MAPPO** and **QMIX** (the

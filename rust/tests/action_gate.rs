@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Acceptance: **every path to actuation crosses Guard** (RM-P1-GUARD-03; LUNAR-FR-006,
 //! LUNAR-SR-004; guard.md §3, §6, §9.1).
 //!

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Oracle cross-check for contact pass times (RM-P0-LINK-05).
 
 The dependency-free comparator behind Link's external-oracle validation (link.md §10): reduce

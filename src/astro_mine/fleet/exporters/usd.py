@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF -> USD stage (RM-P0-FLEET-01/02), the Sim/Studio interop form.
 
 USD is the one export target that can hold nearly all of the kinematic model, so it is the

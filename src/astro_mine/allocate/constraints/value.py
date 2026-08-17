@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``refine_value_objective`` — Prospect resource value with uncertainty (RM-P1-ALLOC-03).
 
 Ingests [Prospect](prospect.md)'s resource-value field as an objective input: a task that acts on a

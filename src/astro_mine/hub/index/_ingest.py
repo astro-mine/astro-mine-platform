@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ingest a Core plugin manifest into the catalog (RM-P1-HUB-02).
 
 On publish, Hub projects the artifact's Core plugin manifest into a :class:`CatalogEntry` and

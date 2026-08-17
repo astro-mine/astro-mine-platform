@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``[mind]`` binding — Allocate's ``AllocationPlanner`` as a Mind tier plugin (RFC-0006).
 
 RFC-0006's **sibling-binding convention** ("The sibling-binding convention (Guard / Allocate)"):

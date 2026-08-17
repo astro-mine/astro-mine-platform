@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``build_terrain_constraints`` — Worlds traversability → keep-out constraints (RM-P1-ALLOC-03).
 
 Lifts the [Worlds](worlds.md) traversability layer (slope, illumination, regolith bearing) and the

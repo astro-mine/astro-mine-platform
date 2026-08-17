@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Bench — benchmark suite, scenario zoo, and reproducibility harness.
 
 The :mod:`~astro_mine.bench.scenario` spec + content-hash resolver (incl. the anchor

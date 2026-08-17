@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The GPU-vectorized rollout executor (RM-P1-LEARN-04; learn.md §8 throughput strategies).
 
 Simulation throughput is the dominant training cost (learn.md §8), so a policy trained on a

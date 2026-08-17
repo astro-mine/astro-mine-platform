@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The sensor-likelihood contract — one model, used forward (Sim) and inverse (belief).
 
 prospect.md §3 names **sensor/observation models** as a first-class extension point: "pluggable

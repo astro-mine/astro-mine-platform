@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Celestial-body packs — a new world is a package, not a core change (RM-P1-WORLDS-11).
 
 A :class:`BodyPack` bundles everything body-specific that the (otherwise body-agnostic) Worlds

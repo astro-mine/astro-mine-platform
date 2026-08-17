@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ray fan-out — horizontal throughput for the batched rollout on [Cloud](cloud.md) (RM-P1-SIM-04).
 
 A thin Ray shim over :class:`~astro_mine.sim.engines.brax._batch.VectorizedRollout`: shard the N
@@ -17,7 +18,7 @@ dispatch (which needs live worker processes) runs under Ray.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, cast
 
 from astro_mine.core.messages.model import ActionBatch
 from astro_mine.sim.engines.brax._batch import (
@@ -173,12 +174,22 @@ def _fan_out_on_cluster(  # pragma: no cover  (needs live Ray workers; deselecte
 
     scenario_json = scenario.model_dump_json()
     actions_json = actions.model_dump_json()
+    # Ray types `ray.remote(Cls)` fine; what it does not model is that calling `.remote(...)` on
+    # it yields an **ActorHandle** rather than an instance of the class. Left unannotated, mypy
+    # reads `a.rollout` as the plain method and reports that a `Callable` has no `.remote` -- at
+    # the *use* site, which is why #40's reading (a cast at construction) does not fix it: the
+    # cast is redundant there, and mypy says so. `.remote()` is also overloaded, so it yields
+    # `ActorHandle[_RolloutActor] | type[_RolloutActor]`; naming the handles resolves that too.
+    # (astro-mine-platform#40.)
     remote_actor = ray.remote(_RolloutActor)
-    actors = [
-        remote_actor.remote(scenario_json, rng.root_seed, shard)
-        for shard in _shard_ranges(total, num_shards)
-        if shard
-    ]
+    actors = cast(
+        "list[ray.actor.ActorHandle[_RolloutActor]]",
+        [
+            remote_actor.remote(scenario_json, rng.root_seed, shard)
+            for shard in _shard_ranges(total, num_shards)
+            if shard
+        ],
+    )
     results: list[ShardResult] = ray.get([a.rollout.remote(actions_json, steps) for a in actors])
     return _aggregate(results, total)
 

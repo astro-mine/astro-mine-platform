@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Train a baseline *through* a curriculum (learn.md §3, §11) — the wiring, not just the schema.
 
 A curriculum that nothing consumes is a document, not a feature. This is the loop that makes it

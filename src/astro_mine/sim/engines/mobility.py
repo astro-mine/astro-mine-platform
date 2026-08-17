@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Mobility engine — mid-fidelity wheeled-rover surface mobility (RM-P0-SIM-03).
 
 The Phase-0 surface-mobility tier: a deterministic rover model that tracks a commanded

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Canonical-JSON serialization of a decision trace (RM-P1-MIND-01).
 
 The determinism gate's wire form: a byte-stable JSON rendering of a

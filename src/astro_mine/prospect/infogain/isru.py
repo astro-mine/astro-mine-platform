@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """EVPI tied to ISRU yield — active perception valued in production ROI (prospect.md §3, §11).
 
 Max-variance and mutual information (:mod:`astro_mine.prospect.infogain`) value a sample in *nats*:

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Lazy chunk-range reads over Zarr / COG / Parquet -- never bulk-copy a dataset.
 
 A worker streams only the chunks it needs from object storage (``cloud.md`` §2 principle 7,

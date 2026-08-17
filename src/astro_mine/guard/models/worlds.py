@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Worlds terrain / illumination adapter — the *untrusted* constraint-source binding (GUARD-04).
 
 Wraps a Core :class:`~astro_mine.core.world.protocol.WorldProvider` and derives the per-tick signals

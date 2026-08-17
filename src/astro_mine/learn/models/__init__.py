@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Policy/value/comms model building blocks shared across the baselines (learn.md §3).
 
 - :class:`MLP` / :class:`DictActorCritic` / :class:`AgentQNet` — feed-forward trunk, the

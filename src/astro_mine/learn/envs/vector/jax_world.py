@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The JAX/XLA reference :class:`BatchedWorld` — the GPU-vectorized rollout tier (LEARN-04).
 
 learn.md §8 strategy 1 is **GPU-vectorized envs**: "thousands of envs resident on one GPU, best

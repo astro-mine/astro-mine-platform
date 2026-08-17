@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed artifact I/O + RunContext provenance envelope.
 
 S3-compatible (MinIO local) content-addressed artifact I/O plus a ``RunContext``

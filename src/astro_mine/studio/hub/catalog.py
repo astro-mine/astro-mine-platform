@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Fleet/Hub asset catalog as Studio's robot menu + geometry preview (RM-P1-STUDIO-09).
 
 Studio surfaces the assets a designer can choose from, and previews one in the embedded View, by

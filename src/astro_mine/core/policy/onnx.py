@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ONNX-PolicyPackage → Policy adapter (RM-P1-CORE-01).
 
 Guarantees a Learn-exported ONNX policy is *loadable and callable as a plain

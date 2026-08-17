@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Link's Core ``comms_model`` plugin manifest — the comms environment declaring itself.
 
 Per conventions.md §1.3 ("plugins over patches") and link.md §3, **Link is itself a Core

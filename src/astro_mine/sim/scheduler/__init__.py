@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """First-cut rule-based multi-fidelity scheduler with error tracking (RM-P0-SIM-05).
 
 The scheduler answers "which fidelity tier runs each agent this episode, and what error does

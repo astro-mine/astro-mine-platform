@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Node-autoscaling policies -- spot-first, scale-to-zero, portable.
 
 Compiles the node-autoscaling config that keeps compute cheap (``cloud.md`` §7, §8):

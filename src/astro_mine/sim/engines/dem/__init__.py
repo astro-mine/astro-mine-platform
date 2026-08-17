@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """High-fidelity DEM granular-excavation engine (RM-P1-SIM-06) — the surrogate's oracle.
 
 The ground-truth tool-soil contact tier behind the reduced-order ``GranularEngine`` seam: a

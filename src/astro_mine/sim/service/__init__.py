@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The service skin — gRPC ``EnvironmentService`` + a generic Ray-actor wrapper (sim.md §3, §6, §7).
 
 sim.md §3's package layout names a ``service/`` module (*"gRPC EnvironmentService + Ray-actor

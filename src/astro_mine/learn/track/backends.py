@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Experiment-tracking backends — MLflow default, W&B optional (learn.md §4, §11).
 
 learn.md §11: *"**MLflow default** (OSS, self-host), **W&B optional**"*; learn.md §4: "Runs link

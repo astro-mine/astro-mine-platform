@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``compile_with_constraints`` — compose the RM-P1-ALLOC-03 builders into one IR (RM-P1-ALLOC-03).
 
 The single entry point that lowers an :class:`~astro_mine.allocate.AllocationRequest` **plus its

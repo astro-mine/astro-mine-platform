@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Allocate delegation (RM-P1-MIND-04) — Mind's side of it.
 
 Mind owns *decomposition and execution*; Allocate owns *who does what, when, where* — Mind embeds

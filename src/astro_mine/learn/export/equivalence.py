@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ONNX-Runtime equivalence check that GATES publish (RM-P1-LEARN-05 AC; learn.md §10).
 
 "Every export passes the ONNX-Runtime equivalence check vs the source policy on a fixed

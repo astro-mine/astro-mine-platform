@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Learn — the multi-agent reinforcement-learning toolkit.
 
 Turns a simulatable world into trainable RL problems: Gymnasium (single-agent) and

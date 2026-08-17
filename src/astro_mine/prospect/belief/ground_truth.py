@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sealed GroundTruthField — a fixed, seeded realization of a resource field (prospect.md §2.2, §9).
 
 The "true" field for a scenario: a single deterministic realization sampled from a

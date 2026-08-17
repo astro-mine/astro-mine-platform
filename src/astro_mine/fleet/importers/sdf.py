@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SDF -> SADF parsing (RM-P0-FLEET-02), via the stdlib XML parser.
 
 Maps one ``<model>`` from an SDF/Gazebo file onto the shared

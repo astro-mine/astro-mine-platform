@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Link — the communications environment.
 
 Models when and where agents can talk to each other and to Earth: geometric

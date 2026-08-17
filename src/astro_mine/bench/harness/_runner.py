@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The runner contract + a deterministic reference runner (RM-P0-BENCH-04).
 
 A :class:`Runner` maps a resolved scenario + seed to a :class:`RunOutcome`. The harness is

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """RBAC/OPA authorization -- who may submit into which tenant namespace.
 
 Fine-grained authorization on submission and namespace access is enforced with OPA

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The registry transport contract — one interface, a local layout or any OCI registry.
 
 :class:`RegistryClient` is the seam hub.md §7 requires: the ``astro-mine-hub`` client

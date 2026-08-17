@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``AllocationRequest`` / ``Allocation`` — the solver-neutral canonical model (RM-P1-ALLOC-01).
 
 The Core-typed input/output of the allocation sub-interface (allocate.md §3, "Key

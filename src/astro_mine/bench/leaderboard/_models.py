@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Leaderboard wire models (RM-P0-BENCH-06; bench.md §9).
 
 The typed request/response surface of the minimal leaderboard: a :class:`SubmissionRequest`

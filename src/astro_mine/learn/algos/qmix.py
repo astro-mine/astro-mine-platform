@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """QMIX / VDN — the value-based CTDE-default baseline (RM-P1-LEARN-03; learn.md §11).
 
 **Design choice (flagged for the PR).** RLlib's new-API-stack QMIX is *not* first-class with

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Multi-domain coupler — explicit co-simulation across engines (RM-P0-SIM-04).
 
 The heterogeneous co-step the reduced-order engine set (RM-P0-SIM-03) was built for but could not

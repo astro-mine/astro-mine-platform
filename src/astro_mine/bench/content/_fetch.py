@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Populate a local OCI-layout registry from the published anchor content (G1.2; bench#56).
 
 A user who clones Bench can list scenarios and score a fixture, and — until this command — had no

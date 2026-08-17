@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ONNX-graph construction for the PolicyPackage export (RM-P1-LEARN-05; learn.md §5, §10).
 
 The ONNX graph is the **only** cross-component policy artifact (learn.md §5): a Learn-trained

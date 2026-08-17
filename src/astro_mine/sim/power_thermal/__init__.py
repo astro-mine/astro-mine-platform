@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-asset power/thermal evolution — the lunar-night survival constraint (RM-P0-SIM-07).
 
 A reduced-order, coupled power-and-thermal model that turns a SADF ``PowerBudget`` /

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Surface thermal (first-cut) - 1-D thermophysical diurnal curves (RM-P0-WORLDS-04).
 
 Per-terrain-class precomputed diurnal surface-temperature curves, driving the ~14-Earth-day

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The CGR-style contact graph derived from a ContactPlan (RM-P1-LINK-11).
 
 A contact-graph-routing (CGR) view of the constellation: the plan's per-pair contact

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sampling-based motion feasibility (RM-P1-MIND-03).
 
 The geometric half of TAMP behind the small

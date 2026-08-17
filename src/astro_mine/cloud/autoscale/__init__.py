@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Autoscaling & resilience -- spot-first node pools and checkpoint-to-resume.
 
 Cost is a first-class constraint (``cloud.md`` §2 principle 5): :mod:`.policy` compiles

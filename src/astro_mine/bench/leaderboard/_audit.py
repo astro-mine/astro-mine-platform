@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The authN/authZ + verification audit trail (bench#29 AC4; bench.md §2 principle 7, §9).
 
 bench.md §9 ends its anti-cheat section on the sentence this module implements: *"results carry full

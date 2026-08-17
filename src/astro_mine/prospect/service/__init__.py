@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The optional distributed field service (RM-P1-PROSPECT-11; prospect.md §3, §7, §9).
 
 A thin gRPC service fronting the importable library: it serves large shared belief fields and

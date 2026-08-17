@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``Solver`` strategy contract — ``Incumbent`` + the streaming protocol (RM-P1-ALLOC-02).
 
 The single, backend-neutral seam every solver plugin sits behind (allocate.md §3): a

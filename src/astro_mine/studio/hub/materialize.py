@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Materializing a Worlds bundle pulled from Hub by digest (RM-P1-STUDIO-06).
 
 The embedded View renders terrain by fetching a Worlds bundle over **HTTP** —

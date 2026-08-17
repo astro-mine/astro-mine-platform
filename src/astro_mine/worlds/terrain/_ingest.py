@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reprojection and COG IO for terrain ingest (RM-P0-WORLDS-01).
 
 The rasterio/GDAL boundary: open a GDAL-readable DEM, reproject it to the explicit

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """BeliefField — a Bayesian posterior over a resource field with a replayable log (prospect.md §5).
 
 The agents' evolving estimate: a :class:`BeliefField` carries a dataset-derived

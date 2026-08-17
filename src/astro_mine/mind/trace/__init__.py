@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Decision traces — Mind's reproducibility and explanation substrate.
 
 The neutral record model (:mod:`astro_mine.mind.trace.model`) plus the canonical-JSON serializer

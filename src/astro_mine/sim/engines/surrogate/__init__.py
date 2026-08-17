@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The learned-surrogate granular fidelity tier (RM-P1-SIM-03).
 
 Sim loads a content-addressed [Surrogate](surrogate.md) ONNX artifact through Core contracts

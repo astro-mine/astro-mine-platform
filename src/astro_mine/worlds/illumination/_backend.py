@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The illumination backend contract — the swappable Sun-visibility surface (RM-P1-WORLDS-10).
 
 worlds.md §11 recommends *precomputed horizon maps as the default, GPU ray casting for the fine

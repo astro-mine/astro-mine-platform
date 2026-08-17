@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Canonical JSON Schema for the allocation contracts (allocate.md §5; conventions.md §3).
 
 The Pydantic models are the source of truth; this exports their JSON Schema so an external /

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The real NATS + JetStream eventing backend (RM-P1-CLOUD-06; conventions.md §4; cloud.md §4, §6).
 
 The production sink behind the :class:`~astro_mine.cloud.runs.events.EventPublisher` seam:

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Manipulation engine — reduced-order articulated excavator linkage (RM-P0-SIM-03).
 
 The Phase-0 manipulation tier: a deterministic articulated-chain model for an excavator

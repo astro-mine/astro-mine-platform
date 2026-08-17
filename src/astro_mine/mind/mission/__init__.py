@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The strategic mission tier — global decomposition + Allocate delegation (mind.md §3).
 
 ``mission/planner/`` holds the pluggable mission-planner backend (RM-P1-MIND-03): the

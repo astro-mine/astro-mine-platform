@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The MuJoCo mobility engine's static self-declaration — MuJoCo-free (RM-P0-SIM-03).
 
 In its own module so :mod:`astro_mine.sim.engines.mujoco` (and ``engines/builtins.py``) can expose

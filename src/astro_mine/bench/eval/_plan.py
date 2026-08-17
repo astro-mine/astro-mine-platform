@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The evaluation-batch planner — fan seeds x submissions out onto Cloud (RM-P1-BENCH-11).
 
 :func:`plan_batch` turns a ``(ScenarioSpec, submissions, seed set, budgets)`` request into the

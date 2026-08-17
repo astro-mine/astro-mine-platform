@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The generic Environment-as-Ray-actor wrapper — Cloud-level fan-out (sim.md §3, §6, §7).
 
 The second half of the "service skin": sim.md §6 describes Sim being consumed *"as a gRPC
@@ -26,7 +27,7 @@ Sim's.
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from astro_mine.core.messages.model import ActionBatch
 from astro_mine.sim.runtime.episode import Simulator
@@ -153,14 +154,23 @@ def _dispatch_on_cluster(  # pragma: no cover  (needs live Ray workers; deselect
     import ray
 
     scenario_json = scenario.model_dump_json()
+    # Ray types `ray.remote(Cls)` fine; what it does not model is that calling `.remote(...)` on
+    # it yields an **ActorHandle** rather than an instance of the class. Left unannotated, mypy
+    # reads `a.rollout` as the plain method and reports that a `Callable` has no `.remote` -- at
+    # the *use* site, which is why #40's reading (a cast at construction) does not fix it: the
+    # cast is redundant there, and mypy says so. `.remote()` is also overloaded, so it yields
+    # `ActorHandle[EnvironmentActor] | type[EnvironmentActor]`; naming the handles resolves that
+    # too.
+    # (astro-mine-platform#40.)
     remote_actor = (
         ray.remote(**actor_options)(EnvironmentActor)
         if actor_options
         else ray.remote(EnvironmentActor)
     )
-    actors = [
-        remote_actor.remote(scenario_json, seed, engine_factory=engine_factory) for seed in seeds
-    ]
+    actors = cast(
+        "list[ray.actor.ActorHandle[EnvironmentActor]]",
+        [remote_actor.remote(scenario_json, seed, engine_factory=engine_factory) for seed in seeds],
+    )
     payloads: list[str] = ray.get([actor.run_json.remote(steps) for actor in actors])
     by_seed = {r["seed"]: r["frames"] for r in (json.loads(p) for p in payloads)}
     return [(seed, by_seed[seed]) for seed in seeds]

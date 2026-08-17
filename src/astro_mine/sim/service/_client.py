@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The gRPC ``EnvironmentService`` client — a *served* Core Environment (sim.md §3, §6).
 
 :class:`RemoteEnvironment` drives the service and **is itself a Core**
@@ -54,7 +55,7 @@ class RemoteEnvironment:
     def __init__(self, channel: grpc.Channel, *, stream_steps: int = 1) -> None:
         if stream_steps < 1:
             raise ValueError(f"stream_steps must be >= 1, got {stream_steps}")
-        self._stub = pb_grpc.EnvironmentServiceStub(channel)
+        self._stub = pb_grpc.EnvironmentServiceStub(channel)  # type: ignore[no-untyped-call]
         self._stream_steps = stream_steps
         description = self._stub.Describe(pb.DescribeRequest())
         self._possible_agents: tuple[str, ...] = tuple(description.possible_agents)

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The zero-violation oracle: the safe-set predicate the falsification search tries to break.
 
 Given a rollout (:mod:`astro_mine.guard.falsify.rollout`) the oracle decides, per tick, whether the

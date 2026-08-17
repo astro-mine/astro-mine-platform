@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """MAPPO — the CTDE-default PPO baseline (RM-P1-LEARN-03; learn.md §11).
 
 Decentralised actors, one shared centralized critic over the global ``SwarmEnv.state()``,

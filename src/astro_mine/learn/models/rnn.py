@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Recurrent policy core for partial observability (RM-P1-LEARN-03; learn.md §3).
 
 A single-step GRU cell used as the trunk of a recurrent

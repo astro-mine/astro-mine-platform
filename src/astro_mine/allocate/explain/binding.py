@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Binding-constraint reporting over the solver-neutral IR (RM-P1-ALLOC-06).
 
 *Which* constraint bound the result — the comms window, power floor, terrain keep-out,

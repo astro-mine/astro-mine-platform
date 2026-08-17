@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``DriftMonitor`` — OOD/drift monitoring of live surrogate queries (RM-P1-SURR-04).
 
 The inline-loop watchdog of surrogate.md §3/§10: it accumulates the per-query signals a

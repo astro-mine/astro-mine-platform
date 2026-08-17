@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Training the learned-DEM GNS ensemble (RM-P1-SURR-02).
 
 Turns the frozen DEM fixture into transition examples, trains a **deep ensemble** of GNS models

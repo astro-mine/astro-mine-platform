@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Parametric asset families — the parameter-resolution engine (RM-P1-FLEET-10).
 
 ``fleet.md`` §3 splits parametric modelling into ``templates/`` (the family definitions:

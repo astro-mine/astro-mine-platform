@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Constraint builders — power, comms-window, terrain (RM-P1-ALLOC-03).
 
 The builders that lift **upstream truth** into the solver-neutral Allocation IR so the model

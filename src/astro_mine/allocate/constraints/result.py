@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Structured build artifacts the constraint builders emit alongside the IR (RM-P1-ALLOC-03).
 
 Every constraint a builder derives is emitted **into the versioned IR** (the single contract a

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Physical-plausibility lint.
 
 Catches assets that are *schema-valid but physically impossible* — the tier above

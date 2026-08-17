@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The MCAP SafetyVerdict stream — the auditable, replayable output surface (RM-P1-GUARD-06).
 
 Streams per-tick :class:`~astro_mine.guard.audit.model.SafetyVerdict` records to an **MCAP**

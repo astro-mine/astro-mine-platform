@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SweepSpec -- a parameter space over a base JobSpec.
 
 A :class:`SweepSpec` describes many related jobs as one object: a base

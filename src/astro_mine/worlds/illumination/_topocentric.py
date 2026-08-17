@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-cell topocentric horizon maps — pure NumPy (RM-P1-WORLDS-12).
 
 The rigorous fidelity upgrade to the RM-P0-WORLDS-03 grid-azimuth horizon. Instead of

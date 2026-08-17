@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Message-catalog validation (control plane) and union semantic checks.
 
 Mirrors the SADF/ObjectiveSpec loaders: structural validation against the canonical

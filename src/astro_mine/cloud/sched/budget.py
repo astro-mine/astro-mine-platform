@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Hard per-tenant budget caps -- cost as a safety rail.
 
 A :class:`BudgetLedger` gives each tenant a spend cap and **halts a runaway sweep before it

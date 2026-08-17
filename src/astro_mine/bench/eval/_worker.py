@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The single-seed rollout worker — the argv Cloud runs per fanned-out seed (RM-P1-BENCH-11).
 
 This is the command a planned :class:`~astro_mine.bench.eval._plan.PlannedEvaluation` fans out

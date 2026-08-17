@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ground-truth/belief isolation — a leak is a security-class defect (prospect.md §9).
 
 The sealed ground-truth field is **access-gated** and **structurally unreachable** through the

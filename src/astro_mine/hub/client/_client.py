@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``astro-mine-hub`` client SDK — resolve / verify / pull / cache / publish (RM-P1-HUB-06).
 
 The tier-1 path that MUST always work with **no hosted Hub** (hub.md principle 7, §7): a

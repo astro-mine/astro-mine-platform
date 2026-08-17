@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Mission-architecture schema — the reserved RFC-0001 hooks (RM-P1-CORE-04).
 
 **Schema only, no mechanism.** A :class:`MissionSpec` is an ordered set of :class:`Phase`\\

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Latency/bandwidth time-series products for the planners (RM-P1-LINK-12).
 
 link.md §11 recommends delivering **both** constraint representations to the planners, from

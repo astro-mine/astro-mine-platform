@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-pinned Scenario construction (RM-P1-SIM-01).
 
 Where :mod:`~astro_mine.sim.runtime.scenario` loads a :class:`Scenario` from an inline document —

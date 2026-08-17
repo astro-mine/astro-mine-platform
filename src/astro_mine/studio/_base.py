@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Shared Pydantic base for every Studio-owned artifact.
 
 Studio adds **no Core surface** (studio.md §2, §12): these are Studio-local models

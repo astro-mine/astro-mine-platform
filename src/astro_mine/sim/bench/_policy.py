@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The anchor baseline — a capability-aware mode policy (astro-mine-sim#61, G1.3).
 
 The floor a Bench leaderboard needs something to beat. It emits **one Core ``MODE`` action per

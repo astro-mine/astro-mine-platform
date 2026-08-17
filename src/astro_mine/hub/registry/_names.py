@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The artifact-name rule, in one place (conventions.md §13, normative).
 
 A published artifact's registry name is **bare kebab-case**: lowercase ASCII, hyphen-separated,

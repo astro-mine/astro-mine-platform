@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Design-space exploration engine (RM-P1-STUDIO-02).
 
 A pluggable multi-objective search that proposes, evaluates, and **Pareto-ranks**

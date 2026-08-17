@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Safety-metric extraction + Parquet aggregation from the verdict stream (RM-P1-GUARD-06).
 
 The Bench-facing scoring surface: Guard **emits** the per-tick verdicts; this module derives the

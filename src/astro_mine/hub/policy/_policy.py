@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """License + export-control download gating at the boundary (RM-P1-HUB-05; hub.md §9).
 
 Hub evaluates **license** and **export-control/dual-use** policy at the **download boundary**,

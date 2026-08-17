@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """BaseResourceField — the shared base making ground-truth and belief identical (prospect.md §2.2).
 
 Sealed ground-truth realizations and evolving belief posteriors are *distinct types with the

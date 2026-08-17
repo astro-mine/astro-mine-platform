@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A policy plugin's self-declaration: the manifest Core gates, plus the factory that builds it.
 
 Core resolves plugin **manifests** and runs the three load gates (validity → Core-interface-version

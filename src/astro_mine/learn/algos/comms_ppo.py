@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms-learning PPO — the differentiable-message CTDE baseline (RM-P1-LEARN-03; learn.md §11).
 
 learn.md §11 makes **comms-learning a first-class research track** alongside IPPO/MAPPO/QMIX,

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """MissionSpec loading and validation (RM-P1-CORE-04 / RFC-0001).
 
 Pipeline (``load_mission``), mirroring SADF/ObjectiveSpec:

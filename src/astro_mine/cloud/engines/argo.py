@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Argo Workflows engine -- DAG batch and embarrassingly-parallel fan-out.
 
 Compiles a :class:`~astro_mine.cloud.submission.workflowspec.WorkflowSpec` to an Argo

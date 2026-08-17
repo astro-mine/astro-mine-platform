@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Decision-trace record model (RM-P1-MIND-01).
 
 The structured record of what a Mind stack decided, tick by tick — the substrate for the

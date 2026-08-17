@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The composer — stack spec → validated, runnable hierarchy graph (RM-P1-MIND-01).
 
 :func:`compose` turns a loaded :class:`StackSpecDocument` into a :class:`HierarchyGraph`,

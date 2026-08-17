@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ObjectiveSpec loading, validation, and semantic checks.
 
 Pipeline (``load_objective``), mirroring SADF (astro_mine.core.sadf.loader):

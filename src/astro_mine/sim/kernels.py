@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Furnishing the SPICE kernel pool from the CLI and the environment (#80).
 
 Sim resolves body-fixed frames through :mod:`astro_mine.spice` (RFC-0002), and SPICE cannot

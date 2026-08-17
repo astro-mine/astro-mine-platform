@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Regolith terramechanics parameter field — parameters only (RM-P0-WORLDS-05).
 
 A grid-aligned spatial field of the five regolith mechanical parameters — bulk density,

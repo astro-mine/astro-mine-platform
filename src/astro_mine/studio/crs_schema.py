@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Pin the content-addressed ``PlanetaryCRS`` to Core's canonical units schema (RM-P1-STUDIO-08).
 
 Studio content-addresses artifacts that embed Core's ``PlanetaryCRS`` — ``GeoRegion.crs`` on

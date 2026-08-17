@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GPU scheduling & sharing -- MIG partitioning, time-slicing, DCGM telemetry.
 
 Small GPU jobs must not strand whole cards (``cloud.md`` §7, §8). :mod:`.mig` holds the

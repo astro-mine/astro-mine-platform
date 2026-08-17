@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Run-time provenance — the shared execution-provenance vocabulary (issue #18).
 
 The run-time counterpart to the build-time artifact ``Provenance`` schemas (SADF,

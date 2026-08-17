@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Parametric link budget — CCSDS-aligned (RM-P0-LINK-03).
 
 Gain / path-loss / SNR → rate over a CCSDS-aligned mod/cod table, plus per-link latency

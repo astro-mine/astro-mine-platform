@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Orekit higher-fidelity orbital tier (RM-P0-SIM-03) — the flight-grade orbital backend.
 
 Behind the *same* ``RegimeEngine`` waist as the reduced-order RK4 two-body engine, so routing it is

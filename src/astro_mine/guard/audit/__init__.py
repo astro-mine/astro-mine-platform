@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetyVerdict — the auditable output surface of the Guard shield (RM-P1-GUARD-06).
 
 Every tick's :class:`SafetyVerdict` — the certified action, whether/why an intervention occurred,

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The excavation-parameter trust region + OOD flag (RM-P1-SURR-02).
 
 Every surrogate declares the input domain it was trained/validated on; a query outside it raises

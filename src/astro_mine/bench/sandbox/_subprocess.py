@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The out-of-process sandbox backend: rlimits + seccomp, no egress (bench.md §9; bench#30).
 
 The default backend the hosted leaderboard runs submitted policies under. It executes the **existing

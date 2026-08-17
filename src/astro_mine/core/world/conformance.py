@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """World-provider API contract-test utility (worlds.md §5/§6).
 
 The consumer-driven conformance check a Worlds implementation runs in its own CI to prove it

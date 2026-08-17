@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Brax/MJX GPU-vectorized swarm-scale rollout path (RM-P1-SIM-04) — the fast-contact training tier.
 
 A JAX-native low-fidelity surface-mobility/contact engine behind the ``RegimeEngine`` waist, plus

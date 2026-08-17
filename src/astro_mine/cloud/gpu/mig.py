@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """MIG profiles, time-slicing, and DCGM -- GPU sharing config.
 
 MIG partitions one physical GPU into isolated slices so a small fit/inference job shares a

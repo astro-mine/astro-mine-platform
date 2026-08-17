@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Gaussian posterior summaries shared by the resource-field backends (RM-P0-PROSPECT-02).
 
 Both the grid and GP backends model the per-point posterior as a univariate Gaussian — a mean

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The →Hub / ←Hub seam (RM-P1-STUDIO-06; studio.md §6).
 
 Studio reads assets, worlds, and policies from Hub **by content hash**, and writes validated designs

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Illumination + PSR detection — horizon maps and permanently-shadowed-region masks.
 
 Precomputed per-azimuth horizon maps (O(1) per-epoch Sun visibility) and PSR masks over a

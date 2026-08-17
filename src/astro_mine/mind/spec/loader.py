@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Stack-spec loading and validation (RM-P1-MIND-01).
 
 Pipeline (``load_stack_spec``), mirroring Core's manifest / objective loaders:

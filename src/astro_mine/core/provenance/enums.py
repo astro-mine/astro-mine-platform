@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Closed vocabularies for run-provenance.
 
 Run provenance carries **no** closed enum vocabulary in v0.1: engine names, fidelity-tier

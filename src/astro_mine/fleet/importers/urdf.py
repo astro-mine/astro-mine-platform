@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """URDF -> SADF parsing (RM-P0-FLEET-02), via ``yourdfpy``.
 
 Maps a URDF robot onto the shared :class:`~astro_mine.fleet.importers._common.IRModel`:

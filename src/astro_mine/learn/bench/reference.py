@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reproducible reference-score + throughput harness, and the honest-eval seam (LEARN-03).
 
 Every baseline ships a **reproducible reference score + throughput benchmark** (issue AC;

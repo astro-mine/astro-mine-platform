@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Engine-adapter framework — the ``RegimeEngine`` plugin (RM-P0-SIM-02).
 
 The plugin seam that routes physics engines behind the Core Environment waist: the

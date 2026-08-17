@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The reference kinematic engine — the trivial ``RegimeEngine`` (RM-P0-SIM-02).
 
 A deterministic, dependency-light stand-in that makes the engine-adapter seam real before

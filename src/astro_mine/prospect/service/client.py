@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The field-service client — reconstruct and track the one shared posterior over gRPC.
 
 A :class:`FieldServiceClient` fetches a field's replayable state, submits observations, and follows

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The composed hierarchy graph (RM-P1-MIND-01).
 
 The validated, runnable artifact the composer produces from a stack spec and the executive

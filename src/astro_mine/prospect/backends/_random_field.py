@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A seeded, spatially-correlated standard-normal field — the latent a realization is drawn from.
 
 A realization of a resource field is not per-cell independent noise: ice is *spatially structured*,

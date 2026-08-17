@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Verify-twice orchestration — the required-evidence policy and the fail-closed check.
 
 The consumer half of the supply-chain trust boundary (guard.md §9.5; hub.md §9; conventions.md §9):

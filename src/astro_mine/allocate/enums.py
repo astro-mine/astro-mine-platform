@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Closed vocabularies for the allocation contracts (RM-P1-ALLOC-01).
 
 Small, append-only ``StrEnum``\\ s — the platform idiom for a closed vocabulary

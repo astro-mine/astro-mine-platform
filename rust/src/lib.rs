@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Astro-Mine-Guard trusted safety core (the TCB) — RM-P1-GUARD-02.
 //!
 //! The small, deterministic, allocation-free (on the hot path) Rust core that actually

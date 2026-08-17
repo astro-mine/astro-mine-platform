@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference symbolic task planner (RM-P1-MIND-03).
 
 Reads the mission tier's decomposition from ``DecisionContext.upstream`` and selects each

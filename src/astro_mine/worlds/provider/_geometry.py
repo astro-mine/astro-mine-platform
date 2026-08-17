@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Provider geometry kernels — pure, IO-free (RM-P0-WORLDS-06).
 
 Coordinate-independent helpers the Environment-API world provider composes: a first-cut

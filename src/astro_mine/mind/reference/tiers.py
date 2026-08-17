@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference tier plugins — replaceable examples, not privileged internals.
 
 Per conventions.md §1.3 ("reference implementations ship as replaceable examples"), these

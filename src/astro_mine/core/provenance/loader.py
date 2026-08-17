@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Run-provenance loading and validation.
 
 Pipeline (``load_run_provenance``), mirroring SADF/ObjectiveSpec/manifest:

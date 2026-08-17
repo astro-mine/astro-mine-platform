@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Bench reporting — scorecards, provenance bundles, MCAP replay export, and the View handoff.
 
 The bench.md §3 ``report`` module: the surface that packages Bench's results for the components that

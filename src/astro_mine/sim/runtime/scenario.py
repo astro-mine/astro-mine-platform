@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Scenario specification + loader (RM-P0-SIM-01).
 
 A :class:`Scenario` is the reproducible declaration of *what* an episode contains — its agents and

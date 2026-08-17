@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Resource-field API — the uncertainty-first probabilistic resource contract (prospect.md).
 
 A Core-owned thin Protocol for a probabilistic resource field: a query surface over a

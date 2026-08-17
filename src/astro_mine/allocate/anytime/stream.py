@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The anytime incumbent stream + honest deadline status (RM-P1-ALLOC-05).
 
 Layers the anytime contract over the :class:`~astro_mine.allocate.solvers.base.Solver` strategy

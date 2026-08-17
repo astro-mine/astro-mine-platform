@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetySpec v0.1 — typed Pydantic models (the Guard-owned safety contract).
 
 The declarative document of *hard* constraints every Guard layer compiles from

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The OMPL + FCL motion backend (RM-P1-MIND-03) — the ``[native]`` extra.
 
 The production realization of the geometric half of TAMP that mind.md §4 names: **OMPL**

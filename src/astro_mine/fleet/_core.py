@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fleet's binding to the Core narrow waist (RM-P0-FLEET-01).
 
 The single place that declares which Core interface versions Fleet authors against,

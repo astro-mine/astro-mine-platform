@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Container-first, cluster-ready packaging.
 
 Packages every Phase-0 workload (Sim, Bench) as **digest-pinned** OCI images with

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Core — the narrow waist.
 
 The thin, stable contract layer every Astro-Mine package and third-party plugin

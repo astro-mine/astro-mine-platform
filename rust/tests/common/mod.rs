@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Shared test fixtures: hand-built compiled models and a double-integrator simulator.
 
 #![allow(dead_code)]

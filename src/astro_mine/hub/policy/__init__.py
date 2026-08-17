@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """License + export-control download gating + the audit log (RM-P1-HUB-05).
 
 The download-boundary gate (hub.md §9; ``LUNAR-SR-001``): evaluate license + export-control/dual-use

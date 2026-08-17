@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The allocation-delegation contract — request, response, and the adapter that carries it.
 
 Mind owns *decomposition and execution*; Allocate owns *who does what, when, where*, and Mind

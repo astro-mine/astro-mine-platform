@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ONNX export of the excavation surrogate as a raw-state self-contained graph (RM-P1-SURR-04).
 
 Exports the **whole** query — featurization *and* prediction — into one ONNX graph: from the raw

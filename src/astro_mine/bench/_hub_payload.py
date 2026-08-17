@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Verified retrieval of an artifact's payload bytes — Bench's one door onto them (bench#44).
 
 Bench **resolves and verifies artifacts by digest but consumes no payload bytes itself**: both Hub

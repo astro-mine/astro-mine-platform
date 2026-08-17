@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The conditionable-belief seam a simulator drives — Core types in, Core types out.
 
 A belief is Prospect's (prospect.md §6): a simulator renders sensor observations *of* a sealed

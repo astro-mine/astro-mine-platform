@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF -> a single preview artifact (``fleet render``; RM-P0-FLEET-01).
 
 The asset preview [Studio](https://github.com/astro-mine/docs) shows in its robot menu and
@@ -129,7 +130,7 @@ def _write_glb(scene: trimesh.Scene, path: Path) -> None:
     to_gltf = geometry.gltf_node_transform()
     for name, mesh in scene.geometry.items():
         rotated.add_geometry(mesh, node_name=name, geom_name=name, transform=to_gltf)
-    path.write_bytes(rotated.export(file_type="glb", include_normals=True))
+    path.write_bytes(rotated.export(file_type="glb", include_normals=True))  # type: ignore[no-untyped-call]
 
 
 def _write_usd(scene: trimesh.Scene, path: Path) -> None:
