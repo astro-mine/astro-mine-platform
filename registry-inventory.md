@@ -59,6 +59,19 @@ Registry names are immutable, so each is a **re-publish under a new name, not a 
 digests, a re-pinned zoo, and every previously published scorecard still resolving by digest. §13
 requires it as one sweep, so the registry never carries a half-migrated set.
 
+## Mirroring, and the one entry still unmirrored
+
+The §13 migration re-published ten artifacts, and for a while the zoo pinned digests that existed
+only in the workspace store — the single-point-of-failure this file exists to record, re-created by
+fixing a different problem. They are mirrored now (astro-mine-platform#41), and they were re-signed
+with the **org** key first: the migration had signed them with the workspace development key, which
+`verify` rejects against the published `anchor-signing.pub`, so mirroring them as-is would have
+published content that fails closed for every consumer.
+
+`excavation-gns:0.6.0` is the one entry left in `SINGLE_COPY`, and it is the original one. Note that
+re-publishing it would not be mirroring it: the tier the tree actually depends on was destroyed by
+the 2026-08-08 prune and cannot be rebuilt (astro-mine-platform#42).
+
 ## The two entries that need mirroring
 
 `excavation-gns:0.6.0` and `shackleton_water_ice_pds_v1:1.0.0` are `published`, are pinned by

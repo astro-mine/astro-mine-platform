@@ -35,6 +35,8 @@ import argparse
 import importlib.metadata
 import json
 import logging
+import os
+import pathlib
 import sys
 import time
 from collections.abc import Mapping, Sequence
@@ -134,7 +136,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     # also meant a failure *after* the search threw the whole search away, which is exactly what
     # happened when the publish call below turned out to be passing an argument that does not
     # exist. Same key, now actually memoized.
-    plan = PlanCache().resolve(key, _compute)
+    # `PlanCache()` with no root is **memory-only**, so it memoizes nothing across processes -- it
+    # would have left the 33-minute rebuild exactly where it was. Rooted at the same XDG location
+    # `bench.content` uses for its store, so a second run of this script is a lookup.
+    cache_root = pathlib.Path(
+        os.environ.get("XDG_CACHE_HOME") or (pathlib.Path.home() / ".cache")
+    ) / "astro-mine" / "link-plans"
+    plan = PlanCache(cache_root).resolve(key, _compute)
+    logging.info("plan cache: %s", cache_root)
     input_hashes = {
         "kernels": key.kernels,
         "terrain": world_digest,
