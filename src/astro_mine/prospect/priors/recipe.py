@@ -22,6 +22,7 @@ Backlog: RM-P0-PROSPECT-03 — astro-mine-prospect#3
 from __future__ import annotations
 
 import hashlib
+import re
 from collections.abc import Callable
 
 import numpy as np
@@ -129,12 +130,83 @@ class Prior:
 
 _RECIPES: dict[str, PriorRecipe] = {}
 
+#: recipe key -> the name the prior publishes under. See :func:`default_artifact_name`.
+_ARTIFACT_NAMES: dict[str, str] = {}
 
-def register_recipe(name: str, recipe: PriorRecipe) -> None:
-    """Register a prior recipe under ``name`` (fails loudly on a duplicate name)."""
+_VERSION_SUFFIX = re.compile(r"-v\d+$")
+
+
+def default_artifact_name(recipe_name: str) -> str:
+    """The conforming published artifact name a recipe key maps to (``conventions.md`` §13).
+
+    **A recipe key and an artifact name are two different things**, and conflating them is what let
+    ``shackleton_water_ice_pds_v1`` reach the registry. A key is a Python-side identifier: it names
+    a callable, it is what ``load_prior`` and ``get_recipe`` take, and it is snake_case because the
+    function it names is. An artifact name is what the published bytes are addressed by, and §13
+    requires bare kebab-case with no version in the name.
+
+    Publishing defaulted to the key, so the key silently *became* the artifact name and dragged its
+    shape into the registry with it. Deriving instead of defaulting keeps the key free to look like
+    Python while making the published name conformant by construction: underscores become hyphens
+    and a trailing ``-v<n>`` is dropped, because the version belongs in the tag.
+
+        shackleton_water_ice_v1      -> shackleton-water-ice
+        shackleton_water_ice_pds_v1  -> shackleton-water-ice-pds
+
+    Raises :class:`ValueError` if the derivation is not conformant, so a key that cannot produce a
+    valid name fails at registration rather than at publish — or, worse, silently at neither.
+    """
+    from astro_mine.hub.registry import is_valid_artifact_name
+
+    candidate = _VERSION_SUFFIX.sub("", recipe_name.replace("_", "-"))
+    if not is_valid_artifact_name(candidate):
+        raise ValueError(
+            f"prior recipe {recipe_name!r} does not derive a conforming artifact name "
+            f"(got {candidate!r}); pass artifact_name= explicitly (conventions.md §13)"
+        )
+    return candidate
+
+
+def register_recipe(name: str, recipe: PriorRecipe, *, artifact_name: str | None = None) -> None:
+    """Register a prior recipe under ``name`` (fails loudly on a duplicate name).
+
+    ``artifact_name`` is the name the prior publishes under; it defaults to
+    :func:`default_artifact_name` of the key, and is validated either way. It is a keyword with a
+    derived default rather than a required argument so that existing registrations — including
+    community ones through :func:`~astro_mine.prospect.publish.publish_recipe` — keep working while
+    still being unable to mint a non-conforming name.
+    """
     if name in _RECIPES:
         raise ValueError(f"prior recipe {name!r} is already registered")
+    if artifact_name is None:
+        resolved = default_artifact_name(name)
+    else:
+        from astro_mine.hub.registry import validate_artifact_name
+
+        resolved = validate_artifact_name(artifact_name)
     _RECIPES[name] = recipe
+    _ARTIFACT_NAMES[name] = resolved
+
+
+def artifact_name_for(recipe_name: str) -> str:
+    """The published artifact name for ``recipe_name``, registered or derived.
+
+    Unregistered keys are derived rather than rejected: a caller may hand
+    :func:`~astro_mine.prospect.publish.publish_prior` a :class:`Prior` whose
+    ``provenance.recipe`` was never registered in this process, and that is a legitimate ad-hoc
+    publish, not an error. It still gets a conforming name.
+    """
+    known = _ARTIFACT_NAMES.get(recipe_name)
+    return known if known is not None else default_artifact_name(recipe_name)
+
+
+def list_artifact_names() -> tuple[str, ...]:
+    """The published artifact names of all registered prior recipes, sorted.
+
+    This — not :func:`list_recipes` — is the set that has to satisfy §13, and the distinction is the
+    whole point of splitting the two concepts.
+    """
+    return tuple(sorted(_ARTIFACT_NAMES.values()))
 
 
 def get_recipe(name: str) -> PriorRecipe:

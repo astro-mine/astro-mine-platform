@@ -71,7 +71,9 @@ def test_isru_family_applies_the_resource_storage_gauge() -> None:
 
 def test_variant_and_version_flow_into_identity() -> None:
     doc = resolve_family("orbital-relay", variant="heavy", version="2.0.0")
-    assert doc.asset.identity.id.endswith(".heavy")
+    # `<family>-<variant>`, not `astro-mine.fleet.<family>.<variant>`: templated assets are
+    # minted conformant now, or the gate at publish would refuse every one of them (§13).
+    assert doc.asset.identity.id == "orbital-relay-heavy"
     assert doc.asset.identity.version == "2.0.0"
 
 

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from astro_mine.prospect.priors.recipe import Prior
+from astro_mine.prospect.priors.recipe import Prior, artifact_name_for
 from astro_mine.prospect.publish._bundle import (
     BUNDLE_MEDIA_TYPE,
     bundle_digest,
@@ -50,8 +50,12 @@ def publish_prior(
     Returns the :class:`~astro_mine.hub.registry.PublishedArtifact` (its immutable ``name:version``
     reference and content digest). With a ``private_key_pem`` the artifact is signed and gets its
     cosign signature / SLSA provenance / SBOM attestations (verified fail-closed at pull); without
-    one it is stored for integrity-only verification. ``name``/``version`` default to the prior's
-    recipe name and version. ``namespace`` is the Hub namespace (default ``open``; community
+    one it is stored for integrity-only verification. ``version`` defaults to the prior's version.
+    ``name`` defaults to the *published artifact name* the recipe maps to
+    (:func:`~astro_mine.prospect.priors.artifact_name_for`) — **not** the recipe key, which is a
+    Python-side identifier and stays snake_case. Defaulting to the key is what put
+    ``shackleton_water_ice_pds_v1`` in the registry (conventions.md §13).
+    ``namespace`` is the Hub namespace (default ``open``; community
     contributions publish under ``community`` — see
     :func:`~astro_mine.prospect.publish._community.publish_community_prior`).
 
@@ -77,7 +81,7 @@ def publish_prior(
         layers.append(Blob(ZARR_MEDIA_TYPE, serialize_zarr(FieldArchive.parametric(prior))))
     client = HubClient(registry)
     return client.publish(
-        name=name or prior.provenance.recipe,
+        name=name or artifact_name_for(prior.provenance.recipe),
         version=version or prior.provenance.recipe_version,
         kind="plugin",
         manifest=manifest,

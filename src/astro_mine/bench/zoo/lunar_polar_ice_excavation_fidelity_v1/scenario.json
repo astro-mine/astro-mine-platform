@@ -1,7 +1,7 @@
 {
   "scenario_id": "lunar-polar-ice-excavation-fidelity-v1",
   "name": "Lunar Polar Ice Excavation Fidelity v1",
-  "spec_version": "0.4.0",
+  "spec_version": "0.5.0",
   "description": "The surrogate-fidelity task: a single excavator digs icy regolith on the anchor's Shackleton-de Gerlache ridge for 10 s of contact-scale time, and the benchmark measures what the high-fidelity DEM granular solver costs against a learned surrogate standing in for it - at the error bound the substitution actually held to (surrogate.md §8/§12; RM-P1-SURR-04 / RM-P1-SIM-03; LUNAR-TR-002). THIS SCENARIO'S HEADLINE RESULT IS THE SPEEDUP, NOT THE SCORECARD: see RESULTS.md and PROVENANCE.md. Content is REUSED by hash from the anchor's published Hub artifacts, except the excavator, which is pinned at 0.2.0 - the first revision to declare its digging blade as a SADF `tool` contact element, which is what routes it to the granular contact ladder at all (astro-mine-fleet#37). The episode's declared cadence (10.0 s / 200 steps = 0.05 s) is the contact-scale tick the granular tiers integrate at, so the task's cadence and the runner's agree rather than the runner silently overriding the task. This scenario does not exercise the operational_targeting dual-use gate.",
   "core_interface": {
     "env": "0.1.0",
@@ -16,21 +16,21 @@
   "core_schema_digest": "sha256:2ebc6353bda4ecd0ed14b39ef04747b84a8fa79f8a094146f74ee027cbf07980",
   "content": {
     "world": {
-      "id": "shackleton-de-gerlache-v1",
-      "content_hash": "sha256:fd14f5f6e618a9c01c36028e642e6efdbee449a5e96bac832047654913a4fd2c",
+      "id": "shackleton-de-gerlache",
+      "content_hash": "sha256:f9bcbefcef5500c0ce9e1e8151885ffdc0c7d644d3e95cd32c099ea49f36483c",
       "description": "Shackleton-de Gerlache ridge, lunar south pole, version 0.4.0. It supplies the terramechanics the granular tiers are parameterized by - regolith bulk density 1500 kg/m3 and friction angle 40 deg, i.e. a friction COEFFICIENT of tan(40 deg) = 0.839, which is the number the surrogate's trust region has to cover. 0.4.0 is the first anchor world to ship its horizon map (illumination/horizon.zarr), so it resolves in ~3 s instead of re-deriving a 192-million-entry skyline from the packaged DEM on every load (astro-mine-worlds#46). Its regolith rasters - the only thing this task reads from it - are byte-identical to the bundle the anchor pinned before. See PROVENANCE.md."
     },
     "fleet": [
       {
-        "id": "astro-mine.fleet.excavator",
-        "content_hash": "sha256:d576d7844625b25baec6496a45ad0a18a4da945c2cb0a5ebfa5c957d62fd5d35",
+        "id": "excavator",
+        "content_hash": "sha256:5af3d461b7cd65c48a320d404ff0db3add8a6f4907684d4ecda1aa6a86a6bf6b",
         "description": "Granular excavation (bucket/auger), version 0.2.0 - the first excavator to declare a `tool` contact element. Its blade's cutting width (0.40 m) and height (0.15 m) size the DEM particle bed and tool. Real Hub digest - see PROVENANCE.md."
       }
     ],
     "prospect": [
       {
-        "id": "shackleton_water_ice_v1",
-        "content_hash": "sha256:1019c47f1d3258413ce8b5a0090d0ff2dacfc984dec269f2d86c86fb81aa81ca",
+        "id": "shackleton-water-ice",
+        "content_hash": "sha256:86f0962be30ce4a4450c1e46da7c1fc611ba52c13734e398e6dea775d22dde64",
         "description": "Water-ice belief prior over the default Shackleton grid; the sealed GroundTruthField is realized per seed at runtime. Reused from the anchor's real Hub digest - see PROVENANCE.md."
       }
     ],

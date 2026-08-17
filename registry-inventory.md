@@ -32,6 +32,7 @@ recorded here as `lost` with no digest — which is the honest state, and the ar
 | `bundle_digest` | The signed payload hash from the Core `PluginManifest`'s provenance block. For a surrogate tier this is the hash the signature covers, and it is **not** the manifest digest |
 | `mirrored_to` | Keys into the top-level `mirrors` map. **Empty means one copy exists** |
 | `pinned_by` | Repository-relative paths that resolve this artifact. Empty for `ephemeral` |
+| `migrates_to` | Present when the published name predates `conventions.md` §13 — the conforming name the artifact takes at the flip-time sweep. Ten entries carry one |
 | `note` | Why it is what it is |
 
 ### Dispositions
@@ -43,6 +44,20 @@ recorded here as `lost` with no digest — which is the honest state, and the ar
   an entry without one cannot, and republishing it is refused outright.
 - **`ephemeral`** — a fixture. Safe to prune; regenerate by re-running whatever made it. Nothing
   resolves it by digest.
+
+## The artifact-name migration worklist
+
+Ten published names predate `conventions.md` §13, and each carries the conforming name it becomes
+(`migrates_to`). **This file is the worklist**, because it is the only record of the *published* set;
+`tests/hub/test_artifact_names.py` records what the *tree references*, and the two are not the same
+list. `shackleton_water_ice_pds_v1` is exactly the difference: it is published, it is
+non-conforming, and since prior publishing stopped defaulting to the recipe key
+(astro-mine-platform#34) nothing in the tree references it by that name any more. It still has to be
+re-published, and this is where that is tracked.
+
+Registry names are immutable, so each is a **re-publish under a new name, not a rename** — new
+digests, a re-pinned zoo, and every previously published scorecard still resolving by digest. §13
+requires it as one sweep, so the registry never carries a half-migrated set.
 
 ## The two entries that need mirroring
 

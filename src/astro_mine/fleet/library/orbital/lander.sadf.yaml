@@ -6,7 +6,7 @@
 sadf_version: "0.1"
 asset:
   identity:
-    id: astro-mine.fleet.lander
+    id: lander
     name: Surface Delivery Lander
     version: 0.1.0
     kind: lander

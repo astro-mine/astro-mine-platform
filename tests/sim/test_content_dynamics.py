@@ -115,7 +115,7 @@ def _excavator_asset() -> ResolvedAsset:
     """A Fleet SADF excavator-rover: two rigid bodies, drive actuators, a wheel, and a dig tool."""
     asset = Asset(
         identity=Identity(
-            id="astro-mine.fleet.excavator", name="Excavator", version="0.1.0", kind="rover"
+            id="excavator", name="Excavator", version="0.1.0", kind="rover"
         ),
         root_frame="body",
         bodies=[

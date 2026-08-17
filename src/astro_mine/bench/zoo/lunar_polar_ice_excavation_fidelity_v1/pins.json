@@ -1,19 +1,19 @@
 {
-  "shackleton-de-gerlache-v1": {
+  "shackleton-de-gerlache": {
     "producer": "worlds",
-    "content_id": "shackleton-de-gerlache-v1",
+    "content_id": "shackleton-de-gerlache",
     "content_version": "0.4.0",
     "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md); no republish - the same content backs a new task. 0.4.0 ships its horizon map (astro-mine-worlds#46), so resolving the world costs ~3 s rather than the better part of an hour."
   },
-  "astro-mine.fleet.excavator": {
+  "excavator": {
     "producer": "fleet",
-    "content_id": "astro-mine.fleet.excavator",
+    "content_id": "excavator",
     "content_version": "0.2.0",
     "recipe": "fleet publish library/manipulation/excavator.sadf.yaml --registry <reg> --sign --key <key>  # 0.2.0 adds the `tool` contact element (astro-mine-fleet#37); 0.1.0 remains published and immutable"
   },
-  "shackleton_water_ice_v1": {
+  "shackleton-water-ice": {
     "producer": "prospect",
-    "content_id": "shackleton_water_ice_v1",
+    "content_id": "shackleton-water-ice",
     "content_version": "1.0.0",
     "recipe": "reuses the anchor's published Hub digest (see ../lunar_polar_ice_prospecting_v1/PROVENANCE.md)"
   },

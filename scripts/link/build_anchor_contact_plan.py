@@ -43,6 +43,7 @@ from typing import Any
 
 from astro_mine import spice
 from astro_mine.core.registry import PluginManifest
+from astro_mine.hub.registry import open_registry
 from astro_mine.link.anchor import (
     ANCHOR_ARTIFACT_NAME,
     ANCHOR_ARTIFACT_VERSION,
@@ -54,7 +55,7 @@ from astro_mine.link.anchor import (
     anchor_scenario,
     build_anchor_contact_plan,
 )
-from astro_mine.link.cache import build_cache_key, plan_digest
+from astro_mine.link.cache import PlanCache, build_cache_key, plan_digest
 from astro_mine.link.geometry import SpiceEphemeris
 from astro_mine.link.registry import publish_contact_plan
 from astro_mine.link.windows import SpiceTopocentric
@@ -110,21 +111,30 @@ def main(argv: Sequence[str] | None = None) -> int:
     world, world_digest = _world_provider(args.world_registry, args.world_ref)
     logging.info("world loaded in %.1fs (%s)", time.monotonic() - started, world_digest)
 
-    with spice.kernel_pool(args.metakernel, args.relay_spk):
-        scenario = anchor_scenario(
-            world=world,
-            ephemeris=SpiceEphemeris(),
-            topocentric=SpiceTopocentric(),
-            window=ANCHOR_EPOCH_WINDOW,
-        )
-        plan = build_anchor_contact_plan(scenario)
-
     key = build_cache_key(
         kernels=[args.metakernel, args.relay_spk],
         nodes=list(anchor_node_ids()),
         epoch=ANCHOR_EPOCH_WINDOW,
         config=anchor_config(),
     )
+
+    def _compute() -> Any:
+        with spice.kernel_pool(args.metakernel, args.relay_spk):
+            scenario = anchor_scenario(
+                world=world,
+                ephemeris=SpiceEphemeris(),
+                topocentric=SpiceTopocentric(),
+                window=ANCHOR_EPOCH_WINDOW,
+            )
+            return build_anchor_contact_plan(scenario)
+
+    # The key was already being computed here and then used only for the provenance record, while
+    # `PlanCache` -- the memo this module exists to provide -- went unused. That cost a full rebuild
+    # every run, and a rebuild is ~33 minutes: 25 node pairs searched across a 30-day window. It
+    # also meant a failure *after* the search threw the whole search away, which is exactly what
+    # happened when the publish call below turned out to be passing an argument that does not
+    # exist. Same key, now actually memoized.
+    plan = PlanCache().resolve(key, _compute)
     input_hashes = {
         "kernels": key.kernels,
         "terrain": world_digest,
@@ -139,9 +149,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(json.dumps(input_hashes, indent=2, sort_keys=True))
         return 0
 
+    # `registry=`, a RegistryClient -- not `registry_path=`. The signature takes an injected client
+    # (conventions.md §3.3: local OCI layout and remote Distribution are two implementations of one
+    # protocol, and choosing is the caller's job), and this script was still passing a path under
+    # the old keyword. It raised TypeError after the ~33-minute search, so the script could never
+    # have published a plan since that signature changed.
     artifact = publish_contact_plan(
         plan,
-        registry_path=args.registry or args.world_registry,
+        registry=open_registry(str(args.registry or args.world_registry)),
         name=args.name,
         version=args.version,
         scenario_id=ANCHOR_SCENARIO_ID,

@@ -54,7 +54,7 @@ def registry(tmp_path: Path) -> Registry:
 
 
 def _manifest(
-    name: str = "astro-mine.mind.lawnmower-survey",
+    name: str = "lawnmower-survey",
     version: str = "0.2.0",
     kind: PluginKind = PluginKind.POLICY,
 ) -> PluginManifest:
@@ -98,7 +98,7 @@ def test_the_config_blob_is_the_bare_manifest(registry: Registry) -> None:
 
     # hub.md §2 principle 2: "Hub indexes artifacts by the Core plugin manifest." The manifest's
     # own fields are at the top level; there is no envelope to reach through.
-    assert config["name"] == "astro-mine.mind.lawnmower-survey"
+    assert config["name"] == "lawnmower-survey"
     assert config["kind"] == "policy"
     assert "manifest_version" not in config
     assert "manifest" not in config
@@ -114,10 +114,10 @@ def test_every_reader_shape_in_the_platform_reads_it(registry: Registry) -> None
     config = registry.read_config(digest)
 
     # The eight-call-site shape — Hub's client and catalog, Fleet, Prospect, Surrogate, Studio.
-    assert PluginManifest.model_validate_json(config).name == "astro-mine.mind.lawnmower-survey"
+    assert PluginManifest.model_validate_json(config).name == "lawnmower-survey"
 
     # Bench's shape, which parses the same bytes *and* validates them.
-    assert load_plugin_manifest(config).name == "astro-mine.mind.lawnmower-survey"
+    assert load_plugin_manifest(config).name == "lawnmower-survey"
 
 
 def test_bench_hub_intake_accepts_a_published_policy(registry: Registry) -> None:
@@ -139,12 +139,12 @@ def test_bench_hub_intake_accepts_a_published_policy(registry: Registry) -> None
 
 def test_bench_metric_plugin_discovery_accepts_a_published_metric(registry: Registry) -> None:
     """The same defect through RM-P1-BENCH-12 — a community metric was equally unreadable."""
-    manifest = _manifest(name="acme.metric.coverage", kind=PluginKind.METRIC)
+    manifest = _manifest(name="coverage", kind=PluginKind.METRIC)
     digest = _publish(registry, manifest, kind="plugin")
 
     resolved = resolve_metric_plugin(registry, digest)
 
-    assert resolved.manifest.name == "acme.metric.coverage"
+    assert resolved.manifest.name == "coverage"
     assert resolved.manifest.kind is PluginKind.METRIC
 
 
@@ -156,14 +156,14 @@ def test_a_published_artifact_leaves_the_registry_catalogable(registry: Registry
     """
     _publish(registry, _manifest())
     _publish(
-        registry, _manifest(name="acme.metric.coverage", kind=PluginKind.METRIC), kind="plugin"
+        registry, _manifest(name="coverage", kind=PluginKind.METRIC), kind="plugin"
     )
 
     catalog = catalog_from_registry(registry)
 
     assert {record.manifest.name for record in catalog.all()} == {
-        "astro-mine.mind.lawnmower-survey",
-        "acme.metric.coverage",
+        "lawnmower-survey",
+        "coverage",
     }
 
 

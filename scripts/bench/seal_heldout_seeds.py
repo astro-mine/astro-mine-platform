@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Seal / verify an embargoed held-out seed set for a zoo scenario (RM-P0-BENCH-02).
 
-The held-out seeds are the anti-gaming reserve (bench.md §9): committed to this *private* repo but
-excluded from the packaged zoo artifact (the wheel ships only ``src/astro_mine``), and bound into
-the public ``ScenarioSpec`` by a ``heldout_commit`` — a sha256 over the sealed ``{salt, seeds}``
-payload — so the seeds influence the spec hash without being disclosed.
+The held-out seeds are the anti-gaming reserve (bench.md §9): held in the private
+``astro-mine/embargo`` repository, never in this tree, and bound into the public ``ScenarioSpec``
+by a ``heldout_commit`` — a sha256 over the sealed ``{salt, seeds}`` payload — so the seeds
+influence the spec hash without being disclosed.
 
     python scripts/seal_heldout_seeds.py <scenario-id>
     python scripts/seal_heldout_seeds.py <scenario-id> --verify sha256:<hex>
@@ -13,7 +13,8 @@ The commitment formula mirrors ``astro_mine.bench.scenario._hash.content_hash`` 
 key-sorted, compact JSON + sha256); it is replicated here with the standard library only, so the
 script runs without the project environment installed.
 
-SECURITY: rotate these seeds before the repo flips public (see ``embargo/README.md``).
+SECURITY: the seeds live in the private ``astro-mine/embargo`` repository, not here. Point
+``$ASTRO_MINE_BENCH_EMBARGO_ROOT`` at a checkout of it (see ``embargo/README.md``).
 """
 
 from __future__ import annotations
@@ -21,12 +22,31 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
-# `parents[2]`, not `parents[1]`: this script sits at `scripts/bench/`, so the repo root — where
-# `embargo/` lives, deliberately outside `src/` so the wheel cannot ship it — is two levels up.
-EMBARGO_ROOT = Path(__file__).resolve().parents[2] / "embargo"
+# The store moved out of this repository entirely (astro-mine-platform#37): rotating in place would
+# have republished the same seeds one commit later, because the flip publishes every commit rather
+# than `HEAD`. `$ASTRO_MINE_BENCH_EMBARGO_ROOT` is the same seam
+# `astro_mine.bench.leaderboard.resolve_embargo_root` reads, so the script and the evaluator agree
+# on where the seeds are by construction rather than by convention.
+#
+# The repo-relative fallback is kept, and it now resolves to a directory holding only a README. That
+# is deliberate: a reader who runs this without the variable set gets a `FileNotFoundError` naming a
+# path whose README says where the seeds went, which is a better failure than a silent default.
+EMBARGO_ROOT_ENV = "ASTRO_MINE_BENCH_EMBARGO_ROOT"
+
+
+def embargo_root() -> Path:
+    """Where the sealed sets live: ``$ASTRO_MINE_BENCH_EMBARGO_ROOT``, else the repo-relative
+    path."""
+    configured = os.environ.get(EMBARGO_ROOT_ENV)
+    if configured:
+        return Path(configured).expanduser()
+    # `parents[2]`, not `parents[1]`: this script sits at `scripts/bench/`, so the repo root is two
+    # levels up.
+    return Path(__file__).resolve().parents[2] / "embargo"
 
 
 def content_hash(payload: object) -> str:
@@ -37,7 +57,7 @@ def content_hash(payload: object) -> str:
 
 def seal(scenario_id: str) -> str:
     """The ``heldout_commit`` over the sealed seed payload for ``scenario_id``."""
-    path = EMBARGO_ROOT / scenario_id / "heldout_seeds.json"
+    path = embargo_root() / scenario_id / "heldout_seeds.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
     return content_hash(payload)
 

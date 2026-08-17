@@ -53,7 +53,7 @@ from astro_mine.link.registry import (
     serialize_bundle,
 )
 
-_NAME = "astro-mine.link.test-comms-model"
+_NAME = "test-comms-model"
 _VERSION = "0.1.0"
 _SCENARIO = "unit-test-scenario"
 

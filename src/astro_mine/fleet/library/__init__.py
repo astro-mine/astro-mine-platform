@@ -27,7 +27,7 @@ __all__ = ["REFERENCE_ASSETS", "available", "load_reference"]
 
 #: The anchor roster: stable reference name -> package-relative ``.sadf.yaml`` path. The
 #: name is the human handle callers pass to :func:`load_reference`; the document's
-#: ``identity.id`` (e.g. ``astro-mine.fleet.relay-orbiter``) is what Bench pins by content
+#: ``identity.id`` (e.g. ``relay-orbiter``) is what Bench pins by content
 #: hash. Append-only -- renaming a key breaks anyone who pinned the old handle.
 REFERENCE_ASSETS: dict[str, str] = {
     "relay_orbiter": "orbital/relay-orbiter.sadf.yaml",

@@ -15,6 +15,7 @@ httpx ``MockTransport`` for the JWKS/OPA HTTP seams, and the fast in-process san
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -137,8 +138,45 @@ def scorer() -> SandboxScorer:
     return SandboxScorer(InProcessSandbox())
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _embargo_root(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
+    """A **synthetic** held-out seed set for the whole module, via the deployment override.
+
+    The real sets left this repository for the private ``astro-mine/embargo``
+    (astro-mine-platform#37), and the honest question was what these tests should do about it. The
+    answer is *not to need them*: this file characterizes the **submit flow** — idempotency, rate
+    limits, sandbox rejection, ranking, bundling — and none of that is a claim about which seeds the
+    anchor reserves. Depending on the production secret to test a rate limiter was always the wrong
+    coupling; the seeds leaving the tree only made it visible.
+
+    So the module points ``$ASTRO_MINE_BENCH_EMBARGO_ROOT`` at twelve fixed seeds under ``tmp_path``
+    and stops depending on the store entirely. That is better than skipping, which is what #37 warns
+    against: these tests now run everywhere, deterministically, and a skip here would have hidden
+    the submit path on every machine without a checkout of the store.
+
+    Verifying the *real* commitment stays where it belongs —
+    ``tests/bench/test_zoo_anchor.py::test_heldout_commitment_binds_the_sealed_seeds`` — which is
+    genuinely a claim about the anchor's seeds and is gated on the store being reachable.
+
+    The environment is read per call (``resolve_embargo_root``), so setting it after import works;
+    that property is itself asserted below, and it is why this fixture can exist at all.
+    """
+    root = tmp_path_factory.mktemp("embargo")
+    sealed = root / ANCHOR_SCENARIO_ID
+    sealed.mkdir(parents=True)
+    (sealed / "heldout_seeds.json").write_text(
+        json.dumps({"salt": "00" * 32, "seeds": list(range(900_101, 900_113))}),
+        encoding="utf-8",
+    )
+    patch = pytest.MonkeyPatch()
+    patch.setenv(EMBARGO_ROOT_ENV, str(root))
+    yield root
+    patch.undo()
+
+
 @pytest.fixture(scope="module")
 def heldout() -> tuple[int, ...]:
+    """The module's synthetic held-out seeds, disclosed the way the evaluator discloses them."""
     return load_heldout_seeds(ANCHOR_SCENARIO_ID)
 
 

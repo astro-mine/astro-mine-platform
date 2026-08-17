@@ -35,7 +35,7 @@ from astro_mine.hub.supply_chain import SupplyChainError, generate_keypair
 from astro_mine.prospect.belief import sample_ground_truth
 from astro_mine.prospect.field import FieldGrid
 from astro_mine.prospect.isolation import GROUND_TRUTH_ACCESS
-from astro_mine.prospect.priors import load_prior
+from astro_mine.prospect.priors import artifact_name_for, load_prior
 from astro_mine.prospect.publish import (
     BUNDLE_MEDIA_TYPE,
     METADATA_MEMBER,
@@ -206,7 +206,12 @@ def test_publish_verify_pull_and_reopen_via_entry_point(tmp_path: Path) -> None:
     prior = load_prior(grid=_small_grid())
     artifact = publish_prior(prior, registry=open_registry(str(tmp_path / "reg")),
         private_key_pem=private_pem)
-    assert artifact.reference == f"{_ANCHOR}:1.0.0"
+    # `publish_prior` defaults to the recipe's *published artifact name*, not its registry
+    # key -- the key is a Python-side identifier and stays snake_case, while §13 governs what
+    # the bytes are addressed by. Defaulting to the key is what put `shackleton_water_ice_pds_v1`
+    # in the registry (astro-mine-platform#34).
+    assert artifact.reference == f"{artifact_name_for(_ANCHOR)}:1.0.0"
+    assert artifact.reference == "shackleton-water-ice:1.0.0"
 
     # A consumer opens the *same* registry with the trusted key — only Core + Hub, no prospect.
     consumer = HubClient(Registry(tmp_path / "reg"), trusted_public_key_pem=public_pem)

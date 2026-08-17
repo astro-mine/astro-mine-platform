@@ -36,6 +36,7 @@ from astro_mine.hub.registry import (
     IntegrityError,
     PublishedArtifact,
     RegistryClient,
+    validate_artifact_name,
 )
 from astro_mine.hub.resolve import Resolution, ResolutionRequest, resolve
 from astro_mine.hub.supply_chain import DEFAULT_REQUIRED, admit, attest
@@ -118,7 +119,16 @@ class HubClient:
 
         Nothing is indexed unless admission passes — a half-admitted artifact (bytes present,
         evidence absent, entry queryable) is the state this gate exists to prevent.
+
+        ``name`` must satisfy ``conventions.md`` §13. **This is the enforcement point §13 names**,
+        and it could not be turned on until now: ``publish_asset`` passes ``name=identity.id``, so a
+        gate here would have refused the platform's own shipped Fleet library while its authored ids
+        still carried the legacy shape. Those ids are migrated and the published set is re-published
+        under conforming names, so the check moves from a pinned inventory in
+        ``tests/hub/test_artifact_names.py`` to the one place every producer already goes through —
+        which is what makes it a property of publishing rather than a property of remembering.
         """
+        validate_artifact_name(name)
         artifact = self.registry.publish(
             name=name,
             version=version,

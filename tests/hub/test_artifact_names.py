@@ -23,41 +23,57 @@ makes it work in both directions:
 
 A list that could only grow would rot into a permanent exemption. Pinning it exactly means the
 migration cannot quietly stall, and a tenth legacy name cannot be added without saying so here.
+
+**Discovery had a third blind spot, and closing it changed the shape of the problem.** The set said
+nine because discovery looked in two places: zoo pins and shipped Fleet asset ids.
+``shackleton_water_ice_pds_v1`` is published and non-conforming and was in neither — it is a
+*prospect prior*, and a prior published under the registry key of its recipe, because
+``publish_prior`` defaulted ``name`` to ``prior.provenance.recipe``. Nothing here could see it, so
+the "exhaustive and exact" claim above was false. Found while building the registry inventory in
+astro-mine-platform#41.
+
+The fix was not to record a tenth legacy name. It was to stop a recipe key from *being* an artifact
+name: a key is a Python-side identifier that names a callable and is snake_case for that reason,
+while an artifact name is what published bytes are addressed by. They are now separate
+(:func:`astro_mine.prospect.priors.default_artifact_name`), the publish default derives a conforming
+name from the key, and :func:`_prospect_artifact_names` reads the *published* names. A prior added
+tomorrow cannot mint a non-conforming name even by accident.
+
+What remains is the already-published artifact still sitting in the registry under the old name.
+That is a migration item rather than a code reference, so it is tracked in
+``registry-inventory.json``, where the published set is recorded — not here, where tree references
+are.
 """
 
 from __future__ import annotations
 
 import json
 import pathlib
+import tempfile
 
 import pytest
 import yaml
 
+from astro_mine.core.registry import PluginKind, PluginManifest
+from astro_mine.hub.client import HubClient
 from astro_mine.hub.registry import (
     ARTIFACT_NAME_PATTERN,
     InvalidArtifactName,
+    Registry,
     is_valid_artifact_name,
     validate_artifact_name,
 )
+from astro_mine.prospect.priors import list_artifact_names
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
 
 #: Every published artifact name that predates §13, and the name it becomes at the flip.
 #:
-#: Nine, which is exactly the count the issue that opened this named (astro-mine-platform#23). The
-#: tenth pinned artifact, ``excavation-gns``, already conformed and is deliberately absent — it is
-#: the proof that the rule describes something achievable rather than an aspiration.
-LEGACY_NAMES = {
-    "astro-mine.fleet.excavator": "excavator",
-    "astro-mine.fleet.hauler": "hauler",
-    "astro-mine.fleet.isru-plant": "isru-plant",
-    "astro-mine.fleet.lander": "lander",
-    "astro-mine.fleet.prospecting-rover": "prospecting-rover",
-    "astro-mine.fleet.relay-orbiter": "relay-orbiter",
-    "astro-mine.link.lunar-polar-relay-dsn": "lunar-polar-relay-dsn",
-    "shackleton-de-gerlache-v1": "shackleton-de-gerlache",
-    "shackleton_water_ice_v1": "shackleton-water-ice",
-}
+#: Nine — the count astro-mine-platform#23 opened with, and now for a checked reason rather than an
+#: unchecked one: prior artifact names are discovered and conform, so nothing is hiding behind the
+#: gap that hid ``shackleton_water_ice_pds_v1``. ``excavation-gns`` is pinned and deliberately
+#: absent: it already conformed, and is the proof that the rule describes something achievable.
+LEGACY_NAMES: dict[str, str] = {}
 
 
 def _pinned_names() -> set[str]:
@@ -66,6 +82,18 @@ def _pinned_names() -> set[str]:
     for pins in (REPO / "src" / "astro_mine" / "bench" / "zoo").rglob("pins.json"):
         names |= set(json.loads(pins.read_text(encoding="utf-8")))
     return names
+
+
+def _prospect_artifact_names() -> set[str]:
+    """Every registered prior's **published** name — the third discovery source.
+
+    Deliberately :func:`~astro_mine.prospect.priors.list_artifact_names` and not ``list_recipes``.
+    The recipe key is a Python-side identifier and is allowed to stay snake_case; what has to
+    satisfy §13 is the name the bytes are published under. Reading the live registry rather than a
+    hand-kept list is what makes a *new* prior fail :func:`test_no_new_non_conforming_names` on the
+    day it is added, the way a new Fleet asset or zoo pin already does.
+    """
+    return set(list_artifact_names())
 
 
 def _shipped_asset_ids() -> set[str]:
@@ -143,17 +171,19 @@ def test_the_error_says_what_to_write_instead() -> None:
 # --- the legacy inventory -----------------------------------------------------------------------
 
 
-def test_every_legacy_name_is_genuinely_non_conforming() -> None:
-    """No entry may be parked here that the rule would have accepted anyway."""
-    for name in LEGACY_NAMES:
-        assert not is_valid_artifact_name(name), f"{name} conforms; it does not belong in the set"
+def test_the_migration_is_complete() -> None:
+    """The inventory is empty, and empty is the whole point of it having existed.
 
-
-def test_every_legacy_name_migrates_to_a_conforming_one() -> None:
-    """The right-hand side is the flip-time worklist, so it has to be usable."""
-    for old, new in LEGACY_NAMES.items():
-        assert is_valid_artifact_name(new), f"{old} -> {new} is not conformant"
-    assert len(set(LEGACY_NAMES.values())) == len(LEGACY_NAMES), "two names collide after migration"
+    While the migration was outstanding this set was the enforcement: exhaustive, exact, and
+    checked in both directions so it could neither grow a quiet exemption nor shrink without
+    someone noticing. It is empty now, which is the state it was built to reach rather than a
+    weakening of it — the rule moved to :meth:`HubClient.publish`, where it is a property of
+    publishing rather than a property of remembering.
+    """
+    assert LEGACY_NAMES == {}, (
+        f"the legacy inventory is not empty: {sorted(LEGACY_NAMES)}. If a non-conforming name has "
+        f"been published again, that is a defect in the publish gate, not a new exemption."
+    )
 
 
 def test_no_new_non_conforming_names() -> None:
@@ -162,33 +192,43 @@ def test_no_new_non_conforming_names() -> None:
     This is what makes the rule enforceable before the migration can run. Adding a new artifact with
     a dotted, snaked or version-suffixed name fails here, naming the file and the fix.
     """
-    observed = _pinned_names() | _shipped_asset_ids()
+    observed = _pinned_names() | _shipped_asset_ids() | _prospect_artifact_names()
     assert observed, "found no names to check — the discovery above has broken, not the content"
 
-    offenders = {n for n in observed if not is_valid_artifact_name(n) and n not in LEGACY_NAMES}
+    offenders = {n for n in observed if not is_valid_artifact_name(n)}
     assert offenders == set(), (
-        f"non-conforming artifact names outside the recorded legacy set: {sorted(offenders)}. "
-        f"conventions.md §13 requires bare kebab-case with the version in the tag. If this is new "
-        f"content, rename it; it must not join the migration backlog."
+        f"non-conforming artifact names: {sorted(offenders)}. conventions.md §13 requires bare "
+        f"kebab-case with the version in the tag. There is no longer a legacy set to join — the "
+        f"migration is complete and `HubClient.publish` refuses these outright."
     )
 
 
-def test_the_legacy_set_is_exact_and_still_present() -> None:
-    """The set may not drift in either direction while the migration is outstanding.
+def test_the_rule_is_enforced_at_publish() -> None:
+    """**The gate, at the endpoint §13 names.** Not a list someone has to remember to update.
 
-    Shrinking it silently would mean content vanished; growing it would mean the rule quietly
-    acquired an exemption. When the flip-time sweep runs, entries come out of `LEGACY_NAMES` in the
-    same change that renames them, and this test is what forces the two to move together.
+    This is the assertion the whole module was building toward, and it is stronger than the
+    inventory it replaces in a specific way: the inventory could only see names that had already
+    been *published*, so it was structurally blind to a non-conforming name minted for the first
+    time. The move surfaced three such cases that no list could have caught — the Fleet template
+    factory building `astro-mine.fleet.<family>.<variant>`, `publish_prior` defaulting to a
+    snake_case recipe key, and `recipe_reference_name` appending its suffix to that same key.
     """
-    observed = _pinned_names() | _shipped_asset_ids()
-    stale = set(LEGACY_NAMES) - observed
-    assert stale == set(), (
-        f"recorded as legacy but no longer used anywhere: {sorted(stale)}. If these were migrated, "
-        f"remove them from LEGACY_NAMES in the same change."
+    registry = Registry(tempfile.mkdtemp())
+    client = HubClient(registry)
+    manifest = PluginManifest(
+        name="whatever", version="0.1.0", kind=PluginKind.RESOURCE_FIELD_BACKEND
     )
+    with pytest.raises(InvalidArtifactName, match="excavator"):
+        client.publish(
+            name="astro-mine.fleet.excavator",
+            version="0.1.0",
+            kind="asset",
+            manifest=manifest,
+            private_key_pem=b"",
+        )
 
 
-def test_the_already_conforming_anchor_is_not_recorded_as_legacy() -> None:
+def test_the_already_conforming_anchor_was_never_legacy() -> None:
     """`excavation-gns` shipped conformant before the rule existed, and proves it is achievable."""
     assert "excavation-gns" in _pinned_names()
     assert is_valid_artifact_name("excavation-gns")

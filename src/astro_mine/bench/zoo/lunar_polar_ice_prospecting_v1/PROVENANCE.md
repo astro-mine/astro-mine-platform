@@ -5,6 +5,55 @@ The anchor Bench scenario (**"Lunar Polar Water-Ice Prospecting v1"**), traceabl
 This file records *how every pinned value was produced*, so the scenario is reproducible and each
 provisional digest can be replaced by a real published one without guesswork.
 
+## Spec 0.9.0 — the held-out seeds are rotated and leave the repository
+
+`0.9.0` carries a new `seeds.heldout_commit`. The seeds it commits to are **not** in this repository:
+they moved to the private [`astro-mine/embargo`](https://github.com/astro-mine/embargo), reached
+through `$ASTRO_MINE_BENCH_EMBARGO_ROOT` (astro-mine-platform#37).
+
+The old set was committed here in plaintext, deliberately, for CI verifiability, on the standing
+assumption that this repository was private. The public flip retires that assumption for **every
+commit**, not just `HEAD` — so rotating in place would have republished the same seeds one commit
+later. Rotation was necessary and moving the store was what made it sufficient.
+
+The retired set was also `900001`–`900012`: sequential, and guessable from the public set's
+`1001`–`1005` without reading the file at all. Its replacement is drawn from `secrets`.
+
+**Results scored against `0.8.0` remain valid for `0.8.0`.** They are not comparable to `0.9.0`
+results and were never meant to be — a new commitment is a new scenario version precisely so the two
+cannot be silently pooled.
+
+`0.9.0` also re-pins **every** content reference to its conforming artifact name (`conventions.md`
+§13, astro-mine-platform#34):
+
+| was | is |
+|---|---|
+| `shackleton-de-gerlache-v1` | `shackleton-de-gerlache` |
+| `astro-mine.fleet.relay-orbiter` | `relay-orbiter` |
+| `astro-mine.fleet.lander` | `lander` |
+| `astro-mine.fleet.prospecting-rover` | `prospecting-rover` |
+| `astro-mine.fleet.excavator` | `excavator` |
+| `astro-mine.fleet.hauler` | `hauler` |
+| `astro-mine.fleet.isru-plant` | `isru-plant` |
+| `shackleton_water_ice_v1` | `shackleton-water-ice` |
+| `astro-mine.link.lunar-polar-relay-dsn` | `lunar-polar-relay-dsn` |
+
+Registry names are immutable, so each is a **re-publish, not a rename**, and each therefore has a new
+digest. Every name on the left is still published and still resolvable, which is what keeps results
+scored against `0.8.0` valid for `0.8.0`.
+
+Two of these are not just relabelled. The **contact plan was rebuilt**, because its nodes carry the
+Fleet SADF `identity.id`s and its provenance pins the world's content hash — both of which moved. It
+reproduces byte-identically: the 30-day window searched across 25 node pairs yields
+`plan_digest sha256:38d5e507…` and 1108 intervals on repeat runs, the determinism `link.md` claims.
+And the **ISRU plant's descriptor version was corrected** from `0.1.0` to `0.2.0` in `pins.json`;
+`scenario.json` and the `0.8.0` note above had said `0.2.0` since that re-pin, so the descriptor had
+simply drifted from the pin it describes.
+
+**These artifacts are not yet mirrored to `ghcr.io`.** They exist only in the workspace store until
+that runs, so a fresh clone cannot resolve this scenario's content — see
+`registry-inventory.json` and `docs/hub/publishing-the-anchor-content-set.md`.
+
 ## Spec 0.8.0 — the plant declares the tank it fills
 
 `0.8.0` re-pins **one** content reference: `astro-mine.fleet.isru-plant` to `0.2.0`

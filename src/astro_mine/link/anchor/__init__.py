@@ -74,7 +74,7 @@ ANCHOR_SCENARIO_ID = "lunar-polar-ice-prospecting-v1"
 #: The Hub artifact identity of the anchor comms model — the stable content **id** a Bench
 #: ``ContentPins.link`` entry needs alongside the digest (a bare ``ContactPlan`` has no id field,
 #: which is exactly why the anchor's ``link`` pin was ``null`` until now).
-ANCHOR_ARTIFACT_NAME = "astro-mine.link.lunar-polar-relay-dsn"
+ANCHOR_ARTIFACT_NAME = "lunar-polar-relay-dsn"
 #: **0.3.0** extends the pinned epoch window from 24 h to the full mission horizon the Bench anchor
 #: runs (30 days, ``43_200 x 60 s``; see :data:`ANCHOR_EPOCH_WINDOW`). The 24 h window is a
 #: well-chosen *representative* rotation, but Sim masks every epoch beyond the plan as no-contact,
@@ -82,7 +82,7 @@ ANCHOR_ARTIFACT_NAME = "astro-mine.link.lunar-polar-relay-dsn"
 #: -- the same shape as the two defects below, and the last one left (astro-mine-link#34).
 #:
 #: **0.2.0** renamed the swarm's contact-graph nodes to the Fleet SADF asset ids
-#: (``astro-mine.fleet.<id>``) that 0.1.0 already *claimed* they were while emitting bare names
+#: (the SADF ``identity.id``) that 0.1.0 already *claimed* they were while emitting other names
 #: (``prospecting-rover``). That mismatch was load-bearing: Sim binds a contact node to an agent by
 #: exact id match, so the published plan's nodes intersected none of Sim's agents, no observation
 #: was ever masked, and the anchor's ``comms_robustness`` scored *not applicable* for a reason no
@@ -121,7 +121,7 @@ ANCHOR_REFINE_S = 5.0
 #: the RM-P0-LINK-05 oracle regression consumes a GMAT-exported SPK. Link never propagates an orbit
 #: itself (link.md §2.2); it resolves this target through the injected ``EphemerisProvider``.
 ANCHOR_RELAY_TARGET = "-90001"
-ANCHOR_RELAY = EphemerisNode(name="astro-mine.fleet.relay-orbiter", target=ANCHOR_RELAY_TARGET)
+ANCHOR_RELAY = EphemerisNode(name="relay-orbiter", target=ANCHOR_RELAY_TARGET)
 
 
 @dataclass(frozen=True, slots=True)
@@ -154,14 +154,14 @@ class AnchorSurfaceSite:
 
 
 #: The anchor swarm's comms nodes. Ids **are** the Fleet SADF asset ids the Bench anchor pins
-#: (``astro-mine.fleet.<id>``), so a Sim agent and a contact-plan node name the same robot -- see
+#: (the SADF ``identity.id``), so a Sim agent and a contact-plan node name the same robot -- see
 #: the node-id vocabulary note on :data:`ANCHOR_ARTIFACT_VERSION` above. The two
 #: PSR sites are on the Shackleton crater floor (deep shadow, no Earth line of sight); the two lit
 #: sites are on the Shackleton-de Gerlache connecting ridge, where the ISRU plant and the haul
 #: route live (scenarios/1 §3-§5).
 ANCHOR_SURFACE_SITES: tuple[AnchorSurfaceSite, ...] = (
     AnchorSurfaceSite(
-        name="astro-mine.fleet.prospecting-rover",
+        name="prospecting-rover",
         lat_deg=-89.90,
         lon_deg=0.0,
         elevation_m=-3800.0,
@@ -170,7 +170,7 @@ ANCHOR_SURFACE_SITES: tuple[AnchorSurfaceSite, ...] = (
         description="Active-perception scout on the Shackleton PSR floor.",
     ),
     AnchorSurfaceSite(
-        name="astro-mine.fleet.excavator",
+        name="excavator",
         lat_deg=-89.86,
         lon_deg=90.0,
         elevation_m=-3500.0,
@@ -179,7 +179,7 @@ ANCHOR_SURFACE_SITES: tuple[AnchorSurfaceSite, ...] = (
         description="Granular excavation on the PSR floor.",
     ),
     AnchorSurfaceSite(
-        name="astro-mine.fleet.hauler",
+        name="hauler",
         lat_deg=-89.78,
         lon_deg=135.0,
         elevation_m=-800.0,
@@ -188,7 +188,7 @@ ANCHOR_SURFACE_SITES: tuple[AnchorSurfaceSite, ...] = (
         description="Haul route between the PSR floor and the ridge plant.",
     ),
     AnchorSurfaceSite(
-        name="astro-mine.fleet.isru-plant",
+        name="isru-plant",
         lat_deg=-89.68,
         lon_deg=204.0,
         elevation_m=1800.0,

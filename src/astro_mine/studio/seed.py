@@ -73,7 +73,7 @@ def _example_draft() -> IntentDraft:
         constraints=[
             HardConstraint(criterion_id="power", metric="power_margin", unit="W", threshold=0.0)
         ],
-        inventory=[AssetSelection(sadf_ref="astro-mine.fleet.prospecting-rover:0.1.0", count=4)],
+        inventory=[AssetSelection(sadf_ref="prospecting-rover:0.1.0", count=4)],
     )
 
 
@@ -90,15 +90,15 @@ async def example_study() -> tuple[ObjectiveDocument, TradeStudy]:
     candidates = [
         DesignCandidate(
             id="lean-2",
-            swarm=[AssetSelection(sadf_ref="astro-mine.fleet.prospecting-rover:0.1.0", count=2)],
+            swarm=[AssetSelection(sadf_ref="prospecting-rover:0.1.0", count=2)],
         ),
         DesignCandidate(
             id="balanced-4",
-            swarm=[AssetSelection(sadf_ref="astro-mine.fleet.prospecting-rover:0.1.0", count=4)],
+            swarm=[AssetSelection(sadf_ref="prospecting-rover:0.1.0", count=4)],
         ),
         DesignCandidate(
             id="heavy-6",
-            swarm=[AssetSelection(sadf_ref="astro-mine.fleet.prospecting-rover:0.1.0", count=6)],
+            swarm=[AssetSelection(sadf_ref="prospecting-rover:0.1.0", count=6)],
         ),
     ]
     cache = InMemoryResultCache()

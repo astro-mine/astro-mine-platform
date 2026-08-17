@@ -64,7 +64,7 @@ def _spec_with_excavator(content: dict[str, Any]) -> ScenarioSpec:
                     "fleet": (
                         *pins.fleet,
                         ContentRef(
-                            id="astro-mine.fleet.excavator",
+                            id="excavator",
                             content_hash=content["excavator_digest"],
                         ),
                     )

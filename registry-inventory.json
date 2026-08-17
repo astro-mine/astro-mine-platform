@@ -10,109 +10,94 @@
       "producer": "fleet",
       "manifest_digest": "sha256:d576d7844625b25baec6496a45ad0a18a4da945c2cb0a5ebfa5c957d62fd5d35",
       "bundle_digest": "sha256:292cbd18dac85dba46086e18365b752706e6776dcee2cca4cf414bdf0c779091",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": [
-        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
-        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json"
-      ]
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "excavator:0.2.0",
+      "note": "Superseded by excavator:0.2.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "astro-mine.fleet.hauler:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:5e0c5b6d075d81c06507f283f390b74afd92953ec106d67656e00c31f7c63aab",
       "bundle_digest": "sha256:f63e6e771ebb45de58e6f3d3a225a495232aa3527dd92448b0faccc201b9e216",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json"]
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "hauler:0.1.0",
+      "note": "Superseded by hauler:0.1.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "astro-mine.fleet.isru-plant:0.2.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:3b13364714c41693c4523c0bed6303a77d3d6348a3b8a549561d2addb57fa7eb",
       "bundle_digest": "sha256:394ff6a0f518164ca4c04ef4c74ad0a2bfc66a8d24e4adbc866f1a324367a7ca",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json"]
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "isru-plant:0.2.0",
+      "note": "Superseded by isru-plant:0.2.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "astro-mine.fleet.lander:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:f0270170c2cac90953392b5cd70d79a2d7abf3799454d29f46fa6a4cea4bdc90",
       "bundle_digest": "sha256:ed048316f78323c17cec5dbc323712b938ac34a899b0263e6bb4f63101adf286",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json"]
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "lander:0.1.0",
+      "note": "Superseded by lander:0.1.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "astro-mine.fleet.prospecting-rover:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:74db543ff304a2fe4cef9c421873a3375243019acd0314f0ef9aae6e6fb04629",
       "bundle_digest": "sha256:9b82aa8911513faf0b7881e89c21c7d7a89224799f0a64f65fb8bd774639b662",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": [
-        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json",
-        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json"
-      ]
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "prospecting-rover:0.1.0",
+      "note": "Superseded by prospecting-rover:0.1.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "astro-mine.fleet.relay-orbiter:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:47d74f0e851826718a5064d101983ea187d40d9d8ac51488c023755c29141480",
       "bundle_digest": "sha256:1260f76fe21ea308ae30a4a5b8124883586e506a168ee84fa9f9728999c2c2a5",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json"]
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "relay-orbiter:0.1.0",
+      "note": "Superseded by relay-orbiter:0.1.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "astro-mine.link.lunar-polar-relay-dsn:0.3.0": {
       "disposition": "published",
       "producer": "link",
       "manifest_digest": "sha256:0a0eb64e4a0a25fe9f767209f1e8baca4fb4df4c4b1313c0b5f78a5bbf27f9ed",
       "bundle_digest": "sha256:97a2a80517b517bbfb85fd3c4a5eed96520925fc7a19b0e0acd1e6e20062429d",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": ["src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json"]
-    },
-    "shackleton-de-gerlache-v1:0.4.0": {
-      "disposition": "published",
-      "producer": "worlds",
-      "manifest_digest": "sha256:fd14f5f6e618a9c01c36028e642e6efdbee449a5e96bac832047654913a4fd2c",
-      "bundle_digest": "sha256:dcc3b0f8ee2f14198863c80c9ad3fb613d3ab6a34e29b6b524fa44a1078d6ac8",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": [
-        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
-        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
-      ]
-    },
-    "shackleton_water_ice_v1:1.0.0": {
-      "disposition": "published",
-      "producer": "prospect",
-      "manifest_digest": "sha256:1019c47f1d3258413ce8b5a0090d0ff2dacfc984dec269f2d86c86fb81aa81ca",
-      "bundle_digest": "sha256:d91e6abf83a82c0660ad77c8fad9689d9ac5f9a50525f8ccca02388a1d843f4e",
-      "mirrored_to": ["ghcr"],
-      "pinned_by": [
-        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
-        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
-      ]
-    },
-
-    "excavation-gns:0.6.0": {
-      "disposition": "published",
-      "producer": "surrogate",
-      "manifest_digest": "sha256:b3c5846b5df7d241ea9df1ddf97729c138576c06709577a609aea37cfc923f18",
-      "bundle_digest": "sha256:bd1cd3936e2ad3458aecbdee57b7a49d1653cb544cd142fd319bc30d28f36469",
-      "mirrored_to": [],
-      "pinned_by": [
-        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
-        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/RESULTS.md",
-        "scripts/bench/measure_fidelity_crossover.py"
+      "mirrored_to": [
+        "ghcr"
       ],
-      "note": "UNMIRRORED and pinned. The zoo's fidelity-crossover entry resolves this tier by digest and the workspace store is its only copy. astro-mine-platform#41 tracks mirroring it to ghcr.io/astro-mine."
+      "pinned_by": [],
+      "superseded_by": "lunar-polar-relay-dsn:0.3.0",
+      "note": "Superseded by lunar-polar-relay-dsn:0.3.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
-    "shackleton_water_ice_pds_v1:1.0.0": {
-      "disposition": "published",
-      "producer": "prospect",
-      "manifest_digest": "sha256:182595d53cb60a0ff78b79cb0ade5e75e166007f9be24145d223e9adbbdece9b",
-      "bundle_digest": "sha256:d44dd8244e0bc1a4d9ebe2e0dc371e5ed1dbf84f0e570c04d1924d8cd8c98789",
+    "example-lunar-ice:0.1.0": {
+      "disposition": "ephemeral",
+      "producer": "studio",
+      "manifest_digest": "sha256:ad3a25118fa49c1999664fc11e3ff1ef2461c648465f1ebf544eddb99e6fe025",
+      "bundle_digest": "sha256:c90c5fbd052b605980a6ee284ba5f5eaf551fa1f0125efc04a37518d5e715852",
       "mirrored_to": [],
-      "pinned_by": ["src/astro_mine/prospect/priors/RECIPE.md"],
-      "note": "UNMIRRORED and pinned. RECIPE.md tells a reader to reproduce this prior by pull-by-digest from Hub rather than by re-ingesting the PDS rasters, and the workspace store is its only copy. Rebuilding it needs the raw Diviner/M3/LEND products, which are not in any repository. astro-mine-platform#41 tracks mirroring it."
+      "pinned_by": [],
+      "note": "Studio's seeded demo campaign (studio/seed.py SEED_NAME). Regenerated by re-running the seeder; nothing resolves it by digest."
     },
-
     "excavation-gns:0.2.0": {
       "disposition": "lost",
       "producer": "surrogate",
@@ -152,15 +137,48 @@
       "pinned_by": [],
       "note": "Pruned 2026-08-08. No recorded digest; see excavation-gns:0.2.0."
     },
-
-    "example-lunar-ice:0.1.0": {
-      "disposition": "ephemeral",
-      "producer": "studio",
-      "manifest_digest": "sha256:ad3a25118fa49c1999664fc11e3ff1ef2461c648465f1ebf544eddb99e6fe025",
-      "bundle_digest": "sha256:c90c5fbd052b605980a6ee284ba5f5eaf551fa1f0125efc04a37518d5e715852",
+    "excavation-gns:0.6.0": {
+      "disposition": "published",
+      "producer": "surrogate",
+      "manifest_digest": "sha256:b3c5846b5df7d241ea9df1ddf97729c138576c06709577a609aea37cfc923f18",
+      "bundle_digest": "sha256:bd1cd3936e2ad3458aecbdee57b7a49d1653cb544cd142fd319bc30d28f36469",
       "mirrored_to": [],
-      "pinned_by": [],
-      "note": "Studio's seeded demo campaign (studio/seed.py SEED_NAME). Regenerated by re-running the seeder; nothing resolves it by digest."
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/RESULTS.md",
+        "scripts/bench/measure_fidelity_crossover.py"
+      ],
+      "note": "UNMIRRORED and pinned. The zoo's fidelity-crossover entry resolves this tier by digest and the workspace store is its only copy. astro-mine-platform#41 tracks mirroring it to ghcr.io/astro-mine."
+    },
+    "excavator:0.2.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:5af3d461b7cd65c48a320d404ff0db3add8a6f4907684d4ecda1aa6a86a6bf6b",
+      "bundle_digest": "sha256:546f84f45de11c89b5ca9b53e74fa29f2380d47d6a27c15bc8211fc0cad674ae",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.fleet.excavator (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "hauler:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:837d656212b523ca13594de1110c454ce9f0ef15efae1f35f364b64001fa3c10",
+      "bundle_digest": "sha256:83b3654c8e1cbdc2c226ad0f0c4cd7e96b7bc5646cc1943b9fd86de755d03035",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.fleet.hauler (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
     },
     "imported.mini_rover:0.1.0": {
       "disposition": "ephemeral",
@@ -170,6 +188,48 @@
       "mirrored_to": [],
       "pinned_by": [],
       "note": "URDF-import smoke fixture. Nothing in the tree references it."
+    },
+    "isru-plant:0.2.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:b808cb0473655a53716086cf51c904046d3caf1cc2bdc85d23edd05b800fd6a4",
+      "bundle_digest": "sha256:c6c6f2146209d16e32dab941bc1b31e402a7d565660c52aff4f6382c5a32044b",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.fleet.isru-plant (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "lander:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:c18d55754e091d0d78af4f315395c0382ba8d05b5ff339347c7857920e6bda00",
+      "bundle_digest": "sha256:4df1446a72f2c1d5b281961e1b49f824b185d8d9b5226b1487c1a508bb1cf322",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.fleet.lander (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "lunar-polar-relay-dsn:0.3.0": {
+      "disposition": "published",
+      "producer": "link",
+      "manifest_digest": "sha256:506b1cfdabc21b8a2d5b7fb0174846b4a55832621b5988b2a9b1aebbea7628e4",
+      "bundle_digest": "sha256:97a2a80517b517bbfb85fd3c4a5eed96520925fc7a19b0e0acd1e6e20062429d",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.link.lunar-polar-relay-dsn (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
     },
     "mappo-rover:0.1.0": {
       "disposition": "ephemeral",
@@ -188,6 +248,117 @@
       "mirrored_to": [],
       "pinned_by": [],
       "note": "Documentation example for a third-party solver backend. Its bundle digest is a literal placeholder, so it could not be a real artifact even by accident."
+    },
+    "prospecting-rover:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:051b559717d39d42478ab747ab9d5dd2d20a4f5ffb3d0c45979eba1f9abff6a8",
+      "bundle_digest": "sha256:9936e3571c64a76d203688b6792f1de4a26f3326af86c2ec24aecfbd44a5a090",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.fleet.prospecting-rover (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "relay-orbiter:0.1.0": {
+      "disposition": "published",
+      "producer": "fleet",
+      "manifest_digest": "sha256:0e80cc59139cf140bec86a8aec166da14970b5a7623c7aa601c48ce974e67193",
+      "bundle_digest": "sha256:49ac84957b19c3e32a8bf34235dbea83a9c7a32659979dbc3272c4e05b9758c8",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of astro-mine.fleet.relay-orbiter (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "shackleton-de-gerlache-v1:0.4.0": {
+      "disposition": "published",
+      "producer": "worlds",
+      "manifest_digest": "sha256:fd14f5f6e618a9c01c36028e642e6efdbee449a5e96bac832047654913a4fd2c",
+      "bundle_digest": "sha256:dcc3b0f8ee2f14198863c80c9ad3fb613d3ab6a34e29b6b524fa44a1078d6ac8",
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "shackleton-de-gerlache:0.4.0",
+      "note": "Superseded by shackleton-de-gerlache:0.4.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
+    },
+    "shackleton-de-gerlache:0.4.0": {
+      "disposition": "published",
+      "producer": "worlds",
+      "manifest_digest": "sha256:f9bcbefcef5500c0ce9e1e8151885ffdc0c7d644d3e95cd32c099ea49f36483c",
+      "bundle_digest": "sha256:dcc3b0f8ee2f14198863c80c9ad3fb613d3ab6a34e29b6b524fa44a1078d6ac8",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of shackleton-de-gerlache-v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "shackleton-water-ice-pds:1.0.0": {
+      "disposition": "published",
+      "producer": "prospect",
+      "manifest_digest": "sha256:82a02a443417f87c973fb16818ef57f2c75f334c447d39f99ccf164068f59f39",
+      "bundle_digest": "sha256:d44dd8244e0bc1a4d9ebe2e0dc371e5ed1dbf84f0e570c04d1924d8cd8c98789",
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "The conforming re-publish of shackleton_water_ice_pds_v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "shackleton-water-ice:1.0.0": {
+      "disposition": "published",
+      "producer": "prospect",
+      "manifest_digest": "sha256:86f0962be30ce4a4450c1e46da7c1fc611ba52c13734e398e6dea775d22dde64",
+      "bundle_digest": "sha256:d91e6abf83a82c0660ad77c8fad9689d9ac5f9a50525f8ccca02388a1d843f4e",
+      "mirrored_to": [],
+      "pinned_by": [
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_sprint_v1/scenario.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
+        "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
+      ],
+      "note": "The conforming re-publish of shackleton_water_ice_v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+    },
+    "shackleton_water_ice_pds_v1:1.0.0": {
+      "disposition": "published",
+      "producer": "prospect",
+      "manifest_digest": "sha256:182595d53cb60a0ff78b79cb0ade5e75e166007f9be24145d223e9adbbdece9b",
+      "bundle_digest": "sha256:d44dd8244e0bc1a4d9ebe2e0dc371e5ed1dbf84f0e570c04d1924d8cd8c98789",
+      "mirrored_to": [],
+      "pinned_by": [],
+      "note": "Superseded by shackleton-water-ice-pds:1.0.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest.",
+      "superseded_by": "shackleton-water-ice-pds:1.0.0"
+    },
+    "shackleton_water_ice_v1:1.0.0": {
+      "disposition": "published",
+      "producer": "prospect",
+      "manifest_digest": "sha256:1019c47f1d3258413ce8b5a0090d0ff2dacfc984dec269f2d86c86fb81aa81ca",
+      "bundle_digest": "sha256:d91e6abf83a82c0660ad77c8fad9689d9ac5f9a50525f8ccca02388a1d843f4e",
+      "mirrored_to": [
+        "ghcr"
+      ],
+      "pinned_by": [],
+      "superseded_by": "shackleton-water-ice:1.0.0",
+      "note": "Superseded by shackleton-water-ice:1.0.0 in the §13 migration and no longer referenced by the tree. Deliberately still published: registry names are immutable and every previously published scorecard resolves through this digest."
     },
     "wave19-probe:1.0.0": {
       "disposition": "ephemeral",
