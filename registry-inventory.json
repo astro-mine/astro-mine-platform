@@ -142,20 +142,20 @@
       "producer": "surrogate",
       "manifest_digest": "sha256:b3c5846b5df7d241ea9df1ddf97729c138576c06709577a609aea37cfc923f18",
       "bundle_digest": "sha256:bd1cd3936e2ad3458aecbdee57b7a49d1653cb544cd142fd319bc30d28f36469",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_excavation_fidelity_v1/RESULTS.md",
         "scripts/bench/measure_fidelity_crossover.py"
       ],
-      "note": "UNMIRRORED and pinned. The zoo's fidelity-crossover entry resolves this tier by digest and the workspace store is its only copy. astro-mine-platform#41 tracks mirroring it to ghcr.io/astro-mine."
+      "note": "Mirrored to ghcr.io/astro-mine and verifying against anchor-signing.pub (astro-mine-platform#41). It was already org-signed, so it needed no re-signing. Note this is the 0.6.0 tier: the 0.2.0-0.5.0 tiers the 2026-08-08 prune destroyed are gone and cannot be rebuilt (astro-mine-platform#42)."
     },
     "excavator:0.2.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:5af3d461b7cd65c48a320d404ff0db3add8a6f4907684d4ecda1aa6a86a6bf6b",
       "bundle_digest": "sha256:546f84f45de11c89b5ca9b53e74fa29f2380d47d6a27c15bc8211fc0cad674ae",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
@@ -164,21 +164,21 @@
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.fleet.excavator (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.fleet.excavator (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "hauler:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:837d656212b523ca13594de1110c454ce9f0ef15efae1f35f364b64001fa3c10",
       "bundle_digest": "sha256:83b3654c8e1cbdc2c226ad0f0c4cd7e96b7bc5646cc1943b9fd86de755d03035",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.fleet.hauler (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.fleet.hauler (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "imported.mini_rover:0.1.0": {
       "disposition": "ephemeral",
@@ -194,21 +194,21 @@
       "producer": "fleet",
       "manifest_digest": "sha256:b808cb0473655a53716086cf51c904046d3caf1cc2bdc85d23edd05b800fd6a4",
       "bundle_digest": "sha256:c6c6f2146209d16e32dab941bc1b31e402a7d565660c52aff4f6382c5a32044b",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.fleet.isru-plant (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.fleet.isru-plant (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "lander:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:c18d55754e091d0d78af4f315395c0382ba8d05b5ff339347c7857920e6bda00",
       "bundle_digest": "sha256:4df1446a72f2c1d5b281961e1b49f824b185d8d9b5226b1487c1a508bb1cf322",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
@@ -217,19 +217,19 @@
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.fleet.lander (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.fleet.lander (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "lunar-polar-relay-dsn:0.3.0": {
       "disposition": "published",
       "producer": "link",
       "manifest_digest": "sha256:506b1cfdabc21b8a2d5b7fb0174846b4a55832621b5988b2a9b1aebbea7628e4",
       "bundle_digest": "sha256:97a2a80517b517bbfb85fd3c4a5eed96520925fc7a19b0e0acd1e6e20062429d",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.link.lunar-polar-relay-dsn (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.link.lunar-polar-relay-dsn (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "mappo-rover:0.1.0": {
       "disposition": "ephemeral",
@@ -254,7 +254,7 @@
       "producer": "fleet",
       "manifest_digest": "sha256:051b559717d39d42478ab747ab9d5dd2d20a4f5ffb3d0c45979eba1f9abff6a8",
       "bundle_digest": "sha256:9936e3571c64a76d203688b6792f1de4a26f3326af86c2ec24aecfbd44a5a090",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
@@ -263,14 +263,14 @@
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.fleet.prospecting-rover (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.fleet.prospecting-rover (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "relay-orbiter:0.1.0": {
       "disposition": "published",
       "producer": "fleet",
       "manifest_digest": "sha256:0e80cc59139cf140bec86a8aec166da14970b5a7623c7aa601c48ce974e67193",
       "bundle_digest": "sha256:49ac84957b19c3e32a8bf34235dbea83a9c7a32659979dbc3272c4e05b9758c8",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
@@ -279,7 +279,7 @@
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of astro-mine.fleet.relay-orbiter (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of astro-mine.fleet.relay-orbiter (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "shackleton-de-gerlache-v1:0.4.0": {
       "disposition": "published",
@@ -298,7 +298,7 @@
       "producer": "worlds",
       "manifest_digest": "sha256:f9bcbefcef5500c0ce9e1e8151885ffdc0c7d644d3e95cd32c099ea49f36483c",
       "bundle_digest": "sha256:dcc3b0f8ee2f14198863c80c9ad3fb613d3ab6a34e29b6b524fa44a1078d6ac8",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
@@ -309,23 +309,23 @@
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of shackleton-de-gerlache-v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of shackleton-de-gerlache-v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "shackleton-water-ice-pds:1.0.0": {
       "disposition": "published",
       "producer": "prospect",
       "manifest_digest": "sha256:82a02a443417f87c973fb16818ef57f2c75f334c447d39f99ccf164068f59f39",
       "bundle_digest": "sha256:d44dd8244e0bc1a4d9ebe2e0dc371e5ed1dbf84f0e570c04d1924d8cd8c98789",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [],
-      "note": "The conforming re-publish of shackleton_water_ice_pds_v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of shackleton_water_ice_pds_v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "shackleton-water-ice:1.0.0": {
       "disposition": "published",
       "producer": "prospect",
       "manifest_digest": "sha256:86f0962be30ce4a4450c1e46da7c1fc611ba52c13734e398e6dea775d22dde64",
       "bundle_digest": "sha256:d91e6abf83a82c0660ad77c8fad9689d9ac5f9a50525f8ccca02388a1d843f4e",
-      "mirrored_to": [],
+      "mirrored_to": ["ghcr"],
       "pinned_by": [
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_endurance_v1/scenario.json",
@@ -336,7 +336,7 @@
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/pins.json",
         "src/astro_mine/bench/zoo/lunar_polar_ice_prospecting_v1/scenario.json"
       ],
-      "note": "The conforming re-publish of shackleton_water_ice_v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. UNMIRRORED: it exists only in the workspace store until the GHCR mirror runs."
+      "note": "The conforming re-publish of shackleton_water_ice_v1 (conventions.md §13, astro-mine-platform#34). Same content, new name, therefore a new digest. Signed with the org key and mirrored to ghcr.io/astro-mine, where it verifies against anchor-signing.pub (astro-mine-platform#41)."
     },
     "shackleton_water_ice_pds_v1:1.0.0": {
       "disposition": "published",
