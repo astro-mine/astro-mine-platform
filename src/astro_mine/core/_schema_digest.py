@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Core schema digest — GENERATED, do not edit by hand.
 
 Regenerate with::

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetySpec v0.1 — closed vocabularies (Guard-owned safety contract).
 
 Small, closed enums for the declarative safety contract. The ``SafetySpec`` is a

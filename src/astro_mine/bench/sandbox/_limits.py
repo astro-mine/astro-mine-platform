@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sandbox resource limits + the network and filesystem postures (bench.md §9; conventions.md §9).
 
 The leaderboard runs **arbitrary community code at scale** — bench.md §9 calls this "the central

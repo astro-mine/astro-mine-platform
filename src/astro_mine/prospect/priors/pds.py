@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The real PDS raster-ingest water-ice prior-recipe (RM-P1-PROSPECT-12).
 
 Fits the Shackleton water-ice prior from **real public planetary rasters** — Diviner bolometric

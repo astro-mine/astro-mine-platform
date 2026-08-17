@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Scale-out evaluation on Cloud — fan seeds x submissions out and collect (RM-P1-BENCH-11).
 
 Bench *composes*, it owns neither the compute fabric ([Cloud](cloud.md)) nor the simulator

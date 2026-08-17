@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment-API world provider + terrain occlusion / LOS service (RM-P0-WORLDS-06).
 
 :class:`DemWorldProvider` implements the Core

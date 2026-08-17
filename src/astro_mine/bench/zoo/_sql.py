@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Postgres/pgvector scenario-zoo catalog (bench#33; bench.md §5, §11).
 
 bench.md §5's data architecture puts the **scenario zoo catalog in PostgreSQL** — *"Indexes specs,

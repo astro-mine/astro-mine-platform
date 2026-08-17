@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Message-schema catalog — the typed cross-component vocabulary (RM-P0-CORE-04).
 
 The typed messages every plane exchanges, co-designed with the Environment API

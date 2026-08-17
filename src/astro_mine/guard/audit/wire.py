@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetyVerdict <-> Protobuf wire form (the Core-catalogued cross-language interchange).
 
 Mirrors :mod:`astro_mine.guard.spec.wire`: conversion goes through protobuf's ``json_format``

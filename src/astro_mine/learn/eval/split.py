@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Held-out evaluation seeds, separated from training **by construction** (RM-P1-LEARN-06).
 
 Honest evaluation begins with an eval set the policy has never trained on. Learn enforces the

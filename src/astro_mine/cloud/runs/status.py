@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ephemeral job-status store -- the fast submit/track/cancel read model (RM-P1-CLOUD-06).
 
 ``conventions.md`` §5 scopes **Redis** to "queues, locks, ephemeral cache ... short-lived

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Verify-twice supply chain — attest at publish, re-verify at pull (RM-P1-HUB-03).
 
 The supply-chain trust boundary (hub.md §9): an artifact is **signed** (cosign-keyed) and carries

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Space-side (relay↔relay) occultation geometry for the constellation (RM-P1-LINK-10).
 
 Surface-involved links (surface↔surface, surface↔relay, surface↔Earth) are decided by

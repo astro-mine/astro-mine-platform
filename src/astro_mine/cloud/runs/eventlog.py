@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The durable event-log contract subscribers consume (RM-P1-CLOUD-06; cloud.md §4, §5).
 
 Lifecycle events flow on a **durable, replayable** JetStream stream: a subscriber (Bench result

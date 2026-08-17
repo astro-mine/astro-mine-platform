@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Terramechanics validation against analytic cases (RM-P0-SIM-10; sim.md §2.9, §10).
 
 The Phase-0 surface engines are reduced-order, so their oracle is the **closed form of the very

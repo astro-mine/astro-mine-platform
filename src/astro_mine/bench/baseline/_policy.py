@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The reference baseline policy (RM-P0-BENCH-05; bench.md §7, §12).
 
 A :class:`BaselinePolicy` is the platform's floor for the anchor scenario: the simplest

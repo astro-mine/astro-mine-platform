@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Prior bundle, the recipe registry, and the default Shackleton water-ice recipe.
 
 A :class:`Prior` is a spatially-varying Gaussian prior over a world's grid (per-cell ``mean`` +

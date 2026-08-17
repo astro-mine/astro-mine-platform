@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The relay constellation: a typed node set → a time-varying, multi-pair contact graph.
 
 Extends the P0 single-relay MVP (RM-P0-LINK-01/02) to a **constellation** (RM-P1-LINK-10):

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The one place a composed hierarchy turns observations into an emitted action.
 
 Extracted so the two runtimes that drive a stack — the :class:`~astro_mine.mind.exec.Executive`

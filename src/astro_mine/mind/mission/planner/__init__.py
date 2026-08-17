@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The pluggable mission-planner backend (RM-P1-MIND-03).
 
 The strategic tier behind Core's :class:`~astro_mine.core.policy.protocol.MissionPlanner`

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Acceptance: **determinism** (guard.md §2 principle 3). Two fresh cores fed the same input
 //! stream produce byte-identical verdicts — the seeded golden/determinism gate. (The
 //! allocation-free + latency acceptance lives in its own single-test binary, `no_alloc.rs`,

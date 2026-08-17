@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Training-observation validation shared by the resource-field backends (RM-P0-PROSPECT-02).
 
 The GP and grid backends both condition on the same primitive: scattered ``(position, value)``

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The cited public lunar datasets + the canonical Shackleton CRS/grid (prospect.md §2.4, §6).
 
 The Phase-0 water-ice prior is anchored to the **published characterizations** of five public

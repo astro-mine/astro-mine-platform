@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The evaluation-batch orchestrator — plan → enforce → dispatch → collect (RM-P1-BENCH-11).
 
 :func:`run_evaluation_batch` is the top-level scale-out entry point: it plans the fan-out

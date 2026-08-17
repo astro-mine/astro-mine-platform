@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Curriculum plugin discovery (learn.md §3 "Extension / plugin points"; charter §10.2).
 
 "New **algorithms**, **curricula**, **scenario generators**, and **model architectures** register

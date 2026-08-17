@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Trainer orchestration: the rollout executor seam + the Ray RLlib scale-out path.
 
 - :class:`RolloutExecutor` / :class:`LocalExecutor` / :class:`KubeRayExecutor` — the single

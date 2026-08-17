@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment API contract-test utility (RM-P0-CORE-02).
 
 The consumer-driven conformance check an implementor (Sim) runs in its own CI to prove it honors the

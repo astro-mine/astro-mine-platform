@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publish a contact plan to a Hub registry as a signed, content-addressed ``comms_model``.
 
 The producer→Hub half of link.md §6 ("contact-plan products are shareable Hub artifacts,

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reproducibility-by-construction — the enforced contract (RM-P1-STUDIO-07).
 
 The guarantee that makes a Studio design trustworthy: **every** produced artifact

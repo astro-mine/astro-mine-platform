@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The executive — the event-driven loop that ticks a composed hierarchy (RM-P1-MIND-01).
 
 The runtime that steps a :class:`HierarchyGraph` against a Core :class:`Environment`. On

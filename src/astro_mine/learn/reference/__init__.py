@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The shipped reference training configuration — a copy-pasteable starting point.
 
 Learn shipped no reference config and no emitted schema, so a newcomer's first

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fail-closed supply-chain verification of a Hub submission (bench#29; bench.md §9).
 
 bench.md §9: *"Submission artifacts (ONNX/OCI) are verified via **Sigstore/cosign** signatures and

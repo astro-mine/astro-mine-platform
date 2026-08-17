@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment API v0.1 — the contract (RM-P0-CORE-02).
 
 ``reset()/step(action) -> observation, reward?, info`` generalized for multi-agent

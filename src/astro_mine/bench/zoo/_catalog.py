@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The scenario zoo catalog — discovery behind one interface, two backends (bench.md §1, §3, §5).
 
 The zoo is the platform's curated benchmark catalog; the anchor "Lunar Polar Water-Ice Prospecting

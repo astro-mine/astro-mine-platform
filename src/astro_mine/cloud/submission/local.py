@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The local backend -- a subprocess on the workstation (the sacred tier).
 
 ``LocalBackend`` runs ``job.command`` as a subprocess in the local Python env

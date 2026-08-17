@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ObjectiveSpec v0.1 — typed Pydantic models (the shared objective contract).
 
 A first-class Core schema: an objective plus its **binding** to Bench metrics, by

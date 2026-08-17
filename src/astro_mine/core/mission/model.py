@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Mission-architecture schema v0.1 — typed Pydantic models (RM-P1-CORE-04 / RFC-0001).
 
 The **reserved** RFC-0001 mission hooks: a :class:`MissionSpec` is an ordered set of

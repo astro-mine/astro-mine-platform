@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """First-class observation-mask and comms-channel surfaces (RM-P1-LEARN-01).
 
 Partial observability and intermittent comms are what make swarm coordination hard

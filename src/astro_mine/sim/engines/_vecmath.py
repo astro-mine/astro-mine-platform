@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Pure-Python 3-vector helpers for the reduced-order engine set (RM-P0-SIM-03).
 
 Dependency-light vector math (no numpy) so the concrete engines stay in the always-works

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Units, frames, and time — the shared spatial/temporal primitives (RM-P0-CORE-06).
 
 SI everywhere; SPICE-backed body-fixed/inertial frames and TDB/ET epochs; explicit

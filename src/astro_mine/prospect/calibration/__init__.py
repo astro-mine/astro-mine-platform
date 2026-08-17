@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Calibration gate — credible-interval coverage checked in CI (prospect.md §10, §12; LUNAR-DR-005).
 
 A belief field's stated uncertainty must be **honest**, not decorative: an over-confident field is a

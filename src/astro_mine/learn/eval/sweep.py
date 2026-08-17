@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Seed sweeps with variance + single-seed rejection (RM-P1-LEARN-06).
 
 A single lucky seed is an anti-pattern (learn.md §2 principle 8, §8): a reported score must

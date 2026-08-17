@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-agent Gymnasium spaces built from a SADF asset (RM-P1-LEARN-01).
 
 The Core Environment protocol exposes neither spaces nor SADF assets (its surface is

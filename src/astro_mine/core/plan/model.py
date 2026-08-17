@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plan / ContingentPlan v0.1 — typed Pydantic models (the delay-tolerant plan contract).
 
 A first-class Core message schema (RFC-0006; mind.md §5): the time-stamped, validity-horizoned

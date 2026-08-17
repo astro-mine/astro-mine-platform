@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The anchor scenario's instrument set — the built-in sensor likelihoods (scenario §6).
 
 The lunar polar water-ice scout carries a **neutron spectrometer, NIR, GPR and a drill**

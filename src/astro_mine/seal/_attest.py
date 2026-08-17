@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SLSA provenance + SBOM documents, the referrer vocabulary, and publish-side ``attest``.
 
 The two non-signature attestations the supply chain attaches to an artifact alongside the cosign

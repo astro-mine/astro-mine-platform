@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The admission gate — the *first* of the two verifications (RM-P1-HUB-03; hub.md §2.3).
 
 ``hub.md`` §2 principle 3 states three clauses: evidence is checked at **publish (admission)** and

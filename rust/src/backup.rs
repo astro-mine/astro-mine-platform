@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Simplex backup — the *recover* layer (guard.md §9.2).
 //!
 //! When the arbiter cannot certify the primary/shielded action, it hands control to a **verified

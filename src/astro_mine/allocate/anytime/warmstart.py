@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Warm-start seam for incremental online re-solve (RM-P1-ALLOC-05).
 
 The delta-path stub for online replanning (allocate.md §2 principle 4; issue #5): keep the IR and

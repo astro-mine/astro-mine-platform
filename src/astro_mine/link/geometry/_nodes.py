@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Link nodes: the endpoints of a line-of-sight query.
 
 A node is either fixed to the body surface (its body-fixed position is known up front) or

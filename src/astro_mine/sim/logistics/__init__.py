@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The value chain between a digger and a plant: excavate -> haul -> feedstock (#64).
 
 `IsruModel` used to produce water from a mode string alone — no dig target, no delivered mass, no

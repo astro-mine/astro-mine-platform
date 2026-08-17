@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference tier/shield plugins — replaceable examples for local dev and tests.
 
 Deterministic, minimal implementations of the three tiers plus a pass-through shield,

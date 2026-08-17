@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """2D soft-sphere DEM kernel — the ground-truth granular contact physics (RM-P1-SIM-06).
 
 A dependency-heavy (numpy) discrete-element solver for a vertical trench cross-section: a

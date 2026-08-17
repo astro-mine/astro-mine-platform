@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Determinism gates — seeded reproducibility + golden traces (RM-P0-SIM-10; sim.md §2.4, §10).
 
 Determinism is a hard requirement, not a hope: same inputs + same seed + same pinned engine

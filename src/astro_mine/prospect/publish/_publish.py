@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publish a belief prior to a local Hub registry, and the ``prospect publish`` CLI.
 
 The publish half of RM-P1-PROSPECT-13: serialize a prior to the content-addressed bundle, build the

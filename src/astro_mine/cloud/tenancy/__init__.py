@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Tenancy -- namespace-per-tenant isolation, cosign admission, OPA authz.
 
 Cloud runs *others' code* for *multiple tenants* on *shared hardware*, so isolation is the

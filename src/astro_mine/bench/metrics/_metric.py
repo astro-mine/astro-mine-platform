@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The metric plugin contract (bench.md §3).
 
 A :class:`Metric` is a plugin ``(EpisodeTrace) -> MetricValue`` carrying a declared name,

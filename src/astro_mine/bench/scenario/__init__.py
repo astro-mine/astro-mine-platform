@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ScenarioSpec schema + content-hash resolver, and (later) the anchor scenario.
 
 The versioned :class:`ScenarioSpec` pins the Core interface version and references

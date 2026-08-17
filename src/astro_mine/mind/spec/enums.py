@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Stack-spec closed vocabularies (Mind-owned, RM-P1-MIND-01).
 
 The small, closed enumerations the stack spec authors against. Like Core's SADF /

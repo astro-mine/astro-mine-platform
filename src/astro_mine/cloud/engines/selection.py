@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Engine selection -- route a workload shape to the right engine.
 
 Realizes ``cloud.md`` §2 principle 3 ("the right engine for the workload shape"): a

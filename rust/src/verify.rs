@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Machine-checked proofs of the TCB's load-bearing kernels — **Kani** model checking
 //! (guard.md §9.3: "for the smallest critical kernels — amenability to formal analysis
 //! (model checking / Kani-style verification) is a stated design goal of keeping the TCB tiny").

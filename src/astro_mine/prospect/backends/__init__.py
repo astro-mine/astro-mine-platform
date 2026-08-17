@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Inference backends behind the ResourceField contract (RM-P0-PROSPECT-02; RM-P1-PROSPECT-10).
 
 Interchangeable geostatistical backends, all implementing the Core

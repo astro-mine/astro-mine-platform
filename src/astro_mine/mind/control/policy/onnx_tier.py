@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ONNX-controller hosting through the Core OnnxPolicy contract (RM-P1-MIND-03).
 
 Binds a Learn-exported ONNX ``PolicyPackage`` to Core's

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Where the line falls between *content* and *provenance* in a Worlds content hash.
 
 Every Worlds product hashes the same way: the raw arrays, then the canonical JSON of the manifest

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms-stress curves — the headline honest-eval diagnostic (RM-P1-LEARN-06).
 
 Robust coordination under intermittent, degraded comms is the charter §8 problem; the

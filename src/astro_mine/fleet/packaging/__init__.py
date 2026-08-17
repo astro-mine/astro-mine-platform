@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed asset packaging (RM-P0-FLEET-01; signing + OCI in RM-P0-FLEET-06).
 
 ``fleet package`` turns a validated SADF document into a **content-addressed** bundle:

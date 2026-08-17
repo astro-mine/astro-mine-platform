@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``RevalidationPolicy`` — the hybrid schedule-or-drift re-validation rule (RM-P1-SURR-04).
 
 surrogate.md §11 recommends a **hybrid** re-validation trigger: a periodic schedule *plus*

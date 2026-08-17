@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Shared PPO trainer for IPPO / MAPPO / comms-learning PPO — RM-P1-LEARN-03.
 
 One reproducible on-policy PPO loop parameterised by two flags: ``centralized`` and ``comms``.

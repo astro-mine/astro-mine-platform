@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Shared importer core: a small intermediate representation (IR), the math that maps
 robot-description conventions onto SADF, and the one SADF builder both parsers feed.
 

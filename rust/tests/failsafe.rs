@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Acceptance: **fail-safe, never fail-open** (guard.md §9.1). Every uncertifiable case
 //! resolves to a verified safe fallback whose action is finite and within the control box.
 

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressing + Core-catalog registration for the SafetySpec.
 
 "Core-catalogued" means the Guard-**owned** SafetySpec schema is registered *through* the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Mind — the hierarchical autonomy composition framework.
 
 Turns a stated objective into actuator-level commands across a heterogeneous swarm through

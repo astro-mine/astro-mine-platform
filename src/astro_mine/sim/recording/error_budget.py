@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Error-budget reports as Parquet (RM-P1-SIM-03; sim.md §5).
 
 The multi-fidelity scheduler's per-tier verdict — each surrogate/low-fidelity tier's declared or

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The plugin registry — discovery, resolution, and the load-time gates (RM-P0-CORE-05).
 
 :class:`PluginRegistry` is the in-process point where a host component (Sim, Bench, …)

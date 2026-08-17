@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Mind binding — Guard's ``PolicyShield`` as a Mind tier/shield plugin (RFC-0006).
 
 The **only** place in Guard that knows Mind exists, and it exists only inside the optional

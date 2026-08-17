@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Behavior-tree execution scaffold (RM-P1-MIND-02).
 
 The ``behavior_tree`` execution representation: a Groot-compatible XML dialect

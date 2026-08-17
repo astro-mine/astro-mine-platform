@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic reproducibility harness + determinism gates (RM-P0-BENCH-04).
 
 Containerized, seeded, lockfile-pinned execution with determinism gates that fail CI on

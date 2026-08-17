@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Seed / RNG stream manager (RM-P0-SIM-01).
 
 Deterministic, dependency-light randomness for the stepping core. A single root seed fans

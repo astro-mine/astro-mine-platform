@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``SamplingPolicy`` — the declarative spec for how ``datagen`` samples the oracle (RM-P1-SURR-03).
 
 The offline **build** loop's experiment design, made a first-class, content-addressed artifact

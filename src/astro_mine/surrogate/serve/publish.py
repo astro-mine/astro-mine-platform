@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publish a served surrogate to a Hub registry (RM-P1-SURR-04; surrogate.md §4, §6).
 
 Surrogate produces the ONNX tier; it is discovered and reused as a **content-addressed OCI

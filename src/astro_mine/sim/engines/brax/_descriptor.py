@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Brax/MJX engine's static self-declaration — JAX-free (RM-P1-SIM-04).
 
 Kept in its own module so :mod:`astro_mine.sim.engines.brax` (and therefore

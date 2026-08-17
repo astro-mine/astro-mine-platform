@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Scheduling -- Kueue queues/quotas/fair-share and hard per-tenant budgets.
 
 Two rails keep a shared cluster fair and safe (``cloud.md`` §3, §9):

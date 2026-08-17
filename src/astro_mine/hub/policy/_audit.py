@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Append-only audit log for gating + governance decisions (RM-P1-HUB-05; hub.md §5, §10).
 
 Every download-gating decision and every curation action (yank / deprecate / promote) is written to

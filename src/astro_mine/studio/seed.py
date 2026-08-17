@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The seeded example: a full, pinned campaign so a fresh ``serve`` is never an empty screen (#32).
 
 `serve` authors an example objective → study → campaign for the lunar polar water-ice anchor and

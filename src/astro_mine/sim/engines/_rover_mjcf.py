@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The articulated wheeled-rover MJCF model — the shared contact model (RM-P0-SIM-03, RM-P1-SIM-04).
 
 One place that describes the rover **as a physical machine** rather than as a point mass: a chassis

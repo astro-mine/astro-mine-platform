@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A seccomp-BPF filter that denies network egress to a submitted policy (bench.md §9).
 
 bench.md §9 and conventions.md §9 require submitted policies to run "with **no network egress**",

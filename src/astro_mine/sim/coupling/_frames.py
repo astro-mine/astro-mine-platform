@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The coupling boundary's frame bridge — inertial ↔ body-fixed via SPICE (RFC-0002).
 
 The transform the multi-domain coupler (RM-P0-SIM-04) could not do. A coupling boundary hands a

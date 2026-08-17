@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``build_comms_constraints`` — Link contact windows → comms-window gating (RM-P1-ALLOC-03).
 
 Gates a relay-dependent task's execution to fall inside a [Link](link.md) contact window: a task

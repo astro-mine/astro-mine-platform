@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deriving a falsification start and attack from **the spec itself** (issue #35).
 
 The search was anchor-only, and not because the plant is: `WorstCaseAdversary` already aims at

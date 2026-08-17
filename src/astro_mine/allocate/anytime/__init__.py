@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Anytime contract — streaming incumbents, monotone bounds, deadline management (RM-P1-ALLOC-05).
 
 Anytime by default (allocate.md §2 principle 2): every solve exposes incumbent solutions with

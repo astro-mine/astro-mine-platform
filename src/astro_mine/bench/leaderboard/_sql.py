@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SQLAlchemy-backed leaderboard persistence: the submission catalog + the audit trail.
 
 One store, two databases: the same SQLAlchemy Core code runs on **SQLite** (the tests + a

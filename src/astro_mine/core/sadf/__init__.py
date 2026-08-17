@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF — the Swarm Asset Description Format (v0.1, RM-P0-CORE-01).
 
 Engine-neutral, declarative description of an asset: identity, USD/glTF geometry

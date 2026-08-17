@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed curve aggregation — Parquet default, optional MLflow (RM-P1-LEARN-06).
 
 The honest-eval curves are emitted as a tidy **long-format** table (one row per

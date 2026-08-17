@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ObjectiveSpec + the objective->metric binding — the shared objective contract.
 
 A first-class Core schema: an objective plus its binding to Bench metrics and (later)

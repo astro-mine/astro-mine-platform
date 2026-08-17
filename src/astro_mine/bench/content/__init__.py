@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Obtaining the content a scenario pins — the local half of the commons' content distribution.
 
 A :class:`~astro_mine.bench.scenario.ScenarioSpec` pins its world, fleet, resource prior and contact

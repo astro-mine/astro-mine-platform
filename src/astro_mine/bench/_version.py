@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The package version, in its own module to keep the import graph acyclic.
 
 Imported by the package ``__init__`` and by :mod:`astro_mine.bench.harness` (which stamps it

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Host-side ONNX inference adapter — the Mind/Bench consumption seam (RM-P1-LEARN-05; §10).
 
 Core defines :class:`~astro_mine.core.policy.OnnxPolicy` as *package + a host-supplied

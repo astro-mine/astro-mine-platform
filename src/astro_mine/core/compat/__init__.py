@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Interface version negotiation and contract-test utilities (RM-P0-CORE-07).
 
 Core publishes a small set of independently-versioned interfaces — SADF, the message

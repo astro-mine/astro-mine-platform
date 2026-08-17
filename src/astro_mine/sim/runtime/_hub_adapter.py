@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The ``astro-mine-hub`` binding of the :class:`~astro_mine.sim.runtime.content.BundleStore` seam.
 
 Sim's resolver depends on the narrow :class:`BundleStore` Protocol, not on Hub; this adapter is the

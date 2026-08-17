@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Units / frames / time guards — the non-Python binding of Core's `require_*` contract.
 //!
 //! RFC-0007 (Design §3) ratifies the frame/CRS/time guard rules as a normative contract Core

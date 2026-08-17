@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """IPPO — independent PPO, the simple control baseline (RM-P1-LEARN-03; learn.md §11).
 
 Each agent optimises its own actor-critic against its own reward with **no** shared

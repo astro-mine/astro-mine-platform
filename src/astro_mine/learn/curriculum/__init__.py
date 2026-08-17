@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Curricula & scenario generation — staged difficulty + domain randomization (learn.md §3).
 
 The ``curriculum/`` module of learn.md §3's tree: *"staged difficulty, automatic curricula,

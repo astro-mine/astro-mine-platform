@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The typed sensor return that drives belief updating (prospect.md §key-abstractions, §5).
 
 A :class:`FieldObservation` is one atomic entry of a belief field's **ordered observation log**:

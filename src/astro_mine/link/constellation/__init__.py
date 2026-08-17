@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Relay constellation geometry + multi-hop reachability (RM-P1-LINK-10 / -13).
 
 Extends the P0 single-relay MVP to a richer relay constellation: multiple orbiters as

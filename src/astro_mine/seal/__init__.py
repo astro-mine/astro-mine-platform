@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Seal — shared artifact-integrity companion.
 
 The single home for the platform's signing, verification, SLSA provenance, and SBOM

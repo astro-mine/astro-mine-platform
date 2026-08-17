@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A synthetic DEM generator — so the shipped WorldSpec example has a copyable input (issue #60).
 
 `synthetic_polar.world.yaml` is a spec you can copy, validate and hash without downloading anything.

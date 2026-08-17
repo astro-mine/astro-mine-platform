@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Property-based invariants for the CBF-QP shield, in **every** control mode (guard.md §9.3;
 //! RM-P1-GUARD-03).
 //!

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Oracle-validated regression + determinism gates (RM-P0-SIM-10; sim.md §9, §10).
 
 The validation harness: every engine result is admissible only against an **explicit error budget**,

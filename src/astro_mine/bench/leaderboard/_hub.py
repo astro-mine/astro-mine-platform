@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Hub-digest submission intake (RM-P1-BENCH-10; bench.md §3, §6, §9).
 
 The public leaderboard's flywheel turns when an external lab **publishes a policy to Hub** and it

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """DSN ground-station contact windows (LINK-02): when an Earth antenna can see the target.
 
 A ground station is an Earth :class:`~astro_mine.spice.Site` plus a minimum-elevation mask. A

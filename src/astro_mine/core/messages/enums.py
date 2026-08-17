@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Message-catalog v0.1 — closed vocabularies (Core-owned).
 
 The closed enums of the runtime message vocabulary. Like the SADF vocabularies

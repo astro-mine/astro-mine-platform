@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Tier-plugin discovery, gating, and instantiation (RM-P1-MIND-01).
 
 Core's :class:`~astro_mine.core.registry.PluginRegistry` resolves plugin **manifests** and

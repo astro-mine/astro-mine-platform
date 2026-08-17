@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sealed GroundTruthField + Bayesian BeliefField updating.
 
 A sealed ground-truth realization sampled from a prior, and a belief field updated

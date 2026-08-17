@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Hub-publish the belief prior + reopen it as a live ResourceField (RM-P1-PROSPECT-13).
 
 The publish/resolve half of Prospect (prospect.md §3, §4, §6; hub.md §3, §9): take the offline

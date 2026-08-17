@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Real PDS raster-ingest for the water-ice prior-recipe (RM-P1-PROSPECT-12).
 
 Reads the public conditioning rasters the water-ice prior conditions on — Diviner bolometric

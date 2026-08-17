@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Shared exporter core: SADF → a link tree, the loss contract, and mesh materialization.
 
 URDF, SDF, and USD differ only in *serialization*. What they share is the hard part: SADF's

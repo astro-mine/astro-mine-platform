@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Closed vocabularies for the surrogate contracts (RM-P1-SURR-01).
 
 Small, append-only StrEnums — the platform idiom for a closed vocabulary

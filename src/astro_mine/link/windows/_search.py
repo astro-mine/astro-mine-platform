@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The window-search mechanism: a visibility series reduced to contact intervals.
 
 One generic search underlies both relay-orbiter and ground-station windows (LINK-02): sample

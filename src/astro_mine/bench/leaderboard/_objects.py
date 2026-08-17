@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed object store for traces + provenance bundles (RM-P1-BENCH-10; bench.md §7).
 
 The hosted leaderboard keeps its bulky, immutable artifacts — episode traces and the

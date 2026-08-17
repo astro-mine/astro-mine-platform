@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The design-loop worker: one candidate evaluation, as a process (RM-P1-STUDIO-03).
 
 :class:`~.cloud.CloudDispatcher` fans candidates out through ``cloud.submit()``, and Cloud

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publishing a frozen design or campaign to Hub (RM-P1-STUDIO-06; studio.md §6 →Hub).
 
 Studio "can write back published designs/campaigns as **content-addressed, signed** artifacts"

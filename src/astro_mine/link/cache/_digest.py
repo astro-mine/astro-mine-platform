@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content addressing: the digests + cache key Link's reproducibility is built on (LINK-05).
 
 Determinism is a hard requirement (conventions.md §1.5): same SPICE kernels + same terrain +

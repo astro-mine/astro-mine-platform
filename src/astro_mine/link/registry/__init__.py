@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Link as a Core plugin: the ``comms_model`` manifest + the Hub publish/resolve path.
 
 link.md §3 names this module — "``registry/`` — Core plugin manifest: declares Link as an

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference metric set + scoring/aggregation (RM-P0-BENCH-03; bench.md §3).
 
 The plugin-based metric set: seven reference metrics — water mass, energy/kg, information

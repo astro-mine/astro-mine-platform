@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-hash resolver — materialize a ScenarioSpec into a resolved scenario identity.
 
 :func:`resolve_scenario` turns a :class:`~astro_mine.bench.scenario._spec.ScenarioSpec` into a

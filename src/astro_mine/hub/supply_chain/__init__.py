@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Verify-twice supply chain — cosign + SLSA + SBOM at publish and pull (RM-P1-HUB-03).
 
 Hub's supply-chain trust boundary (hub.md §9; ``LUNAR-SR-002``): every shared artifact is

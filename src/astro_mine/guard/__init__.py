@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Guard — runtime safety assurance.
 
 The verifiable shield that wraps any decision producer — a learned policy from

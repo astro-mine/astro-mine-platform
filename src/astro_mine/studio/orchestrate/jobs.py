@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Durable, cancelable, resumable design-loop jobs (studio.md §2 principle 5, §3
 ``orchestrate/jobs``; STUDIO-03 acceptance).
 

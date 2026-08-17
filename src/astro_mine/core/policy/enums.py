@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Policy/Planner API — closed vocabularies (Core-owned, RM-P1-CORE-01).
 
 The closed enums the :class:`~astro_mine.core.policy.model.PolicyPackage` sidecar draws

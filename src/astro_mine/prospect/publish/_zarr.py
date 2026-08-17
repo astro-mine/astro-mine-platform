@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Zarr field/prior storage — the parametric / ensemble / quantile encodings (prospect.md §5).
 
 prospect.md §5 (and conventions.md §5; ``LUNAR-DR-003``) name **Zarr** as *the* field store:

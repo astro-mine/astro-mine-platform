@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``TrivialStubSolver`` — the OR-Tools-free ``Solver`` for the no-solver path (RM-P1-ALLOC-02).
 
 A deterministic greedy that satisfies the :class:`~astro_mine.allocate.solvers.base.Solver`

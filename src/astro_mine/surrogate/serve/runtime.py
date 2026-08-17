@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``OnnxServedSurrogate`` — the ONNX-Runtime served fidelity tier (RM-P1-SURR-04).
 
 Runs a raw-state :class:`~astro_mine.surrogate.serve.bundle.OnnxBundle` through ONNX Runtime and

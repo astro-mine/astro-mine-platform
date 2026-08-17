@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic, no-LLM structured intent authoring (studio.md §3 ``intent/forms``).
 
 The MVP intent front door: turn an :class:`~astro_mine.studio.models.IntentDraft`

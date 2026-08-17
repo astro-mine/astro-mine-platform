@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Native motion-planning backends (RM-P1-MIND-03) — the ``[native]`` extra.
 
 The real sampling-based motion planner behind

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The RunContext provenance envelope.
 
 Records the minimum a run needs to reproduce byte-for-byte -- inputs by content hash,

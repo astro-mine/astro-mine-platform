@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Zonal spherical-harmonic gravity kernels — pure, IO-free (worlds.md §3, §11).
 
 The evaluation half of worlds.md §3's ``gravity/`` module: "point-mass + spherical-harmonic

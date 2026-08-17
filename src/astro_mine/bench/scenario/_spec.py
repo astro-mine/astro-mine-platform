@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ScenarioSpec — the versioned, content-addressed benchmark task (bench.md §3, §5).
 
 A :class:`ScenarioSpec` *is* the task: it pins the Core interface version, references the

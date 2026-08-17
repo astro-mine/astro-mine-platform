@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference PDDL/temporal mission planner (RM-P1-MIND-03).
 
 The deterministic pure-Python default behind Core's

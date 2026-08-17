@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publish and discover SADF asset bundles through Hub (RM-P1-FLEET-10).
 
 Upgrades the P0 pre-Hub local/object-store OCI path (:mod:`astro_mine.fleet.packaging.oci`,

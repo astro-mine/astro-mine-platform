@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-addressed resource-field bundle: serialize a prior, reopen a live field.
 
 The wire form of a published belief prior (RM-P1-PROSPECT-13): a **deterministic** tar carrying the

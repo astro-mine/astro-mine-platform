@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF -> URDF/SDF/USD exporters + the asset preview (RM-P0-FLEET-01, RM-P0-FLEET-02).
 
 The mirror of :mod:`astro_mine.fleet.importers`, completing the **bidirectional URDF/SDF ↔ SADF

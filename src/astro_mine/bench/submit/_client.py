@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The leaderboard submission client — the CLI's write path (G2.14; RM-P1-BENCH-10).
 
 The leaderboard service ships complete: intake, sandboxed execution, OIDC auth, ranking. What it

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The high-fidelity oracle seam ``datagen`` labels against (RM-P1-SURR-03; surrogate.md §3).
 
 ``datagen`` needs *labeled* rollouts — a ``config -> particle trajectory`` map produced by a

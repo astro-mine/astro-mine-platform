@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Action dispatch — routing an ``ActionBatch`` into the engines (RM-P0-SIM-03).
 
 The stepping core hands each step's :class:`~astro_mine.core.messages.model.ActionBatch`

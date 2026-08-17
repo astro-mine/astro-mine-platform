@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms masking -- consume a Core ContactPlan into per-tick masks (RM-P0-SIM-08).
 
 Turns Link connectivity into per-tick, per-agent observation/comms masks applied through the

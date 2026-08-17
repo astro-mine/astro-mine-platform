@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Multi-hop *contemporaneous* reachability over the constellation graph (RM-P1-LINK-10).
 
 Given a :class:`~astro_mine.link.products.ConnectivitySampler` built from the constellation

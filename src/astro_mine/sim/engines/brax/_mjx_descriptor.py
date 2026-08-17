@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The MJX contact engine's static self-declaration — JAX-free (RM-P1-SIM-04).
 
 In its own module so :mod:`astro_mine.sim.engines.brax` (and ``engines/builtins.py``) can expose the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Leaderboard submission — the CLI's write path (G2.14; RM-P1-BENCH-10; bench.md §6).
 
 The public surface of :mod:`astro_mine.bench.submit._client`. Needs the optional ``[submit]``

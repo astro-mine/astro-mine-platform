@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Locality hints -- pre-warm shared datasets and co-schedule to warm nodes.
 
 For sweeps that re-read the same slices, Cloud pre-warms a shared cache and co-schedules jobs

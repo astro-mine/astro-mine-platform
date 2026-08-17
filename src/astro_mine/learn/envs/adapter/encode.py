@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Observation → space sample and space sample → Core action codecs (RM-P1-LEARN-01).
 
 The two pure functions that bridge the Core message vocabulary and the RL tensor

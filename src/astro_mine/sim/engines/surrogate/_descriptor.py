@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The learned-surrogate granular tier descriptor (RM-P1-SIM-03).
 
 A ``SURROGATE``-tier :class:`~astro_mine.sim.engines.adapter.EngineDescriptor` for the excavation

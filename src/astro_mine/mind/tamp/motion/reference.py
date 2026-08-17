@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference RRT motion planner (RM-P1-MIND-03).
 
 A deterministic, pure-Python rapidly-exploring random tree in the ground plane: the CI-tested

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Optuna :class:`~.search.SearchBackend` adapter (RM-P1-STUDIO-02; studio.md §3, §11).
 
 studio.md §11 names four external trade-study engines — Ax/BoTorch, **Optuna**, pymoo, and

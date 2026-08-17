@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``PolicyShield`` as a Mind shield plugin — the RFC-0006 sibling binding (RM-P1-GUARD-03).
 
 Registered under the ``astro_mine.mind.tier_plugins`` entry-point group by the ``[mind]`` extra, so

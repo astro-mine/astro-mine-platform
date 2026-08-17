@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetySpec loading, validation, and fail-safe semantic checks.
 
 Pipeline (``load_safety_spec``), mirroring the Core objective/SADF loaders

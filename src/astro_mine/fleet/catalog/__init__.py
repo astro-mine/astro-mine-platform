@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Fleet/Hub catalog as a selectable robot menu (RM-P1-FLEET-11).
 
 A read-only projection of a [Hub](https://github.com/astro-mine/docs) registry into the two

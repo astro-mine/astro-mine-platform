@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Observation <-> Cap'n Proto hot-path wire form (zero-copy per-tick decode).
 
 The per-tick observation family uses Cap'n Proto, not Protobuf, so streaming

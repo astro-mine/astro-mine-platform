@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """WorldSpec — the declarative description of a world (RM-P0-WORLDS-07; worlds.md §3, §5).
 
 A :class:`WorldSpec` names a *place* and how to derive it: the body CRS, the region/resolution,

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Core ``observation_model`` plugin manifest for a sensor likelihood — the registry seam.
 
 prospect.md §3 requires a sensor likelihood to be **selectable through a Core plugin manifest**, the

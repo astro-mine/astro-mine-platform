@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Resource-field API v0.1 — the contract (prospect.md §2/§3).
 
 The Core-owned, uncertainty-first probabilistic resource-field contract: a query surface

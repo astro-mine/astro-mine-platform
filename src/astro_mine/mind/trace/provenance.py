@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content hashing for decision-trace provenance (RM-P1-MIND-07; conventions.md §5).
 
 Every emitted plan records the content-addressed identities of its inputs — the stack spec,

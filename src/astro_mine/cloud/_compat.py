@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Core interface-version admission for Cloud's provenance / job envelopes.
 
 Cloud declares no new Core schema (``cloud.md`` §6): its :class:`RunContext` and

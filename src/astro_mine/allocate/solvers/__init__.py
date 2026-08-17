@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Solver backends behind one ``Solver`` strategy (allocate.md §3, ``solvers/``).
 
 The pluggable search backends of Allocate: each lowers the solver-neutral Allocation IR and

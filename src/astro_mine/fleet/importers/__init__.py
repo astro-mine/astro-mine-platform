@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """URDF/SDF/USD importers + USD/glTF geometry handling (RM-P0-FLEET-02).
 
 Bring existing robot descriptions into SADF: parse URDF (``yourdfpy``), SDF (stdlib XML), or a USD

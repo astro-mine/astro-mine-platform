@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GenerativeEnsembleField — a deep-generative / normalizing-flow backend (prospect.md §11).
 
 Where the GP and GMRF backends carry a *parametric* (Gaussian) marginal at every point, some

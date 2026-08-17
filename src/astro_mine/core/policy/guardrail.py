@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The shield-report seam — structured Guard-intervention provenance (RM-P1-MIND-05).
 
 Guard is the single output path, and RM-P1-MIND-05 makes *what the shield did* observable in the

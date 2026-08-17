@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fail-loud ingest guards for units / frames / time (RM-P0-CORE-06, RM-P1-CORE-08).
 
 The "reject at ingest with a clear error" surface. Components (Worlds, Link) call these

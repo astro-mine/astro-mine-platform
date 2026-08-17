@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Illumination/PSR validation against published lunar references (worlds.md §10).
 
 worlds.md §10 and the Phase-0 Worlds exit criteria both require that "illumination/PSR results

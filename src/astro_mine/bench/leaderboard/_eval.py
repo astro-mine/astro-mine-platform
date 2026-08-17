@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Submit-policy-we-run evaluation + integrity (RM-P0-BENCH-06; bench.md §9).
 
 The leaderboard's trust model: rather than believe reported numbers, Bench **runs the policy

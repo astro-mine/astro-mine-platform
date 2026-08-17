@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Space-filling experiment design over the sampling box (RM-P1-SURR-03; surrogate.md §8).
 
 Turns a :class:`~astro_mine.surrogate.datagen.policy.SamplingPolicy`'s ``parameter_bounds`` box into

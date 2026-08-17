@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Load a served surrogate tier fail-closed, Core-side (RM-P1-SIM-03; sim.md §5, §6).
 
 Sim consumes the [Surrogate](surrogate.md) tier as a **content-addressed ONNX artifact** through

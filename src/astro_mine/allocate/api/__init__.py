@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The allocation sub-interface: request/response types, Core manifest, and the planner.
 
 ``api/`` holds the Core Policy/Planner allocation sub-interface implementation and the

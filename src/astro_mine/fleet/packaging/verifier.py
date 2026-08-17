@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Asset-manifest signing glue over the shared signer (RM-P0-FLEET-06, CX-SEC; RFC-0005 dedup).
 
 The ECDSA P-256 cosign signer itself lives once in :mod:`astro_mine.seal` (RFC-0005 — one signer

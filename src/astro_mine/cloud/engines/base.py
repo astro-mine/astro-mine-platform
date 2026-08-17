@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The engine seam -- the ``Engine`` protocol, registry, and shared container builders.
 
 An :class:`Engine` compiles a single :class:`~astro_mine.cloud.submission.jobspec.JobSpec` to

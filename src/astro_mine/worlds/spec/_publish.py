@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Publish a world bundle to Hub as a signed ``world`` OCI artifact (RM-P1-WORLDS-15).
 
 :func:`build_world_bundle` (RM-P0-WORLDS-07) writes a content-addressed bundle **to disk only** —

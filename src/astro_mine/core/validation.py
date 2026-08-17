@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Core's document-format registry and validator — the library behind `astro-mine validate`.
 
 Nine authored formats are Core's: SADF, ObjectiveSpec, MissionSpec, Plan, the plugin manifest,

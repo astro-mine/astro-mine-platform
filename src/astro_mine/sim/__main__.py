@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sim's module entrypoint and container ENTRYPOINT (RM-P0-SIM-11, RM-P0-CLOUD-01).
 
 This module is machine-facing: it is the argv Cloud and the Dockerfile run, and it is deliberately

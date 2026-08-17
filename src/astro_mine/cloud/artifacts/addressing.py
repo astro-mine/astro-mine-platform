@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content addressing for Cloud artifacts.
 
 Reuses the platform's de-facto content-hash convention -- canonical JSON + ``sha256``,

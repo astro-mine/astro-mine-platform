@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """PolicyPackage loading and validation (RM-P1-CORE-01).
 
 Pipeline (``load_policy_package``), mirroring the manifest / run-provenance loaders:

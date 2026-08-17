@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fine on-demand ray-cast illumination — the reference + portable CPU fallback (RM-P1-WORLDS-10).
 
 The precomputed horizon map (RM-P0-WORLDS-03) bins the terrain skyline into ``n_azimuth`` azimuth

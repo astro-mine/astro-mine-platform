@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """OIDC bearer-token authentication for the hosted leaderboard (bench#29; bench.md §9).
 
 bench.md §9 and conventions.md §9 both open with the same requirement: **AuthN is OIDC** (Keycloak

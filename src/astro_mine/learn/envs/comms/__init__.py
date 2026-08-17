@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms-limited / partial-observability env wrappers (RM-P1-LEARN-02).
 
 The declarative :class:`CommsModel` — line-of-sight/range gating, message bandwidth budget,

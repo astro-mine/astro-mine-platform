@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The plain-Kubernetes-Job engine -- trivial one-shot containers.
 
 Compiles a :class:`~astro_mine.cloud.submission.jobspec.JobSpec` to a ``batch/v1`` Job (or an

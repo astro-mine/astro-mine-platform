@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Comms-aware degrade-not-collapse strategy (RM-P1-MIND-06).
 
 The execution strategy for the decentralized / hybrid coordination posture: it makes

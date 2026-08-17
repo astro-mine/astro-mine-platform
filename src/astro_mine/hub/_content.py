@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Canonical content hashing — the platform content-address form (mirrors ``core.hashing``).
 
 Core's shared hashing primitive (``content_hash`` / ``canonical_json``, Core issue #19) landed on

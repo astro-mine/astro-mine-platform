@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Orekit orbital engine's static self-declaration — JVM-free (RM-P0-SIM-03).
 
 Kept in its own module so :mod:`astro_mine.sim.engines.orekit` (and therefore

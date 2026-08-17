@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Decode a Sim MCAP recording into a Bench :class:`EpisodeTrace` (RM-P0-BENCH-07; bench.md §6).
 
 The Bench-side consumer of Sim's output at the **MCAP artifact boundary** ("Sim rollouts produce

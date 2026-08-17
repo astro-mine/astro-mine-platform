@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The in-container run harness -- the entrypoint a *cluster* workload actually runs.
 
 The compiled manifests carry a job's content-addressed I/O as annotations

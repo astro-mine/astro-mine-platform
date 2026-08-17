@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The comparison view: a Pareto front that shows what it does not know (RM-P1-STUDIO-06).
 
 studio.md §2 principle 7 is unambiguous — "**Uncertainty is shown, not hidden.** … the comparison UI

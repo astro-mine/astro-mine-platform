@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The installed distribution version, isolated so ``__init__`` can bind it before heavier imports.
 
 ``spec.catalog`` imports ``__version__`` from the package, so it must exist before the spec-tooling

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """PDDL problem generation from a belief view (RM-P1-MIND-03).
 
 The mission tier's symbolic-planning input: a PDDL2.1 *problem* generated per replan from the

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! CBF-QP shield — the *correct* layer (guard.md §9.2).
 //!
 //! Minimally perturbs the policy's proposed command so the state provably stays inside the

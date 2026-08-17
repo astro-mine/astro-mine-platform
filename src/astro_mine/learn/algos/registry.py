@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Learn-internal algorithm registry + Core ``POLICY`` manifest emission (RM-P1-LEARN-03).
 
 Two registries, kept strictly separate to honour the narrow waist (learn.md §2):

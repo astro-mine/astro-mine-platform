@@ -412,20 +412,6 @@ ignore_errors = true
 module = ["astro_mine.learn.*"]
 ignore_errors = true
 
-[[tool.mypy.overrides]]
-# 7 errors, all downstream of `trimesh`: it ships `py.typed` while leaving `apply_scale`,
-# `TextureVisuals`, `PBRMaterial` and `export` unannotated, so the geometry and exporter paths fail
-# on untyped calls and the `Any` they return. Enrolling this one is mostly a stub question.
-module = ["astro_mine.fleet.*"]
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-# 6 errors: generated gRPC servicer/stub calls in `service/`, and Ray/Brax `.remote()` and
-# `.update()` handles in `engines/brax/`. Note this is the component whose `-m sim` suite the
-# `sim-e2e` job could never run.
-module = ["astro_mine.sim.*"]
-ignore_errors = true
-
 [tool.ruff]
 line-length = 100
 target-version = "py312"

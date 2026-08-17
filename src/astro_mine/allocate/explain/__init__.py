@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Explainability over the solver-neutral IR — *why this plan* / *why no plan* (RM-P1-ALLOC-06).
 
 Principle 9 (allocate.md §2/§10): every plan ships with its objective decomposition, its binding

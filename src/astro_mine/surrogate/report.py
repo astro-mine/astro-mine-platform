@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``ErrorReport`` — the machine-readable, calibrated error a surrogate carries.
 
 *The error is the product* (surrogate.md §2, principle 1): a surrogate ships with a

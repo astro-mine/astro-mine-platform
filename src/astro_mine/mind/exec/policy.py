@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A composed Mind stack, presented as a plain Core :class:`~astro_mine.core.policy.Policy`.
 
 The :class:`~astro_mine.mind.exec.Executive` drives the loop itself: it holds the

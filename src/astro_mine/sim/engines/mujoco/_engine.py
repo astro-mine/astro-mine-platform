@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The MuJoCo articulated mobility :class:`RegimeEngine` — real wheel-soil contact (RM-P0-SIM-03).
 
 The contact-rich surface-mobility backend RM-P0-SIM-03 names ("mobility/contact (MuJoCo/Brax,

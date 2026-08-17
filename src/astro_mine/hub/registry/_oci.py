@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Spec-exact OCI image-layout primitives — the content-addressed substrate (RM-P1-HUB-01).
 
 Hand-rolled (no ``oras``/``oci`` runtime dependency) so the output is **byte-stable and

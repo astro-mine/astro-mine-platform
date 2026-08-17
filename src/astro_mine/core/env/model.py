@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment API v0.1 — result containers (RM-P0-CORE-02).
 
 The typed returns of the Core Environment contract. Multi-agent by construction:

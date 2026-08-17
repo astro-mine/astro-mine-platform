@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The per-candidate design loop (studio.md §6) — turn one ``DesignCandidate`` into a
 scored ``EvaluatedCandidate`` by sequencing the seven delegated steps.
 

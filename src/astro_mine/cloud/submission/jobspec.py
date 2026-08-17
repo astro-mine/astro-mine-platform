@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The JobSpec contract -- one containerized unit of work.
 
 A :class:`JobSpec` is the small typed contract Cloud runs: a digest-pinned image, a

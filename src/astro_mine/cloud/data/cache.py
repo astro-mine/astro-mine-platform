@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Pull-through / locality cache -- keep hot chunks on local scratch.
 
 For a sweep that re-reads the same slices across thousands of jobs, fetching every chunk from

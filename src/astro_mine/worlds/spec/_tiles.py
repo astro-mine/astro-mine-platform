@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A minimal, deterministic 3D-Tiles + glTF terrain export (RM-P0-WORLDS-07; worlds.md §3, §11).
 
 The "early View reuse" thin-slice: a triangulated heightfield mesh of the terrain elevation,

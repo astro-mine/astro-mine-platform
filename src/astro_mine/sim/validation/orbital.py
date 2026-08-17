@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Orbital regression against an analytic two-body oracle (RM-P0-SIM-10; sim.md §2.9, §10).
 
 The Phase-0 orbital engine (:mod:`astro_mine.sim.engines.orbital`) is a reduced-order **two-body

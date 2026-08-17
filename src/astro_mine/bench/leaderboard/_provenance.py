@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Provenance bundle + re-execution integrity (RM-P1-BENCH-10; bench.md §5, §9).
 
 Every hosted leaderboard entry must carry the lineage that makes it **byte-for-byte reproducible**

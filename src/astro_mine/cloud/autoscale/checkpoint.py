@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed checkpoint-to-resume -- surviving a spot eviction.
 
 Spot/preemptible compute is the default (``cloud.md`` §2 principle 5), so a job must survive

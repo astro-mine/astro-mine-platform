@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Hand-rolled message-passing GNN — the learned-DEM particle simulator (RM-P1-SURR-02).
 
 A GNS/MeshGraphNet-style encoder-processor-decoder over a particle radius-graph, implemented

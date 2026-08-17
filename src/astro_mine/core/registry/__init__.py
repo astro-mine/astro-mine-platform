@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plugin manifest, registry, and version negotiation (RM-P0-CORE-05).
 
 How content is discovered, version-negotiated, signed, and loaded — and the

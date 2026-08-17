@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! The compiled safety model: decode the canonical `CompiledSafetyModel` protobuf wire form
 //! into the small, fully-resolved, pre-allocatable structs the TCB evaluates each tick.
 //!

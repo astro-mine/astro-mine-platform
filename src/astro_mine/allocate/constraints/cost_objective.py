@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``refine_cost_objective`` — the per-**pair** cost family: value minus what it cost (ALLOC-04).
 
 The objective family that makes a plan's *assignment* matter. Task value is a per-**task** quantity

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Backend-agnostic plan decoding shared by the solvers (RM-P1-ALLOC-02).
 
 The small, **OR-Tools-free** helpers that map a solved ``(task → asset, task → start)`` assignment

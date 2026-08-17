@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Immutable, content-addressed dataset IO — Zarr arrays + Parquet tabular (RM-P1-SURR-03).
 
 Datasets are **immutable, content-addressed, versioned** (surrogate.md §5; conventions.md §5): a

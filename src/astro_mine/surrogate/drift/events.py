@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Drift events — the re-validation trigger a monitor publishes (RM-P1-SURR-04; surrogate.md §10).
 
 When live queries leave the trust region or the surrogate's uncertainty drifts, the monitor raises

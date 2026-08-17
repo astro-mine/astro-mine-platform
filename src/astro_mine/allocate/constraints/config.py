@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``ConstraintConfig`` — Allocate's *declared modeling policy* for the builders (RM-P1-ALLOC-03).
 
 The constraint builders lift **upstream truth** — Worlds traversability, Link contact windows,

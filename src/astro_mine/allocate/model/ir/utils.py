@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Read-only helpers over a compiled :class:`~astro_mine.allocate.AllocationIR` (RM-P1-ALLOC-03).
 
 Small, pure accessors the constraint builders, the solver backends, and the verifier/explainer

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Signer-identity fingerprint for a loaded artifact's provenance (guard.md §9.5).
 
 The one bit of key handling that stays in Guard after adopting the shared

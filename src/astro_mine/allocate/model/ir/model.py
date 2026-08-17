@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Allocation IR — the solver-neutral problem representation (RM-P1-ALLOC-01).
 
 The stable internal contract that lets solver backends be true plugins ("model/solver

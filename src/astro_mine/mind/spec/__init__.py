@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The stack spec — Mind's declarative autonomy-stack description (RM-P1-MIND-01).
 
 The authored artifact (YAML/JSON, JSON-Schema-validated, Pydantic-typed) the composer

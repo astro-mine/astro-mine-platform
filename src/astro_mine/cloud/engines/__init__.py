@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Execution engines -- compile a JobSpec/SweepSpec/WorkflowSpec to cluster objects.
 
 The right engine per workload shape (``cloud.md`` §2 principle 3, §3):

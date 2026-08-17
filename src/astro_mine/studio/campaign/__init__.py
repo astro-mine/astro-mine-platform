@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Campaign authoring + Ops hand-off (RM-P1-STUDIO-04).
 
 Author a chosen, scored ``EvaluatedCandidate`` into a ``Campaign`` (timeline + phases +

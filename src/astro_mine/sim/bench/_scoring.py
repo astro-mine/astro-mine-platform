@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sim ``Trace`` → Bench ``EpisodeTrace`` — the scored-input projection (bench.md §6).
 
 Bench scores an :class:`~astro_mine.bench.metrics.EpisodeTrace`: an ordered stream of **Core**

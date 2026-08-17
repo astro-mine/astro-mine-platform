@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Errors for the Link geometry layer."""
 
 from __future__ import annotations

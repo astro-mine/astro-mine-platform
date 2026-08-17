@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Cosign-verified-images-only admission -- the supply-chain trust boundary.
 
 Cloud never runs unsigned images in shared tenancy (``cloud.md`` §9): only an image that is

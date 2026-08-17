@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Rollout collection behind a single executor seam (RM-P1-LEARN-03; LEARN-04 seam).
 
 "Library first, cluster second" (learn.md §2.1): the distributed path is the *same* code

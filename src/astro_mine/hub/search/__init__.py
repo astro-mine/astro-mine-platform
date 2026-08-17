@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Discovery — faceted + full-text + capability + semantic search over the catalog (RM-P1-HUB-02).
 
 The query surface hub.md §3 exposes over :mod:`astro_mine.hub.index`: precision facets and full

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Rollout-throughput benchmark: batched GPU kernel vs. the sequential CPU loop (LEARN-04).
 
 "Every baseline ships a reproducible throughput benchmark" (learn.md §8, conventions.md §8

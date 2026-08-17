@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Cloud — distributed orchestration (Phase 0: local-first discipline).
 
 Container-first :mod:`~astro_mine.cloud.packaging`, the

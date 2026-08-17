@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed Result + provenance models for the reproducibility harness (bench.md §5).
 
 A :class:`Result` binds a run to the lineage a leaderboard entry needs to be *byte-for-byte

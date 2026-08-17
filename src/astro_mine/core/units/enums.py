@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Units / frames / time — closed vocabularies (Core-owned, RM-P0-CORE-06).
 
 The closed part of the units/frames/time waist: the admissible time scales, the

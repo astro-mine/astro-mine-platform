@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The solver registry — name → backend factory, built-in or plugin (RM-P1-ALLOC-02).
 
 The dispatch table :class:`~astro_mine.allocate.AllocationPlanner` resolves a backend id through

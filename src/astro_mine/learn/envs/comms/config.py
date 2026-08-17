@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Declarative ``CommsModel`` configuration (RM-P1-LEARN-02).
 
 The comms regime is described *declaratively* — a Pydantic v2 document validated by JSON

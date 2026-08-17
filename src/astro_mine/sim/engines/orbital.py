@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Orbital engine — reduced-order two-body propagation for the relay (RM-P0-SIM-03).
 
 The Phase-0 orbital tier: a deterministic, dependency-light **two-body** propagator

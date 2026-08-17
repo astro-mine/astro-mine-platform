@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Worlds — celestial-body environment models.
 
 Real planetary data in, simulatable world out: terrain from DEMs

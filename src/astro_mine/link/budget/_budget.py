@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The parametric link budget: gain / path loss / SNR → rate, plus latency (LINK-03).
 
 Geometry is ground truth; RF is a layer on top (link.md §2.1). Given a transmit and receive

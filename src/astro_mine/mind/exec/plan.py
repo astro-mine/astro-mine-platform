@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plan behavior over the Core-owned plan schema (RFC-0006; RM-P1-MIND-06).
 
 RFC-0006 ratified ``Plan``/``ContingentPlan`` as **Core-owned message schemas**

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Convert between the Prospect :class:`FieldObservation` and its wire :class:`Observation` proto.
 
 The single place the field service crosses the library ↔ wire boundary, so the belief log a client

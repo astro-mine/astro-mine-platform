@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Sim-backed Bench runners — real-physics scoring + the determinism gate (RM-P0-SIM-11).
 
 Bench's scoring path and its determinism gate both ship a **documented stand-in**: the baseline's

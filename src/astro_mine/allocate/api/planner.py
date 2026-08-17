@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``AllocationPlanner`` — the Core allocation sub-interface implementation (RM-P1-ALLOC-01).
 
 Allocate's realization of the Core :class:`~astro_mine.core.policy.protocol.Allocator`

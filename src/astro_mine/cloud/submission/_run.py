@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The shared run harness -- what makes backends equivalent.
 
 Every backend runs the *same* pipeline: stage content-addressed inputs into an isolated

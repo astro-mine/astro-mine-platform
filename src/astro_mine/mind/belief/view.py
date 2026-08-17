@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The belief view — a tier's partial-observability-aware input (RM-P1-MIND-01).
 
 Assembled by the executive from the per-agent :class:`~astro_mine.core.messages.Observation`

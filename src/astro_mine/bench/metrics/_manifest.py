@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Core ``metric``-kind plugin manifests for Bench metrics (RM-P1-BENCH-12; bench.md §3, §6).
 
 A Bench metric declares itself to the platform through a **Core plugin manifest**, never a

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GridField — the simple, dependency-light reference backend (prospect.md §11).
 
 A regular 2-D grid over the field's :class:`~astro_mine.prospect.field.FieldGrid` domain holding

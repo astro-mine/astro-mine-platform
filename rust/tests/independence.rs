@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Acceptance: **independence proven** (guard.md §9.1). A deliberately adversarial policy —
 //! one that always commands acceleration straight into the keep-out — cannot drive a
 //! hard-constraint violation: the arbiter's precedence (shield-correct, else backup) keeps the

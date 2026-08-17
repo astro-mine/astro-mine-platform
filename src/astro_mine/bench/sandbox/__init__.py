@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sandboxed execution of submitted policies (bench#30; bench.md §9; conventions.md §9).
 
 **A submitted policy is untrusted code.** bench.md §9 calls this "the central safety concern for

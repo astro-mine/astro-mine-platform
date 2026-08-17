@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Symbolic task selection (RM-P1-MIND-03).
 
 The symbolic half of TAMP: turn the mission tier's decomposition (assigned prospect regions)

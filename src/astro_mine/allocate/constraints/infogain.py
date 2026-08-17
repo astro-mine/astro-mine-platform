@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``refine_infogain_objective`` — active-perception info-gain vs extraction ROI (RM-P1-ALLOC-04).
 
 The planning-to-learn knob (charter §8; allocate.md §11): an objective family that trades **active

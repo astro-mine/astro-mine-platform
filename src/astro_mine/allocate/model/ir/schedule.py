@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Semantics of the IR's **scheduling** constraint families (RM-P1-ALLOC-02).
 
 ``NO_OVERLAP`` and ``CUMULATIVE`` are the two IR families whose meaning is *not* the linear form

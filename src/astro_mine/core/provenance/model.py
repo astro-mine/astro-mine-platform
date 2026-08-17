@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Run-time provenance v0.1 — typed Pydantic models (issue #18; conventions.md §5).
 
 The **run-time** counterpart to the build-time artifact ``Provenance`` schemas in

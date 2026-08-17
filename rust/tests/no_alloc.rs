@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Acceptance: **no hot-path allocation** + **bounded latency** (guard.md §2 principle 6, §8).
 //!
 //! A counting global allocator proves `step_into` performs **zero** heap allocations per tick

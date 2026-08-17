@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Tier-plugin discovery via the Core manifest + entry-point instantiation.
 
 See :mod:`astro_mine.mind.registry.registry`: :class:`TierRegistry` gates plugin manifests

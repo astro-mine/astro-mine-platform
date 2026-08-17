@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The behavior-tree execution strategy (RM-P1-MIND-02).
 
 The ``behavior_tree`` counterpart to :class:`~astro_mine.mind.exec.strategy.CompositionStrategy`:

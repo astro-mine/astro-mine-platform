@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The embedding-provider seam — swappable semantic backends (RM-P1-HUB-02; hub.md §3, §11).
 
 hub.md §3 names the search backend an **extension point** ("the semantic/full-text backend is

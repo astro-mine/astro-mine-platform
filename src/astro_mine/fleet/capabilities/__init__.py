@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Applied capability-tag taxonomy — autonomy negotiation + export-control gating.
 
 Fleet **applies** the Core-owned capability-tag vocabulary; it never widens it

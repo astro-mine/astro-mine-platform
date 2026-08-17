@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Spice — the shared SPICE foundation (RFC-0002).
 
 Resolves Core's units/frames vocabulary through SPICE — the name->geometry step Core

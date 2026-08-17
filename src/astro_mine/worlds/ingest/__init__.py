@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Source adapters for external world field layers (worlds.md §3, §5).
 
 New dataset providers/instruments arrive here as **source adapters**, not core changes: each

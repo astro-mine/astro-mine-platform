@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SPICE-backed frames, epochs, and body/topocentric geometry (RFC-0002).
 
 The shared SPICE foundation. It *resolves* Core's units/frames vocabulary via SPICE — the

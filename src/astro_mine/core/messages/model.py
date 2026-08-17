@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Message-catalog v0.1 — typed Pydantic models (the runtime vocabulary).
 
 The typed cross-component message vocabulary every plane exchanges: the per-tick

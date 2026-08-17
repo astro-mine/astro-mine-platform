@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The MuJoCo articulated mobility/contact tier (RM-P0-SIM-03) — real wheel-soil contact.
 
 The contact-rich surface backend RM-P0-SIM-03 names, behind the *same* ``RegimeEngine`` waist as the

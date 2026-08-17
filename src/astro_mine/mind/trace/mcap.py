@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """MCAP decision-trace serialization (RM-P1-MIND-07; conventions.md §4).
 
 The replayable-in-View / object-store form of a

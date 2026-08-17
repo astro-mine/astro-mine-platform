@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ResourceField contract — uncertainty-first; no point-estimate API (prospect.md §2/§3).
 
 Prospect does **not** define its own resource-field contract — the narrow waist owns it. This

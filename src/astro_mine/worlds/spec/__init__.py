@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """WorldSpec — content-addressed world bundle, STAC catalog, 3D-Tiles export.
 
 The declarative :class:`WorldSpec` (authored as YAML, validated by JSON Schema) plus

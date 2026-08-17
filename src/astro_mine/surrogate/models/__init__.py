@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Learned-DEM surrogate models (RM-P1-SURR-02) — the torch layer.
 
 The granular/excavation GNS: a deep-ensemble message-passing network trained on the frozen DEM

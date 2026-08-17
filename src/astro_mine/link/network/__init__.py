@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Delay-tolerant networking: CGR contact graph + store-and-forward delivery (RM-P1-LINK-11).
 
 The abstract DTN layer on top of the constellation contact graph: :class:`ContactGraph`

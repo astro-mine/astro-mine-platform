@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Canonical content hashing — the platform's one content-address primitive (issue #19).
 
 Core ships byte-stable serializers (``to_wire(deterministic=True)``) but no content-hash

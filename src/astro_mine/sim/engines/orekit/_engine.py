@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Orekit orbital :class:`RegimeEngine` — the higher-fidelity orbital tier (RM-P0-SIM-03).
 
 The flight-grade orbital backend RM-P0-SIM-03 names, behind the *same* ``RegimeEngine`` waist as the

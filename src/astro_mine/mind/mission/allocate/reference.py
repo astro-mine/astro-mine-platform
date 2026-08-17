@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference greedy allocator — the delegated-to stand-in for Astro-Mine-Allocate (RM-P1-MIND-04).
 
 A deterministic solver behind the Core :class:`~astro_mine.core.policy.protocol.Allocator`

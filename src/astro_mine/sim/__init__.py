@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Sim — the multi-physics engine and scenario runtime.
 
 The deterministic stepping :mod:`~astro_mine.sim.runtime`, the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The SwarmEnv adapter — a Core world as PettingZoo/Gymnasium RL envs (RM-P1-LEARN-01).
 
 Public surface:

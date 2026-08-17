@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reproducibility-by-construction provenance (studio.md §2 principle 6, §5).
 
 Every produced artifact records the inputs it was built from (content hashes), the

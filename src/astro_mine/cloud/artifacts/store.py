@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed artifact stores — Cloud's backends for the Core contract.
 
 The :class:`~astro_mine.core.artifacts.ArtifactStore` *protocol* is Core's (conventions.md

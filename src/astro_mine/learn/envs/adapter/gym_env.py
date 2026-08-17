@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Gymnasium views over a Core world: single-agent and centralized (RM-P1-LEARN-01).
 
 A multi-agent :class:`~astro_mine.learn.envs.adapter.parallel_env.SwarmEnv` also exposes

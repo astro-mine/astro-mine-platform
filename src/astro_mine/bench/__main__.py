@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``python -m astro_mine.bench eval-worker …`` — the single-seed rollout Cloud fans out.
 
 **Not a command line.** Bench's user-facing verbs live in `astro-mine-cli` (`astro-mine bench

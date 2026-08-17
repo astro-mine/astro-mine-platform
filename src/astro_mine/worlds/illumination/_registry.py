@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Illumination field-model selection + the Core ``field_model`` manifest (RM-P1-WORLDS-10).
 
 The backend a world uses for Sun visibility is a **plugin choice**, not a code path: worlds.md §3

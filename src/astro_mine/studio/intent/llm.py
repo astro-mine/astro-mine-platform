@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Optional, provider-abstracted LLM intent capture (RM-P1-STUDIO-05).
 
 The **optional** ``intent/llm`` subsystem: a provider-abstracted adapter (default: the

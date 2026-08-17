@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Driving a real Prospect belief from a run's own observations (#66).
 
 Sim will not fabricate a belief. It renders sensor observations *of* a sealed field and

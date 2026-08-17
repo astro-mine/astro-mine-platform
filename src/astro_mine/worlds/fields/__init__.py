@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The chunked N-D field-layer store — Zarr (worlds.md §5; conventions.md §5).
 
 worlds.md §3's module map files the "COG/Zarr writers" under ``ingest/``, but the Zarr store is

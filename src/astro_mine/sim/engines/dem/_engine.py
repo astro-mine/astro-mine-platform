@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The DEM granular :class:`RegimeEngine` — ground-truth excavation behind the waist (RM-P1-SIM-06).
 
 Wraps the numpy soft-sphere kernel (:mod:`._solver`) as a Sim regime engine: an ``excavate``

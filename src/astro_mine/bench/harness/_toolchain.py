@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Environment / lockfile pinning for reproducible runs (conventions.md §5, §7; bench.md §10).
 
 The harness folds a ``toolchain`` of pinned inputs — the ``uv.lock`` digest, the bench code version,

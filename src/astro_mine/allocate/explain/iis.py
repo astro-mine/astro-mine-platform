@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Irreducible-infeasible-set (IIS) extraction via CP-SAT assumptions (RM-P1-ALLOC-06).
 
 *Why no plan* — an irreducible conflict set naming the minimal set of constraints that cannot

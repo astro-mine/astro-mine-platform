@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The frozen DEM training fixture the learned-DEM surrogate learns from (RM-P1-SURR-02).
 
 Loads the content-addressed particle-rollout dataset produced from the high-fidelity SIM-06 DEM

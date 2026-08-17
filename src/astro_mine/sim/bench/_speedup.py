@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The surrogate speedup measurement — DEM vs. surrogate, same seed, same task (#51).
 
 Surrogate's phase exit criterion is a *demonstrated speedup at a published, calibrated error bound*

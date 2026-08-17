@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The canonical constraint model: the solver-neutral Allocation IR.
 
 ``model/`` holds the problem representation the solver backends lower (allocate.md §3).

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fleet SADF budget adapter — the *untrusted* constraint-source binding (RM-P1-GUARD-04).
 
 Extracts the power / energy / thermal / torque / slope budgets a ``SafetySpec`` threshold binds

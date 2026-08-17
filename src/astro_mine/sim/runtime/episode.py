@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The deterministic episode loop — Sim's Core Environment implementation (RM-P0-SIM-01).
 
 :class:`Simulator` is Sim's reference stepping core: it loads a

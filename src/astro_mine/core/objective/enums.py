@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """ObjectiveSpec v0.1 — closed vocabularies (Core-owned).
 
 Small, closed enums for the objective->metric binding. Like the SADF vocabularies

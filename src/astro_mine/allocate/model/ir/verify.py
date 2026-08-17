@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``verify_feasible`` — an independent structural feasibility check (RM-P1-ALLOC-01).
 
 Allocate produces *feasible-by-construction* plans, but it is **not** the safety authority

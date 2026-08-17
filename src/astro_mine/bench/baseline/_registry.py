@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Runner discovery — the ``astro_mine.bench.runners`` entry-point group (bench.md §2.2, §11).
 
 A runner is an **in-process plugin** (conventions.md §7: *"in-process plugins use Python entry

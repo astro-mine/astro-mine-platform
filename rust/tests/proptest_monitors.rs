@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Property-based invariants for the STL/MTL monitors (guard.md §9.3 — the proptest gate).
 //!
 //! Drives [`Monitor`] directly with arbitrary predicate-robustness streams and checks the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The distributed field service — the single writer that keeps one consistent posterior.
 
 A :class:`FieldServicer` holds, per shared field, one authoritative :class:`BeliefField`. Producers

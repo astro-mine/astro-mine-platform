@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Content-addressed OCI artifact registry — local layout or any remote registry (RM-P1-HUB-01/06).
 
 The store hub.md §1 opens with: worlds, SADF assets, ONNX policies, surrogate models, plugins, and

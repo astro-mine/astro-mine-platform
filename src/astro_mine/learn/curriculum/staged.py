@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Staged curricula + domain randomization — the MVP curriculum (learn.md §3, §11).
 
 The :class:`Curriculum` **plugin contract** and its hand-authored realization.

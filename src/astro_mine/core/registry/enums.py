@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plugin manifest v0.1 — closed vocabularies (Core-owned, RM-P0-CORE-05).
 
 The *closed* part of the registry waist: the plugin **kind** vocabulary every

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Namespace tiers + governance actions — verified publishers, yank, deprecate (RM-P1-HUB-05).
 
 Tiered namespaces (hub.md §9): **open** (community, signed, unreviewed) vs **curated/verified**

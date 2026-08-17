@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """S3-compatible artifact store (MinIO local, or any S3 backend).
 
 Implements the :class:`~astro_mine.core.artifacts.ArtifactStore` contract

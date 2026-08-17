@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The local scoring path — ``run(spec, policy)`` (RM-P0-BENCH-05; bench.md §7, §8, §12).
 
 :func:`run` is the platform's headline promise (charter §13): *clone → run the anchor → score

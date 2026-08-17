@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """CompiledSafetyModel v0.1 — the analyzable, content-addressed compiled IR.
 
 The output of the constraint compiler (:mod:`astro_mine.guard.spec.compiler`): the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reproducible reference-score / throughput harness + the honest-eval seam (learn.md §8, §10).
 
 Learn *produces* reference scores that [Bench](../../../../docs/architecture/bench.md) scores

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The submit() backend-equivalence contract (local backend).
 
 The same call site runs in-process on a workstation as it later will on a cluster -- a

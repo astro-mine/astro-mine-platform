@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Declarative training config — the reproducibility key for a baseline run (LEARN-03).
 
 A Pydantic v2 document (conventions.md §3) validated and recorded with every run: the same

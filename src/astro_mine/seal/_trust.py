@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The trust root — *whose* signature counts (conventions.md §9; hub.md §9).
 
 Seal has been able to answer "is this signature intact and bound to this artifact?" since it

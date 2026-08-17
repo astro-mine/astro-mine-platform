@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Hub-discovered community metric plugins (RM-P1-BENCH-12; bench.md §2.4, §3, §11).
 
 A new measure of "good" for a swarm campaign is **a plugin, not a Bench code change**: the

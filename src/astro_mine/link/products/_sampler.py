@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """On-demand connectivity + per-tick comms masks over a ContactPlan (RM-P0-LINK-04).
 
 The two agent-facing products Sim drives each tick: a :class:`ConnectivitySampler` that

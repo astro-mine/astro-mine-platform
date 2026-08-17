@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-addressed artifact registry — name→digest, referrers, and GC (RM-P1-HUB-01).
 
 :class:`Registry` is the OCI-backed store hub.md §1 opens with: it *stores* every commons content

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Sibling client seam for the design loop (studio.md §3 ``orchestrate/clients``, §6).
 
 **Studio computes nothing** (studio.md §2 principle 1): each of the seven design-loop

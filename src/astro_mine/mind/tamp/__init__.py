@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The tactical task-and-motion tier (mind.md §3, §4).
 
 ``tamp/task/`` selects the symbolic task (which GOTO/prospect step) from the mission tier's

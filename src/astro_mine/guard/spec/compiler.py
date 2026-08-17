@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The constraint compiler — lower a validated SafetySpec into the compiled IR.
 
 ``compile_spec`` is the deterministic lowering (RM-P1-GUARD-01): a validated

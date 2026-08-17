@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Fail-closed signed loading of SafetySpec / CompiledSafetyModel artifacts (RM-P1-GUARD-05).
 
 The shield's correctness depends on its inputs, so their integrity is part of the safety

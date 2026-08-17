@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """OpenTelemetry + Prometheus for the submission pipeline (bench#32; bench.md §10; CX-OBS).
 
 bench.md §10 asks for two things and this module is both:

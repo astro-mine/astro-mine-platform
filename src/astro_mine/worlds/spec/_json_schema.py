@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The published ``WorldSpec`` JSON Schema — shipped, not just derivable (worlds.md §11).
 
 ``worlds.md §11`` says the ``WorldSpec`` is "**JSON Schema** + Pydantic v2, versioned and owned by

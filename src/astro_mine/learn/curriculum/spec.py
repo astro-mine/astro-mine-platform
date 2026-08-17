@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Declarative curriculum + domain-randomization schema (learn.md §3, §11).
 
 learn.md §11 recommends **"hand-authored staged curricula + domain randomization for the MVP,

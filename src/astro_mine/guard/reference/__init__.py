@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Guard's shipped reference safety content — resolvable from an installed wheel (GUARD, G2.7).
 
 The reviewed anchor ``SafetySpec`` (lunar polar water-ice prospecting) is Guard's reference safety

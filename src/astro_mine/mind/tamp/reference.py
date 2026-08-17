@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Reference TAMP backend — symbolic task interleaved with sampling motion (RM-P1-MIND-03).
 
 The default behind Core's :class:`~astro_mine.core.policy.protocol.TaskMotionPlanner`

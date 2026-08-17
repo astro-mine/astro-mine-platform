@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SafetySpec + the constraint compiler — Guard's declarative safety contract (RM-P1-GUARD-01).
 
 The Guard-**owned**, versioned document of *hard* constraints every Guard layer compiles from

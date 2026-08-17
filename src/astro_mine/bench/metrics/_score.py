@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Scoring + cross-seed aggregation over a metric set (bench.md §3).
 
 :func:`score` runs each metric over every seed's trace, aggregates the per-seed values by that

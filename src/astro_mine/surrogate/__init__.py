@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Surrogate — learned surrogate models with calibrated error bounds.
 
 GNN emulators for the most expensive physics in :mod:`~astro_mine.sim` — above all granular

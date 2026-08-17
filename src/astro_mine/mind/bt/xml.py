@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Groot-compatible behavior-tree XML — authoring/inspection format (RM-P1-MIND-02).
 
 The concrete syntax for :mod:`astro_mine.mind.bt.model`: the BehaviorTree.CPP v4 XML dialect

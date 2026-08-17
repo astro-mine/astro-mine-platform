@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Policy/Planner API contract-test utility (RM-P0-CORE-03).
 
 The consumer-driven conformance check an implementor (a Bench baseline, a Mind tier, an

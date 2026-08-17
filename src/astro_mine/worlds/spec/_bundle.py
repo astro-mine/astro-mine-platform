@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-addressed world bundle (RM-P0-WORLDS-07; worlds.md §3, §5).
 
 :func:`build_world_bundle` composes the already-built, content-addressed layer products

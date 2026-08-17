@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Deterministic stepping core (RM-P0-SIM-01).
 
 The scenario loader (:class:`Scenario` / :func:`load_scenario`), a SPICE-time

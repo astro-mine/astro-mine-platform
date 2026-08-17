@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Discovery over the catalog — faceted + full-text + capability + semantic (RM-P1-HUB-02).
 
 The query planner hub.md §3 describes: **faceted** browse (kind / license / namespace, excluding

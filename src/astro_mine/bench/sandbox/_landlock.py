@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A Landlock allowlist that confines a submitted policy's filesystem reach (bench#36; bench.md §9).
 
 bench#30 shipped the out-of-process sandbox but left one boundary undrawn: a submitted policy runs

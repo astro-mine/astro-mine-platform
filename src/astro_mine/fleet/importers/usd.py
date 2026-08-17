@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """USD stage -> SADF parsing (RM-P0-FLEET-02), via ``pxr``.
 
 The inverse of :mod:`astro_mine.fleet.exporters.usd`, and what makes the **USD → SADF → USD**

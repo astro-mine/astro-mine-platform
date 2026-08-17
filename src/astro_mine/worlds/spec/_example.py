@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The shipped ``WorldSpec`` example — the copyable YAML the front door always implied (G2.11).
 
 ``WorldSpec`` has read YAML since it existed (:meth:`~astro_mine.worlds.spec.WorldSpec.from_yaml`)

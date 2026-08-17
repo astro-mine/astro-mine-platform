@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ray RLlib scale-out path for the PPO baselines (RM-P1-LEARN-03; learn.md §11, LEARN-04).
 
 learn.md §11 recommends **Ray RLlib (PyTorch)** as the default distributed executor and

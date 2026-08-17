@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! STL/MTL runtime monitors — the *detect* layer (guard.md §9.2).
 //!
 //! Each temporal clause of the [`CompiledSafetyModel`](crate::model::CompiledSafetyModel) is

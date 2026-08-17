@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Assemble a Core ContactPlan from Link's contact windows + link budgets (RM-P0-LINK-04).
 
 The reduction step from Link's own products to the **Core message catalog**: LINK-02's

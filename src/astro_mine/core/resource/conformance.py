@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Resource-field API contract-test utility (prospect.md §2/§3).
 
 The consumer-driven conformance check a Prospect field backend runs in its own CI to prove

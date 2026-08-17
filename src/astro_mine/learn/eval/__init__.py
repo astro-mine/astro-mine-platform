@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Honest-evaluation harness — held-out envs, seed sweeps, comms-stress curves (LEARN-06).
 
 The harness that makes a reported score statistically honest (learn.md §10; charter §8):

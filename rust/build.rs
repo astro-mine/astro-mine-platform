@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! Build script: generate the prost bindings for the CompiledSafetyModel wire form.
 //!
 //! The `.proto` sources are the *same* canonical files the Python side generates its

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """A small, offline reference environment — the always-works quickstart tier.
 
 The anchor scenario is a *benchmark*: ~461 MB across nine pins from a private registry, over a

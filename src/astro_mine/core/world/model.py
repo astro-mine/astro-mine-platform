@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """World-provider API — result containers (worlds.md §5/§6).
 
 The frozen, in-memory returns of the Core Environment-API world/terrain surface Worlds

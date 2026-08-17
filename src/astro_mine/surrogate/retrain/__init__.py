@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``retrain`` — offline retrain + gated promotion (RM-P1-SURR-03; surrogate.md §5, §11).
 
 The build loop's terminal step: :func:`retrain_surrogate` trains a new SemVer surrogate on a

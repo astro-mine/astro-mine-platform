@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Workspace — Studio's owned design state + audit log (studio.md §5).
 
 Studio owns projects/designs/audit; it does **not** own world, asset, policy, or

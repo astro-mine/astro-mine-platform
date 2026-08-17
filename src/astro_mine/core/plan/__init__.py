@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plan / ContingentPlan — the Core-owned delay-tolerant plan contract (RFC-0006).
 
 A first-class Core message schema (mind.md §5): the time-stamped, validity-horizoned plan the

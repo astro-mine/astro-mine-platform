@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Brax/MJX contact :class:`RegimeEngine` — the JAX GPU-vectorizable mobility tier (SIM-04).
 
 A minimal, **JAX-native** low-fidelity surface-mobility/contact model behind the ``RegimeEngine``
@@ -59,7 +60,7 @@ __all__ = [
 # float32, which would round per-step battery draws to nothing. Enabling x64 here (the module is
 # only imported by the [brax] factory) keeps the tier honest and the mobility oracle cross-check
 # tight, while determinism stays TOLERANCE — x64 does not make XLA reductions bit-portable.
-jax.config.update("jax_enable_x64", True)
+jax.config.update("jax_enable_x64", True)  # type: ignore[no-untyped-call]
 
 _IDENTITY_QUAT = Quat(x=0.0, y=0.0, z=0.0, w=1.0)
 

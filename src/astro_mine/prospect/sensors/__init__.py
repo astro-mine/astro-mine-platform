@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Per-instrument sensor likelihoods — the ``sensors/`` extension point (prospect.md §3, §6).
 
 The **one** observation model a scenario's instruments are described by, used in both directions so

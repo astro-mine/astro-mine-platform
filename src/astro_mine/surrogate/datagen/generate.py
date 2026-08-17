@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Label the design against the oracle into a :class:`DemDataset` + active learning (RM-P1-SURR-03).
 
 The two halves of ``datagen``'s **build** loop (surrogate.md §3, §8):

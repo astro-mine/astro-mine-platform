@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """SADF v0.1 — closed vocabularies (Core-owned).
 
 These enums are the *closed* part of the narrow waist: the capability-tag

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Derived terrain layers + content hashing — pure NumPy kernels (RM-P0-WORLDS-01).
 
 Slope, aspect, roughness, and the vertical-uncertainty / void treatment, plus the

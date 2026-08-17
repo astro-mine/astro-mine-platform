@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GMRFField — a Gaussian Markov random field (SPDE / precision-matrix) backend (prospect.md §11).
 
 A resource field whose spatial prior is a **Gaussian Markov random field** defined by a *sparse

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Wall-clock instrumentation for the stepping core — the real-time factor (sim.md §10).
 
 Every ``elapsed_s`` elsewhere in Sim is *sim* time: the modeled seconds a scenario advances.

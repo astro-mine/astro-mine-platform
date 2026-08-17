@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plugin manifest loading, validation, and the dual-use (export-control) gate.
 
 Two entry points, because a manifest has two forms and conflating them is how a publisher and a

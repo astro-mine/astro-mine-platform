@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Baseline policy + the local scoring path (RM-P0-BENCH-05).
 
 The reference :class:`BaselinePolicy` (a Core :class:`~astro_mine.core.policy.Policy`) and

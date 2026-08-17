@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Water-ice / hydrogen priors from public lunar datasets (RM-P0-PROSPECT-03).
 
 The dataset-derived, **provenance-tracked** prior that seeds the belief field before any observation

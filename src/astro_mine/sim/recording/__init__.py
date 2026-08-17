@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Headless + interactive modes; MCAP recording + provenance stamping (RM-P0-SIM-09).
 
 The output side of the stepping core: it records a run's per-tick frames to an **MCAP** container

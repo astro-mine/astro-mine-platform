@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Hub-published community priors and prior-recipes (RM-P1-PROSPECT-11; prospect.md §6, §12).
 
 Two content-addressed community-contribution paths on top of the anchor publish flow

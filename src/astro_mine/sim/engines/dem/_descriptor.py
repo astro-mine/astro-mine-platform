@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The DEM engine's static self-declaration — numpy-free (RM-P1-SIM-06).
 
 Kept in its own module so :mod:`astro_mine.sim.engines.dem` (and therefore

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Packaged data for astro-mine-surrogate — the frozen DEM training fixture (RM-P1-SURR-02).
 
 ``dem_excavation_v1.npz`` is a content-addressed particle-rollout dataset generated from the

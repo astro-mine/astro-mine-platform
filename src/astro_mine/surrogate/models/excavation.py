@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The learned-DEM excavation surrogate — a concrete ``SurrogateModel`` (RM-P1-SURR-02).
 
 Ties the pieces together: a deep-ensemble GNS trained on the frozen DEM fixture, split-conformal

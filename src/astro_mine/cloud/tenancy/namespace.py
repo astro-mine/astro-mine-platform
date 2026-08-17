@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Namespace-per-tenant isolation -- the baseline tenancy bundle.
 
 Compiles the objects that isolate a tenant on shared hardware (``cloud.md`` §9): a

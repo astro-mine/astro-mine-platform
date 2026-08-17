@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Data locality -- bring data to compute, lazily.
 
 Thousands of workers must stream only the slices they need from object storage, never

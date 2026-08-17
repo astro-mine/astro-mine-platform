@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``SurrogateModel`` — the runtime seam a learned fidelity tier satisfies.
 
 The prediction interface Sim's scheduler calls per query: a prediction, a *calibrated

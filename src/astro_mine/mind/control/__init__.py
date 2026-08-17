@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The reactive control tier — closed-loop controllers (mind.md §3, §4).
 
 Pluggable per asset class behind Core's :class:`~astro_mine.core.policy.protocol.Controller`

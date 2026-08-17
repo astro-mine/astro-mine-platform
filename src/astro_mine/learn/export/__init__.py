@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """PolicyPackage export — the one cross-component artifact Learn emits (RM-P1-LEARN-05).
 
 Renders a trained policy's typed :class:`~astro_mine.learn.algos.PolicyExport` intermediate

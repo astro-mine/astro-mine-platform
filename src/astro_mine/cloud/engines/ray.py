@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The Ray / KubeRay engine -- tightly-coupled stateful work.
 
 Compiles a distributed :class:`~astro_mine.cloud.submission.jobspec.JobSpec` to a KubeRay

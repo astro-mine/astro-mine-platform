@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """GPU-vectorized rollout tier (RM-P1-LEARN-04; learn.md §3 module map, §8).
 
 The **third** rollout-executor choice — after the in-process :class:`LocalExecutor` and the

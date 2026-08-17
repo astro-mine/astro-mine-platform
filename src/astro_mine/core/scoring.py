@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The episode-scoring vocabulary — what a runner returns and a metric reads.
 
 Bench runs a simulator through the ``EpisodeRunner`` seam and deliberately never imports Sim

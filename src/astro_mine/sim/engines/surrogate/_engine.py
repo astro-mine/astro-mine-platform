@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The adaptive surrogate/DEM granular engine (RM-P1-SIM-03; sim.md §10, §11).
 
 The runtime surrogate-error gate. The engine steps each excavator's particle bed with the **learned

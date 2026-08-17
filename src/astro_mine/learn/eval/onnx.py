@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Score an exported ONNX ``PolicyPackage`` through the same rollout as a live policy (LEARN-06).
 
 The honest-eval harness scores **live** policies and **exported ONNX packages** identically —

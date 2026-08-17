@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Resource-field API — result container (RM-P0-CORE; prospect.md §2/§3).
 
 The frozen, uncertainty-first return of :meth:`ResourceField.posterior`: a distributional

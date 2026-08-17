@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The per-tick observation payload codec — FlatBuffers (conventions.md §3, §4; sim.md §6, §11).
 
 The platform splits its wire formats deliberately (conventions.md §3): **Protobuf/gRPC** is the

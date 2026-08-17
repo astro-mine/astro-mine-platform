@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plan explanation derived from the decision trace (RM-P1-MIND-07; LUNAR-UX-003).
 
 Turns a :class:`~astro_mine.mind.trace.model.DecisionTrace` into an operator-facing explanation —

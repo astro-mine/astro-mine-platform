@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """The content-addressed ContactPlan cache (RM-P0-LINK-05).
 
 A store keyed by :class:`~astro_mine.link.cache.CacheKey` digest: identical pinned inputs

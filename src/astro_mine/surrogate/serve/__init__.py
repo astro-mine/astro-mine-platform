@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Serve: ONNX export + ONNX-Runtime inference for the learned fidelity tier (RM-P1-SURR-04).
 
 The inline **use** loop of surrogate.md §3: a trained

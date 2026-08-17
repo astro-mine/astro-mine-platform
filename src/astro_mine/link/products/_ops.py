@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Forward-looking Earth-link windows for Ops (RM-P1-LINK-13).
 
 [Ops](ops.md) lands in Phase 2, but its **delay-tolerant supervisory scheduling** needs a

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """``CommsModel`` — the declarative comms-regime channel over the SwarmEnv stream.
 
 The model is a *pure function of (config, observation stream, seed)* applied inside the

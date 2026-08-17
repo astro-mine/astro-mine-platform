@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Ground-station catalogs beyond DSN — data, not code (RM-P1-LINK-13).
 
 The P0 MVP treated DSN antennas as caller-supplied :class:`~astro_mine.link.windows.GroundStation`

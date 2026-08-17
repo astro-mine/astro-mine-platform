@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """World-provider API — the Core Environment-API world/terrain surface (worlds.md §5/§6).
 
 A Core-owned thin Protocol for the world/terrain query surface Worlds implements and Sim

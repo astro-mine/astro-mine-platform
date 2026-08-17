@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Allocate — combinatorial task allocation and scheduling.
 
 The specialist allocation-and-scheduling engine: given heterogeneous assets, a set of

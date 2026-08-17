@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Plugin manifest v0.1 — typed Pydantic models (RM-P0-CORE-05).
 
 The manifest is how every extension declares itself to the platform: its ``kind``, the

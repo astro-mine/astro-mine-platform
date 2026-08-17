@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Result collection — pull MCAP + Parquet back from Cloud and ingest (RM-P1-BENCH-11).
 
 The other side of the fan-out: given the Cloud

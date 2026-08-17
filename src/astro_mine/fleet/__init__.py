@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Astro-Mine-Fleet — SADF asset library and authoring toolchain.
 
 The authoring commands (`astro-mine fleet …`, in astro-mine-cli),

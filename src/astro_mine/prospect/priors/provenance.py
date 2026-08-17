@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Provenance for dataset-derived priors: cited sources + a content hash (prospect.md §2.4, §5).
 
 "Priors are sourced and cited, not invented" (prospect.md principle 4): every default prior records

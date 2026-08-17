@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
 //! PyO3 binding — the in-process bridge from the Python orchestration layer to the trusted
 //! Rust core (guard.md §3, §4). The core does all the safety work; this layer only marshals
 //! typed inputs in and an auditable verdict out. Built into `astro_mine.guard._core` by

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 """Public leaderboard — submit-policy-we-run + Hub-digest intake (RM-P1-BENCH-10; bench.md §9).
 
 A submit-policy-we-run leaderboard: a submitted policy is executed server-side on the scenario's
