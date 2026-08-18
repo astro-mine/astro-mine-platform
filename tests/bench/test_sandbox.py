@@ -332,17 +332,22 @@ def test_default_limits_deny_egress_and_gpus() -> None:
 
 @linux_only
 def test_the_embargoed_held_out_seeds_cannot_be_read() -> None:
-    """The headline of bench#36: a submission cannot ``open()`` ``embargo/*/heldout_seeds.json``.
+    """The headline of bench#36: a submission cannot ``open()`` a file under the repo root.
 
     Run under the **default** sandbox (``FilesystemPolicy.CONFINE``), a policy whose only purpose is
-    to read the held-out set fails on the *read* — a Landlock ``EACCES`` — long before it could
-    encode anything in its metrics. The assertion checks the read was denied, not merely that egress
-    was: the error must name a permission failure on the seed file, and the policy must never reach
-    its ``EMBARGO-READ-SUCCEEDED`` line.
-    """
-    from tests.bench._policies_hostile import HELDOUT_SEEDS_PATH
+    to read that file fails on the *read* — a Landlock ``EACCES`` — long before it could encode
+    anything in its metrics. The assertion checks the read was denied, not merely that egress was:
+    the error must name a permission failure on the file, and the policy must never reach its
+    ``EMBARGO-READ-SUCCEEDED`` line.
 
-    assert HELDOUT_SEEDS_PATH.is_file()  # the file really is there to be protected
+    The target is a committed **stand-in**, not the real held-out set — those moved to the private
+    ``astro-mine/embargo`` store (astro-mine-platform#37). The guarantee is about a location, not
+    about the bytes, so a stand-in tests it exactly as well and does not require secret material to
+    sit in a public tree. See ``PROTECTED_PROBE_PATH`` for why it cannot live under ``tests/``.
+    """
+    from tests.bench._policies_hostile import PROTECTED_PROBE_PATH
+
+    assert PROTECTED_PROBE_PATH.is_file()  # the file really is there to be protected
     sandbox = SubprocessSandbox(
         limits=SandboxLimits(cpu_seconds=30, wall_seconds=60.0), python_path=(TESTS_DIR,)
     )
@@ -351,7 +356,7 @@ def test_the_embargoed_held_out_seeds_cannot_be_read() -> None:
     assert outcome.status is SandboxStatus.FAILED
     error = (outcome.result.error if outcome.result else "") or ""
     assert "EMBARGO-READ-SUCCEEDED" not in error  # the read must NOT have succeeded
-    assert "PermissionError" in error and "heldout_seeds.json" in error  # it failed on the read
+    assert "PermissionError" in error and "confinement-probe.json" in error  # failed on the read
 
 
 @linux_only
@@ -360,7 +365,12 @@ def test_the_host_filesystem_policy_is_the_explicit_unconfined_opt_in() -> None:
 
     This is the negative control that proves the confinement is what closes the read: the identical
     policy, run with the filesystem posture flipped to ``HOST`` (the trusted/local tier), reaches
-    the seed file. That is precisely why ``HOST`` is never selected for a community submission.
+    the file. That is precisely why ``HOST`` is never selected for a community submission.
+
+    It is also the half that catches a stand-in gone missing. If the probe file were absent, the
+    confinement test above would still pass — an ``open()`` of a nonexistent path fails too, just
+    with the wrong errno — and the guarantee would be silently untested. This test fails instead,
+    because a read that was *supposed* to succeed did not.
     """
     unconfined = SubprocessSandbox(
         limits=SandboxLimits(cpu_seconds=30, wall_seconds=60.0, filesystem=FilesystemPolicy.HOST),

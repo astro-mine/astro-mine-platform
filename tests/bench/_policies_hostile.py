@@ -36,14 +36,22 @@ SECRET_ENV_VARS = (
     "ASTRO_MINE_BENCH_OIDC_ISSUER",
 )
 
-#: The embargoed held-out seed set the leaderboard's whole anti-overfitting story protects — the
-#: exact file bench#36 exists to make unreadable from inside a submission.
-HELDOUT_SEEDS_PATH = (
-    Path(__file__).parent.parent.parent
-    / "embargo"
-    / "lunar-polar-ice-prospecting-v1"
-    / "heldout_seeds.json"
-)
+#: The file a submission must not be able to read: a **stand-in**, not the real held-out set.
+#:
+#: bench#36's guarantee is about a *location* — nothing under the repo root is on the Landlock
+#: allowlist — so the target only has to be a real file at a real repo-root path. It used to be the
+#: embargoed seeds themselves, which was the strongest possible target right up until they left for
+#: the private ``astro-mine/embargo`` store (astro-mine-platform#37) and these tests started failing
+#: on a missing file.
+#:
+#: Two constraints pin where it can live, and both are load-bearing:
+#:
+#: * **not under ``tests/``** — that is the sandbox's ``python_path``, which *is* allowlisted
+#:   (:func:`~astro_mine.bench.sandbox.filesystem_read_roots`), so a probe there would be readable
+#:   and the test would quietly assert the opposite of what it means to;
+#: * **not named ``heldout_seeds.json``** — ``test_zoo_anchor.py`` asserts no file of that name
+#:   exists anywhere in the working tree.
+PROTECTED_PROBE_PATH = Path(__file__).parent.parent.parent / "embargo" / "confinement-probe.json"
 
 
 def _noop_batch(mode: str = "idle") -> ActionBatch:
@@ -163,18 +171,21 @@ class SeedReaderPolicy:
     """Reads the embargoed held-out seeds off the filesystem — the attack bench#36 closes.
 
     seccomp denies the *socket* that would exfiltrate the seeds, but not the *read*: a policy that
-    can ``open()`` ``embargo/*/heldout_seeds.json`` can overfit to the held-out set, or encode it in
-    the metric floats the leaderboard publishes (``TRUST_BOUNDARY.md`` §4). Under
+    can ``open()`` a file under the repo root can read whatever an evaluator left there — the
+    held-out set, when it lived here — and overfit to it or encode it in the metric floats the
+    leaderboard publishes (``TRUST_BOUNDARY.md`` §4). Under
     :attr:`~astro_mine.bench.sandbox.FilesystemPolicy.CONFINE` the Landlock allowlist does not
     include the repo tree, so the ``open()`` fails with ``EACCES`` before a byte is read — which is
     the guarantee, and is exactly what the test asserts (the *read* fails, not merely egress).
     """
 
     def decide(self, observations: object, context: object) -> ActionBatch:
-        contents = HELDOUT_SEEDS_PATH.read_text(encoding="utf-8")
-        # Reached only if the read was NOT denied — the sandbox failed. Surface the leak length so a
-        # failing test shows the seeds really were exposed, never the seeds themselves.
-        raise AssertionError(f"EMBARGO-READ-SUCCEEDED: {len(contents)} bytes of held-out seeds")
+        contents = PROTECTED_PROBE_PATH.read_text(encoding="utf-8")
+        # Reached only if the read was NOT denied — the sandbox failed. Surface the length so a
+        # failing test shows the file really was reachable, never its contents.
+        raise AssertionError(
+            f"EMBARGO-READ-SUCCEEDED: {len(contents)} bytes read from under the repo root"
+        )
 
 
 class ProcEnvironSnoopPolicy:
