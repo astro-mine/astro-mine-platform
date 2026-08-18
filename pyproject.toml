@@ -83,6 +83,10 @@ bench-cloud = ["pyarrow>=16"]
 bench-fetch = []                       # was: astro-mine-hub (now in-package)
 # cloud (cloud[serve] not migrated — REST)
 cloud-cluster = ["pyyaml>=6"]
+# NOTE: mlflow caps `cryptography` -- <49 at 3.14.0, still <50 at 3.15.1. A uv lock is one
+# universal resolution across every extra and group, so this line and `learn-mlflow` below hold the
+# WHOLE lockfile below cryptography's security fix (GHSA-g6cj-pr64-35w5). The dev group is not the
+# cause: it uses `mlflow-skinny`, which has no such constraint. astro-mine-platform#51.
 cloud-mlflow = ["mlflow>=2.14"]
 cloud-nats = ["nats-py>=2.6"]
 cloud-redis = ["redis>=5.0"]
@@ -97,7 +101,7 @@ learn-rllib = ["ray[rllib]>=2.54,<2.57", "torch>=2.4"]
 learn-eval = ["pyarrow>=15"]
 learn-export = ["onnx>=1.17", "onnxruntime>=1.19"]
 learn-jax = ["jax>=0.4.35"]
-learn-mlflow = ["mlflow"]
+learn-mlflow = ["mlflow"]           # caps cryptography; see the note at `cloud-mlflow` (#51)
 # link
 link-hub = []                          # was: astro-mine-hub
 # mind
