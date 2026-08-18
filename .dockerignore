@@ -1,0 +1,18 @@
+# The Docker build context, trimmed to what the images actually copy.
+#
+# There was no .dockerignore, so every `docker build` here shipped the whole checkout to the daemon
+# -- including `.venv`, which `cluster-e2e` creates with `uv sync` *before* it builds the workload
+# image, and which is several gigabytes of already-installed dependencies the image installs again
+# from the lockfile. None of it reached an image (the COPYs are selective), it was just carried.
+#
+# Kept deliberately narrow: local caches and build outputs only. Nothing here is an input to any
+# image, and `.git` is *not* excluded -- the version is static now, but excluding a directory on the
+# theory that nothing reads it is how a build starts failing for a reason nobody can see.
+.venv/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+rust/target/
+dist/
