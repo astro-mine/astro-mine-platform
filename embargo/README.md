@@ -4,8 +4,16 @@ The **embargoed held-out seed sets** for the Bench scenario zoo — the anti-gam
 (`docs/architecture/bench.md` §9) — used to live in this directory, committed in plaintext.
 
 **They now live in the private repository [`astro-mine/embargo`](https://github.com/astro-mine/embargo).**
-This directory holds only this file, so that a reader who lands here from a path, a script or a
-stack trace is told where to go rather than finding nothing.
+This directory holds this file, so that a reader who lands here from a path, a script or a stack
+trace is told where to go rather than finding nothing — and one other file, which is not secret:
+
+- **`confinement-probe.json`** — a stand-in target for the sandbox confinement tests, and nothing
+  else. `tests/bench/test_sandbox.py` proves a submitted policy cannot `open()` a file under the
+  repo root, which needs a real file at a real path to fail on. The held-out seeds used to be that
+  file; when they left, the test started failing on a missing path instead of proving anything, and
+  the probe replaced them. It lives *here* rather than under `tests/` because `tests/` is the
+  sandbox's `python_path` and **is** on the Landlock allowlist — a probe there would be readable
+  and the test would silently invert. Its contents are meaningless by construction.
 
 ## Why they left
 

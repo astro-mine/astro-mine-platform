@@ -1,0 +1,7 @@
+{
+  "_what_this_is": "NOT SECRET. A stand-in target for the sandbox confinement tests.",
+  "_why_it_exists": "tests/bench/test_sandbox.py proves a submitted policy cannot read a file under the repo root. It needs a real file at a real path to fail to open. The embargoed held-out seeds used to be that file; they moved to the private astro-mine/embargo store (astro-mine-platform#37), and this probe replaced them so the guarantee stays under test without secret material in a public tree.",
+  "_why_it_lives_here": "embargo/ is a repo-root path, and the Landlock allowlist is built from the interpreter, the system paths and the sandbox's python_path only - never the repo root (see filesystem_read_roots). A probe under tests/ WOULD be readable, because tests/ is the python_path, and the test would silently invert.",
+  "_why_not_named_heldout_seeds_json": "tests/bench/test_zoo_anchor.py asserts no file of that name exists anywhere in the working tree.",
+  "probe": "if you can read this from inside the sandbox, the confinement failed"
+}
