@@ -70,6 +70,12 @@ WORKDIR /build
 COPY pyproject.toml uv.lock README.md LICENSE /build/
 COPY rust /build/rust
 COPY src /build/src
+# Guard's build script compiles the CompiledSafetyModel wire form from `../schemas/guard/proto`, so
+# the crate does not build without it -- `protox failed to compile the proto: … is not in any
+# include path`. The protos are the same canonical files the Python side generates from, which is
+# what makes the Rust safety core and the Python compiler agree byte-for-byte (`rust/build.rs`), so
+# this is a build input rather than package data.
+COPY schemas /build/schemas
 
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/build/rust/target \
