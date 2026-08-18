@@ -55,7 +55,16 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
   | sh -s -- -y --no-modify-path --profile minimal --default-toolchain stable
 
-COPY --from=ghcr.io/astral-sh/uv:0.5.29 /uv /usr/local/bin/uv
+# uv 0.9.9, matching `docker/Dockerfile`. **Not 0.5.29, which this pinned and which cannot read the
+# lockfile in this repository**: `uv.lock` is `revision = 3`, 0.5.29 predates that revision, and its
+# response to a lockfile it does not understand is to re-resolve -- which `--locked` then refuses.
+# Measured rather than guessed: `uv lock --check` fails on 0.5.29 and passes on 0.8.0 and 0.9.9.
+#
+# The runner installs uv through `setup-uv@v5`, which takes the latest release, so the lockfile's
+# revision follows uv forward and a fixed pin here drifts behind it. That is survivable now only
+# because the failure is loud: before `set -eux` below, this exact mismatch produced a clean build
+# of an empty image.
+COPY --from=ghcr.io/astral-sh/uv:0.9.9 /uv /usr/local/bin/uv
 
 WORKDIR /build
 COPY pyproject.toml uv.lock README.md LICENSE /build/
@@ -95,7 +104,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates wget \
  && rm -rf /var/lib/apt/lists/*
 
-COPY --from=ghcr.io/astral-sh/uv:0.5.29 /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.9.9 /uv /usr/local/bin/uv
 
 WORKDIR /work
 
