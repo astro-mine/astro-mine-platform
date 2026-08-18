@@ -146,22 +146,25 @@ kubectl -n "${NAMESPACE}" wait --for=condition=Complete job/minio-create-bucket 
 
 # --- 3. the workload image --------------------------------------------------------------------
 
-# The version the image must be built as. RunContext.code_version is *inside* the content address,
-# and hatch-vcs derives it from `git describe` -- so an image built without the host's git state
-# gets a different version, a different content address, and the equivalence test fails for a
-# reason that has nothing to do with the run. Read the host's version and pin the build to it.
+# The version the image must report. RunContext.code_version is *inside* the content address, so an
+# image whose platform version differs from the host's produces a different address and fails the
+# equivalence test for a reason that has nothing to do with the run.
+#
+# It used to be *injected*: hatch-vcs derived the version from `git describe`, the build context has
+# no .git, so the host's answer was passed in as SETUPTOOLS_SCM_PRETEND_VERSION. Consolidation moved
+# the build to maturin and pinned `version = "0.1.0"` statically, so the two now agree by
+# construction and there is nothing to inject. The host's answer is still read and still passed --
+# as something for the image to be *checked against*, which is a weaker claim that stays true.
 log "workload image"
 CODE_VERSION="$(uv run python -c 'import astro_mine.cloud as c; print(c.__version__)')"
-echo "pinning the image to the host's astro-mine-cloud version: ${CODE_VERSION}"
+echo "asserting the image reports the host's platform version: ${CODE_VERSION}"
 
-CORE_TOKEN_FILE="$(mktemp)"
-trap 'rm -f "${CORE_TOKEN_FILE}"' EXIT
-printf '%s' "${CORE_REPO_TOKEN:-}" > "${CORE_TOKEN_FILE}"
-
+# The `core_token` build secret is gone with the repositories it authenticated to: the platform is
+# one package with no private git sources, so the image builds from this checkout and reaches only
+# the public indexes.
 DOCKER_BUILDKIT=1 docker build \
   --file "${HERE}/workload.Dockerfile" \
-  --secret "id=core_token,src=${CORE_TOKEN_FILE}" \
-  --build-arg "ASTRO_MINE_CLOUD_VERSION=${CODE_VERSION}" \
+  --build-arg "ASTRO_MINE_PLATFORM_VERSION=${CODE_VERSION}" \
   --build-arg "INSTALL_RAY=${INSTALL_RAY}" \
   --tag "${IMAGE_REPO}:${IMAGE_TAG}" \
   "${ROOT}"
