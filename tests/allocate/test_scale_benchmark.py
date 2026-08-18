@@ -59,6 +59,7 @@ from astro_mine.allocate import (
     extract_iis,
     verify_feasible,
 )
+from astro_mine.allocate import __version__ as allocate_version
 from astro_mine.allocate.model.ir.schedule import scheduling_slack
 from tests.allocate.scale_factories import CONFLICT_SITE, infeasible_scale_instance, scale_instance
 
@@ -103,13 +104,20 @@ def _record(name: str, payload: dict[str, Any]) -> None:
 
     The solver version is pinned into the record alongside the numbers, because a benchmark number
     without the solver that produced it is not reproducible (allocate.md §5/§8).
+
+    Allocate's half is read from ``astro_mine.allocate.__version__``, not from
+    ``version("astro-mine-allocate")``: consolidation retired that distribution, so the metadata
+    lookup raised `PackageNotFoundError` and every benchmark failed *after* solving, on the
+    recording step. `_allocate_version()` in `allocate/api/planner.py` already reads the attribute
+    and it is the same number this record wants, so the two now agree by construction rather than
+    by coincidence.
     """
     _BENCH_DIR.mkdir(parents=True, exist_ok=True)
     document = {
         "benchmark": name,
         "recorded_at": datetime.now(UTC).isoformat(),
         "ortools": version("ortools"),
-        "allocate": version("astro-mine-allocate"),
+        "allocate": allocate_version,
         **payload,
     }
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S")
