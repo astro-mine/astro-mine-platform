@@ -87,7 +87,7 @@ cloud-cluster = ["pyyaml>=6"]
 # universal resolution across every extra and group, so this line and `learn-mlflow` below hold the
 # WHOLE lockfile below cryptography's security fix (GHSA-g6cj-pr64-35w5). The dev group is not the
 # cause: it uses `mlflow-skinny`, which has no such constraint. astro-mine-platform#51.
-cloud-mlflow = ["mlflow>=2.14"]
+cloud-mlflow = ["mlflow*"]
 cloud-nats = ["nats-py>=2.6"]
 cloud-redis = ["redis>=5.0"]
 cloud-s3 = ["boto3>=1.34"]
